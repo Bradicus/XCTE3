@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LANGUAGE_DEFS>
+
+	<STYLING variable="CAMEL_CASE" />
+	
+	<FILE_TYPES>
+		<FILE_TYPE type="body" extension="rb" />
+	</FILE_TYPES>
+
+	<!-- These don't do much but let the program know which variable types 
+	     are primitives
+	-->
+
+	<TYPE_MAPS>	
+		<TYPE_MAP genType="Boolean" langType="Boolean" />
+		<TYPE_MAP genType="Char" 	langType="Char" />
+		<TYPE_MAP genType="UChar" 	langType="UChar" />
+		<TYPE_MAP genType="UNC16" 	langType="UNC16" />
+		
+		<TYPE_MAP genType="Int8" 	langType="Int8" />
+		<TYPE_MAP genType="Int16" 	langType="Int16" />
+		<TYPE_MAP genType="Int32" 	langType="Int32" />
+		<TYPE_MAP genType="Int64" 	langType="Int64" />
+		
+		<!-- Wastes space but java has no unsigned -->
+		<TYPE_MAP genType="UInt8" 	langType="UInt8" />
+		<TYPE_MAP genType="UInt16" 	langType="UInt16" />
+		<TYPE_MAP genType="UInt32" 	langType="UInt32" />
+		<TYPE_MAP genType="UInt64" 	langType="UInt64" />
+		
+		<TYPE_MAP genType="Float32" langType="Float32" />
+		<TYPE_MAP genType="Float64" langType="Float64" />
+		<TYPE_MAP genType="String" 	langType="String" />
+	</TYPE_MAPS>
+	
+</LANGUAGE_DEFS>

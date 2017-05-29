@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file defines includes that automatically get added
+     to a class file if a variable of a certain type is encountered
+ -->
+ 
+<xcte:AUTO_INCLUDES>
+
+    <INCL name="&lt;mysql++&gt;">
+		<NAMESPACE_USE name="mysqlpp" />
+	</INCL>
+	
+	<INCL name="&lt;iostream&gt;">
+		<VAR_TYPE name="std::stringstream" />
+	</INCL>
+	
+</xcte:AUTO_INCLUDES>

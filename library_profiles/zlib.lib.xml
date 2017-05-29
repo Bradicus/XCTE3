@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LIBRARY name="zlib" >
+	<LANGUAGE name="cpp">
+			
+	    <OS_FAMILY name="Windows" >
+			<OS name="Vista">
+				<compiler name="vcpp">
+					<lib32 name="zlib" path="" />
+					<lib64 name="zlib" path="" />
+				</compiler>
+			</OS>
+			<OS name="XP">
+				<lib32 name="zlib" path="" />
+				<lib64 name="zlib" path="" />
+			</OS>
+		</OS_FAMILY>		
+			
+	    <OS_FAMILY name="GNU/Linux" >
+			<OS name="Debian">
+				<lib32 name="zlib" path="" />
+				<lib64 name="zlib" path="" />
+			</OS>
+			<OS="CentOS">
+				<lib32 name="zlib" path="" />
+				<lib64 name="zlib" path="" />
+			</OS>
+		</OS_FAMILY>	
+							
+	</LANGUAGE>	
+</LIBRARY>

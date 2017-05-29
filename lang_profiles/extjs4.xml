@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LANGUAGE_DEFS>
+
+	<FILE_TYPES>
+		<FILE_TYPE type="body" extension="js" />
+	</FILE_TYPES>
+
+	<TYPE_MAPS>	
+		<TYPE_MAP genType="Boolean" langType="boolean" />
+		<TYPE_MAP genType="Char" 	langType="string" />
+		<TYPE_MAP genType="UChar" 	langType="string" />
+		<TYPE_MAP genType="UNC16" 	langType="string" />
+		
+		<TYPE_MAP genType="Int8" 	langType="int" />
+		<TYPE_MAP genType="Int16" 	langType="int" />
+		<TYPE_MAP genType="Int32" 	langType="int" />
+		<TYPE_MAP genType="Int64" 	langType="int" />
+		
+		<!-- Wastes space but extjs4 has no unsigned -->
+		<TYPE_MAP genType="UInt8" 	langType="int" />
+		<TYPE_MAP genType="UInt16" 	langType="int" />
+		<TYPE_MAP genType="UInt32" 	langType="int" />
+		<TYPE_MAP genType="UInt64" 	langType="unsupported_type" />
+		
+		<TYPE_MAP genType="Float32" langType="float" />
+		<TYPE_MAP genType="Float64" langType="float" />
+		<TYPE_MAP genType="String" 	langType="string" />
+	</TYPE_MAPS>
+	
+</LANGUAGE_DEFS>

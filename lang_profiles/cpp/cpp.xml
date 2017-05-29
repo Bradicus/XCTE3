@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xcte:LANGUAGE_DEFS>
+
+	<FILE_TYPES>
+		<FILE_TYPE type="header" 	extension="h" />
+		<FILE_TYPE type="body" 		extension="cpp" />
+	</FILE_TYPES>
+
+	<!-- Unless you're using some old compilers this should be true -->
+	<TYPE_MAPS>	
+		<TYPE_MAP genType="Boolean"		langType="bool" />
+		<TYPE_MAP genType="Char" 		langType="char" />
+		<TYPE_MAP genType="UChar" 		langType="unsigned char" />
+		<TYPE_MAP genType="UNC16" 		langType="wchar_t" />
+		
+		<TYPE_MAP genType="Int8" 		langType="char" />
+		<TYPE_MAP genType="Int16" 		langType="short" />
+		<TYPE_MAP genType="Int32" 		langType="int" />
+		<TYPE_MAP genType="Int64" 		langType="long" />
+		
+		<TYPE_MAP genType="UInt8" 		langType="unsigned char" />
+		<TYPE_MAP genType="UInt16" 		langType="unsigned short" />
+		<TYPE_MAP genType="UInt32" 		langType="unsigned int" />
+		<TYPE_MAP genType="UInt64" 		langType="unsigned long" />
+		
+		<TYPE_MAP genType="Float32" 	langType="float" />
+		<TYPE_MAP genType="Float64" 	langType="double" />
+		<TYPE_MAP genType="String" 		langType="std::string" />
+	</TYPE_MAPS>
+	
+</xcte:LANGUAGE_DEFS>

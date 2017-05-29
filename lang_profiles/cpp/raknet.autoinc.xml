@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file defines includes that automatically get added
+     to a class file if a variable of a certain type is encountered
+ -->
+ 
+<xcte:AUTO_INCLUDES>
+
+    <INCL name="RakPeerInterface">
+		<VAR_TYPE name="RakPeerInterface" />
+	</INCL>
+	
+    <INCL name="RakNetworkFactory">
+		<NAMESPACE_USE name="RakNetworkFactory" />
+	</INCL>
+	
+    <INCL name="RakSleep">
+		<FUN_CALL name="RakSleep" />
+	</INCL>
+
+</xcte:AUTO_INCLUDES>

@@ -1,0 +1,86 @@
+##
+# @author Brad Ottoson
+# 
+# Copyright (C) 2008 Brad Ottoson
+# This file is released under the zlib/libpng license, see license.txt in the 
+# root directory
+#
+# This class is the base class for all code elements
+
+class CodeElem
+  attr_accessor :elementId, :xmlElement, :osInclude, :parent, :visibility
+  
+  ELEM_CLASS = "class";
+  ELEM_HEADER = "header";
+  ELEM_LIBRARY = "library";
+  ELEM_APPLICATION = "app";
+  ELEM_BODY = "body";
+  ELEM_BUILD_OPTION = "build_option";
+  ELEM_BUILD_TYPE = "build_type";
+  ELEM_COMMENT = "comment";
+  ELEM_FORMAT = "format";
+  ELEM_FUNCTION = "function";
+  ELEM_INCLUDE = "include";
+  ELEM_PARENT = "parent";
+  ELEM_VARIABLE = "variable";
+  ELEM_VAR_GROUP = "variable_group";
+
+  ELEM_PROJECT = "project"
+  ELEM_PROJECT_COMPONENT_GROUP = "project_cg"
+
+  def initialize(parentElem = nil)
+    @elementId
+    
+    @osInclude = Array.new   # What os's this node is processed on
+
+    @xmlElement     # Points to the xml element a code element
+                    # is read from, making it easier to add and use custom
+                    # tags
+
+    @visibility = "public"
+    @parentElem = parentElem
+  end
+
+  # Loads attributes all code elements share
+  def loadAttributes(nodeXML)
+    @xmlElement = nodeXML
+
+    if (nodeXML.attributes["lang_ignore"] != nil)
+      ignoreLangs = nodeXML.attributes["lang_ignore"].split(",")
+      for iLang in ignoreLangs
+        @langInclude.delete(strip(iLang))
+      end
+    end
+
+    if (nodeXML.attributes["lang_only"] != nil)
+      ignoreLangs = nodeXML.attributes["lang_only"].split(",")
+      @langInclude = Array.new
+      for iLang in ignoreLangs
+        @langInclude << strip(iLang)
+      end
+    end
+  end
+
+  # Find an attribute searching through parent elements if it doesn't exist 
+  # on this element
+  def findAttribute(attribName)
+    if @xmlElement.attributes[attribName] != nil
+      return(@xmlElement.attributes[attribName])
+    else
+      if @parentElem != nil
+        return(@parentElem.findAttribute(attribName))
+      end
+    end  
+
+    return nil  
+  end
+
+  def attribOrDefault(attribName, default)
+    if @xmlElement.attributes[attribName] != nil
+      return(@xmlElement.attributes[attribName])
+    end
+
+    return default
+  end
+  
+end
