@@ -27,11 +27,13 @@ class CodeElem
 
   ELEM_PROJECT = "project"
   ELEM_PROJECT_COMPONENT_GROUP = "project_cg"
+  ELEM_TEMPLATE_DIRECTORY = "templates";
 
   def initialize(parentElem = nil)
     @elementId
     
     @osInclude = Array.new   # What os's this node is processed on
+    @langInclude = Array.new # What languages this node generates code in
 
     @xmlElement     # Points to the xml element a code element
                     # is read from, making it easier to add and use custom

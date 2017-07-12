@@ -9,12 +9,12 @@
  
 require 'lang_profile.rb'
 
-module XCTESql
+module XCTETSql
   class Utils
     @@langProfile = LangProfile.new
     
     def self.init
-      @@langProfile.name = "sql"   
+      @@langProfile.name = "tsql"   
       @@langProfile.loadProfile
     end
     

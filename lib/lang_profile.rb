@@ -22,7 +22,7 @@ class LangProfile
   
   def loadProfile
     begin
-      file = File.new("../lang_profiles/" << name << ".xml")      
+      file = File.new(__dir__ + "/../lang_profiles/" << name << ".xml")      
     rescue
       p 'error loading language profile ' << name << ".xml"
     end

@@ -163,6 +163,9 @@ module XCTECSharp
         if var.vtype == "Float64"
           return "Double"
         end
+        if var.vtype == "Decimal"
+          return "Decimal"
+        end
         if var.vtype == "UNC16"  
           return "WChar"
         end

@@ -1,3 +1,5 @@
+
+
 ##
 # @author Brad Ottoson
 #
@@ -21,11 +23,11 @@ class SourceRenderer
     @hangingBlockStart = true
 
     # Ruby will use encoding specified when the file was opened, don't need this
-    if (OS.windows?)
+    #if (OS.windows?)
       @lineEnding = "\n"
-    else
-      @lineEnding = "\n"
-    end
+    #else
+    #  @lineEnding = "\n"
+    #end
   end
   
   def indent(count = 1)

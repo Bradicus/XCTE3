@@ -24,7 +24,7 @@ class CodeElemFunction < CodeElem
     @isVirtual = false
     @isInline = false
     @isTemplate = false
-    @returnValue = CodeElemVariable.new
+    @returnValue = CodeElemVariable.new(self)
     @returnValue.vtype = "void"
   end
 end

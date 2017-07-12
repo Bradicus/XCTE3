@@ -17,7 +17,6 @@ require 'code_elem_parent.rb'
 require 'code_elem_variable.rb'
 require 'code_elem_var_group.rb'
 require 'rexml/document'
-require 'os'
 
 module CodeStructure
   class CodeElemClass < CodeElem
@@ -48,7 +47,9 @@ module CodeStructure
     def loadXMLClassFile(fName)
       file = File.new(fName)
       @path = fName
-      xmlDoc = REXML::Document.new file
+
+      xmlString = file.read
+      xmlDoc = REXML::Document.new xmlString
 
       if xmlDoc.root.attributes["classType"] != nil   
         @classType = xmlDoc.root.attributes["classType"]
@@ -68,19 +69,19 @@ module CodeStructure
       
       @xmlElement = xmlDoc.root
 
-      xmlDoc.elements.each("model/core_class") { |coreC|
+      xmlDoc.root.elements.each("core_class") { |coreC|
         @coreClass = coreC.attributes["name"]
       }
 
-      xmlDoc.elements.each("model/description") { |desc|
+      xmlDoc.root.elements.each("description") { |desc|
         @description = desc.text
       }
 
-      xmlDoc.elements.each("model/parent") { |par|
+      xmlDoc.root.elements.each("parent") { |par|
         loadBaseClassNode(par)
       }
 
-      xmlDoc.elements.each("model/include") { |inc|
+      xmlDoc.root.elements.each("include") { |inc|
         newInclude = CodeElemInclude.new
         if (inc.attributes["name"] != nil)
           newInclude.name = inc.attributes["name"]
@@ -96,26 +97,16 @@ module CodeStructure
         @includes << newInclude
       }
 
-#      xmlDoc.elements.each("model/VARIABLES") { |vars|
-#        for varElem in vars.elements
-#          if (varElem.name == "VARIABLE")
-#            loadVariableNode(varElem, @varGroup.vars)
-#          elsif (varElem.name == "COMMENT")
-#            loadCommentNode(varElem, @variableSection)
-#          elsif (varElem.name == "BR")
-#            loadBRNode(varElem, @variableSection)
-#          end
-#        end
-#      }
+      xmlDoc.root.elements.each("var_group") { |vargXML|
 
-      xmlDoc.elements.each("model/var_group") { |vargXML|
+        puts "loading var group"
         newVGroup = CodeElemVarGroup.new
         newVGroup.loadAttributes(vargXML)
         loadVarGroupNode(newVGroup, vargXML)
         @groups << newVGroup
       }
       
-      xmlDoc.elements.each("model/functions") { |funXML|
+      xmlDoc.root.elements.each("functions") { |funXML|
         for varElemXML in funXML.elements
           if (varElemXML.name == "template_function")
             loadTemplateFunctionNode(varElemXML)

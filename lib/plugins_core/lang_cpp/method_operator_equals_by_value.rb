@@ -44,7 +44,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
 #      codeGen.add("    unsigned int i;\n");
 #    end
 
-    for par in codeClass.parentsList
+    for par in codeClass.baseClasses
       codeGen.add("    " << par.name << "::operator=(src" + codeClass.name << ");")
     end
 

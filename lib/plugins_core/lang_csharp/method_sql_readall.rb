@@ -59,6 +59,8 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
       end
     end
 
+    codeGen.endBlock
+
     return(conDef)
   end
   

@@ -10,7 +10,7 @@
 require 'code_elem.rb'
 require 'code_elem_class.rb'
 require 'code_elem_header.rb'
-require 'code_elem_body.rb'
+require 'code_elem_template_directory.rb'
 require 'code_elem_build_type.rb'
 require 'code_elem_build_option.rb'
 require 'code_elem_project_component_group.rb'
@@ -29,7 +29,7 @@ module CodeStructure
       @name
       @path
       @buildType
-      @templateFolders
+      @templateFolders = Array.new
       @outputLanguages
       @type = String.new
       @description
@@ -50,7 +50,7 @@ module CodeStructure
 
       @xmlElement = xmlDoc.root
 
-      xmlDoc.elements.each("PROJECT") { |prj|
+      xmlDoc.elements.each("project") { |prj|
         loadComponentGroup(@componentGroup, prj);
       }
 
@@ -69,6 +69,11 @@ module CodeStructure
 
       xmlGroup.elements.each("DESCRIPTION") { |desc|
         groupNode.description = desc.text
+      }
+      xmlGroup.elements.each("template_dir") { |tplDir|
+        newTDir = CodeElemTemplateDirectory.new
+        loadTemplateNode(newTDir, tplDir)
+        groupNode.components << newTDir
       }
       xmlGroup.elements.each("CLASS") { |cclass|
         newClass = CodeElemClass.new
@@ -133,6 +138,14 @@ module CodeStructure
     def loadBodyNode(bNode, bNodeXML)
       bNode.name = bNodeXML.attributes["name"]
       bNode.case = bNodeXML.attributes["case"]
+    end
+
+    def loadTemplateNode(tNode, tNodeXml)
+      tNode.path = tNodeXml.attributes["path"]
+      tNode.dest = tNodeXml.attributes["dest"]
+      tNode.isStatic = (tNodeXml.attributes["static_code"] == true)
+      tNode.languages = tNodeXml.attributes["languages"].split(" ")
+      puts "template node loaded with path"
     end
 
     def loadBuildTypeNode(btNode, btNodeXML)

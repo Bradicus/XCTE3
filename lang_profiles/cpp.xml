@@ -29,6 +29,10 @@
 		<TYPE_MAP genType="Float64" 	langType="double" />
 		<TYPE_MAP genType="String" 		langType="std::string" />
 		<TYPE_MAP genType="StringUNC16" langType="std::string" />
+		
+		<TYPE_MAP genType="Date" 		langType="tm" />
+		<TYPE_MAP genType="Time" 		langType="tm" />
+		<TYPE_MAP genType="DateTime"	langType="tm" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

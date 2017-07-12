@@ -11,7 +11,7 @@
 require 'x_c_t_e_plugin.rb'
 require 'plugins_core/lang_sql/x_c_t_e_sql.rb'
 
-module XCTESql
+module XCTETSql
   class StatementCreate < XCTEPlugin
       
     def initialize
@@ -25,6 +25,7 @@ module XCTESql
     def get_lines(codeClass, cfg)
       sqlCDef = Array.new
       indent = ""
+      first = true
 
       codeLine = indent + "CREATE TABLE `" + codeClass.name + "` ("
       sqlCDef << codeLine
@@ -36,7 +37,7 @@ module XCTESql
         if var.elementId == CodeElem::ELEM_VARIABLE
           codeLine = ", "
 
-          codeLine << XCTESql::Utils::getVarDec(var)
+          codeLine << XCTETSql::Utils::getVarDec(var)
 
           if var.defaultValue != nil
             codeLine << " default '" << var.defaultValue << "'"
