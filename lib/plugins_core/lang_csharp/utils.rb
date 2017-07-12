@@ -103,7 +103,11 @@ module XCTECSharp
 
     # Returns the version of this name styled for this language
     def getStyledName(var)
-      
+      if (var.genGet || var.genSet)
+        return(self.getCapitalizedFirst(var.name)
+      else
+        return name
+      end
     end
             
     # Get a parameter declaration for a method parameter
