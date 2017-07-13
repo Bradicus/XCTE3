@@ -68,9 +68,9 @@ class XCTECSharp::ClassStandard < XCTEPlugin
     codeGen.startClass(classDec)
         
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(cfg, varArray)
     if codeClass.hasAnArray
-      codeGen.add  # If we declaired array size variables add a seperator
+      codeGen.add  # If we declared array size variables add a separator
     end
     # Generate class variables
     for var in varArray
@@ -104,6 +104,14 @@ class XCTECSharp::ClassStandard < XCTEPlugin
       end
     end  # class  + codeClass.name
     codeGen.endClass
+
+    # Process namespace items
+    if codeClass.namespaceList != nil
+      for nsItem in codeClass.namespaceList
+        codeGen.endBlock(" // namespace " + nsItem)
+      end
+      codeGen.add
+    end
   end
 end
 

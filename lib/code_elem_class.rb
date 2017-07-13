@@ -144,9 +144,10 @@ module CodeStructure
       curVar.isConst      = varXML.attributes["const"]
       curVar.isStatic     = varXML.attributes["static"]
       curVar.isPointer    = varXML.attributes["pointer"]
+      curVar.isVirtual    = curVar.findAttribute("virtual")
       
-      curVar.genGet       = self.findAttribute("genGet")
-      curVar.genSet       = self.findAttribute("genSet")
+      curVar.genGet       = curVar.findAttribute("genGet")
+      curVar.genSet       = curVar.findAttribute("genSet")
       
       curVar.comment      = varXML.attributes["comm"]
       curVar.defaultValue = varXML.attributes["default"]
@@ -165,12 +166,6 @@ module CodeStructure
       puts "[ElemClass::loadVarGroupNode] loading var node "
 
       for varElem in vgXML.elements
-        if (vgXML.attributes.has_key?("genGet") && !varElem.attributes.has_key?("genGet"))
-            varElem.attributes["genGet"] = vgXML.attributes.has_key?("genGet")
-        end      
-        if (vgXML.attributes.has_key?("genSet") && !varElem.attributes.has_key?("genSet"))
-            varElem.attributes["genSet"] = vgXML.attributes.has_key?("genSet")
-        end      
         if (varElem.name.downcase == "variable" || varElem.name.downcase == "var" )
           loadVariableNode(varElem, vgNode)    
         elsif (varElem.name == "var_group")

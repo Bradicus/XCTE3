@@ -35,10 +35,13 @@ def processProjectComponentGroup(project, pcGroup, cfg)
               basepn = Pathname.new(currentDir + "/" + pComponent.path)
               pn = Pathname.new(path)
               fileGenPath = pn.relative_path_from(basepn).dirname.to_path
+              if fileGenPath[0] == '.'
+                fileGenPath = fileGenPath[1..-1]
+              end
 
               codeClass = CodeStructure::CodeElemClass.new
               codeClass.loadXMLClassFile(path);
-              if (codeClass.namespaceList == nil)
+              if (codeClass.namespaceList == nil && fileGenPath.length > 0)
                 codeClass.namespaceList = fileGenPath.split('/')
               end
               
@@ -62,9 +65,12 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                     if !File.directory?(newPath)
                       FileUtils.mkdir_p(newPath)
                   #   puts "Creating folder: " + newPath
-                    end               
+                    end
 
-                    #puts newPath
+                    puts "Current dir " + currentDir
+                    puts "Abs root path " + basepn.to_path
+                    puts "Rel Path " + newPath
+                    puts "File gen path " + fileGenPath
 
                     for srcFile in srcFiles
 
@@ -77,7 +83,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                       #else
                         sFile = File.new(newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode:"w")
                       #end
-                      puts "writing file" + newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension
+                      puts "writing file" + newPath + srcFile.lfName + "." + srcFile.lfExtension
                       sFile << srcFile.getContents
                       sFile.close                    
                     end
@@ -94,7 +100,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
   end
   
   for pSubgroup in pcGroup.subGroups
-    processProjectComponentGroup(project, pSubgroup)
+    processProjectComponentGroup(project, pSubgroup, cfg)
   end
 end
 

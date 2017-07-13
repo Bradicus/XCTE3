@@ -9,6 +9,7 @@
 # used by various plugins
  
 require 'lang_profile.rb'
+require 'code_name_styling.rb'
 
 module XCTECSharp
   class Utils
@@ -51,7 +52,9 @@ module XCTECSharp
     # Returns variable declaration for the specified variable
     def self.getVarDec(var)
       vDec = String.new
-        
+
+      vDec << var.visibility << " "
+
       if var.isConst
         vDec << "const "
       end
@@ -60,7 +63,9 @@ module XCTECSharp
         vDec << "static "
       end
 
-      vDec << var.visibility << " "
+      if var.isVirtual
+        vDec << "virtual "
+      end
 
       if (var.templateType != nil)
         vDec << var.templateType << "<" << self.getTypeName(var.vtype) << ">"
@@ -70,7 +75,7 @@ module XCTECSharp
         vDec << self.getTypeName(var.vtype)
       end
             
-      vDec << " " << self.getStyledName(var);
+      vDec << " " << self.getStyledName(var)
       
       if var.arrayElemCount.to_i > 0
         vDec << "[" + self.getSizeConst(var) << "]"
@@ -102,17 +107,17 @@ module XCTECSharp
     end
 
     # Returns the version of this name styled for this language
-    def getStyledName(var)
+    def self.getStyledName(var)
       if (var.genGet || var.genSet)
-        return(self.getCapitalizedFirst(var.name)
+        return CodeNameStyling.stylePascal(var.name)
       else
-        return name
+        return CodeNameStyling.styleCamel(var.name)
       end
     end
             
     # Get a parameter declaration for a method parameter
     def self.getTypeName(gType)
-      return @@langProfile.getTypeName(gType)      
+      return @@langProfile.getTypeName(gType)
     end
 
     # Capitalizes the first letter of a string
