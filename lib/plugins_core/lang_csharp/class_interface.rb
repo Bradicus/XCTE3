@@ -25,6 +25,8 @@ class XCTECSharp::ClassInterface < XCTEPlugin
   
   def genSourceFiles(codeClass, cfg)
     srcFiles = Array.new
+
+    codeClass.name += "Interface"
   
     codeGen = SourceRendererCSharp.new
     codeGen.lfName = codeClass.name

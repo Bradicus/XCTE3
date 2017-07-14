@@ -26,7 +26,7 @@ module XCTETSql
       if (var.arrayElemCount.to_i > 0)  # All arrays will be csv strings
         vDec << "TEXT"
       else
-        tName = self.getTypeName(var.vtype)
+        tName = self.getTypeName(var)
 
         if tName != var.vtype
           vDec << tName
@@ -39,8 +39,24 @@ module XCTETSql
     end
         
     # Get a parameter declaration for a method parameter
-    def self.getTypeName(gType)
-      return @@langProfile.getTypeName(gType)      
+    def self.getTypeName(var)
+      if (var.vtype == "String")
+        if (var.arrayElemCount > 9999)
+          return("TEXT")
+        else
+          return("VARCHAR(" + var.arrayElemCount + ")")
+        end
+      else
+        if (var.vtype == "StringUNC16")
+          if (var.arrayElemCount > 9999)
+            return("NTEXT")
+          else
+            return("NVARCHAR(" + var.arrayElemCount + ")")
+          end
+        end
+      end
+
+      return @@langProfile.getTypeName(var.vType)
     end
     
     # Get the extension for a file type

@@ -24,10 +24,9 @@ module XCTETSql
     # Returns definition string for this class's constructor
     def get_lines(codeClass, cfg)
       sqlCDef = Array.new
-      indent = ""
       first = true
 
-      codeLine = indent + "CREATE TABLE `" + codeClass.name + "` ("
+      codeLine = "CREATE TABLE `" + codeClass.name + "` ("
       sqlCDef << codeLine
       
       varArray = Array.new
