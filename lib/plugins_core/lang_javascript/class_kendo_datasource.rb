@@ -14,7 +14,7 @@ require 'plugins_core/lang_javascript/utils.rb'
 require 'plugins_core/lang_javascript/x_c_t_e_javascript.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'
-require 'code_elem_class.rb'
+require 'code_elem_model.rb'
 require 'lang_file.rb'
 
 class XCTEJavascript::ClassKendoDatasource < XCTEPlugin

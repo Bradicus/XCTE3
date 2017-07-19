@@ -11,38 +11,40 @@ require 'code_elem_parent.rb'
 require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
-class XCTECSharp::ClassStandard < XCTEPlugin
+class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
   def initialize
-  
+
     XCTECSharp::Utils::init
-    
-    @name = "standard"
+
+    @name = "tsql_engine"
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
     @author = "Brad Ottoson"
   end
-  
+
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
-  
+
+    genClass.name = dataModel.name + 'Engine'
+
     codeBuilder = SourceRendererCSharp.new
-    codeBuilder.lfName = dataModel.name
+    codeBuilder.lfName = genClass.name
     codeBuilder.lfExtension = XCTECSharp::Utils::getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
-    
+
     srcFiles << codeBuilder
-    
+
     return srcFiles
   end
-  
+
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
-  
+
     for inc in genClass.includes
-        codeBuilder.add(' "' << inc.path << inc.name << "." << XCTECpp::Utils::getExtension('header') << '"')
+      codeBuilder.add(' "' << inc.path << inc.name << "." << XCTECSharp::Utils::getExtension('header') << '"')
     end
-    
+
     if !genClass.includes.empty?
       codeBuilder.add
     end
@@ -54,35 +56,30 @@ class XCTECSharp::ClassStandard < XCTEPlugin
       end
       codeBuilder.add
     end
-    
-    classDec = dataModel.visibility + " class " + dataModel.name
-        
-    for par in (0..genClass.baseClasses.size)
-      if par == 0 && genClass.baseClasses[par] != nil
-        classDec << " < " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
-      elsif genClass.baseClasses[par] != nil
-        classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+
+    classDec = dataModel.visibility + " class " + genClass.name
+
+    inheritsFrom = Array.new
+
+    for baseClass in genClass.baseClasses
+      inheritsFrom << baseClass.name
+    end
+    if genClass.interfaceNamespace != nil
+      inheritsFrom << dataModel.name + 'Interface'
+    end
+
+    for par in (0..inheritsFrom.size)
+      if par == 0 && inheritsFrom[par] != nil
+        classDec << " < " << inheritsFrom[par]
+      elsif inheritsFrom[par] != nil
+        classDec << ", " << inheritsFrom[par]
       end
     end
-    
+
     codeBuilder.startClass(classDec)
-        
-    varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
-    if dataModel.hasAnArray
-      codeBuilder.add  # If we declared array size variables add a separator
-    end
-    # Generate class variables
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        codeBuilder.add(XCTECSharp::Utils::getVarDec(var))
-      elsif var.elementId == CodeElem::ELEM_COMMENT
-        codeBuilder.sameLine(XCTECSharp::Utils::getComment(var))
-      elsif var.elementId == CodeElem::ELEM_FORMAT
-        codeBuilder.add(var.formatText)
-      end
-    end
-    codeBuilder.add
+
+    puts genClass.name + ' has function count: ' + genClass.functions.length.to_s
+
     # Generate code for functions
     for fun in genClass.functions
       if fun.elementId == CodeElem::ELEM_FUNCTION
@@ -115,4 +112,4 @@ class XCTECSharp::ClassStandard < XCTEPlugin
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECSharp::ClassStandard.new)
+XCTEPlugin::registerPlugin(XCTECSharp::ClassTsqlEngine.new)

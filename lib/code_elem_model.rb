@@ -8,7 +8,8 @@
 # This class stores information for the class code structure
 # read in from an xml file
 
-require 'code_elem.rb' 
+require 'code_elem.rb'
+require 'code_elem_class_gen.rb'
 require 'code_elem_comment.rb'
 require 'code_elem_format.rb'
 require 'code_elem_function.rb'
@@ -19,85 +20,40 @@ require 'code_elem_var_group.rb'
 require 'rexml/document'
 
 module CodeStructure
-  class CodeElemClass < CodeElem
-    attr_accessor :classType, :name, :description, :includes, :baseClasses, 
-      :functionSection, :case, :path, :coreClass, :groups, :namespaceList
-    
+  class CodeElemModel < CodeElem
+    attr_accessor :classes, :name, :description,
+                  :case, :groups, :xmlFileName
+
     def initialize
       super()
 
       @elementId = CodeElem::ELEM_CLASS
-      @classType = "standard"
+      @classes = Array.new
       @name
-      @path
       @case
       @description
-      @includes = Array.new
-      @baseClasses = Array.new
-      @namespaces = Array.new
-      @coreClass
       @groups = Array.new
-      @functionSection = Array.new
-
-      @path = ""
+      @xmlFileName = ""
     end
 
     ##
     # Loads an XML class definition and stores it in this object
     def loadXMLClassFile(fName)
       file = File.new(fName)
-      @path = fName
+      @xmlFileName = fName
 
       xmlString = file.read
       xmlDoc = REXML::Document.new xmlString
 
-      if xmlDoc.root.attributes["classType"] != nil   
-        @classType = xmlDoc.root.attributes["classType"]
-      end
-      
       @name = xmlDoc.root.attributes["name"]
-      @namespaceList = xmlDoc.root.attributes["namespace"]
 
-      if @namespaceList != nil
-        @namespaceList = @namespaceList.split(',')
-
-        @namespaceList.each { |nsItem|
-          nsItem = nsItem.strip()
-          puts nsItem
-        }
-      end
-      
       @xmlElement = xmlDoc.root
 
-      xmlDoc.root.elements.each("core_class") { |coreC|
-        @coreClass = coreC.attributes["name"]
-      }
-
-      xmlDoc.root.elements.each("description") { |desc|
+      xmlDoc.root.elements.each("description") {|desc|
         @description = desc.text
       }
 
-      xmlDoc.root.elements.each("parent") { |par|
-        loadBaseClassNode(par)
-      }
-
-      xmlDoc.root.elements.each("include") { |inc|
-        newInclude = CodeElemInclude.new
-        if (inc.attributes["name"] != nil)
-          newInclude.name = inc.attributes["name"]
-		elsif (inc.attributes["lname"] != nil)		
-          newInclude.name = inc.attributes["lname"]
-		  newInclude.itype="<"
-        end
-        if (inc.attributes["path"] != nil)
-          newInclude.path = inc.attributes["path"]
-        end
-
-        newInclude.xmlElement = inc
-        @includes << newInclude
-      }
-
-      xmlDoc.root.elements.each("var_group") { |vargXML|
+      xmlDoc.root.elements.each("var_group") {|vargXML|
 
         puts "loading var group"
         newVGroup = CodeElemVarGroup.new
@@ -105,29 +61,22 @@ module CodeStructure
         loadVarGroupNode(newVGroup, vargXML)
         @groups << newVGroup
       }
-      
-      xmlDoc.root.elements.each("functions") { |funXML|
-        for varElemXML in funXML.elements
-          if (varElemXML.name == "template_function")
-            loadTemplateFunctionNode(varElemXML)
-          elsif (varElemXML.name == "empty_function")
-            loadEmptyFunctionNode(varElemXML)
-          elsif (varElemXML.name == "comment")
-            loadCommentNode(varElemXML, @functionSection)
-          elsif (varElemXML.name == "br")
-            loadBRNode(varElemXML, @functionSection)
-          end
-        end
-      }
-    end
 
-    # Loads a parent from an XML parent node
-    def loadBaseClassNode(parXML)
-      newParent = CodeElemParent.new(
-        parXML.attributes["name"],
-        parXML.attributes["visibility"] )
-      @baseClasses << newParent
-       # puts "added parent node" + newParent.name
+      xmlDoc.root.elements.each("gen_class") {|genCXML|
+        genClass = CodeElemClassGen.new(self)
+        loadClassNode(genClass, genCXML)
+        @classes << genClass
+
+        if genClass.interfaceNamespace != nil
+          intf = CodeElemClassGen.new(genClass)
+          intf.functions = genClass.functions
+          intf.ctype = 'interface'
+          @classes << intf
+        end
+
+        puts "Loaded class node with function count " + genClass.functions.length.to_s
+        puts "classes count " + @classes.length.to_s
+      }
     end
 
     # Loads a variable from an XML variable node
@@ -135,23 +84,23 @@ module CodeStructure
       curVar = CodeElemVariable.new(parentElem)
       curVar.xmlElement = varXML
 
-      curVar.name         = varXML.attributes["name"]
-      curVar.vtype        = varXML.attributes["type"]
-      curVar.visibility   = curVar.attribOrDefault("visibility", curVar.visibility)
-      curVar.passBy       = curVar.attribOrDefault("passby", curVar.passBy)
-      curVar.listType   = varXML.attributes["list"]
-      curVar.arrayElemCount   = varXML.attributes["len"].to_i
-      curVar.isConst      = varXML.attributes["const"]
-      curVar.isStatic     = varXML.attributes["static"]
-      curVar.isPointer    = varXML.attributes["pointer"]
-      curVar.isVirtual    = curVar.findAttribute("virtual")
-      
-      curVar.genGet       = curVar.findAttribute("genGet")
-      curVar.genSet       = curVar.findAttribute("genSet")
-      
-      curVar.comment      = varXML.attributes["comm"]
+      curVar.name = varXML.attributes["name"]
+      curVar.vtype = varXML.attributes["type"]
+      curVar.visibility = curVar.attribOrDefault("visibility", curVar.visibility)
+      curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
+      curVar.listType = varXML.attributes["list"]
+      curVar.arrayElemCount = varXML.attributes["len"].to_i
+      curVar.isConst = varXML.attributes["const"]
+      curVar.isStatic = varXML.attributes["static"]
+      curVar.isPointer = varXML.attributes["pointer"]
+      curVar.isVirtual = curVar.findAttribute("virtual")
+
+      curVar.genGet = curVar.findAttribute("genGet")
+      curVar.genSet = curVar.findAttribute("genSet")
+
+      curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = varXML.attributes["default"]
-      
+
       # puts "[ElemClass::loadVariable] loaded variable: " << curVar.name
 
       parentElem.vars << curVar
@@ -166,8 +115,8 @@ module CodeStructure
       puts "[ElemClass::loadVarGroupNode] loading var node "
 
       for varElem in vgXML.elements
-        if (varElem.name.downcase == "variable" || varElem.name.downcase == "var" )
-          loadVariableNode(varElem, vgNode)    
+        if (varElem.name.downcase == "variable" || varElem.name.downcase == "var")
+          loadVariableNode(varElem, vgNode)
         elsif (varElem.name == "var_group")
           newVG = CodeElemVarGroup.new
           loadVarGroupNode(subvgXML, newVG)
@@ -178,7 +127,7 @@ module CodeStructure
           loadBRNode(varElem, vgNode.vars)
         end
       end
-      
+
 
       #        vgXML.each("VARIABLE") { |varXML|
       #          newVar = CodeElemVariable.new
@@ -188,23 +137,36 @@ module CodeStructure
 
     end
 
-    # Loads a template function element from an XML template function node
-    def loadTemplateFunctionNode(tmpFunXML)
-      curFunction = CodeElemFunction.new
-      curFunction.loadAttributes(tmpFunXML)
-      curFunction.name = tmpFunXML.attributes["name"]
-      curFunction.isTemplate = true
-      curFunction.isInline = (tmpFunXML.attributes["inline"] == "true")
-      @functionSection << curFunction       
+    def loadClassNode(genC, genCXml)
+      genC.ctype = genCXml.attributes["type"]
+      genC.namespaceList = genCXml.attributes["namespace"].split('.')
+      genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
+
+      genCXml.elements.each("function") {|funXml|
+        newFun = CodeElemFunction.new(genC)
+        loadTemplateFunctionNode(newFun, funXml)
+        genC.functions << newFun
+      }
+
+      puts "Loaded class notde with function count " + genC.functions.length.to_s
     end
-        
+
+    # Loads a template function element from an XML template function node
+    def loadTemplateFunctionNode(fun, tmpFunXML)
+      fun.loadAttributes(tmpFunXML)
+      fun.name = tmpFunXML.attributes["name"]
+      puts "Loading function: " + fun.name
+      fun.isTemplate = true
+      fun.isInline = (tmpFunXML.attributes["inline"] == "true")
+    end
+
     # Loads a function element from an XML function node
     def loadEmptyFunctionNode(empFunXML)
       curFunction = CodeElemFunction.new
       curFunction.loadAttributes(empFunXML)
       curFunction.name = empFunXML.attributes["name"]
       curFunction.isInline = (empFunXML.attributes["inline"] == "true")
-      
+
       if empFunXML.attributes["const"] != nil && empFunXML.attributes["const"].casecmp("true")
         curFunction.isConst = true
       end
@@ -217,7 +179,7 @@ module CodeStructure
       if empFunXML.attributes["virtual"] != nil && empFunXML.attributes["virtual"].casecmp("true")
         curFunction.isVirtual = true
       end
-      
+
       for funElemXML in empFunXML.elements
         if funElemXML.name == "parameters"
           for paramXML in funElemXML.elements
@@ -229,41 +191,41 @@ module CodeStructure
           curFunction.returnValue = retVar[0]
         end
       end
-      
-      @functionSection << curFunction           
+
+      @functionSection << curFunction
     end
-    
+
     # Loads a comment from an XML comment node
     def loadCommentNode(parXML, section)
-        comNode = CodeElemComment.new( parXML.attributes["text"] )
-        comNode.loadAttributes(parXML)
-        section << comNode       
+      comNode = CodeElemComment.new(parXML.attributes["text"])
+      comNode.loadAttributes(parXML)
+      section << comNode
     end
-    
+
     # Loads a br format element from an XML br node
     def loadBRNode(brXML, section)
-        brk = CodeElemFormat.new("\n")
-        brk.loadAttributes(brXML)
-        section << brk       
+      brk = CodeElemFormat.new("\n")
+      brk.loadAttributes(brXML)
+      section << brk
     end
-    
+
     # Returns whether or not this class has an array variable
     def hasAnArray
       varArray = Array.new
 
       for vGrp in groups
-        CodeElemClass.getVarsFor(vGrp, nil, varArray);
+        CodeElemModel.getVarsFor(vGrp, nil, varArray);
       end
-      
+
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount.to_i > 0
           return true
         end
       end
-      
+
       return false
     end
-    
+
     # Returns whether or not this class has an variable of this type
     def hasVariableType(vt)
       variableSection = Array.new
@@ -273,8 +235,8 @@ module CodeStructure
           return true
         end
       end
-      
-      return false 
+
+      return false
     end
 
     def getObjFileName
@@ -320,16 +282,16 @@ module CodeStructure
         getVarsFor(grp, cfg, vArray)
       end
 
-     # puts vArray.size
+      # puts vArray.size
     end
 
     # Returns all variables in this class that match the cfg
     def getAllVarsFor(cfg, varArray)
       for vGrp in @groups
-        CodeElemClass.getVarsFor(vGrp, cfg, varArray)
+        CodeElemModel.getVarsFor(vGrp, cfg, varArray)
       end
     end
-    
+
     def getNamespaceList(cfg, varArray)
       if @namespaceList != nil
         return @namespaceList.join('.')

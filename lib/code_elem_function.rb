@@ -10,8 +10,10 @@
 
 class CodeElemFunction < CodeElem
   attr_accessor :name, :description, :visibility, :parameters, :isConst, :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue
-  
-  def initialize
+
+  def initialize(parentElem)
+    super(parentElem)
+
     @elementId = CodeElem::ELEM_FUNCTION
     
     @name

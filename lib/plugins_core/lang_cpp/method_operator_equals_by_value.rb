@@ -20,32 +20,32 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
   end
 
   # Returns declairation string for this class's equality assignment operator
-  def get_declaration(codeClass, cfg, codeGen)
+  def get_declaration(codeClass, cfg, codeBuilder)
     eqString = String.new
 
-    codeGen.add("const " << codeClass.name << "& operator=" << "(const " << codeClass.name)
-    codeGen.sameLine("& src" << codeClass.name << ");")
-    codeGen.add
+    codeBuilder.add("const " << codeClass.name << "& operator=" << "(const " << codeClass.name)
+    codeBuilder.sameLine("& src" << codeClass.name << ");")
+    codeBuilder.add
 
     return eqString
   end
 
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, cfg, codeGen)
+  def get_definition(codeClass, cfg, codeBuilder)
     eqString = String.new
     longArrayFound = false;
 
-    codeGen.add("/**")
-    codeGen.add(" * Sets this object equal to incoming object")
-    codeGen.add(" */")
-    codeGen.startClass("const " + codeClass.name + "& " + codeClass.name + " :: operator=(const " + codeClass.name + "& src" + codeClass.name + ");")
+    codeBuilder.add("/**")
+    codeBuilder.add(" * Sets this object equal to incoming object")
+    codeBuilder.add(" */")
+    codeBuilder.startClass("const " + codeClass.name + "& " + codeClass.name + " :: operator=(const " + codeClass.name + "& src" + codeClass.name + ");")
     
 #    if codeClass.hasAnArray
-#      codeGen.add("    unsigned int i;\n");
+#      codeBuilder.add("    unsigned int i;\n");
 #    end
 
     for par in codeClass.baseClasses
-      codeGen.add("    " << par.name << "::operator=(src" + codeClass.name << ");")
+      codeBuilder.add("    " << par.name << "::operator=(src" + codeClass.name << ");")
     end
 
     varArray = Array.new
@@ -56,40 +56,40 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
         if !var.isStatic   # Ignore static variables
           if XCTECpp::Utils::isPrimitive(var)
             if var.arrayElemCount.to_i > 0	# Array of primitives
-              codeGen.add("    memcpy(" << var.name << ", ")
-              codeGen.sameLine("src" << codeClass.name << ".")
-              codeGen.sameLine(var.name << ", ")
-              codeGen.sameLine("sizeof(" + XCTECpp::Utils::getTypeName(var.vtype) << ") * " << XCTECpp::Utils::getSizeConst(var))
-              codeGen.sameLine(");")
+              codeBuilder.add("    memcpy(" << var.name << ", ")
+              codeBuilder.sameLine("src" << codeClass.name << ".")
+              codeBuilder.sameLine(var.name << ", ")
+              codeBuilder.sameLine("sizeof(" + XCTECpp::Utils::getTypeName(var.vtype) << ") * " << XCTECpp::Utils::getSizeConst(var))
+              codeBuilder.sameLine(");")
             else
-              codeGen.add(var.name << " = src" << codeClass.name << "." << var.name << ";\n")
+              codeBuilder.add(var.name << " = src" << codeClass.name << "." << var.name << ";\n")
             end
           else	# Not a primitive
             if var.arrayElemCount > 0	# Array of objects
                 if !longArrayFound
-                  codeGen.add("unsigned int i;")
-                  codeGen.add
+                  codeBuilder.add("unsigned int i;")
+                  codeBuilder.add
                   longArrayFound = true
                 end
-              codeGen.startBlock("for (i = 0; i < " << XCTECpp::Utils::getSizeConst(var) << "; i++)")
-              codeGen.add(var.name + "[i] = src" + codeClass.name + "." + "[i];")
-              codeGen.endBlock
+              codeBuilder.startBlock("for (i = 0; i < " << XCTECpp::Utils::getSizeConst(var) << "; i++)")
+              codeBuilder.add(var.name + "[i] = src" + codeClass.name + "." + "[i];")
+              codeBuilder.endBlock
             else
-              codeGen.add(var.name + " = src" + codeClass.name + "." + var.name + ";")
+              codeBuilder.add(var.name + " = src" + codeClass.name + "." + var.name + ";")
             end
           end
         end
 
       elsif var.elementId == CodeElem::ELEM_COMMENT
-        codeGen.add(XCTECpp::Utils::getComment(var))
+        codeBuilder.add(XCTECpp::Utils::getComment(var))
       elsif var.elementId == CodeElem::ELEM_FORMAT
-        codeGen.add(var.formatText)
+        codeBuilder.add(var.formatText)
       end
     end
 
-    codeGen.add
-    codeGen.add("return(*this);")
-    codeGen.endBlock
+    codeBuilder.add
+    codeBuilder.add("return(*this);")
+    codeBuilder.endBlock
   end
 end
 

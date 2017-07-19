@@ -23,79 +23,79 @@ class XCTECSharp::ClassInterface < XCTEPlugin
     @author = "Brad Ottoson"
   end
   
-  def genSourceFiles(codeClass, cfg)
+  def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
 
-    codeClass.name += "Interface"
+    dataModel.name += "Interface"
   
-    codeGen = SourceRendererCSharp.new
-    codeGen.lfName = codeClass.name
-    codeGen.lfExtension = XCTECSharp::Utils::getExtension('body')
-    genFileContent(codeClass, cfg, codeGen)
+    codeBuilder = SourceRendererCSharp.new
+    codeBuilder.lfName = dataModel.name
+    codeBuilder.lfExtension = XCTECSharp::Utils::getExtension('body')
+    genFileContent(dataModel, genClass, cfg, codeBuilder)
     
-    srcFiles << codeGen
+    srcFiles << codeBuilder
     
     return srcFiles
   end
   
   # Returns the code for the content for this class
-  def genFileContent(codeClass, cfg, codeGen)
+  def genFileContent(dataModel, genClass, cfg, codeBuilder)
   
-    for inc in codeClass.includes
-        codeGen.add(' "' << inc.path << inc.name << "." << XCTECpp::Utils::getExtension('header') << '"')
+    for inc in genClass.includes
+        codeBuilder.add(' "' << inc.path << inc.name << "." << XCTECpp::Utils::getExtension('header') << '"')
     end
     
-    if !codeClass.includes.empty?
-      codeGen.add
+    if !genClass.includes.empty?
+      codeBuilder.add
     end
 
     # Process namespace items
-    if codeClass.namespaceList != nil
-      for nsItem in codeClass.namespaceList
-        codeGen.startBlock("namespace " << nsItem)
+    if genClass.namespaceList != nil
+      for nsItem in genClass.namespaceList
+        codeBuilder.startBlock("namespace " << nsItem)
       end
-      codeGen.add
+      codeBuilder.add
     end
     
-    classDec = codeClass.visibility + " interface " + codeClass.name
+    classDec = dataModel.visibility + " interface " + dataModel.name
         
-    for par in (0..codeClass.baseClasses.size)      
-      if par == 0 && codeClass.baseClasses[par] != nil
-        classDec << " < " << codeClass.baseClasses[par].visibility << " " << codeClass.baseClasses[par].name
-      elsif codeClass.baseClasses[par] != nil
-        classDec << ", " << codeClass.baseClasses[par].visibility << " " << codeClass.baseClasses[par].name
+    for par in (0..genClass.baseClasses.size)
+      if par == 0 && genClass.baseClasses[par] != nil
+        classDec << " < " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+      elsif genClass.baseClasses[par] != nil
+        classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
       end
     end
     
-    codeGen.startClass(classDec)
+    codeBuilder.startClass(classDec)
         
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
-    if codeClass.hasAnArray
-      codeGen.add  # If we declaired array size variables add a seperator
+    dataModel.getAllVarsFor(cfg, varArray);
+    if dataModel.hasAnArray
+      codeBuilder.add  # If we declaired array size variables add a seperator
     end
     
     # Generate code for functions
-    for fun in codeClass.functionSection
+    for fun in genClass.functions
       if fun.elementId == CodeElem::ELEM_FUNCTION
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
           if templ != nil
-            codeGen.add(templ.get_declairation(codeClass, cfg))
+            templ.get_declairation(dataModel, genClass, cfg, codeBuilder)
           else
           #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
         else  # Must be empty function
           templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
           if templ != nil
-            codeGen.add(templ.get_declairation(fun, cfg))
+            templ.get_declairation(fun, cfg)
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
         end
       end
-    end  # class  + codeClass.name
-    codeGen.endClass
+    end  # class  + dataModel.name
+    codeBuilder.endClass
   end
 end
 

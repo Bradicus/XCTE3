@@ -20,46 +20,46 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg, codeGen)
-    codeGen.add("/**")
-    codeGen.add("* Reads data set from sql database")
-    codeGen.add("*/")
+  def get_definition(codeClass, cfg, codeBuilder)
+    codeBuilder.add("/**")
+    codeBuilder.add("* Reads data set from sql database")
+    codeBuilder.add("*/")
       
-    codeGen.startClass("readAll(SqlConnection con)")
+    codeBuilder.startClass("readAll(SqlConnection con)")
 
-    get_body(codeClass, cfg, codeGen)
+    get_body(codeClass, cfg, codeBuilder)
         
-    codeGen.endClass
+    codeBuilder.endClass
   end
 
-  def get_body(codeClass, cfg, codeGen)
+  def get_body(codeClass, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     codeClass.getAllVarsFor(cfg, varArray);
 
-    codeGen.startBlock("using(SqlCommand cmd = new SqlCommand(\"SELECT * FROM dbo.\")")
+    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(\"SELECT * FROM dbo.\")")
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         if var.defaultValue != nil
-          codeGen.add(var.name << " = ")
+          codeBuilder.add(var.name << " = ")
 
           if var.vtype == "String"
-            codeGen.sameLine("\"" << var.defaultValue << "\";")
+            codeBuilder.sameLine("\"" << var.defaultValue << "\";")
           else
-            codeGen.sameLine(var.defaultValue << ";")
+            codeBuilder.sameLine(var.defaultValue << ";")
           end
 
           if var.comment != nil
-            codeGen.sameLine("\t// " << var.comment)
+            codeBuilder.sameLine("\t// " << var.comment)
           end
 
-          codeGen.add
+          codeBuilder.add
         end
       end
     end
 
-    codeGen.endBlock
+    codeBuilder.endBlock
 
     return(conDef)
   end

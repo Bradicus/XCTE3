@@ -14,7 +14,7 @@ require 'pathname'
 
 require 'find.rb'
 require 'fileutils.rb'
-require 'code_elem_class.rb'
+require 'code_elem_model.rb'
 require 'code_elem_project.rb'
 require 'x_c_t_e_plugin.rb'
 require 'user_settings.rb'
@@ -39,11 +39,8 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 fileGenPath = fileGenPath[1..-1]
               end
 
-              codeClass = CodeStructure::CodeElemClass.new
-              codeClass.loadXMLClassFile(path);
-              if (codeClass.namespaceList == nil && fileGenPath.length > 0)
-                codeClass.namespaceList = fileGenPath.split('/')
-              end
+              dataModel = CodeStructure::CodeElemModel.new
+              dataModel.loadXMLClassFile(path);
               
               #puts pComponent.languages.count()
 
@@ -53,13 +50,11 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 if (language == nil)
                   puts "No language found for: " + langName
                 end
-              
-                classTypes = codeClass.classType.split(' ')
-                
-                for classType in classTypes
-                  if language.has_key?(classType)
-                    
-                    srcFiles = language[classType].genSourceFiles(codeClass, cfg)
+                              
+                for genClass in dataModel.classes
+                  if language.has_key?(genClass.ctype)
+
+                    srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
                     newPath = pComponent.dest + "/" + fileGenPath
 
                     if !File.directory?(newPath)
@@ -74,8 +69,8 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
                     for srcFile in srcFiles
 
-                      #puts srcFile.lfName
-                      #puts "Extendsion: " + srcFile.lfExtension.to_s
+                      puts srcFile.lfName
+                      puts "Extension: " + srcFile.lfExtension.to_s
 
                       #puts OS.windows?
                       #if OS.windows?
@@ -88,7 +83,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                       sFile.close                    
                     end
                   else
-                    puts "Language " + langName + " has no class type defined: " + classType
+                    puts "Language " + langName + " has no class type defined: " + genClass.ctype
                   end        
                 end
               end
@@ -106,8 +101,10 @@ end
 
 XCTEPlugin::loadPLugins
 
+codeRootDir = File.dirname(File.realpath(__FILE__))
+
 cfg = UserSettings.new
-cfg.load(__dir__ + "/../default_settings.xml")
+cfg.load(codeRootDir + "/../default_settings.xml")
 
 currentDir = Dir.pwd
 

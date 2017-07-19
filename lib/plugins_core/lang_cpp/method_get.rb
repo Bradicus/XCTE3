@@ -20,7 +20,7 @@ class XCTECpp::MethodGet < XCTEPlugin
   end
 
   # Returns declairation string for this class's get method
-  def get_declaration(codeClass, cfg, codeGen)
+  def get_declaration(codeClass, cfg, codeBuilder)
     varArray = Array.new
     codeClass.getAllVarsFor(cfg, varArray);
 
@@ -29,22 +29,22 @@ class XCTECpp::MethodGet < XCTEPlugin
         if !varSec.isPointer
           if varSec.arrayElemCount == 0
             if XCTECpp::Utils::isPrimitive(varSec)
-              codeGen.add("const " + XCTECpp::Utils::getTypeName(varSec.vtype) + "& get" + XCTECpp::Utils::getCapitalizedFirst(varSec.name))
-              codeGen.sameLine("() const\t{ return(" + varSec.name + "); };")
+              codeBuilder.add("const " + XCTECpp::Utils::getTypeName(varSec.vtype) + "& get" + XCTECpp::Utils::getCapitalizedFirst(varSec.name))
+              codeBuilder.sameLine("() const\t{ return(" + varSec.name + "); };")
             end
           end
         end
 
       elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        codeGen.add(XCTECpp::Utils::getComment(varSec))
+        codeBuilder.add(XCTECpp::Utils::getComment(varSec))
       elsif varSec.elementId == CodeElem::ELEM_FORMAT
-        codeGen.add(varSec.formatText)
+        codeBuilder.add(varSec.formatText)
       end
     end
   end
 
   # This method has no body
-  def get_definition(codeClass, cfg, codeGen)
+  def get_definition(codeClass, cfg, codeBuilder)
   end
 end
 

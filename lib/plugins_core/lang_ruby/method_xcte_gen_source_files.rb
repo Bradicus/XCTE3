@@ -20,33 +20,33 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
   end
 
   # Returns declairation string for this class's set method
-  def get_declaration(codeClass, cfg, codeGen)
-    codeGen.add("##")
-    codeGen.add("# This class generates a definition for this function")
-    codeGen.startClass("def get_definition(codeClass, cfg, codeGen)")
-    codeGen.add("varArray = Array.new")
-    codeGen.add("codeClass.getAllVarsFor(cfg, varArray)")
-    codeGen.add
+  def get_declaration(codeClass, cfg, codeBuilder)
+    codeBuilder.add("##")
+    codeBuilder.add("# This class generates a definition for this function")
+    codeBuilder.startClass("def get_definition(codeClass, cfg, codeBuilder)")
+    codeBuilder.add("varArray = Array.new")
+    codeBuilder.add("codeClass.getAllVarsFor(cfg, varArray)")
+    codeBuilder.add
 
-    codeGen.startBlock("for varSec in varArray")
-      codeGen.startBlock('if varSec.elementId == CodeElem::ELEM_VARIABLE')
-        codeGen.startBlock('if !varSec.isPointer')
-          codeGen.startBlock('if varSec.arrayElemCount == 0')
-          codeGen.endBlock
-        codeGen.endBlock
-      codeGen.endBlock
-      codeGen.startBlock('elsif varSec.elementId == CodeElem::ELEM_COMMENT')
-        codeGen.add('codeGen.add(XCTERuby::Utils::getComment(varSec))')
-      codeGen.unindent
-      codeGen.startBlock('elsif varSec.elementId == CodeElem::ELEM_COMMENT')
-        codeGen.add('codeGen.sameLine(varSec.formatText)')
-      codeGen.endBlock
-    codeGen.endBlock
-    codeGen.endClass
+    codeBuilder.startBlock("for varSec in varArray")
+      codeBuilder.startBlock('if varSec.elementId == CodeElem::ELEM_VARIABLE')
+        codeBuilder.startBlock('if !varSec.isPointer')
+          codeBuilder.startBlock('if varSec.arrayElemCount == 0')
+          codeBuilder.endBlock
+        codeBuilder.endBlock
+      codeBuilder.endBlock
+      codeBuilder.startBlock('elsif varSec.elementId == CodeElem::ELEM_COMMENT')
+        codeBuilder.add('codeBuilder.add(XCTERuby::Utils::getComment(varSec))')
+      codeBuilder.unindent
+      codeBuilder.startBlock('elsif varSec.elementId == CodeElem::ELEM_COMMENT')
+        codeBuilder.add('codeBuilder.sameLine(varSec.formatText)')
+      codeBuilder.endBlock
+    codeBuilder.endBlock
+    codeBuilder.endClass
   end
 
   # Returns definition string for this class's set method
-  def get_definition(codeClass, cfg, codeGen)
+  def get_definition(codeClass, cfg, codeBuilder)
   end
 end
 

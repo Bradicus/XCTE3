@@ -14,7 +14,7 @@ require 'plugins_core/lang_ruby/utils.rb'
 require 'plugins_core/lang_ruby/x_c_t_e_ruby.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'
-require 'code_elem_class.rb'
+require 'code_elem_model.rb'
 require 'lang_file.rb'
 
 class XCTERuby::ClassStandard < XCTEPlugin

@@ -20,33 +20,33 @@ class XCTECpp::MethodConstructor < XCTEPlugin
   end
   
   # Returns declairation string for this class's constructor
-  def get_declaration(codeClass, cfg, codeGen)
-    codeGen.add(codeClass.name + "();")
+  def get_declaration(codeClass, cfg, codeBuilder)
+    codeBuilder.add(codeClass.name + "();")
   end
 
   # Returns declairation string for this class's constructor
-  def get_declaration_inline(codeClass, cfg, codeGen)
-    codeGen.startFuction(codeClass.name + "()")
-    codeStr << get_body(codeClass, cfg, codeGen)
-    codeGen.endFunction
+  def get_declaration_inline(codeClass, cfg, codeBuilder)
+    codeBuilder.startFuction(codeClass.name + "()")
+    codeStr << get_body(codeClass, cfg, codeBuilder)
+    codeBuilder.endFunction
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg, codeGen)
-    codeGen.add("/**")
-    codeGen.add("* Constructor")
-    codeGen.add("*/")
+  def get_definition(codeClass, cfg, codeBuilder)
+    codeBuilder.add("/**")
+    codeBuilder.add("* Constructor")
+    codeBuilder.add("*/")
       
     classDef = String.new  
     classDef << codeClass.name << " :: " << codeClass.name << "()"
-    codeGen.startClass(classDef)
+    codeBuilder.startClass(classDef)
 
-    get_body(codeClass, cfg, codeGen)
+    get_body(codeClass, cfg, codeBuilder)
         
-    codeGen.endClass
+    codeBuilder.endClass
   end
 
-  def get_body(codeClass, cfg, codeGen)
+  def get_body(codeClass, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     codeClass.getAllVarsFor(cfg, varArray);
@@ -54,19 +54,19 @@ class XCTECpp::MethodConstructor < XCTEPlugin
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         if var.defaultValue != nil
-          codeGen.add(var.name << " = ")
+          codeBuilder.add(var.name << " = ")
 
           if var.vtype == "String"
-            codeGen.sameLine("\"" << var.defaultValue << "\";")
+            codeBuilder.sameLine("\"" << var.defaultValue << "\";")
           else
-            codeGen.sameLine(var.defaultValue << ";")
+            codeBuilder.sameLine(var.defaultValue << ";")
           end
 
           if var.comment != nil
-            codeGen.sameLine("\t// " << var.comment)
+            codeBuilder.sameLine("\t// " << var.comment)
           end
 
-          codeGen.add
+          codeBuilder.add
         end
       end
     end

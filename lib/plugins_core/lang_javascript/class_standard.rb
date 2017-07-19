@@ -14,7 +14,7 @@ require 'plugins_core/lang_javascript/utils.rb'
 require 'plugins_core/lang_javascript/x_c_t_e_javascript.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'
-require 'code_elem_class.rb'
+require 'code_elem_model.rb'
 require 'lang_file.rb'
 
 class XCTEJavascript::ClassStandard < XCTEPlugin
@@ -30,18 +30,18 @@ class XCTEJavascript::ClassStandard < XCTEPlugin
   def genSourceFiles(codeClass, cfg)
     srcFiles = Array.new
     
-    codeGen = SourceRendererJavascript.new
-    codeGen.lfName = codeClass.name
-    codeGen.lfExtension = XCTEJavascript::Utils::getExtension('body')
-    codeGen.lfContents = genFileComment(codeClass, cfg, codeGen)
-    codeGen.lfContents << genFileContent(codeClass, cfg, codeGen)
+    codeBuilder = SourceRendererJavascript.new
+    codeBuilder.lfName = codeClass.name
+    codeBuilder.lfExtension = XCTEJavascript::Utils::getExtension('body')
+    codeBuilder.lfContents = genFileComment(codeClass, cfg, codeBuilder)
+    codeBuilder.lfContents << genFileContent(codeClass, cfg, codeBuilder)
     
-    srcFiles << codeGen
+    srcFiles << codeBuilder
     
     return srcFiles
   end    
   
-  def genFileComment(codeClass, cfg, codeGen)
+  def genFileComment(codeClass, cfg, codeBuilder)
     headerString = String.new
     
     headerString << "/**\n";
@@ -75,7 +75,7 @@ class XCTEJavascript::ClassStandard < XCTEPlugin
   end
 
   # Returns the code for the header for this class
-  def genFileContent(codeClass, cfg, codeGen)
+  def genFileContent(codeClass, cfg, codeBuilder)
     headerString = String.new
     
     headerString << "\n";

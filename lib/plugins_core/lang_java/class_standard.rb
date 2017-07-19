@@ -14,7 +14,7 @@ require 'plugins_core/lang_java/utils.rb'
 require 'plugins_core/lang_java/x_c_t_e_java.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'
-require 'code_elem_class.rb'
+require 'code_elem_model.rb'
 require 'lang_file.rb'
 
 class XCTEJava::ClassStandard < XCTEPlugin

@@ -11,6 +11,7 @@ class CodeElem
   attr_accessor :elementId, :xmlElement, :osInclude, :parent, :visibility
   
   ELEM_CLASS = "class";
+  ELEM_CLASS_GEN = "class_gen"
   ELEM_HEADER = "header";
   ELEM_LIBRARY = "library";
   ELEM_APPLICATION = "app";

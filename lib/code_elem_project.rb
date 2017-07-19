@@ -8,7 +8,7 @@
 # This class stores data for the project level
 
 require 'code_elem.rb'
-require 'code_elem_class.rb'
+require 'code_elem_model.rb'
 require 'code_elem_header.rb'
 require 'code_elem_template_directory.rb'
 require 'code_elem_build_type.rb'
@@ -76,7 +76,7 @@ module CodeStructure
         groupNode.components << newTDir
       }
       xmlGroup.elements.each("CLASS") { |cclass|
-        newClass = CodeElemClass.new
+        newClass = CodeElemClassGen.new(this)
         loadClassNode(newClass, cclass)
         groupNode.components << newClass
       }

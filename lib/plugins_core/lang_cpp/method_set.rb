@@ -20,7 +20,7 @@ class XCTECpp::MethodSet < XCTEPlugin
   end
 
   # Returns declairation string for this class's set method
-  def get_declaration(codeClass, cfg, codeGen)
+  def get_declaration(codeClass, cfg, codeBuilder)
     varArray = Array.new
     codeClass.getAllVarsFor(cfg, varArray);
 
@@ -29,23 +29,23 @@ class XCTECpp::MethodSet < XCTEPlugin
         if !varSec.isPointer
           if varSec.arrayElemCount == 0
             if XCTECpp::Utils::isPrimitive(varSec)
-              codeGen.add("        void set" + XCTECpp::Utils::getCapitalizedFirst(varSec.name))
-              codeGen.sameLine("(" + XCTECpp::Utils::getTypeName(varSec.vtype) + " new" + XCTECpp::Utils::getCapitalizedFirst(varSec.name))
-              codeGen.sameLine(")\t{ " + varSec.name + " = new" + XCTECpp::Utils::getCapitalizedFirst(varSec.name) + "; };")
+              codeBuilder.add("        void set" + XCTECpp::Utils::getCapitalizedFirst(varSec.name))
+              codeBuilder.sameLine("(" + XCTECpp::Utils::getTypeName(varSec.vtype) + " new" + XCTECpp::Utils::getCapitalizedFirst(varSec.name))
+              codeBuilder.sameLine(")\t{ " + varSec.name + " = new" + XCTECpp::Utils::getCapitalizedFirst(varSec.name) + "; };")
             end
           end
         end
 
       elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        codeGen.add(XCTECpp::Utils::getComment(varSec))
+        codeBuilder.add(XCTECpp::Utils::getComment(varSec))
       elsif varSec.elementId == CodeElem::ELEM_FORMAT
-        codeGen.sameLine(varSec.formatText)
+        codeBuilder.sameLine(varSec.formatText)
       end
     end
   end
 
   # Returns definition string for this class's set method
-  def get_definition(codeClass, cfg, codeGen)
+  def get_definition(codeClass, cfg, codeBuilder)
   end
 end
 
