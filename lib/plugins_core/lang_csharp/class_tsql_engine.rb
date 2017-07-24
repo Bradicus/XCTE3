@@ -27,6 +27,9 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
     srcFiles = Array.new
 
     genClass.name = dataModel.name + 'Engine'
+    if genClass.interfaceNamespace != nil
+      genClass.includes << CodeElemInclude.new(dataModel.name + 'Interface', genClass.interfaceNamespace)
+    end
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
@@ -41,8 +44,22 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
+    # Add in any dependencies required by functions
+    for fun in genClass.functions
+      if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
+          if templ != nil
+            templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
+          else
+            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+          end
+        end
+      end
+    end
+
     for inc in genClass.includes
-      codeBuilder.add(' "' << inc.path << inc.name << "." << XCTECSharp::Utils::getExtension('header') << '"')
+      codeBuilder.add('using ' + inc.path + ';');
     end
 
     if !genClass.includes.empty?
@@ -51,9 +68,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
     # Process namespace items
     if genClass.namespaceList != nil
-      for nsItem in genClass.namespaceList
-        codeBuilder.startBlock("namespace " << nsItem)
-      end
+      codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
       codeBuilder.add
     end
 
@@ -70,7 +85,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
     for par in (0..inheritsFrom.size)
       if par == 0 && inheritsFrom[par] != nil
-        classDec << " < " << inheritsFrom[par]
+        classDec << " : " << inheritsFrom[par]
       elsif inheritsFrom[par] != nil
         classDec << ", " << inheritsFrom[par]
       end
@@ -98,15 +113,15 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
         end
+
+        codeBuilder.add
       end
     end  # class  + dataModel.name
     codeBuilder.endClass
 
     # Process namespace items
     if genClass.namespaceList != nil
-      for nsItem in genClass.namespaceList
-        codeBuilder.endBlock(" // namespace " + nsItem)
-      end
+      codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join('.'))
       codeBuilder.add
     end
   end

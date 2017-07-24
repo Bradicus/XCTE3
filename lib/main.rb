@@ -34,10 +34,6 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                     
               basepn = Pathname.new(currentDir + "/" + pComponent.path)
               pn = Pathname.new(path)
-              fileGenPath = pn.relative_path_from(basepn).dirname.to_path
-              if fileGenPath[0] == '.'
-                fileGenPath = fileGenPath[1..-1]
-              end
 
               dataModel = CodeStructure::CodeElemModel.new
               dataModel.loadXMLClassFile(path);
@@ -55,7 +51,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                   if language.has_key?(genClass.ctype)
 
                     srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
-                    newPath = pComponent.dest + "/" + fileGenPath
+                    newPath = "./" + genClass.namespaceList.join("/")
 
                     if !File.directory?(newPath)
                       FileUtils.mkdir_p(newPath)
@@ -65,7 +61,6 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                     puts "Current dir " + currentDir
                     puts "Abs root path " + basepn.to_path
                     puts "Rel Path " + newPath
-                    puts "File gen path " + fileGenPath
 
                     for srcFile in srcFiles
 
@@ -78,7 +73,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                       #else
                         sFile = File.new(newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode:"w")
                       #end
-                      puts "writing file" + newPath + srcFile.lfName + "." + srcFile.lfExtension
+                      puts "writing file" + newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension
                       sFile << srcFile.getContents
                       sFile.close                    
                     end

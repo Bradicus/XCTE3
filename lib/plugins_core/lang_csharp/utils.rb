@@ -23,14 +23,7 @@ module XCTECSharp
     # Get a parameter declaration for a method parameter
     def self.getParamDec(var)
       pDec = String.new
-        
-      if var.isConst
-        pDec << "const "     
-      end
-      if var.isStatic
-        pDec << "static "
-      end
-        
+
       pDec << self.getTypeName(var.vtype);
         
       if var.passBy.upcase == "REFERENCE"

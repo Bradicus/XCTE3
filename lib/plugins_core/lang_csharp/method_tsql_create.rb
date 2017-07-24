@@ -10,6 +10,7 @@
 require 'x_c_t_e_plugin.rb'
 require 'code_name_styling.rb'
 require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
+require 'plugins_core/lang_csharp/utils.rb'
 
 class XCTECSharp::MethodTsqlCreate < XCTEPlugin
 
@@ -26,15 +27,20 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     codeBuilder.add("/// Create new record for this model")
     codeBuilder.add("///")
 
-    codeBuilder.startClass("public Enumerable<" + dataModel.name + "> Create(SqlTransaction trans, " + dataModel.name + " o)")
+    codeBuilder.startFunction("public void Create(SqlTransaction trans, " + dataModel.name + " o)")
 
     get_body(dataModel, genClass, cfg, codeBuilder)
 
-    codeBuilder.endClass
+    codeBuilder.endFunction
   end
 
   def get_declairation(dataModel, genClass, cfg, codeBuilder)
-    codeBuilder.add("public Enumerable<" + dataModel.name + "> Create(SqlTransaction trans, " + dataModel.name + " o);")
+    codeBuilder.add("void Create(SqlTransaction trans, " + dataModel.name + " o);")
+  end
+
+  def get_dependencies(dataModel, genClass, cfg, codeBuilder)
+    genClass.addInclude('Exception', 'System')
+    genClass.addInclude('SqlTransaction', 'System.Data.SqlClient')
   end
 
   def get_body(dataModel, genClass, cfg, codeBuilder)
@@ -87,11 +93,32 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
 
     codeBuilder.add
 
-    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql)")
+    codeBuilder.startBlock("try")
+    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
+
+    first = true
+    for var in varArray
+      if var.elementId == CodeElem::ELEM_VARIABLE && !first
+        codeBuilder.add('cmd.Parameters.AddWithValue("@' + CodeNameStyling.stylePascal(var.name) +
+                            '", o.' + CodeNameStyling.stylePascal(var.name) + ');')
+      else
+        if var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
+        end
+      end
+      first = false
+    end
+
+    codeBuilder.add
 
     codeBuilder.add('var newId = cmd.ExecuteScalar();')
-    codeBuilder.add("o." + varArray[0].name + ' = newId;')
+    codeBuilder.add("o." + XCTECSharp::Utils::getStyledName(varArray[0]) + ' = Convert.ToInt32(newId);')
     codeBuilder.endBlock
+    codeBuilder.endBlock
+    codeBuilder.startBlock("catch(Exception e)")
+    codeBuilder.add('throw new Exception("Error inserting ' + dataModel.name + ' into database with ' +
+                        varArray[0].name + ' = "' + ' + o.' + XCTECSharp::Utils::getStyledName(varArray[0]) + ', e);')
+    codeBuilder.endBlock(';')
   end
 
 end

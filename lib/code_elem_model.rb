@@ -69,6 +69,7 @@ module CodeStructure
 
         if genClass.interfaceNamespace != nil
           intf = CodeElemClassGen.new(genClass)
+          intf.namespaceList = genClass.interfaceNamespace.split('.')
           intf.functions = genClass.functions
           intf.ctype = 'interface'
           @classes << intf

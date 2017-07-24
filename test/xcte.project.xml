@@ -1,4 +1,3 @@
 <project>
-  <template_dir path="templates" dest="gen_cpp" languages="cpp" base_namespace="" static_code="true" />
-  <template_dir path="templates" dest="gen_csharp" languages="csharp" base_namespace="" static_code="true" />
+  <template_dir path="templates" languages="csharp" static_code="true" />
 </project>

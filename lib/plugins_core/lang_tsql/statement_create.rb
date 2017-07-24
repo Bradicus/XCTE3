@@ -30,7 +30,7 @@ module XCTETSql
       sqlCDef << codeLine
       
       varArray = Array.new
-      codeClass.getAllVarsFor(cfg, varArray);
+      codeClass.getAllVarsFor(cfg, varArray)
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE

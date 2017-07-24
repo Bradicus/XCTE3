@@ -38,9 +38,9 @@ class XCTECSharp::ClassStandard < XCTEPlugin
   
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
-  
+
     for inc in genClass.includes
-        codeBuilder.add(' "' << inc.path << inc.name << "." << XCTECpp::Utils::getExtension('header') << '"')
+      codeBuilder.add('using ' + inc.path + ';');
     end
     
     if !genClass.includes.empty?

@@ -25,7 +25,7 @@ class CodeElemInclude < CodeElem
     if path != nil
       @path = path
     else
-      @path = String.new
+      @path = Array.new
     end
 	
 	if (itype != nil)

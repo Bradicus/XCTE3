@@ -13,6 +13,8 @@ class SourceRendererCSharp < SourceRendererBraceDelim
 
   def initialize()
     super
+
+    @hangingBlockStart = false
   end
   
   def endClass(afterClose="")

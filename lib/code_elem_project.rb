@@ -27,7 +27,6 @@ module CodeStructure
     def initialize
       @elementId = CodeElem::ELEM_PROJECT
       @name
-      @path
       @buildType
       @templateFolders = Array.new
       @outputLanguages

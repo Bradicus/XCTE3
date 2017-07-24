@@ -84,11 +84,11 @@ class XCTECpp::ClassStandard < XCTEPlugin
   def genHeader(dataModel, genClass, cfg, hFile)
 
     if (genClass.namespaceList != nil)
-      hFile.add("#ifndef _" << genClass.namespaceList.join('_') + "_" + dataModel.name << "_H")
-      hFile.add("#define _" << genClass.namespaceList.join('_') + "_" + dataModel.name << "_H")
+      hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
+      hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
     else
-      hFile.add("#ifndef _" << genClass.name << "_H")
-      hFile.add("#define _" << genClass.name << "_H")
+      hFile.add("#ifndef _" + genClass.name + "_H")
+      hFile.add("#define _" + genClass.name + "_H")
       hFile.add
     end
 

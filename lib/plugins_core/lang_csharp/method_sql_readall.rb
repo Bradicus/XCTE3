@@ -13,7 +13,7 @@ require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 class XCTECSharp::MethodConstructor < XCTEPlugin
   
   def initialize
-    @name = "method_constructor"
+    @name = "method_tsq_readall"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
     @author = "Brad Ottoson"
@@ -30,6 +30,11 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
     get_body(codeClass, cfg, codeBuilder)
         
     codeBuilder.endClass
+  end
+
+  def get_dependencies(dataModel, genClass, cfg, codeBuilder)
+    genClass.addInclude('IEnumerable', 'System.Collections')
+    genClass.addInclude('SqlTransaction', 'System.Data.SqlClient')
   end
 
   def get_body(codeClass, cfg, codeBuilder)

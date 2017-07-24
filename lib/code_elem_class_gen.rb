@@ -24,4 +24,17 @@ class CodeElemClassGen < CodeElem
     @baseClasses = Array.new
     @namespaceList = Array.new
   end
+
+  def addInclude(iName, iNamespace)
+    found = false
+    for inc in @includes
+      if inc.path == iNamespace
+        found = true
+      end
+    end
+
+    if !found
+      @includes << CodeElemInclude.new(iName, iNamespace)
+    end
+  end
 end

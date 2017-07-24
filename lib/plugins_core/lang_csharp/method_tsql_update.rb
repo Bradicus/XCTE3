@@ -23,10 +23,10 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
   # Returns definition string for this class's constructor
   def get_definition(dataModel, genClass, cfg, codeBuilder)
     codeBuilder.add("///")
-    codeBuilder.add("/// Create new record for this model")
+    codeBuilder.add("/// Update the record for this model")
     codeBuilder.add("///")
 
-    codeBuilder.startClass("public Enumerable<" + dataModel.name + "> Create(SqlTransaction trans, " + dataModel.name + " o)")
+    codeBuilder.startClass("public void Update(SqlTransaction trans, " + dataModel.name + " o)")
 
     get_body(dataModel, genClass, cfg, codeBuilder)
 
@@ -34,64 +34,66 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
   end
 
   def get_declairation(dataModel, genClass, cfg, codeBuilder)
-    codeBuilder.add("public Enumerable<" + dataModel.name + "> Create(SqlTransaction trans, " + dataModel.name + " o);")
+    codeBuilder.add("void Update(SqlTransaction trans, " + dataModel.name + " o);")
   end
 
+  def get_dependencies(dataModel, genClass, cfg, codeBuilder)
+    genClass.addInclude('SqlTransaction', 'System.Data.SqlClient')
+  end
+  
   def get_body(dataModel, genClass, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray)
 
-    codeBuilder.add('string sql = @"UPDATE ' + dataModel.name + '(')
+    codeBuilder.add('string sql = @"UPDATE ' + dataModel.name + ' SET ')
 
     codeBuilder.indent
 
-    first = true;
+    count = 0
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !first
+        if count > 1
           codeBuilder.sameLine(',')
+		end
+        if count > 0
+		  codeBuilder.add(CodeNameStyling.stylePascal(var.name) + " = @" + CodeNameStyling.stylePascal(var.name))
         end
-        first = false;
-
-        codeBuilder.add(CodeNameStyling.stylePascal(var.name))
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
+      elsif var.elementId == CodeElem::ELEM_FORMAT
+        codeBuilder.add(var.formatText)
       end
+	  count += 1
     end
 
     codeBuilder.unindent
-    codeBuilder.add(") VALUES (")
-    codeBuilder.indent
-
-    first = true;
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if !first
-          codeBuilder.sameLine(',')
-        end
-        first = false;
-
-        codeBuilder.add('@' + CodeNameStyling.stylePascal(var.name))
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
-    end
-
-    codeBuilder.unindent
-    codeBuilder.add(')";')
+    codeBuilder.add('WHERE ' + CodeNameStyling.stylePascal(varArray[0].name) +
+		" = @" + CodeNameStyling.stylePascal(varArray[0].name)	+ '";')
 
     codeBuilder.add
 
-    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql)")
+    codeBuilder.startBlock("try")
+    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
 
-    codeBuilder.add('var newId = cmd.ExecuteScalar();')
-    codeBuilder.add("o." + varArray[0].name + ' = newId;')
+    first = true
+    for var in varArray
+      if var.elementId == CodeElem::ELEM_VARIABLE
+        codeBuilder.add('cmd.Parameters.AddWithValue("@' + CodeNameStyling.stylePascal(var.name) +
+                            '", o.' + CodeNameStyling.stylePascal(var.name) + ');')
+      else
+        if var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
+        end
+      end
+      first = false
+    end
+
+    codeBuilder.add('cmd.ExecuteScalar();')
     codeBuilder.endBlock
+    codeBuilder.endBlock
+    codeBuilder.startBlock("catch(Exception e)")
+    codeBuilder.add('throw new Exception("Error updating ' + dataModel.name + ' with ' +
+                        varArray[0].name + ' = "' + ' + o.' + CodeNameStyling.stylePascal(varArray[0].name) + ', e);')
+    codeBuilder.endBlock(';')
   end
 
 end

@@ -26,10 +26,12 @@ class XCTECSharp::ClassInterface < XCTEPlugin
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
 
-    dataModel.name += "Interface"
-  
+    genClass.name = dataModel.name +  "Interface"
+
+    genClass.addInclude('SqlTransaction', 'System.Data.SqlClient')
+
     codeBuilder = SourceRendererCSharp.new
-    codeBuilder.lfName = dataModel.name
+    codeBuilder.lfName = genClass.name
     codeBuilder.lfExtension = XCTECSharp::Utils::getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
     
@@ -40,9 +42,9 @@ class XCTECSharp::ClassInterface < XCTEPlugin
   
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
-  
+
     for inc in genClass.includes
-        codeBuilder.add(' "' << inc.path << inc.name << "." << XCTECpp::Utils::getExtension('header') << '"')
+      codeBuilder.add('using ' + inc.path + ';');
     end
     
     if !genClass.includes.empty?
@@ -57,11 +59,11 @@ class XCTECSharp::ClassInterface < XCTEPlugin
       codeBuilder.add
     end
     
-    classDec = dataModel.visibility + " interface " + dataModel.name
+    classDec = dataModel.visibility + " interface " + genClass.name
         
     for par in (0..genClass.baseClasses.size)
       if par == 0 && genClass.baseClasses[par] != nil
-        classDec << " < " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+        classDec << " : " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
       elsif genClass.baseClasses[par] != nil
         classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
       end
@@ -96,6 +98,14 @@ class XCTECSharp::ClassInterface < XCTEPlugin
       end
     end  # class  + dataModel.name
     codeBuilder.endClass
+
+    # Process namespace items
+    if genClass.namespaceList != nil
+      for nsItem in genClass.namespaceList
+        codeBuilder.endBlock(" // namespace " + nsItem)
+      end
+      codeBuilder.add
+    end
   end
 end
 
