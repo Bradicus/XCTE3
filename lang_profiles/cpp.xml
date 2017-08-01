@@ -33,6 +33,8 @@
 		<TYPE_MAP genType="Date" 		langType="tm" />
 		<TYPE_MAP genType="Time" 		langType="tm" />
 		<TYPE_MAP genType="DateTime"	langType="tm" />
+
+		<TYPE_MAP genType="Vector"		langType="std::vector" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

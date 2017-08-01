@@ -22,19 +22,16 @@ module XCTETSql
     def self.getVarDec(var)
       vDec = String.new
       
-      vDec << "`" << var.name << "` "
-      if (var.arrayElemCount.to_i > 0)  # All arrays will be csv strings
-        vDec << "TEXT"
-      else
-        tName = self.getTypeName(var)
+      vDec << "[" << var.name << "] "
 
-        if tName != var.vtype
-          vDec << tName
-        else
-          vDec << "TEXT"
-        end
+      tName = self.getTypeName(var)
+
+      if tName != var.vtype
+        vDec << tName
+      else
+        vDec << "TEXT"
       end
-      
+
       return vDec
     end
         
@@ -44,7 +41,7 @@ module XCTETSql
         if (var.arrayElemCount > 9999)
           return("TEXT")
         else
-          return("VARCHAR(" + var.arrayElemCount + ")")
+          return("VARCHAR(" + var.arrayElemCount.to_s + ")")
         end
       else
         if (var.vtype == "StringUNC16")
@@ -56,7 +53,7 @@ module XCTETSql
         end
       end
 
-      return @@langProfile.getTypeName(var.vType)
+      return @@langProfile.getTypeName(var.vtype)
     end
     
     # Get the extension for a file type

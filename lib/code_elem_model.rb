@@ -54,7 +54,6 @@ module CodeStructure
       }
 
       xmlDoc.root.elements.each("var_group") {|vargXML|
-
         puts "loading var group"
         newVGroup = CodeElemVarGroup.new
         newVGroup.loadAttributes(vargXML)
@@ -71,6 +70,7 @@ module CodeStructure
           intf = CodeElemClassGen.new(genClass)
           intf.namespaceList = genClass.interfaceNamespace.split('.')
           intf.functions = genClass.functions
+          intf.language = genClass.language
           intf.ctype = 'interface'
           @classes << intf
         end
@@ -89,12 +89,13 @@ module CodeStructure
       curVar.vtype = varXML.attributes["type"]
       curVar.visibility = curVar.attribOrDefault("visibility", curVar.visibility)
       curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
-      curVar.listType = varXML.attributes["list"]
-      curVar.arrayElemCount = varXML.attributes["len"].to_i
+      curVar.listType = varXML.attributes["collection"]
+      curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
       curVar.isConst = varXML.attributes["const"]
       curVar.isStatic = varXML.attributes["static"]
       curVar.isPointer = varXML.attributes["pointer"]
       curVar.isVirtual = curVar.findAttribute("virtual")
+      curVar.nullable = curVar.findAttribute("nullable")
 
       curVar.genGet = curVar.findAttribute("genGet")
       curVar.genSet = curVar.findAttribute("genSet")
@@ -142,6 +143,7 @@ module CodeStructure
       genC.ctype = genCXml.attributes["type"]
       genC.namespaceList = genCXml.attributes["namespace"].split('.')
       genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
+      genC.language = genCXml.attributes["language"]
 
       genCXml.elements.each("function") {|funXml|
         newFun = CodeElemFunction.new(genC)
@@ -149,7 +151,39 @@ module CodeStructure
         genC.functions << newFun
       }
 
-      puts "Loaded class notde with function count " + genC.functions.length.to_s
+      genCXml.elements.each("include") {|incXml|
+        if incXml.attributes["path"] != nil
+          iPath = incXml.attributes["path"].split('/')
+        else
+          iPath = Array.new
+        end
+
+        if (incXml.attributes["name"] != nil)
+          genC.includes.addInclude(iPath, incXml.attributes["name"], '"')
+        else
+          genC.includes.addInclude(iPath, incXml.attributes["lname"], "<")
+        end
+      }
+
+      # Also include higher level includes from model
+      self.xmlElement.elements.each("include") {|gIncXml|
+        iName = gIncXml.attributes["name"]
+        iLName = gIncXml.attributes["lname"]
+
+        if gIncXml.attributes["path"] != nil
+          iPath = gIncXml.attributes["path"].split('/')
+        else
+          iPath = Array.new
+        end
+
+        if (gIncXml.attributes["name"] != nil)
+          genC.includes.addInclude(iPath, iName, '"')
+        else
+          genC.includes.addInclude(iPath, iLName, "<")
+        end
+      }
+
+      puts "Loaded class note with function count " + genC.functions.length.to_s
     end
 
     # Loads a template function element from an XML template function node

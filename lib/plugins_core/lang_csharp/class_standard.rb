@@ -39,19 +39,17 @@ class XCTECSharp::ClassStandard < XCTEPlugin
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
-    for inc in genClass.includes
-      codeBuilder.add('using ' + inc.path + ';');
+    for inc in genClass.includes.iPaths
+      codeBuilder.add('using ' + inc.path.join('.') + ';');
     end
     
-    if !genClass.includes.empty?
+    if !genClass.includes.iPaths.empty?
       codeBuilder.add
     end
 
     # Process namespace items
     if genClass.namespaceList != nil
-      for nsItem in genClass.namespaceList
-        codeBuilder.startBlock("namespace " << nsItem)
-      end
+      codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
       codeBuilder.add
     end
     
@@ -107,9 +105,7 @@ class XCTECSharp::ClassStandard < XCTEPlugin
 
     # Process namespace items
     if genClass.namespaceList != nil
-      for nsItem in genClass.namespaceList
-        codeBuilder.endBlock(" // namespace " + nsItem)
-      end
+      codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join('.'))
       codeBuilder.add
     end
   end

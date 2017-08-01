@@ -10,7 +10,8 @@
 
 class CodeElemVariable < CodeElem
   attr_accessor :elementId, :name, :vtype, :templateType, :defaultValue, :comment,
-    :visibility, :isConst, :isStatic, :isPointer, :isVirtual, :passBy, :genSet, :genGet, :arrayElemCount, :listType
+    :visibility, :isConst, :isStatic, :isPointer, :isVirtual, :passBy, :genSet, :genGet,
+    :arrayElemCount, :listType, :nullable
 
   def initialize(parentElem)
     super(parentElem)
@@ -29,6 +30,7 @@ class CodeElemVariable < CodeElem
     @passBy = "value"
     @genSet = false
     @genGet = false
+    @nullable = false
     @listType
 
     # Stored only for arrays

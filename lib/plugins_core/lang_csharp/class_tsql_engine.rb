@@ -28,7 +28,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
     genClass.name = dataModel.name + 'Engine'
     if genClass.interfaceNamespace != nil
-      genClass.includes << CodeElemInclude.new(dataModel.name + 'Interface', genClass.interfaceNamespace)
+      genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + 'Interface')
     end
 
     codeBuilder = SourceRendererCSharp.new

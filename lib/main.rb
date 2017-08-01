@@ -48,6 +48,12 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 end
                               
                 for genClass in dataModel.classes
+                  if (genClass.language != nil)
+                    language = XCTEPlugin::getLanguages()[genClass.language]
+                  else
+                    language = XCTEPlugin::getLanguages()[langName]
+                  end
+
                   if language.has_key?(genClass.ctype)
 
                     srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
@@ -58,9 +64,9 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                   #   puts "Creating folder: " + newPath
                     end
 
-                    puts "Current dir " + currentDir
-                    puts "Abs root path " + basepn.to_path
-                    puts "Rel Path " + newPath
+                  #  puts "Current dir " + currentDir
+                  #  puts "Abs root path " + basepn.to_path
+                  #  puts "Rel Path " + newPath
 
                     for srcFile in srcFiles
 
@@ -78,7 +84,11 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                       sFile.close                    
                     end
                   else
-                    puts "Language " + langName + " has no class type defined: " + genClass.ctype
+                    if (genClass.language != nil)
+                      puts "Language " + genClass.language + " has no class type defined: " + genClass.ctype
+                    else
+                      puts "Language " + langName + " has no class type defined: " + genClass.ctype
+                    end
                   end        
                 end
               end

@@ -9,9 +9,10 @@
 # read in from an xml file
 
 require 'code_elem.rb'
+require 'code_elem_include_list.rb'
 
 class CodeElemClassGen < CodeElem
-  attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :name, :includes, :baseClasses
+  attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :name, :includes, :baseClasses, :language
 
   def initialize(parentElem)
     super(parentElem)
@@ -19,22 +20,10 @@ class CodeElemClassGen < CodeElem
     @elementId = CodeElem::ELEM_CLASS_GEN
     @name = nil
 
-    @includes = Array.new
+    @language = nil
+    @includes = CodeElemIncludeList.new
     @functions = Array.new
     @baseClasses = Array.new
     @namespaceList = Array.new
-  end
-
-  def addInclude(iName, iNamespace)
-    found = false
-    for inc in @includes
-      if inc.path == iNamespace
-        found = true
-      end
-    end
-
-    if !found
-      @includes << CodeElemInclude.new(iName, iNamespace)
-    end
   end
 end

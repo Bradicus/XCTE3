@@ -9,7 +9,7 @@
 # on this class
  
 require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_sql/x_c_t_e_sql.rb'
+require 'plugins_core/lang_tsql/x_c_t_e_t_sql.rb'
 
 module XCTETSql
   class StatementCreate < XCTEPlugin
@@ -21,36 +21,54 @@ module XCTETSql
       @author = "Brad Ottoson"
     end
 
+    def genSourceFiles(dataModel, genClass, cfg)
+      srcFiles = Array.new
+
+      genClass.name = dataModel.name
+
+      codeBuilder = SourceRenderer.new
+      codeBuilder.lfName = dataModel.name
+      codeBuilder.lfExtension = 'sql'
+      genFileContent(dataModel, genClass, cfg, codeBuilder)
+
+      srcFiles << codeBuilder
+
+      return srcFiles
+    end
+
     # Returns definition string for this class's constructor
-    def get_lines(codeClass, cfg)
+    def genFileContent(dataModel, genClass, cfg, codeBuilder)
       sqlCDef = Array.new
       first = true
 
-      codeLine = "CREATE TABLE `" + codeClass.name + "` ("
-      sqlCDef << codeLine
-      
+      codeBuilder.add("CREATE TABLE [" + genClass.name + "] (")
+      codeBuilder.indent
+
       varArray = Array.new
-      codeClass.getAllVarsFor(cfg, varArray)
+      dataModel.getAllVarsFor(cfg, varArray)
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
-          codeLine = ", "
+          if !first
+            codeBuilder.sameLine(", ")
+          end
+          first = false
 
-          codeLine << XCTETSql::Utils::getVarDec(var)
+          codeBuilder.add(XCTETSql::Utils::getVarDec(var))
 
           if var.defaultValue != nil
-            codeLine << " default '" << var.defaultValue << "'"
+            codeBuilder.sameLine(" default '" << var.defaultValue << "'")
           end
-
-          sqlCDef << codeLine
         end
       end
 
-      sqlCDef << indent << ", PRIMARY KEY (`id`)"
+      codeBuilder.add(", PRIMARY KEY (`id`)")
 
-      sqlCDef << indent << " ) "
+      codeBuilder.unindent
+      codeBuilder.add(") ")
 
-      return(sqlCDef);  
     end
   end
 end
+
+XCTEPlugin::registerPlugin(XCTETSql::StatementCreate.new)

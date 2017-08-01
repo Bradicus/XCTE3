@@ -41,7 +41,7 @@ class XCTECpp::ClassStandard < XCTEPlugin
     cppFile.lfName = dataModel.name
     cppFile.lfExtension = XCTECpp::Utils::getExtension('body')
     genHeaderComment(dataModel, genClass, cfg, cppFile)
-    genBody(dataModel, genClass, cfg, hFile)
+    genBody(dataModel, genClass, cfg, cppFile)
     
     srcFiles << hFile
     srcFiles << cppFile
@@ -86,24 +86,33 @@ class XCTECpp::ClassStandard < XCTEPlugin
     if (genClass.namespaceList != nil)
       hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
       hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
+      hFile.add
     else
       hFile.add("#ifndef _" + genClass.name + "_H")
       hFile.add("#define _" + genClass.name + "_H")
       hFile.add
     end
 
-    
-    for inc in genClass.includes
-      if inc.itype == '<'
-        hFile.add("#include <" << inc.path << inc.name << '>')
-      elsif inc.name.count(".") > 0
-		hFile.add('#include "' << inc.path << inc.name << '"')
-	  else
-        hFile.add('#include "' << inc.path << inc.name << "." << XCTECpp::Utils::getExtension('header') << '"')
+    for iPath in genClass.includes.iPaths
+      for inc in iPath.includes
+        if (iPath.path.length > 0)
+          incPathAndName = iPath.path.join('/') + '/' + inc.name
+        else
+          incPathAndName = inc.name
+        end
+
+        if inc.itype == '<'
+          hFile.add("#include <" << incPathAndName << '>')
+        elsif inc.name.count(".") > 0
+          hFile.add('#include "' << incPathAndName << '"')
+        else
+          hFile.add('#include "' << incPathAndName << "." << XCTECpp::Utils::getExtension('header') << '"')
+        end
       end
+
     end
     
-    if !genClass.includes.empty?
+    if genClass.includes.iPaths.length > 0
       hFile.add
     end
 
@@ -283,7 +292,7 @@ class XCTECpp::ClassStandard < XCTEPlugin
         cppGen.sameLine(";   // namespace " << nsItem)
       end
       #cppGen.add("\n"
-    end   
+    end
   end
 
   def getVarsFor(varGroup, cfg, vArray)

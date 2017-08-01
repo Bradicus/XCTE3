@@ -4,7 +4,7 @@
 	<STYLING class="PASCAL_CASE" variable="UNDERSCORE_UPPER" file="" />
 	
 	<FILE_TYPES>
-		<FILE_TYPE type="body" 		extension="tsql" />
+		<FILE_TYPE type="body" 		extension="sql" />
 	</FILE_TYPES>
 
 	<!-- Unless you're using some old compilers this should be true -->

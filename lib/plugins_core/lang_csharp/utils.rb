@@ -67,8 +67,14 @@ module XCTECSharp
       else
         vDec << self.getTypeName(var.vtype)
       end
-            
-      vDec << " " << self.getStyledName(var)
+
+      vDec << " "
+
+      if var.nullable
+        vDec << "?"
+      end
+
+      vDec << self.getStyledName(var)
       
       if var.arrayElemCount.to_i > 0
         vDec << "[" + self.getSizeConst(var) << "]"

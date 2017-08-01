@@ -53,9 +53,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
 
     # Process namespace items
     if genClass.namespaceList != nil
-      for nsItem in genClass.namespaceList
-        codeBuilder.startBlock("namespace " << nsItem)
-      end
+      codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
       codeBuilder.add
     end
     
@@ -101,9 +99,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
 
     # Process namespace items
     if genClass.namespaceList != nil
-      for nsItem in genClass.namespaceList
-        codeBuilder.endBlock(" // namespace " + nsItem)
-      end
+      codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join('.'))
       codeBuilder.add
     end
   end

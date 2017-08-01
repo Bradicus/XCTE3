@@ -11,9 +11,9 @@
 require 'code_elem.rb'
 
 class CodeElemInclude < CodeElem
-  attr_accessor :name, :path, :itype
+  attr_accessor :name, :itype
   
-  def initialize(name = nil, path = nil, itype = nil)
+  def initialize(name = nil, itype = '"')
     @elementId = CodeElem::ELEM_INCLUDE
 
     if name != nil
@@ -21,15 +21,9 @@ class CodeElemInclude < CodeElem
     else
       @name = String.new
     end
-    
-    if path != nil
-      @path = path
-    else
-      @path = Array.new
-    end
 	
-	if (itype != nil)
-	  @itype = itype;
-	end
+	  if (itype != nil)
+	    @itype = itype
+	  end
   end
 end

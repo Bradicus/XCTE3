@@ -63,7 +63,7 @@ module XCTECpp
       if (var.templateType != nil)
         vDec << var.templateType << "<" << self.getTypeName(var.vtype) << ">"
       elsif (var.listType != nil)
-        vDec << var.listType << "<" << self.getTypeName(var.vtype) << ">"
+        vDec << self.getTypeName(var.listType) << "<" << self.getTypeName(var.vtype) << ">"
       else
         vDec << self.getTypeName(var.vtype)
       end
