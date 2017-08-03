@@ -39,7 +39,11 @@ class LangProfile
     
     xmlDoc.elements.each("LANGUAGE_DEFS/TYPE_MAPS") { |typeMaps|
       typeMaps.elements.each("TYPE_MAP") { |typeMap|
-        @typeMaps << LangProfileTypeMap.new(typeMap.attributes["genType"], typeMap.attributes["langType"])
+        @typeMaps << LangProfileTypeMap.new(typeMap.attributes["genType"],
+                                            typeMap.attributes["langType"],
+                                            typeMap.attributes["autoIncludePath"],
+                                            typeMap.attributes["autoIncludeName"],
+                                            typeMap.attributes["autoIncludeType"])
       }
     }   
   end
@@ -61,7 +65,19 @@ class LangProfile
     
     return gType  # If it can't find it just return the type
   end
-  
+
+  def getType(genericType)
+    for tMap in @typeMaps
+      if tMap.genericType == genericType
+        if tMap.autoInclude != nil && tMap.autoInclude.name != nil
+          return tMap
+        end
+      end
+    end
+
+    return nil
+  end
+
   def isPrimitive(var)
     for tMap in @typeMaps
       if tMap.genericType == var.vtype

@@ -60,6 +60,10 @@ module XCTETSql
     def self.getExtension(eType)
       return @@langProfile.getExtension(eType)
     end
+
+    def getStandardAutoIncludes()
+
+    end
     
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable

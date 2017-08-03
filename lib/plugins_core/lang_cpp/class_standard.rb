@@ -93,26 +93,9 @@ class XCTECpp::ClassStandard < XCTEPlugin
       hFile.add
     end
 
-    for iPath in genClass.includes.iPaths
-      for inc in iPath.includes
-        if (iPath.path.length > 0)
-          incPathAndName = iPath.path.join('/') + '/' + inc.name
-        else
-          incPathAndName = inc.name
-        end
-
-        if inc.itype == '<'
-          hFile.add("#include <" << incPathAndName << '>')
-        elsif inc.name.count(".") > 0
-          hFile.add('#include "' << incPathAndName << '"')
-        else
-          hFile.add('#include "' << incPathAndName << "." << XCTECpp::Utils::getExtension('header') << '"')
-        end
-      end
-
-    end
+    ClassBase::genIncludes(dataModel, genClass, cfg, hFile)
     
-    if genClass.includes.iPaths.length > 0
+    if genClass.includes.length > 0
       hFile.add
     end
 

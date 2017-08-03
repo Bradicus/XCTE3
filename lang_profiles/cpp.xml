@@ -27,14 +27,14 @@
 		
 		<TYPE_MAP genType="Float32" 	langType="float" />
 		<TYPE_MAP genType="Float64" 	langType="double" />
-		<TYPE_MAP genType="String" 		langType="std::string" />
-		<TYPE_MAP genType="StringUNC16" langType="std::string" />
+		<TYPE_MAP genType="String" 		langType="std::string"  autoIncludeName="string"  autoIncludeType="&lt;" />
+		<TYPE_MAP genType="StringUNC16" langType="std::wstring" autoIncludeName="wstring" autoIncludeType="&lt;" />
 		
 		<TYPE_MAP genType="Date" 		langType="tm" />
 		<TYPE_MAP genType="Time" 		langType="tm" />
 		<TYPE_MAP genType="DateTime"	langType="tm" />
 
-		<TYPE_MAP genType="Vector"		langType="std::vector" />
+		<TYPE_MAP genType="List"		langType="std::vector"  autoIncludeName="vector" autoIncludeType="&lt;" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

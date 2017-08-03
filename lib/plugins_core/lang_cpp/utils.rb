@@ -12,7 +12,12 @@ require 'lang_profile.rb'
 
 module XCTECpp
   class Utils
+
     @@langProfile = LangProfile.new
+
+    def self.langProfile
+      return @@langProfile
+    end
     
     def self.init
       @@langProfile.name = "cpp"   
@@ -98,7 +103,7 @@ module XCTECpp
         
     # Get a parameter declaration for a method parameter
     def self.getTypeName(gType)
-      return @@langProfile.getTypeName(gType)      
+      return @@langProfile.getTypeName(gType)
     end
 
     # Capitalizes the first letter of a string

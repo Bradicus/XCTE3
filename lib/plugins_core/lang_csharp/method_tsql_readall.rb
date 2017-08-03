@@ -33,8 +33,8 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
 
   def get_dependencies(dataModel, genClass, cfg, codeBuilder)
-    genClass.addInclude('IEnumerable', 'System.Collections')
-    genClass.addInclude('SqlTransaction', 'System.Data.SqlClient')
+    genClass.addInclude('System.Collections', 'IEnumerable')
+    genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
   end
 
   def get_body(codeClass, cfg, codeBuilder)

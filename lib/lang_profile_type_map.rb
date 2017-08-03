@@ -9,10 +9,12 @@
 # types
 
 class LangProfileTypeMap  
-  attr_accessor :genericType, :langType
+  attr_accessor :genericType, :langType, :autoInclude
   
-  def initialize(genericType, langType)
+  def initialize(genericType, langType, autoIncludePath, autoIncludeName, autoIncludeType)
     @genericType = genericType
     @langType = langType
+
+    @autoInclude = CodeElemInclude.new(autoIncludePath, autoIncludeName, autoIncludeType)
   end
 end

@@ -153,15 +153,15 @@ module CodeStructure
 
       genCXml.elements.each("include") {|incXml|
         if incXml.attributes["path"] != nil
-          iPath = incXml.attributes["path"].split('/')
+          iPath = incXml.attributes["path"]
         else
-          iPath = Array.new
+          iPath = String.new
         end
 
         if (incXml.attributes["name"] != nil)
-          genC.includes.addInclude(iPath, incXml.attributes["name"], '"')
+          genC.addInclude(iPath, incXml.attributes["name"], '"')
         else
-          genC.includes.addInclude(iPath, incXml.attributes["lname"], "<")
+          genC.addInclude(iPath, incXml.attributes["lname"], "<")
         end
       }
 
@@ -171,17 +171,20 @@ module CodeStructure
         iLName = gIncXml.attributes["lname"]
 
         if gIncXml.attributes["path"] != nil
-          iPath = gIncXml.attributes["path"].split('/')
+          iPath = gIncXml.attributes["path"]
         else
-          iPath = Array.new
+          iPath = String.new
         end
 
         if (gIncXml.attributes["name"] != nil)
-          genC.includes.addInclude(iPath, iName, '"')
+          genC.addInclude(iPath, iName, '"')
         else
-          genC.includes.addInclude(iPath, iLName, "<")
+          genC.addInclude(iPath, iLName, "<")
         end
       }
+
+      # Load any auto includes for this class
+
 
       puts "Loaded class note with function count " + genC.functions.length.to_s
     end
