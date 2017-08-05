@@ -12,7 +12,8 @@ require 'code_elem.rb'
 require 'code_elem_include.rb'
 
 class CodeElemClassGen < CodeElem
-  attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :name, :includes, :baseClasses, :language
+  attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
+                :name, :includes, :baseClasses, :language, :path
 
   def initialize(parentElem)
     super(parentElem)
@@ -25,6 +26,7 @@ class CodeElemClassGen < CodeElem
     @functions = Array.new
     @baseClasses = Array.new
     @namespaceList = Array.new
+    @path = nil
   end
 
   def addInclude(iPath, iName, iType = nil)

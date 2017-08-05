@@ -57,7 +57,12 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                   if language.has_key?(genClass.ctype)
 
                     srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
-                    newPath = "./" + genClass.namespaceList.join("/")
+
+                    if genClass.path != nil
+                      newPath = genClass.path
+                    else
+                      newPath = "./" + genClass.namespaceList.join("/")
+                    end
 
                     if !File.directory?(newPath)
                       FileUtils.mkdir_p(newPath)

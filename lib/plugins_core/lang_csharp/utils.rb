@@ -75,10 +75,6 @@ module XCTECSharp
       end
 
       vDec << self.getStyledName(var)
-      
-      if var.arrayElemCount.to_i > 0
-        vDec << "[" + self.getSizeConst(var) << "]"
-      end
 
       if (var.genGet != nil || var.genSet != nil)
         vDec << " { "

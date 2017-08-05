@@ -9,10 +9,11 @@
 #
 # This class renders source code
 class SourceRenderer
-  attr_accessor  :lfName, :lfExtension, :lfContents, :indentLevel, :indentChars, :hangingFunctionStart, :hangingBlockStart
+  attr_accessor  :lfName, :lfPath, :lfExtension, :lfContents, :indentLevel, :indentChars, :hangingFunctionStart, :hangingBlockStart
   
   def initialize
     @lfName
+    @lfPath = nil
     @lfExtension
     @indentLevel = 0
     @indentChars = "    "
@@ -94,7 +95,8 @@ class SourceRenderer
   end
 
   def endClass(afterClose="")
-    endBlock(afterClose)
+    unindent
+    @lines.last << @blockDelimClose + afterClose
   end
 
   def startBlock(statement)

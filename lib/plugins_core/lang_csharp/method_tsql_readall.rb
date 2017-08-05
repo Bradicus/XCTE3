@@ -10,66 +10,89 @@
 require 'x_c_t_e_plugin.rb'
 require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 
-class XCTECSharp::MethodConstructor < XCTEPlugin
+class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
   
   def initialize
-    @name = "method_tsq_readall"
+    @name = "method_tsql_retrieve_all"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
     @author = "Brad Ottoson"
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg, codeBuilder)
+  def get_definition(dataModel, genClass, cfg, codeBuilder)
     codeBuilder.add("/**")
     codeBuilder.add("* Reads data set from sql database")
     codeBuilder.add("*/")
-      
-    codeBuilder.startClass("readAll(SqlConnection con)")
 
-    get_body(codeClass, cfg, codeBuilder)
+    codeBuilder.startClass("IEnumerable<" + dataModel.name + "> RetrieveAll(SqlTransaction trans)")
+
+    get_body(dataModel, genClass, cfg, codeBuilder)
         
     codeBuilder.endClass
   end
 
+  def get_declairation(dataModel, genClass, cfg, codeBuilder)
+    codeBuilder.add("IEnumerable<" + dataModel.name + "> RetrieveAll(SqlTransaction trans);")
+  end
+
   def get_dependencies(dataModel, genClass, cfg, codeBuilder)
-    genClass.addInclude('System.Collections', 'IEnumerable')
+    genClass.addInclude('System.Collections.Generic', 'IEnumerable')
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
   end
 
-  def get_body(codeClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    dataModel.getAllVarsFor(cfg, varArray)
 
-    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(\"SELECT * FROM dbo.\")")
+    codeBuilder.add('string sql = @"SELECT ')
 
+    codeBuilder.indent
+
+    first = true;
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.defaultValue != nil
-          codeBuilder.add(var.name << " = ")
+        if !first
+          codeBuilder.sameLine(',')
+        end
+        first = false
 
-          if var.vtype == "String"
-            codeBuilder.sameLine("\"" << var.defaultValue << "\";")
-          else
-            codeBuilder.sameLine(var.defaultValue << ";")
-          end
-
-          if var.comment != nil
-            codeBuilder.sameLine("\t// " << var.comment)
-          end
-
-          codeBuilder.add
+        codeBuilder.add(CodeNameStyling.stylePascal(var.name))
+      else
+        if var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
         end
       end
     end
 
+    codeBuilder.unindent
+
+    codeBuilder.add('FROM ' + dataModel.name + '";')
+
+
+    codeBuilder.add
+
+    codeBuilder.startBlock("try")
+    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
+
+    codeBuilder.add
+
+    codeBuilder.add('SqlDataReader results = cmd.ExecuteReader();')
+
+    codeBuilder.startBlock('while(results.Read())')
+    codeBuilder.add("o." + XCTECSharp::Utils::getStyledName(varArray[0]) + ' = Convert.ToInt32(newId);')
+
+    codeBuilder.endBlock
     codeBuilder.endBlock
 
-    return(conDef)
+    codeBuilder.endBlock
+    codeBuilder.startBlock("catch(Exception e)")
+    codeBuilder.add('throw new Exception("Error retrieving all items from ' + dataModel.name + '");')
+    codeBuilder.endBlock(';')
   end
   
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTECSharp::MethodConstructor.new)
+XCTEPlugin::registerPlugin(XCTECSharp::MethodTsqlRetrieveAll.new)

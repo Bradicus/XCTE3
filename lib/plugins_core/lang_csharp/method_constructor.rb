@@ -20,21 +20,21 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg, codeBuilder)
+  def get_definition(dataModel, genClass, cfg, codeBuilder)
     codeBuilder.add("/**")
     codeBuilder.add("* Constructor")
     codeBuilder.add("*/")
-      
-    classDef = String.new  
-    classDef << codeClass.name << "()"
-    codeBuilder.startClass(classDef)
 
-    get_body(codeClass, cfg, codeBuilder)
+    genClass.name = dataModel.name
+
+    codeBuilder.startClass(genClass.name + "()")
+
+    get_body(dataModel, genClass, cfg, codeBuilder)
         
     codeBuilder.endClass
   end
 
-  def get_body(codeClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     codeClass.getAllVarsFor(cfg, varArray);

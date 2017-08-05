@@ -28,7 +28,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
 
     genClass.name = dataModel.name +  "Interface"
 
-    genClass.addInclude('SqlTransaction', 'System.Data.SqlClient')
+    genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
@@ -42,6 +42,20 @@ class XCTECSharp::ClassInterface < XCTEPlugin
   
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
+
+    # Add in any dependencies required by functions
+    for fun in genClass.functions
+      if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
+          if templ != nil
+            templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
+          else
+            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+          end
+        end
+      end
+    end
 
     for inc in genClass.includes
       codeBuilder.add('using ' + inc.path + ';');

@@ -69,6 +69,7 @@ module CodeStructure
         if genClass.interfaceNamespace != nil
           intf = CodeElemClassGen.new(genClass)
           intf.namespaceList = genClass.interfaceNamespace.split('.')
+          intf.path = genClass.interfacePath
           intf.functions = genClass.functions
           intf.language = genClass.language
           intf.ctype = 'interface'
@@ -143,7 +144,9 @@ module CodeStructure
       genC.ctype = genCXml.attributes["type"]
       genC.namespaceList = genCXml.attributes["namespace"].split('.')
       genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
+      genC.interfacePath = genCXml.attributes["interface_path"]
       genC.language = genCXml.attributes["language"]
+      genC.path = genCXml.attributes["path"]
 
       genCXml.elements.each("function") {|funXml|
         newFun = CodeElemFunction.new(genC)

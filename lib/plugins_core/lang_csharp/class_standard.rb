@@ -50,7 +50,6 @@ class XCTECSharp::ClassStandard < XCTEPlugin
     # Process namespace items
     if genClass.namespaceList != nil
       codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
-      codeBuilder.add
     end
     
     classDec = dataModel.visibility + " class " + dataModel.name
@@ -67,9 +66,7 @@ class XCTECSharp::ClassStandard < XCTEPlugin
         
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray)
-    if dataModel.hasAnArray
-      codeBuilder.add  # If we declared array size variables add a separator
-    end
+
     # Generate class variables
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
@@ -80,7 +77,11 @@ class XCTECSharp::ClassStandard < XCTEPlugin
         codeBuilder.add(var.formatText)
       end
     end
-    codeBuilder.add
+
+    if (genClass.functions.length > 0)
+      codeBuilder.add
+    end
+
     # Generate code for functions
     for fun in genClass.functions
       if fun.elementId == CodeElem::ELEM_FUNCTION

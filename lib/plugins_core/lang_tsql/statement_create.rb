@@ -62,7 +62,7 @@ module XCTETSql
         end
       end
 
-      codeBuilder.add(", PRIMARY KEY (`id`)")
+      codeBuilder.add(", PRIMARY KEY (id)")
 
       codeBuilder.unindent
       codeBuilder.add(") ")
