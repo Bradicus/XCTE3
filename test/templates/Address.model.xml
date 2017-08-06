@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="Address">
+
+	<description>
+	</description>
+				
+	<gen_class type="standard" namespace="rmap" ></gen_class>
+				
+	<var_group virtual="true" genGet="true" genSet="true">
+		<var name="id"		type="Int32" pkey="true" maxlen="50" />
+		<var name="street1"	type="String" pkey="true" maxlen="50" />
+		<var name="street2"	type="String" maxlen="50" />
+		<var name="city"	type="String" maxlen="50" />
+		<var name="state"	type="String" maxlen="2" />
+		<var name="zip"		type="String" maxlen="20" />
+	</var_group>
+
+	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" ></gen_class>
+	
+	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" modelns="XCTE.Foundation" ></gen_class>	
+	<gen_class language="tsql" type="statement_create" namespace="XCTE.Database" path="XCTE.Database" ></gen_class>
+
+	<gen_class type="tsql_engine" namespace="XCTE.Data" path="XCTE.Data"
+			   interface_namespace="XCTE.Foundation" 
+			   interface_path="XCTE.Foundation" >
+		<!--<function name="retrieveBy" field="id" interface="true" />
+		<function name="retrieveBy" field="zip" interface="true" />-->
+		<function name="method_tsql_create" interface="true" />
+		<function name="method_tsql_update" interface="true" />
+		<function name="method_tsql_retrieve_all" interface="true" />
+		<function name="method_tsql_delete" interface="true" />
+		<!--<function name="update" interface="true" />
+		<function name="delete" interface="true" />
+		<function name="deleteBy" interface="true" />-->
+	</gen_class>
+	
+	<empty_function name="weeeHoo" const="true">
+		<parameters>
+			<var name="name" type="String" const="true" />
+			<var name="countSomething" type="Int16" const="true" passby="Reference" />
+			<var name="anArray" type="UInt8" len="10" const="true" />
+		</parameters>
+		<return_var type="Boolean" const="true" />
+	</empty_function>
+</model>

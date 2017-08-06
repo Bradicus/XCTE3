@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="Role" >
+
+	<description>
+	</description>
+				
+	<gen_class type="standard" namespace="rmap" ></gen_class>
+				
+	<var_group genGet="true" genSet="true">	
+		<var name="first name"		type="String" maxlen="50" />
+		<var name="last name"		type="String" maxlen="50" />
+		<var name="username"	type="String" maxlen="50" />
+		<var name="address" 	type="Address" />
+		<var name="roles"		type="List" of="Role" genSet="false" />
+	</var_group>	
+	
+	
+		<EMPTY_FUNCTION name="weeeHoo" const="true">
+			<PARAMETERS>
+				<var name="name" type="String" const="true" />
+				<var name="countSomething" type="Int16" const="true" passby="Reference" />
+				<var name="anArray" type="UInt8" arrayCount="10" const="true" />
+			</PARAMETERS>
+			<RETURN_VARIABLE type="boolean" const="true" />
+		</EMPTY_FUNCTION>
+</model>
