@@ -31,7 +31,7 @@ class CodeElemVariable < CodeElem
     @genSet = false
     @genGet = false
     @nullable = false
-    @listType
+    @listType = nil
 
     # Stored only for arrays
     @arrayElemCount = 0 	# Array size of 0 means this isn't an array

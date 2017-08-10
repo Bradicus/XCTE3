@@ -12,7 +12,7 @@
 		<var name="street2"	type="String" maxlen="50" />
 		<var name="city"	type="String" maxlen="50" />
 		<var name="state"	type="String" maxlen="2" />
-		<var name="zip"		type="String" maxlen="20" />
+		<var name="zip code"		type="String" maxlen="20" />
 	</var_group>
 
 	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" ></gen_class>
@@ -21,6 +21,7 @@
 	<gen_class language="tsql" type="statement_create" namespace="XCTE.Database" path="XCTE.Database" ></gen_class>
 
 	<gen_class type="tsql_engine" namespace="XCTE.Data" path="XCTE.Data"
+			   var_prefix = "a "
 			   interface_namespace="XCTE.Foundation" 
 			   interface_path="XCTE.Foundation" >
 		<!--<function name="retrieveBy" field="id" interface="true" />
@@ -28,6 +29,13 @@
 		<function name="method_tsql_create" interface="true" />
 		<function name="method_tsql_update" interface="true" />
 		<function name="method_tsql_retrieve_all" interface="true" />
+		<function name="method_tsql_retrieve_one_by" interface="true" >
+			<var_ref name="id" />
+		</function>
+		<function name="method_tsql_retrieve_set_by" interface="true" >
+			<var_ref name="city" />
+			<var_ref name="zip code" />
+		</function>
 		<function name="method_tsql_delete" interface="true" />
 		<!--<function name="update" interface="true" />
 		<function name="delete" interface="true" />

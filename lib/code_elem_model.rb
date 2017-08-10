@@ -147,6 +147,7 @@ module CodeStructure
       genC.interfacePath = genCXml.attributes["interface_path"]
       genC.language = genCXml.attributes["language"]
       genC.path = genCXml.attributes["path"]
+      genC.varPrefix = genCXml.attributes["var_prefix"]
 
       genCXml.elements.each("function") {|funXml|
         newFun = CodeElemFunction.new(genC)

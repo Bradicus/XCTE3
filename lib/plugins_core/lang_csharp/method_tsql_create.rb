@@ -22,28 +22,28 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
   end
 
   # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, cfg, codeBuilder)
+  def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
     codeBuilder.add("///")
     codeBuilder.add("/// Create new record for this model")
     codeBuilder.add("///")
 
-    codeBuilder.startFunction("public void Create(SqlTransaction trans, " + dataModel.name + " o)")
+    codeBuilder.startFunction("public void Create(SqlTransaction trans, " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + " o)")
 
-    get_body(dataModel, genClass, cfg, codeBuilder)
+    get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
     codeBuilder.endFunction
   end
 
-  def get_declairation(dataModel, genClass, cfg, codeBuilder)
+  def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
     codeBuilder.add("void Create(SqlTransaction trans, " + dataModel.name + " o);")
   end
 
-  def get_dependencies(dataModel, genClass, cfg, codeBuilder)
+  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
     genClass.addInclude('System', 'Exception')
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
   end
 
-  def get_body(dataModel, genClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray)
@@ -80,7 +80,7 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
         end
         first = false;
 
-        codeBuilder.add('@' + CodeNameStyling.stylePascal(var.name))
+        codeBuilder.add('@' +  XCTETSql::Utils.instance.getStyledVariableName(genClass.varPrefix + var.name))
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
@@ -99,7 +99,7 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     first = true
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && !first
-        codeBuilder.add('cmd.Parameters.AddWithValue("@' + CodeNameStyling.stylePascal(var.name) +
+        codeBuilder.add('cmd.Parameters.AddWithValue("@' + XCTETSql::Utils.instance.getStyledVariableName(genClass.varPrefix + var.name) +
                             '", o.' + CodeNameStyling.stylePascal(var.name) + ');')
       else
         if var.elementId == CodeElem::ELEM_FORMAT
@@ -112,12 +112,12 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     codeBuilder.add
 
     codeBuilder.add('var newId = cmd.ExecuteScalar();')
-    codeBuilder.add("o." + XCTECSharp::Utils::getStyledName(varArray[0]) + ' = Convert.ToInt32(newId);')
+    codeBuilder.add("o." + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) + ' = Convert.ToInt32(newId);')
     codeBuilder.endBlock
     codeBuilder.endBlock
     codeBuilder.startBlock("catch(Exception e)")
     codeBuilder.add('throw new Exception("Error inserting ' + dataModel.name + ' into database with ' +
-                        varArray[0].name + ' = "' + ' + o.' + XCTECSharp::Utils::getStyledName(varArray[0]) + ', e);')
+                        varArray[0].name + ' = "' + ' + o.' + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) + ', e);')
     codeBuilder.endBlock(';')
   end
 

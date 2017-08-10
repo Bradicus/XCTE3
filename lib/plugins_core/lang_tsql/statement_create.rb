@@ -54,7 +54,7 @@ module XCTETSql
           end
           first = false
 
-          codeBuilder.add(XCTETSql::Utils::getVarDec(var))
+          codeBuilder.add(XCTETSql::Utils.instance.getVarDec(var))
 
           if var.defaultValue != nil
             codeBuilder.sameLine(" default '" << var.defaultValue << "'")

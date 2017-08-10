@@ -11,13 +11,18 @@ require 'lang_profile_file_type.rb'
 require 'lang_profile_type_map.rb'
 
 class LangProfile
-  attr_accessor :name, :fileTypes, :typeMaps
-  
+  attr_accessor :name, :fileTypes, :typeMaps, :variableNameStyle,
+                :functionNameStyle, :classNameStyle, :fileNameStyle
+
   def initialize
     @name       # Defined in the initialize method of child classes
     @fileTypes = Array.new  # Array of LangProfileFileType
     @typeMaps = Array.new   # Array of LangProfileTypeMap
-    @defaultFormatting
+
+    @variableNameStyle = nil
+    @classNameStyle = nil
+    @functionNameStyle = nil
+    @fileNameStyle = nil
   end
   
   def loadProfile
@@ -45,7 +50,29 @@ class LangProfile
                                             typeMap.attributes["autoIncludeName"],
                                             typeMap.attributes["autoIncludeType"])
       }
-    }   
+    }
+
+    xmlDoc.elements.each("LANGUAGE_DEFS/STYLING") { |styling|
+      @variableNameStyle = styling.attributes["variable"]
+      @classNameStyle =  styling.attributes["class"]
+      @functionNameStyle = styling.attributes["function"]
+      @fileNameStyle = styling.attributes["file"]
+    }
+
+    if (@fileNameStyle == nil)
+      @fileNameStyle = @classNameStyle
+    end
+
+    if (@variableNameStyle == nil)
+      raise("Variable name style must be defined in type map for " + name)
+    end
+    if (@classNameStyle == nil)
+      raise("Class name style must be defined in type map for " + name)
+    end
+    if (@functionNameStyle == nil)
+      raise("Function name style must be defined in type map for " + name)
+    end
+
   end
   
   def getExtension(extType)

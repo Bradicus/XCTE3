@@ -14,9 +14,6 @@ require 'x_c_t_e_plugin.rb'
 class XCTECSharp::ClassInterface < XCTEPlugin
 
   def initialize
-  
-    XCTECSharp::Utils::init
-    
     @name = "interface"
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
@@ -32,7 +29,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
-    codeBuilder.lfExtension = XCTECSharp::Utils::getExtension('body')
+    codeBuilder.lfExtension = XCTECSharp::Utils.instance.getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
     
     srcFiles << codeBuilder
@@ -49,7 +46,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
           if templ != nil
-            templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
+            templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
           else
             puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
@@ -95,7 +92,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
           if templ != nil
-            templ.get_declairation(dataModel, genClass, cfg, codeBuilder)
+            templ.get_declairation(dataModel, genClass, fun, cfg, codeBuilder)
           else
           #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end

@@ -1,6 +1,22 @@
 # This class contains functions for styling variables by various standards
 
 class CodeNameStyling
+
+  def self.getStyled(name, styleName)
+    case styleName
+      when 'CAMEL_CASE'
+        return self.styleCamel(name)
+      when 'PASCAL_CASE'
+        return self.stylePascal(name)
+      when 'UNDERSCORE_UPPER'
+        return self.styleUnderscoreUpper(name)
+      when 'UNDERSCORE_LOWER'
+        return self.styleUnderscoreLower(name)
+      else
+        raise('Undefined style type: ' + styleName.to_s)
+    end
+  end
+
   # Format name in pascal case
   def self.stylePascal(name)
     return self.getCapitalizedFirst(self.styleCamel(name))
@@ -9,14 +25,9 @@ class CodeNameStyling
   # Format name in camel case
   def self.styleCamel(name)
     nameParts = name.split(" ")
-    first = true
 
-    for namePart in nameParts
-      if (!first)
-        namePart = self.getCapitalizedFirst(namePart)
-      end
-
-      first = false
+    (1..nameParts.length - 1).each do |i|
+      nameParts[i] = self.getCapitalizedFirst(nameParts[i])
     end
 
     return(nameParts.join(''))
@@ -24,15 +35,15 @@ class CodeNameStyling
 
   # Format in uppercase with underscores
   def self.styleUnderscoreUpper(name)
+    name = name.upcase
     nameParts = name.split(" ")
-    first = true
+    return(nameParts.join('_'))
+  end
 
-    for namePart in nameParts
-      if (!first)
-        namePart = namePart.upcase
-      end
-    end
-
+  # Format in uppercase with underscores
+  def self.styleUnderscoreLower(name)
+    name = name.downcase
+    nameParts = name.split(" ")
     return(nameParts.join('_'))
   end
 

@@ -10,18 +10,19 @@
  
 require 'lang_profile.rb'
 require 'code_name_styling.rb'
+require 'utils_base.rb'
+require 'singleton'
 
 module XCTECSharp
-  class Utils
-    @@langProfile = LangProfile.new
-    
-    def self.init
-      @@langProfile.name = "csharp"   
-      @@langProfile.loadProfile
+  class Utils < UtilsBase
+    include Singleton
+
+    def initialize
+      super('csharp')
     end
     
     # Get a parameter declaration for a method parameter
-    def self.getParamDec(var)
+    def getParamDec(var)
       pDec = String.new
 
       pDec << self.getTypeName(var.vtype);
@@ -43,7 +44,7 @@ module XCTECSharp
     end
     
     # Returns variable declaration for the specified variable
-    def self.getVarDec(var)
+    def getVarDec(var)
       vDec = String.new
 
       vDec << var.visibility << " "
@@ -74,7 +75,7 @@ module XCTECSharp
         vDec << "?"
       end
 
-      vDec << self.getStyledName(var)
+      vDec << self.getStyledVariableName(var)
 
       if (var.genGet != nil || var.genSet != nil)
         vDec << " { "
@@ -97,26 +98,21 @@ module XCTECSharp
     end
       
     # Returns a size constant for the specified variable
-    def self.getSizeConst(var)
+    def getSizeConst(var)
       return "ARRAYSZ_" << var.name.upcase
     end
 
     # Returns the version of this name styled for this language
-    def self.getStyledName(var)
+    def getStyledVariableName(var)
       if (var.genGet || var.genSet)
-        return CodeNameStyling.stylePascal(var.name)
+        return CodeNameStyling.getStyled(var.name, @langProfile.functionNameStyle)
       else
-        return CodeNameStyling.styleCamel(var.name)
+        return CodeNameStyling.getStyled(var.name, @langProfile.variableNameStyle)
       end
-    end
-            
-    # Get a parameter declaration for a method parameter
-    def self.getTypeName(gType)
-      return @@langProfile.getTypeName(gType)
     end
 
     # Capitalizes the first letter of a string
-    def self.getCapitalizedFirst(str)
+    def getCapitalizedFirst(str)
       newStr = String.new
       newStr += str[0,1].capitalize
 
@@ -128,12 +124,12 @@ module XCTECSharp
     end
     
     # Get the extension for a file type
-    def self.getExtension(eType)
-      return @@langProfile.getExtension(eType)
+    def getExtension(eType)
+      return @langProfile.getExtension(eType)
     end
     
     # Returns 
-    def self.getTypeAbbrev(var)
+    def getTypeAbbrev(var)
         if var.vtype == "Boolean"
           return "Bool"
         end
@@ -182,11 +178,11 @@ module XCTECSharp
         return var.vtype
     end
     
-    def self.getComment(var)
+    def getComment(var)
       return "/* " << var.text << " */\n"
     end
 
-    def self.getZero(var)
+    def getZero(var)
         if var.vtype == "Char"
           return "0"
         end
@@ -221,11 +217,11 @@ module XCTECSharp
         return "0"
     end
 
-    def self.isPrimitive(var)
-      return @@langProfile.isPrimitive(var)
+    def isPrimitive(var)
+      return @langProfile.isPrimitive(var)
     end
 
-    def self.getDataListInfo(classXML)
+    def getDataListInfo(classXML)
       dInfo = Hash.new
 
       classXML.elements.each("DATA_LIST_TYPE") { |dataListXML|
@@ -235,5 +231,8 @@ module XCTECSharp
       return(dInfo);
     end
 
+    def getLangugageProfile
+      return @langProfile
+    end
   end
 end

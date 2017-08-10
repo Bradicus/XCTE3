@@ -21,27 +21,27 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
   end
 
   # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, cfg, codeBuilder)
+  def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
     codeBuilder.add("///")
     codeBuilder.add("/// Update the record for this model")
     codeBuilder.add("///")
 
     codeBuilder.startClass("public void Update(SqlTransaction trans, " + dataModel.name + " o)")
 
-    get_body(dataModel, genClass, cfg, codeBuilder)
+    get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
     codeBuilder.endClass
   end
 
-  def get_declairation(dataModel, genClass, cfg, codeBuilder)
+  def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
     codeBuilder.add("void Update(SqlTransaction trans, " + dataModel.name + " o);")
   end
 
-  def get_dependencies(dataModel, genClass, cfg, codeBuilder)
+  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
   end
   
-  def get_body(dataModel, genClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray)

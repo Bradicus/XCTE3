@@ -14,9 +14,6 @@ require 'x_c_t_e_plugin.rb'
 class XCTECSharp::ClassStandard < XCTEPlugin
 
   def initialize
-  
-    XCTECSharp::Utils::init
-    
     @name = "standard"
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
@@ -28,7 +25,7 @@ class XCTECSharp::ClassStandard < XCTEPlugin
   
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = dataModel.name
-    codeBuilder.lfExtension = XCTECSharp::Utils::getExtension('body')
+    codeBuilder.lfExtension = XCTECSharp::Utils.instance.getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
     
     srcFiles << codeBuilder
@@ -70,9 +67,9 @@ class XCTECSharp::ClassStandard < XCTEPlugin
     # Generate class variables
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        codeBuilder.add(XCTECSharp::Utils::getVarDec(var))
+        codeBuilder.add(XCTECSharp::Utils.instance.getVarDec(var))
       elsif var.elementId == CodeElem::ELEM_COMMENT
-        codeBuilder.sameLine(XCTECSharp::Utils::getComment(var))
+        codeBuilder.sameLine(XCTECSharp::Utils.instance.getComment(var))
       elsif var.elementId == CodeElem::ELEM_FORMAT
         codeBuilder.add(var.formatText)
       end

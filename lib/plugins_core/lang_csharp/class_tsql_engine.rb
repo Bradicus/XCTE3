@@ -14,9 +14,6 @@ require 'x_c_t_e_plugin.rb'
 class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
   def initialize
-
-    XCTECSharp::Utils::init
-
     @name = "tsql_engine"
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
@@ -33,7 +30,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
-    codeBuilder.lfExtension = XCTECSharp::Utils::getExtension('body')
+    codeBuilder.lfExtension = XCTECSharp::Utils.instance.getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
 
     srcFiles << codeBuilder
@@ -50,7 +47,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
           if templ != nil
-            templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
+            templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
           else
             puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
@@ -101,14 +98,14 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
           if templ != nil
-            templ.get_definition(dataModel, genClass, cfg, codeBuilder)
+            templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
           else
             puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
         else  # Must be empty function
           templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
           if templ != nil
-            templ.get_definition(dataModel, genClass, cfg, codeBuilder)
+            templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end

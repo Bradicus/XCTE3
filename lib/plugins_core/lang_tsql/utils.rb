@@ -8,23 +8,24 @@
 # This class contains utility functions for a language
  
 require 'lang_profile.rb'
+require 'utils_base.rb'
+require 'singleton'
 
 module XCTETSql
-  class Utils
-    @@langProfile = LangProfile.new
-    
-    def self.init
-      @@langProfile.name = "tsql"   
-      @@langProfile.loadProfile
+  class Utils < UtilsBase
+    include Singleton
+
+    def initialize
+      super('csharp')
     end
     
     # Returns variable declaration for the specified variable
-    def self.getVarDec(var)
+    def getVarDec(var)
       vDec = String.new
       
       vDec << "[" << var.name << "] "
 
-      tName = self.getTypeName(var)
+      tName = getTypeName(var)
 
       if tName != var.vtype
         vDec << tName
@@ -36,7 +37,7 @@ module XCTETSql
     end
         
     # Get a parameter declaration for a method parameter
-    def self.getTypeName(var)
+    def getTypeName(var)
       if (var.vtype == "String")
         if (var.arrayElemCount > 9999)
           return("TEXT")
@@ -53,12 +54,12 @@ module XCTETSql
         end
       end
 
-      return @@langProfile.getTypeName(var.vtype)
+      return @langProfile.getTypeName(var.vtype)
     end
     
     # Get the extension for a file type
-    def self.getExtension(eType)
-      return @@langProfile.getExtension(eType)
+    def getExtension(eType)
+      return @langProfile.getExtension(eType)
     end
 
     def getStandardAutoIncludes()
@@ -67,12 +68,12 @@ module XCTETSql
     
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def self.getComment(var)
+    def getComment(var)
       return "/* " << var.text << " */\n"
     end
     
-    def self.isPrimitive(var)
-      return @@langProfile.isPrimitive(var)
+    def isPrimitive(var)
+      return @langProfile.isPrimitive(var)
     end
   end
 end

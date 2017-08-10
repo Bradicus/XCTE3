@@ -20,31 +20,35 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, cfg, codeBuilder)
+  def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
     codeBuilder.add("/**")
     codeBuilder.add("* Reads data set from sql database")
     codeBuilder.add("*/")
 
-    codeBuilder.startClass("IEnumerable<" + dataModel.name + "> RetrieveAll(SqlTransaction trans)")
+    genClass.name = dataModel.name
 
-    get_body(dataModel, genClass, cfg, codeBuilder)
+    codeBuilder.startClass("public IEnumerable<" + genClass.name + "> RetrieveAll(SqlTransaction trans)")
+
+    get_body(dataModel, genClass, genFun, cfg, codeBuilder)
         
     codeBuilder.endClass
   end
 
-  def get_declairation(dataModel, genClass, cfg, codeBuilder)
+  def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
     codeBuilder.add("IEnumerable<" + dataModel.name + "> RetrieveAll(SqlTransaction trans);")
   end
 
-  def get_dependencies(dataModel, genClass, cfg, codeBuilder)
+  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
     genClass.addInclude('System.Collections.Generic', 'IEnumerable')
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
   end
 
-  def get_body(dataModel, genClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray)
+
+    codeBuilder.add('List<' + dataModel.name + '> resultList = new List<' + dataModel.name + '>();')
 
     codeBuilder.add('string sql = @"SELECT ')
 
@@ -81,17 +85,36 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
     codeBuilder.add('SqlDataReader results = cmd.ExecuteReader();')
 
     codeBuilder.startBlock('while(results.Read())')
-    codeBuilder.add("o." + XCTECSharp::Utils::getStyledName(varArray[0]) + ' = Convert.ToInt32(newId);')
+
+    codeBuilder.add('var o = new ' + dataModel.name + '();')
+
+    for var in varArray
+      if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && XCTECSharp::Utils.instance.isPrimitive(var)
+        resultVal = 'results["' + XCTECSharp::Utils.instance.getStyledVariableName(var) + '"]'
+        objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
+
+        if var.nullable
+            codeBuilder.add(objVar + ' = ' + resultVal + ' == DBNull.Value ? null : Convert.To' +
+                                var.vtype + "(" + resultVal + ");")
+        else
+          codeBuilder.add(objVar + ' = Convert.To' +
+                              var.vtype + "(" + resultVal + ");")
+        end
+      end
+    end
 
     codeBuilder.endBlock
     codeBuilder.endBlock
 
     codeBuilder.endBlock
     codeBuilder.startBlock("catch(Exception e)")
-    codeBuilder.add('throw new Exception("Error retrieving all items from ' + dataModel.name + '");')
+    codeBuilder.add('throw new Exception("Error retrieving all items from ' + dataModel.name + '", e);')
     codeBuilder.endBlock(';')
+
+    codeBuilder.add
+    codeBuilder.add('return resultList;')
   end
-  
+
 end
 
 # Now register an instance of our plugin

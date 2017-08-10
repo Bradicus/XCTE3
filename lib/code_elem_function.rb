@@ -21,6 +21,7 @@ class CodeElemFunction < CodeElem
 	
     @visibility
     @parameters = Array.new # Array of CodeElemVariable
+    @variableReferences = Array.new # Array of variable names
     @isConst = false
     @isStatic = false
     @isVirtual = false
