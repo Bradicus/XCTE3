@@ -11,7 +11,6 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'pathname'
-
 require 'find.rb'
 require 'fileutils.rb'
 require 'code_elem_model.rb'

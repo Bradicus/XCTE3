@@ -231,6 +231,18 @@ module XCTECSharp
       return(dInfo);
     end
 
+    # generate includes list for file
+    def genIncludes(includesList, codeBuilder)
+
+      for inc in includesList
+        codeBuilder.add('using ' + inc.path + ';');
+      end
+
+      if !includesList.empty?
+        codeBuilder.add
+      end
+    end
+
     def getLangugageProfile
       return @langProfile
     end

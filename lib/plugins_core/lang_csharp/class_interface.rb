@@ -23,7 +23,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
 
-    genClass.name = dataModel.name +  "Interface"
+    genClass.name = "I" + dataModel.name
 
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
 

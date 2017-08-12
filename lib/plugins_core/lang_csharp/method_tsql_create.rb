@@ -60,7 +60,9 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
         end
         first = false;
 
-        codeBuilder.add(CodeNameStyling.stylePascal(var.name))
+        codeBuilder.add(
+          XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix)
+        )
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)

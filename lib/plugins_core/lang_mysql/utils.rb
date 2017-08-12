@@ -9,7 +9,7 @@
  
 require 'lang_profile.rb'
 
-module XCTESql
+module XCTEMySql
   class Utils
     @@langProfile = LangProfile.new
     

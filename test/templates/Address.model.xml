@@ -23,9 +23,9 @@
 	<gen_class type="tsql_engine" namespace="XCTE.Data" path="XCTE.Data"
 			   var_prefix = "a "
 			   interface_namespace="XCTE.Foundation" 
-			   interface_path="XCTE.Foundation" >
-		<!--<function name="retrieveBy" field="id" interface="true" />
-		<function name="retrieveBy" field="zip" interface="true" />-->
+			   interface_path="XCTE.Foundation"
+			   test_namespace="XCTE.Test" 
+			   test_path="XCTE.Foundation" >
 		<function name="method_tsql_create" interface="true" />
 		<function name="method_tsql_update" interface="true" />
 		<function name="method_tsql_retrieve_all" interface="true" />

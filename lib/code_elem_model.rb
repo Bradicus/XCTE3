@@ -76,6 +76,16 @@ module CodeStructure
           @classes << intf
         end
 
+        if genClass.testNamespace != nil
+          intf = CodeElemClassGen.new(genClass)
+          intf.namespaceList = genClass.testNamespace.split('.')
+          intf.path = genClass.testPath
+          intf.functions = genClass.functions
+          intf.language = genClass.language
+          intf.ctype = 'test'
+          @classes << intf
+        end
+
         puts "Loaded class node with function count " + genClass.functions.length.to_s
         puts "classes count " + @classes.length.to_s
       }
@@ -145,6 +155,8 @@ module CodeStructure
       genC.namespaceList = genCXml.attributes["namespace"].split('.')
       genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
       genC.interfacePath = genCXml.attributes["interface_path"]
+      genC.testNamespace = genCXml.attributes["test_namespace"]
+      genC.testPath = genCXml.attributes["test_path"]
       genC.language = genCXml.attributes["language"]
       genC.path = genCXml.attributes["path"]
       genC.varPrefix = genCXml.attributes["var_prefix"]

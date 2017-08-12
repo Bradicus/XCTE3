@@ -11,6 +11,8 @@ require 'code_elem_parent.rb'
 require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
+include XCTECSharp
+
 class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
   def initialize
@@ -30,7 +32,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
-    codeBuilder.lfExtension = XCTECSharp::Utils.instance.getExtension('body')
+    codeBuilder.lfExtension = Utils.instance.getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
 
     srcFiles << codeBuilder

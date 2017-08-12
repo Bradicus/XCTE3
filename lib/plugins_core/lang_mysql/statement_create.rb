@@ -9,9 +9,9 @@
 # on this class
  
 require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_sql/x_c_t_e_sql.rb'
+require 'plugins_core/lang_mysql/x_c_t_e_mysql.rb'
 
-module XCTESql
+module XCTEMySql
   class StatementCreate < XCTEPlugin
       
     def initialize
