@@ -21,9 +21,9 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
   
   # Returns definition string for this class's constructor
   def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-    codeBuilder.add("/**")
-    codeBuilder.add("* Reads data set from sql database")
-    codeBuilder.add("*/")
+    codeBuilder.add('/// <summary>')
+    codeBuilder.add('/// Reads data set from sql database')
+    codeBuilder.add('/// </summary>')
 
     genClass.name = dataModel.name
 

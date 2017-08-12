@@ -2,10 +2,10 @@ require 'lang_profile.rb'
 require 'code_name_styling.rb'
 
 module XCTECSharp
-  class MethodTsqlReadOneBy < XCTEPlugin
+  class MethodTsqlReadSetBy < XCTEPlugin
 
     def initialize
-      @name = "method_tsql_retrieve_one_by"
+      @name = "method_tsql_retrieve_set_by"
       @language = "csharp"
       @category = XCTEPlugin::CAT_METHOD
       @author = "Brad Ottoson"
@@ -14,7 +14,7 @@ module XCTECSharp
     # Returns definition string for this class's constructor
     def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
       codeBuilder.add('/// <summary>')
-      codeBuilder.add('/// Reads one result using the specified filter parameters')
+      codeBuilder.add('/// Reads set of results using the specified filter parameters')
       codeBuilder.add('/// </summary>')
       codeBuilder.startFunction("public " + get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder))
 
@@ -44,8 +44,8 @@ module XCTECSharp
         paramNames << XCTECSharp::Utils.instance.getStyledVariableName(param)
       }
 
-      return "IEnumerable<" + genClass.name + "> " +
-                                 XCTECSharp::Utils.instance.getStyledFunctionName("retrieve one by " + paramNames.join(" ")) +
+      return "List<" + genClass.name + "> " +
+                                 XCTECSharp::Utils.instance.getStyledFunctionName("retrieve set by " + paramNames.join(" ")) +
                                  "(SqlTransaction trans, " + paramDec.join(', ') + ")"
     end
 
@@ -57,7 +57,7 @@ module XCTECSharp
       styledClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
       codeBuilder.add('List<' + styledClassName + '> resultList = new List<' + styledClassName + '>();')
 
-      codeBuilder.add('string sql = @"SELECT TOP 1 ')
+      codeBuilder.add('string sql = @"SELECT ')
 
       codeBuilder.indent
 
@@ -147,4 +147,4 @@ module XCTECSharp
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTECSharp::MethodTsqlReadOneBy.new)
+XCTEPlugin::registerPlugin(XCTECSharp::MethodTsqlReadSetBy.new)

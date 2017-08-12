@@ -80,7 +80,7 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
         end
         first = false;
 
-        codeBuilder.add('@' +  XCTETSql::Utils.instance.getStyledVariableName(genClass.varPrefix + var.name))
+        codeBuilder.add('@' +  XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix))
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
@@ -99,8 +99,8 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     first = true
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && !first
-        codeBuilder.add('cmd.Parameters.AddWithValue("@' + XCTETSql::Utils.instance.getStyledVariableName(genClass.varPrefix + var.name) +
-                            '", o.' + CodeNameStyling.stylePascal(var.name) + ');')
+        codeBuilder.add('cmd.Parameters.AddWithValue("@' + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
+                            '", o.' + XCTECSharp::Utils.instance.getStyledVariableName(var) + ');')
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)

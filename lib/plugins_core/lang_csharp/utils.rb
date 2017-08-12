@@ -34,7 +34,7 @@ module XCTECSharp
         pDec << ""
       end
         
-      pDec << " " << var.name;
+      pDec << " " << self.getStyledVariableName(var);
       
       if var.arrayElemCount > 0
         pDec << "[]"
@@ -104,10 +104,14 @@ module XCTECSharp
 
     # Returns the version of this name styled for this language
     def getStyledVariableName(var)
-      if (var.genGet || var.genSet)
-        return CodeNameStyling.getStyled(var.name, @langProfile.functionNameStyle)
+      if var.is_a?(CodeElemVariable)
+        if (var.genGet || var.genSet)
+          return CodeNameStyling.getStyled(var.name, @langProfile.functionNameStyle)
+        else
+          return CodeNameStyling.getStyled(var.name, @langProfile.variableNameStyle)
+        end
       else
-        return CodeNameStyling.getStyled(var.name, @langProfile.variableNameStyle)
+        return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
       end
     end
 

@@ -9,7 +9,9 @@
 # read in from an xml file
 
 class CodeElemFunction < CodeElem
-  attr_accessor :name, :description, :visibility, :parameters, :isConst, :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue
+  attr_accessor :name, :description, :visibility, :parameters, :isConst,
+                :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue,
+                :variableReferences
 
   def initialize(parentElem)
     super(parentElem)
@@ -21,7 +23,7 @@ class CodeElemFunction < CodeElem
 	
     @visibility
     @parameters = Array.new # Array of CodeElemVariable
-    @variableReferences = Array.new # Array of variable names
+    @variableReferences = Array.new # Array of variables
     @isConst = false
     @isStatic = false
     @isVirtual = false

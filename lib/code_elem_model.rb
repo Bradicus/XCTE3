@@ -200,6 +200,12 @@ module CodeStructure
       puts "Loading function: " + fun.name
       fun.isTemplate = true
       fun.isInline = (tmpFunXML.attributes["inline"] == "true")
+
+      varArray = Array.new
+      getAllVarsFor(nil, varArray)
+      tmpFunXML.elements.each("var_ref") {|refXml|
+        fun.variableReferences << varArray.find { |var| var.name == refXml.attributes["name"] }
+      }
     end
 
     # Loads a function element from an XML function node

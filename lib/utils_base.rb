@@ -21,8 +21,8 @@ class UtilsBase
   end
 
   # Returns the version of this name styled for this language
-  def getStyledVariableName(varName)
-    return CodeNameStyling.getStyled(varName, @langProfile.variableNameStyle)
+  def getStyledVariableName(var, prefix = '')
+    return CodeNameStyling.getStyled(var.name + prefix, @langProfile.variableNameStyle)
   end
 
   def getStyledFunctionName(funName)

@@ -7,7 +7,7 @@
 	<gen_class type="standard" namespace="rmap" ></gen_class>
 				
 	<var_group virtual="true" genGet="true" genSet="true">
-		<var name="id"		type="Int32" pkey="true" maxlen="50" />
+		<var name="id"		type="Int32" pkey="true" />
 		<var name="street1"	type="String" pkey="true" maxlen="50" />
 		<var name="street2"	type="String" maxlen="50" />
 		<var name="city"	type="String" maxlen="50" />

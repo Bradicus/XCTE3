@@ -38,4 +38,18 @@ class CodeElemVariable < CodeElem
 
    # puts "[CodeElemVariable::initialize] Creating variable"
   end
+
+  # Returns parameter version of this variable, that can be used in function calls to pass data that
+  # can later be assigned to this variable.
+  def getParam()
+    param = CodeElemVariable.new(@parentElem)
+    param.name = @name
+    param.vtype = @vtype
+    param.templateType = @templateType
+    param.listType = @listType
+    param.arrayElemCount = @arrayElemCount
+
+    return param
+  end
+
 end
