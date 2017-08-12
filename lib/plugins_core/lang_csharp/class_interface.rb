@@ -65,7 +65,6 @@ class XCTECSharp::ClassInterface < XCTEPlugin
     # Process namespace items
     if genClass.namespaceList != nil
       codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
-      codeBuilder.add
     end
     
     classDec = dataModel.visibility + " interface " + genClass.name
@@ -82,9 +81,6 @@ class XCTECSharp::ClassInterface < XCTEPlugin
         
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray);
-    if dataModel.hasAnArray
-      codeBuilder.add  # If we declaired array size variables add a seperator
-    end
     
     # Generate code for functions
     for fun in genClass.functions

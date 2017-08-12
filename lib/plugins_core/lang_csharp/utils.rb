@@ -35,11 +35,7 @@ module XCTECSharp
       end
         
       pDec << " " << self.getStyledVariableName(var);
-      
-      if var.arrayElemCount > 0
-        pDec << "[]"
-      end
-      
+
       return pDec
     end
     

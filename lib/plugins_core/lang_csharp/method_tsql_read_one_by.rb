@@ -44,8 +44,7 @@ module XCTECSharp
         paramNames << XCTECSharp::Utils.instance.getStyledVariableName(param)
       }
 
-      return "IEnumerable<" + genClass.name + "> " +
-                                 XCTECSharp::Utils.instance.getStyledFunctionName("retrieve one by " + paramNames.join(" ")) +
+      return genClass.name + ' ' + XCTECSharp::Utils.instance.getStyledFunctionName("retrieve one by " + paramNames.join(" ")) +
                                  "(SqlTransaction trans, " + paramDec.join(', ') + ")"
     end
 
@@ -55,7 +54,8 @@ module XCTECSharp
       dataModel.getAllVarsFor(cfg, varArray)
 
       styledClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
-      codeBuilder.add('List<' + styledClassName + '> resultList = new List<' + styledClassName + '>();')
+
+      codeBuilder.add('var o = new ' + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + '();')
 
       codeBuilder.add('string sql = @"SELECT TOP 1 ')
 
@@ -113,8 +113,6 @@ module XCTECSharp
 
       codeBuilder.startBlock('while(results.Read())')
 
-      codeBuilder.add('var o = new ' + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + '();')
-
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && XCTECSharp::Utils.instance.isPrimitive(var)
           resultVal = 'results["' + XCTETSql::Utils.instance.getStyledVariableName(var) + '"]'
@@ -135,11 +133,11 @@ module XCTECSharp
 
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving all items from ' + dataModel.name + '", e);')
+      codeBuilder.add('throw new Exception("Error retrieving one item from ' + dataModel.name + '", e);')
       codeBuilder.endBlock(';')
 
       codeBuilder.add
-      codeBuilder.add('return resultList;')
+      codeBuilder.add('return o;')
     end
 
   end

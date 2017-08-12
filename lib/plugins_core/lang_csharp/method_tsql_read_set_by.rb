@@ -130,6 +130,9 @@ module XCTECSharp
         end
       end
 
+      codeBuilder.add
+      codeBuilder.add('resultList.Add(o);')
+
       codeBuilder.endBlock
       codeBuilder.endBlock
 
