@@ -24,7 +24,6 @@ class XCTEJavascript::ClassKendoDatasource < XCTEPlugin
     @name = "kendo_datasource"
     @language = "javascript"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
   
   def genSourceFiles(codeClass, cfg)

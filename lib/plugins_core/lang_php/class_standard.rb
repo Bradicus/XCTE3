@@ -23,7 +23,6 @@ class XCTEPhp::ClassStandard < XCTEPlugin
     @name = "standard"
     @language = "php"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
   
   def genSourceFiles(codeClass, cfg)

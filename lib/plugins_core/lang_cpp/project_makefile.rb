@@ -21,7 +21,6 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     @name = "makefile"
     @language = "cpp"
     @category = XCTEPlugin::CAT_PROJECT
-    @author = "Brad Ottoson"
   end
 
   def genSourceFiles(prj, cfg)

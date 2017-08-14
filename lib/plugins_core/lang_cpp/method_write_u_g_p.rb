@@ -15,7 +15,6 @@ class XCTECpp::MethodWriteUGP < XCTEPlugin
     @name = "method_writeugp"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns declairation string for this class's UGP write method

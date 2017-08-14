@@ -16,7 +16,6 @@ class XCTEJava::MethodLogIt < XCTEPlugin
     @name = "method_log_it"
     @language = "java"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end  
 
   # Returns definition string for this class's logIt method

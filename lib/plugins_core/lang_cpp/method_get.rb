@@ -16,7 +16,6 @@ class XCTECpp::MethodGet < XCTEPlugin
     @name = "method_get"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns declairation string for this class's get method

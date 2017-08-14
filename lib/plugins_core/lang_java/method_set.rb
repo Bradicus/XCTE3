@@ -16,7 +16,6 @@ class XCTEJava::MethodSet < XCTEPlugin
     @name = "method_set"
     @language = "java"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns declairation string for this class's set method

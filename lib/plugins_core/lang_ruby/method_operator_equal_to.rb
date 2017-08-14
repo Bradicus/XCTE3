@@ -16,7 +16,6 @@ class XCTERuby::MethodOperatorEqualTo < XCTEPlugin
     @name = "method_operator_equal_to"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's equality assignment operator

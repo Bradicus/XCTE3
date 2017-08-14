@@ -25,7 +25,6 @@ class XCTERuby::ClassXCTEPlugin < XCTEPlugin
     @name = "xcte_plugin"
     @language = "ruby"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
 
   def genSourceFiles(codeClass, cfg)

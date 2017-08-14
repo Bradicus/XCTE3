@@ -24,7 +24,6 @@ class XCTEJava::ClassStandard < XCTEPlugin
     @name = "standard"
     @language = "java"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
   
   def genSourceFiles(codeClass, cfg)

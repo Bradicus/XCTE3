@@ -16,7 +16,6 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
     @name = "method_tsql_retrieve_all"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns definition string for this class's constructor

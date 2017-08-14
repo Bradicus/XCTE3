@@ -25,7 +25,6 @@ class XCTECpp::ClassStandard < XCTEPlugin
     @name = "standard"
     @language = "cpp"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
   
   def genSourceFiles(dataModel, genClass, cfg)

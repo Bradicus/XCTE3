@@ -16,7 +16,6 @@ class XCTECpp::MethodSet < XCTEPlugin
     @name = "method_set"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns declairation string for this class's set method

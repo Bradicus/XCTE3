@@ -19,7 +19,6 @@ class XCTECpp::MethodEmpty < XCTEPlugin
     @name = "method_empty"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns declairation string for this empty method

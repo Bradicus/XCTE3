@@ -16,7 +16,6 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     @name = "method_operator_equals_by_value"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns declairation string for this class's equality assignment operator

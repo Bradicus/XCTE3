@@ -17,7 +17,6 @@ class XCTECSharp::MethodTsqlDelete < XCTEPlugin
     @name = "method_tsql_delete"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's constructor

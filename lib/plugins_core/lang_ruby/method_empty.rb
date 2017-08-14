@@ -20,7 +20,6 @@ class XCTERuby::MethodEmpty < XCTEPlugin
     @name = "method_empty"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for an empty method

@@ -15,7 +15,6 @@ class XCTECpp::MethodDestructor < XCTEPlugin
     @name = "method_destructor"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns declairation string for this class's destructor   

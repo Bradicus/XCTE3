@@ -15,7 +15,6 @@ class XCTERuby::MethodWriteUGP < XCTEPlugin
     @name = "method_writeugp"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's UGP write method

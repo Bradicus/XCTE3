@@ -16,7 +16,6 @@ class XCTECpp::MethodReadUGP < XCTEPlugin
     @name = "method_readugp"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns declairation string for this class's UGP read method

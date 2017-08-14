@@ -16,7 +16,6 @@ class XCTERuby::MethodReadUGP < XCTEPlugin
     @name = "method_readugp"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's UGP read method

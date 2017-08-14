@@ -18,7 +18,6 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     @name = "method_tsql_create"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's constructor

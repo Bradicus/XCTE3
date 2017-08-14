@@ -16,7 +16,6 @@ class XCTERuby::MethodLogIt < XCTEPlugin
     @name = "method_log_it"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's logIt method

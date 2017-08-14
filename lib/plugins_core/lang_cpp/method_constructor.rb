@@ -16,7 +16,6 @@ class XCTECpp::MethodConstructor < XCTEPlugin
     @name = "method_constructor"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns declairation string for this class's constructor

@@ -16,7 +16,6 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
     @name = "method_xcte_gen_src"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns declairation string for this class's set method

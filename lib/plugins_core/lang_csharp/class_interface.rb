@@ -19,7 +19,6 @@ class XCTECSharp::ClassInterface < XCTEPlugin
     @name = "interface"
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
   
   def genSourceFiles(dataModel, genClass, cfg)

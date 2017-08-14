@@ -16,7 +16,6 @@ class XCTECpp::MethodLogIt < XCTEPlugin
     @name = "method_log_it"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end  
   
   # Returns declairation string for this class's logIt method

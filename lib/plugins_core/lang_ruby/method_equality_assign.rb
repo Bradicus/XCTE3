@@ -16,7 +16,6 @@ class XCTERuby::MethodEqualityAssign < XCTEPlugin
     @name = "method_equality_assign"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's equality assignment operator

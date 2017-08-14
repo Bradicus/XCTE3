@@ -16,7 +16,6 @@ class XCTERuby::MethodConstructor < XCTEPlugin
     @name = "method_constructor"
     @language = "ruby"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's constructor

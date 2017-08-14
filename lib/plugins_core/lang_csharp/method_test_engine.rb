@@ -19,7 +19,6 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
     @name = "method_test_engine"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
 
   # Returns definition string for this class's constructor

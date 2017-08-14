@@ -24,7 +24,6 @@ class XCTEJavascript::ClassModel < XCTEPlugin
     @name = "model"
     @language = "javascript"
     @category = XCTEPlugin::CAT_CLASS
-    @author = "Brad Ottoson"
   end
   
   def genSourceFiles(codeClass, cfg)

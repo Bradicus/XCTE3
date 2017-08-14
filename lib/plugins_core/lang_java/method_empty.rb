@@ -20,7 +20,6 @@ class XCTEJava::MethodEmpty < XCTEPlugin
     @name = "method_empty"
     @language = "java"
     @category = XCTEPlugin::CAT_METHOD
-    @author = "Brad Ottoson"
   end
   
   # Returns definition string for an empty method
