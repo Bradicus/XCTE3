@@ -73,6 +73,7 @@ module CodeStructure
           intf.functions = genClass.functions
           intf.language = genClass.language
           intf.ctype = 'interface'
+          intf.parentElem = genClass
           @classes << intf
         end
 
@@ -80,9 +81,9 @@ module CodeStructure
           intf = CodeElemClassGen.new(genClass)
           intf.namespaceList = genClass.testNamespace.split('.')
           intf.path = genClass.testPath
-          intf.functions = genClass.functions
           intf.language = genClass.language
-          intf.ctype = 'test'
+          intf.ctype = 'test_engine'
+          intf.parentElem = genClass
           @classes << intf
         end
 
@@ -202,7 +203,7 @@ module CodeStructure
       # Load any auto includes for this class
 
 
-      puts "Loaded class note with function count " + genC.functions.length.to_s
+      #puts "Loaded class note with function count " + genC.functions.length.to_s
     end
 
     # Loads a template function element from an XML template function node

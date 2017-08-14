@@ -25,7 +25,7 @@ class XCTECSharp::TestEngine < XCTEPlugin
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
 
-    genClass.name = dataModel.name + 'EngineTest'
+    genClass.setName(Utils.instance.getStyledClassName(dataModel.name + ' engine test'))
     if genClass.interfaceNamespace != nil
       genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + 'Interface')
     end
@@ -42,64 +42,25 @@ class XCTECSharp::TestEngine < XCTEPlugin
 
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
+
+    templ = XCTEPlugin::findMethodPlugin("csharp", 'method_test_engine')
+    templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
+
+    Utils.instance.genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
     Utils.instance.genIncludes(genClass.includes, codeBuilder)
 
-    # Process namespace items
-    if genClass.namespaceList != nil
-      codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
-      codeBuilder.add
-    end
+    Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
 
     classDec = dataModel.visibility + " class " + genClass.name
 
     codeBuilder.startClass(classDec)
 
-    codeBuilder.add('I' + dataModel.name + 'Engine intf;')
-    codeBuilder.add(dataModel.name + ' obj = new ' + dataModel.name + '();')
-    codeBuilder.add('intf = new ' + dataModel.name + 'Engine();')
-    
-    codeBuilder.add
+    templ.get_definition(dataModel, genClass, cfg, codeBuilder)
 
-    varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
-
-    # Generate class variables
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.vtype == 'String'
-          codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "Test String";')
-      end
-    end
-
-    # Generate code for functions
-    for fun in genClass.functions
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-          if templ != nil
-            templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
-          else
-            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-          end
-        else  # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
-          if templ != nil
-            templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-          end
-        end
-
-        codeBuilder.add
-      end
-    end  # class  + dataModel.name
     codeBuilder.endClass
 
-    # Process namespace items
-    if genClass.namespaceList != nil
-      codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join('.'))
-      codeBuilder.add
-    end
+    Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
+
   end
 end
 

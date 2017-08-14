@@ -34,7 +34,7 @@ module XCTECSharp
     end
 
     def get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.name = CodeNameStyling.stylePascal(dataModel.name)
+      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
 
       paramDec = Array.new
       paramNames = Array.new
@@ -44,7 +44,7 @@ module XCTECSharp
         paramNames << XCTECSharp::Utils.instance.getStyledVariableName(param)
       }
 
-      return "List<" + genClass.name + "> " +
+      return "List<" + standardClassName + "> " +
                                  XCTECSharp::Utils.instance.getStyledFunctionName("retrieve set by " + paramNames.join(" ")) +
                                  "(SqlTransaction trans, " + paramDec.join(', ') + ")"
     end

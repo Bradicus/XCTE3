@@ -25,9 +25,9 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
     codeBuilder.add("* Constructor")
     codeBuilder.add("*/")
 
-    genClass.name = dataModel.name
+    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
 
-    codeBuilder.startClass(genClass.name + "()")
+    codeBuilder.startClass(standardClassName + "()")
 
     get_body(dataModel, genClass, cfg, codeBuilder)
         

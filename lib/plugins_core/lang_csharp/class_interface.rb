@@ -11,6 +11,8 @@ require 'code_elem_parent.rb'
 require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
+using XCTECSharp
+
 class XCTECSharp::ClassInterface < XCTEPlugin
 
   def initialize
@@ -23,13 +25,17 @@ class XCTECSharp::ClassInterface < XCTEPlugin
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
 
-    genClass.name = "I" + dataModel.name
+    if (genClass.parentElem.is_a?(CodeElemClassGen))
+      genClass.setName("I" + genClass.parentElem.name)
+    else
+      genClass.setName("I" + dataModel.name)
+    end
 
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
-    codeBuilder.lfExtension = XCTECSharp::Utils.instance.getExtension('body')
+    codeBuilder.lfExtension = Utils.instance.getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
     
     srcFiles << codeBuilder

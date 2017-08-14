@@ -13,8 +13,9 @@ require 'code_elem_include.rb'
 
 class CodeElemClassGen < CodeElem
   attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
-                :testNamespace, :testPath
-                :name, :includes, :baseClasses, :language, :path, :varPrefix
+                :testNamespace, :testPath,
+                :includes, :baseClasses, :language, :path, :varPrefix
+  attr_reader   :name
 
   def initialize(parentElem)
     super(parentElem)
@@ -52,5 +53,9 @@ class CodeElemClassGen < CodeElem
       curInc = CodeElemInclude.new(iPath, iName, iType)
       @includes << curInc
     end
+  end
+
+  def setName(newName)
+    @name = newName
   end
 end

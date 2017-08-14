@@ -24,8 +24,6 @@ module XCTERazor
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
 
-      genClass.name = dataModel.name
-
       codeBuilder = SourceRenderer.new
       codeBuilder.lfName = dataModel.name
       codeBuilder.lfExtension = 'cshtml'
@@ -41,7 +39,8 @@ module XCTERazor
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@model " + genClass.namespaceList.join('.') + '.' + genClass.name)
+      codeBuilder.add("@model " + genClass.namespaceList.join('.') + '.' +
+                          XCTECSharp::Utils.instance.getStandardName(dataModel))
       codeBuilder.add
       codeBuilder.add("<form>")
       codeBuilder.indent

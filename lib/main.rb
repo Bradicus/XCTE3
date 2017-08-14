@@ -54,7 +54,6 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                   end
 
                   if language.has_key?(genClass.ctype)
-
                     srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
 
                     if genClass.path != nil

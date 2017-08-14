@@ -24,7 +24,7 @@ module XCTETSql
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
 
-      genClass.name = dataModel.name
+      genClass.setName(XCTETSql::Utils.instance.getStyledClassName(dataModel.name))
 
       codeBuilder = SourceRenderer.new
       codeBuilder.lfName = dataModel.name

@@ -25,9 +25,9 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
     codeBuilder.add('/// Reads data set from sql database')
     codeBuilder.add('/// </summary>')
 
-    genClass.name = dataModel.name
+    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
 
-    codeBuilder.startClass("public IEnumerable<" + genClass.name + "> RetrieveAll(SqlTransaction trans)")
+    codeBuilder.startClass("public IEnumerable<" + standardClassName + "> RetrieveAll(SqlTransaction trans)")
 
     get_body(dataModel, genClass, genFun, cfg, codeBuilder)
         

@@ -25,9 +25,10 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
 
-    genClass.name = dataModel.name + 'Engine'
+    genClass.setName(Utils.instance.getStyledClassName(dataModel.name + ' engine'))
+
     if genClass.interfaceNamespace != nil
-      genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + 'Interface')
+      genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, 'I' + dataModel.name + 'Engine')
     end
 
     codeBuilder = SourceRendererCSharp.new
@@ -43,33 +44,9 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
-    # Add in any dependencies required by functions
-    for fun in genClass.functions
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-          if templ != nil
-            templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
-          else
-            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-          end
-        end
-      end
-    end
-
-    for inc in genClass.includes
-      codeBuilder.add('using ' + inc.path + ';');
-    end
-
-    if !genClass.includes.empty?
-      codeBuilder.add
-    end
-
-    # Process namespace items
-    if genClass.namespaceList != nil
-      codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
-      codeBuilder.add
-    end
+    Utils.instance.genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
+    Utils.instance.genIncludes(genClass.includes, codeBuilder)
+    Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
 
     classDec = dataModel.visibility + " class " + genClass.name
 
@@ -79,7 +56,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
       inheritsFrom << baseClass.name
     end
     if genClass.interfaceNamespace != nil
-      inheritsFrom << dataModel.name + 'Interface'
+      inheritsFrom << Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine')
     end
 
     for par in (0..inheritsFrom.size)
@@ -118,11 +95,7 @@ class XCTECSharp::ClassTsqlEngine < XCTEPlugin
     end  # class  + dataModel.name
     codeBuilder.endClass
 
-    # Process namespace items
-    if genClass.namespaceList != nil
-      codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join('.'))
-      codeBuilder.add
-    end
+    Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
   end
 end
 

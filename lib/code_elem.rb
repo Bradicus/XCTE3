@@ -8,7 +8,7 @@
 # This class is the base class for all code elements
 
 class CodeElem
-  attr_accessor :elementId, :xmlElement, :osInclude, :parent, :visibility
+  attr_accessor :elementId, :xmlElement, :osInclude, :parentElem, :visibility
   
   ELEM_CLASS = "class";
   ELEM_CLASS_GEN = "class_gen"
