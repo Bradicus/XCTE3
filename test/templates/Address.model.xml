@@ -25,7 +25,7 @@
 			   interface_namespace="XCTE.Foundation" 
 			   interface_path="XCTE.Foundation"
 			   test_namespace="XCTE.Test" 
-			   test_path="XCTE.Foundation" >
+			   test_path="XCTE.Test" >
 		<function name="method_tsql_create" interface="true" />
 		<function name="method_tsql_update" interface="true" />
 		<function name="method_tsql_retrieve_all" interface="true" />
