@@ -27,7 +27,8 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
     codeBuilder.add("/// Constructor")
     codeBuilder.add("///")
 
-    codeBuilder.startFunction('public void ' + Utils.instance.getStyledFunctionName("test engine") + '()')
+    codeBuilder.add('[TestMethod]')
+    codeBuilder.startFunction('public void ' + Utils.instance.getStyledFunctionName("test " + dataModel.name + " engine()"))
     get_body(dataModel, genClass, cfg, codeBuilder)
 
     codeBuilder.endFunction
@@ -36,6 +37,8 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
   def get_dependencies(dataModel, genClass, cfg, codeBuilder)
     genClass.addInclude('System.Collections.Generic', 'IEnumerable')
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
+    genClass.addInclude('System', 'Exception')
+    genClass.addInclude('Microsoft.VisualStudio.TestTools.UnitTesting', 'TestMethod');
     genClass.addInclude('XCTE.Foundation', Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine'))
     genClass.addInclude('XCTE.Data', Utils.instance.getStyledClassName(dataModel.name + ' engine'))
   end
@@ -46,8 +49,12 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
     codeBuilder.add(dataModel.name + ' obj = new ' + dataModel.name + '();')
     codeBuilder.add('intf = new ' + dataModel.name + 'Engine();')
     codeBuilder.add('SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=Test; Integrated Security=SSPI;");')
+    codeBuilder.add('conn.Open();')
+    codeBuilder.add('SqlTransaction trans = conn.BeginTransaction();')
 
     codeBuilder.add
+
+    codeBuilder.startBlock('try')
 
     varArray = Array.new
     dataModel.getAllVarsFor(cfg, varArray)
@@ -55,17 +62,33 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
     # Generate class variables
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.vtype == 'String'
-          codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "Test String";')
-        elsif var.vtype.start_with?('Int')
-          codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
-        elsif var.vtype.start_with?('Decimal')
-          codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
-        elsif var.vtype.start_with?('Float')
-          codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+        if var.identity.nil?
+          if var.vtype == 'String'
+            codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "Test String";')
+          elsif var.vtype.start_with?('Int')
+            codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
+          elsif var.vtype.start_with?('Decimal')
+            codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+          elsif var.vtype.start_with?('Float')
+            codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+          end
         end
       end
     end
+
+    codeBuilder.add
+    codeBuilder.add('intf.Create(trans, obj);')
+
+    codeBuilder.endBlock
+    codeBuilder.startBlock('catch(Exception e)')
+    codeBuilder.startBlock('try')
+    codeBuilder.add('trans.Rollback();')
+    codeBuilder.endBlock
+    codeBuilder.startBlock('catch(Exception er)')
+    codeBuilder.add('throw new Exception("Failed to rollback transaction after exception", er);')
+    codeBuilder.endBlock
+    codeBuilder.add('throw new Exception("Failed to create new test object for ' + Utils.instance.getStandardName(dataModel) + '", e);')
+    codeBuilder.endBlock
 
     # Generate code for functions
     for fun in genClass.functions

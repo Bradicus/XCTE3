@@ -73,8 +73,8 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
                     for srcFile in srcFiles
 
-                      puts srcFile.lfName
-                      puts "Extension: " + srcFile.lfExtension.to_s
+                      #puts srcFile.lfName
+                      #puts "Extension: " + srcFile.lfExtension.to_s
 
                       #puts OS.windows?
                       #if OS.windows?
@@ -82,7 +82,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                       #else
                         sFile = File.new(newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode:"w")
                       #end
-                      puts "writing file" + newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension
+                      puts "writing file: " + newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension
                       sFile << srcFile.getContents
                       sFile.close                    
                     end

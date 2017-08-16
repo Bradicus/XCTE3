@@ -62,7 +62,19 @@ module XCTETSql
         end
       end
 
-      codeBuilder.add(", PRIMARY KEY (id)")
+      primKeys = Array.new
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if var.isPrimary == true
+            primKeys << Utils.instance.getStyledVariableName(var)
+          end
+        end
+      end
+
+      if primKeys.length > 0
+        codeBuilder.sameLine(',')
+        codeBuilder.add("PRIMARY KEY (" + primKeys.join(', ') + ")")
+      end
 
       codeBuilder.unindent
       codeBuilder.add(") ")

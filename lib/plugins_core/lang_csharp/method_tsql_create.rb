@@ -54,14 +54,16 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     first = true;
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !first
-          codeBuilder.sameLine(',')
-        end
-        first = false;
+        if (var.identity == nil)
+          if !first
+            codeBuilder.sameLine(',')
+          end
+          first = false;
 
-        codeBuilder.add(
-          XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix)
-        )
+          codeBuilder.add(
+            XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix)
+          )
+        end
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
@@ -76,12 +78,14 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     first = true;
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !first
-          codeBuilder.sameLine(',')
-        end
-        first = false;
+        if (var.identity == nil)
+          if !first
+            codeBuilder.sameLine(',')
+          end
+          first = false;
 
-        codeBuilder.add('@' +  XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix))
+          codeBuilder.add('@' +  XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix))
+        end
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
@@ -96,6 +100,7 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
 
     codeBuilder.startBlock("try")
     codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
+
 
     first = true
     for var in varArray

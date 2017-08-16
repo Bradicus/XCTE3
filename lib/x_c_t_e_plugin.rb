@@ -44,7 +44,7 @@ class XCTEPlugin
         Find.find(langDir) do |path|
           if FileTest.file?(path)
             if path.include?(".rb") && !path.include?(".svn") # not perfect but good enough
-              puts "Loading plugin: " + path + " for language: " + langName
+              #puts "Loading plugin: " + path + " for language: " + langName
               require path
             end
           end

@@ -87,8 +87,8 @@ module CodeStructure
           @classes << intf
         end
 
-        puts "Loaded class node with function count " + genClass.functions.length.to_s
-        puts "classes count " + @classes.length.to_s
+        #puts "Loaded class node with function count " + genClass.functions.length.to_s
+        #puts "classes count " + @classes.length.to_s
       }
     end
 
@@ -108,6 +108,8 @@ module CodeStructure
       curVar.isPointer = varXML.attributes["pointer"]
       curVar.isVirtual = curVar.findAttribute("virtual")
       curVar.nullable = curVar.findAttribute("nullable")
+      curVar.identity = varXML.attributes["identity"]
+      curVar.isPrimary = varXML.attributes["pkey"] == 'true'
 
       curVar.genGet = curVar.findAttribute("genGet")
       curVar.genSet = curVar.findAttribute("genSet")

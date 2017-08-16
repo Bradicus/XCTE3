@@ -23,12 +23,15 @@ module XCTETSql
     def getVarDec(var)
       vDec = String.new
       
-      vDec << "[" << var.name << "] "
+      vDec << "[" << CodeNameStyling.getStyled(var.name, @langProfile.variableNameStyle) << "] "
 
       tName = getTypeName(var)
 
       if tName != var.vtype
         vDec << tName
+        if (var.identity)
+          vDec << ' IDENTITY' << var.identity
+        end
       else
         vDec << "TEXT"
       end
@@ -62,10 +65,11 @@ module XCTETSql
       return @langProfile.getExtension(eType)
     end
 
-    def getStandardAutoIncludes()
-
+    # Returns the version of this name styled for this language
+    def getStyledVariableName(var, prefix = '')
+      return '[' + CodeNameStyling.getStyled(prefix + var.name, @langProfile.variableNameStyle) + ']'
     end
-    
+
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
     def getComment(var)

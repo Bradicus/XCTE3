@@ -50,6 +50,7 @@ class XCTECSharp::TestEngine < XCTEPlugin
 
     Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
 
+    codeBuilder.add('[TestClass]')
     classDec = dataModel.visibility + " class " + genClass.name
 
     codeBuilder.startClass(classDec)
