@@ -26,7 +26,7 @@ class XCTEPhp::MethodSet < XCTEPlugin
   # Returns definition string for this class's set method
   def get_definition(codeClass, cfg, outCode)
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 	
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == "true"

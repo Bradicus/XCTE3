@@ -29,7 +29,7 @@ class XCTERuby::MethodOperatorEqualTo < XCTEPlugin
     eqString << "def ==" << "(src" << codeClass.name << ")\n"
 
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     eqString << "    return(\n"
 

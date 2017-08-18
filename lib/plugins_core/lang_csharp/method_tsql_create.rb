@@ -45,20 +45,17 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
+    dataModel.getAllVarsFor(varArray)
 
-    codeBuilder.add('string sql = @"INSERT INTO ' + dataModel.name + '(')
+    codeBuilder.add('string sql = @"INSERT INTO ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + '(')
 
     codeBuilder.indent
 
-    first = true;
+    seperator = '';
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         if (var.identity == nil)
-          if !first
-            codeBuilder.sameLine(',')
-          end
-          first = false;
+          codeBuilder.sameLine(seperator)
 
           codeBuilder.add(
             XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix)
@@ -69,6 +66,7 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
           codeBuilder.add(var.formatText)
         end
       end
+      seperator = ',';
     end
 
     codeBuilder.unindent
@@ -84,7 +82,7 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
           end
           first = false;
 
-          codeBuilder.add('@' +  XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix))
+          codeBuilder.add('@' +  XCTECSharp::Utils.instance.getStyledVariableName(var))
         end
       else
         if var.elementId == CodeElem::ELEM_FORMAT
@@ -99,31 +97,25 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
     codeBuilder.add
 
     codeBuilder.startBlock("try")
-    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
+    codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection, trans))")
 
-
-    first = true
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !first
-        codeBuilder.add('cmd.Parameters.AddWithValue("@' + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
-                            '", o.' + XCTECSharp::Utils.instance.getStyledVariableName(var) + ');')
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
-      first = false
-    end
+    Utils.instance.addNonIdentityParams(dataModel, genClass, codeBuilder)
 
     codeBuilder.add
 
-    codeBuilder.add('var newId = cmd.ExecuteScalar();')
-    codeBuilder.add("o." + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) + ' = Convert.ToInt32(newId);')
+    identVar = dataModel.getIdentityVar();
+
+    if identVar != nil
+      codeBuilder.add('var newId = cmd.ExecuteScalar();')
+      codeBuilder.add("o." + Utils.instance.getStyledVariableName(identVar) + 
+                      ' = Convert.To' + identVar.vtype + '(newId);')
+    end
+
     codeBuilder.endBlock
     codeBuilder.endBlock
     codeBuilder.startBlock("catch(Exception e)")
-    codeBuilder.add('throw new Exception("Error inserting ' + dataModel.name + ' into database with ' +
-                        varArray[0].name + ' = "' + ' + o.' + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) + ', e);')
+    codeBuilder.add('throw new Exception("Error inserting ' + 
+        XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + ' into database", e);')
     codeBuilder.endBlock(';')
   end
 

@@ -32,7 +32,7 @@ class XCTECpp::MethodProcessRow < XCTEPlugin
     readDef << indent << "int errCheck;\n"
 
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     puts "Processing process_row method with var count: " + varArray.length.to_s
     

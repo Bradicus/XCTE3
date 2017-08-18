@@ -43,50 +43,42 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
   
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
-    varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
 
-    codeBuilder.add('string sql = @"UPDATE ' + dataModel.name + ' SET ')
+    codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + ' SET ')
 
     codeBuilder.indent
 
-    count = 0
+    separater = ''
+    varArray = Array.new
+    dataModel.getNonIdentityVars(varArray)
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if count > 1
-          codeBuilder.sameLine(',')
-		end
-        if count > 0
-		  codeBuilder.add(CodeNameStyling.stylePascal(var.name) + " = @" + CodeNameStyling.stylePascal(var.name))
-        end
+        codeBuilder.sameLine(separater)        
+        codeBuilder.add(XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
+            " = @" + Utils.instance.getStyledVariableName(var))              
       elsif var.elementId == CodeElem::ELEM_FORMAT
         codeBuilder.add(var.formatText)
       end
-	  count += 1
+      separater = ','
     end
 
     codeBuilder.unindent
-    codeBuilder.add('WHERE ' + CodeNameStyling.stylePascal(varArray[0].name) +
-		" = @" + CodeNameStyling.stylePascal(varArray[0].name)	+ '";')
+    
+    identVar = dataModel.getIdentityVar();
+    codeBuilder.add('WHERE ' + Utils.instance.getStyledVariableName(identVar) +
+		" = @" + Utils.instance.getStyledVariableName(identVar)	+ '";')
 
     codeBuilder.add
 
     codeBuilder.startBlock("try")
     codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
 
-    first = true
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        codeBuilder.add('cmd.Parameters.AddWithValue("@' + CodeNameStyling.stylePascal(var.name) +
-                            '", o.' + CodeNameStyling.stylePascal(var.name) + ');')
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
-      first = false
-    end
+    varArray = Array.new
+    dataModel.getAllVarsFor(varArray)
 
+    Utils.instance.addParameters(varArray, genClass, codeBuilder)
+    
+    codeBuilder.add
     codeBuilder.add('cmd.ExecuteScalar();')
     codeBuilder.endBlock
     codeBuilder.endBlock

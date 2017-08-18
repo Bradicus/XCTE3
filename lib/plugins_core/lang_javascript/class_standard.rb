@@ -96,7 +96,7 @@ class XCTEJavascript::ClassStandard < XCTEPlugin
     
     # Do automatic static array size declairations at top of class
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
     
     if codeClass.hasAnArray
       headerString << "\n"  # If we declaired array size variables add a seperator

@@ -43,7 +43,7 @@ class XCTECSharp::MethodTsqlDelete < XCTEPlugin
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
+    dataModel.getAllVarsFor(varArray)
 
     codeBuilder.add('string sql = @"DELETE FROM ' + dataModel.name +
                         ' WHERE ' + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) +

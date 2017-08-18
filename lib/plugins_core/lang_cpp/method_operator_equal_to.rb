@@ -41,7 +41,7 @@ class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
     eqString << "{\n"
 
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     eqString << "    return(\n"
 

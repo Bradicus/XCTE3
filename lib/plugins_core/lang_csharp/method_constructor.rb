@@ -36,7 +36,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   def get_body(dataModel, genClass, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE

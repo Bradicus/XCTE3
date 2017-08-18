@@ -128,7 +128,7 @@ module XCTECSharp
       return @langProfile.getExtension(eType)
     end
     
-    # Returns 
+    # # Should move this into language def xml 
     def getTypeAbbrev(var)
         if var.vtype == "Boolean"
           return "Bool"
@@ -182,6 +182,7 @@ module XCTECSharp
       return "/* " << var.text << " */\n"
     end
 
+    # Should move this into language def xml
     def getZero(var)
         if var.vtype == "Char"
           return "0"
@@ -233,7 +234,6 @@ module XCTECSharp
 
     # generate includes list for file
     def genIncludes(includesList, codeBuilder)
-
       for inc in includesList
         codeBuilder.add('using ' + inc.path + ';');
       end
@@ -254,6 +254,27 @@ module XCTECSharp
             else
               puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
+          end
+        end
+      end
+    end
+
+    def addNonIdentityParams(dataModel, genClass, codeBuilder)      
+      varArray = Array.new
+      dataModel.getNonIdentityVars(varArray)
+
+      addParameters(varArray, genClass, codeBuilder)
+    end
+
+    def addParameters(varArray, genClass, codeBuilder) 
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          codeBuilder.add('cmd.Parameters.AddWithValue("@' + 
+                  Utils.instance.getStyledVariableName(var) +
+                  '", o.' + Utils.instance.getStyledVariableName(var) + ');')
+        else
+          if var.elementId == CodeElem::ELEM_FORMAT
+            codeBuilder.add(var.formatText)
           end
         end
       end

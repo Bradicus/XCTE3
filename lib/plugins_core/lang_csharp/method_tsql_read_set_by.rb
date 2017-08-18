@@ -52,7 +52,7 @@ module XCTECSharp
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
-      dataModel.getAllVarsFor(cfg, varArray)
+      dataModel.getAllVarsFor(varArray)
 
       styledClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
       codeBuilder.add('List<' + styledClassName + '> resultList = new List<' + styledClassName + '>();')

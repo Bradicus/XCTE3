@@ -220,7 +220,7 @@ class XCTECpp::ClassStandard < XCTEPlugin
 
     # Initialize static variables
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
+    dataModel.getAllVarsFor(varArray)
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE

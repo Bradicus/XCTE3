@@ -21,7 +21,7 @@ class XCTECpp::MethodSet < XCTEPlugin
   # Returns declairation string for this class's set method
   def get_declaration(codeClass, cfg, codeBuilder)
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == "true"

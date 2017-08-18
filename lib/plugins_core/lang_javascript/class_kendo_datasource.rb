@@ -99,7 +99,7 @@ class XCTEJavascript::ClassKendoDatasource < XCTEPlugin
     
     # Do automatic static array size declairations at top of class
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
             
     # Generate class variables
     outCode.add "    // -- Fields --"

@@ -34,7 +34,7 @@ class XCTERuby::MethodWriteUGP < XCTEPlugin
     end
 
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE

@@ -85,7 +85,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
     codeBuilder.startClass(classDec)
         
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray);
+    dataModel.getAllVarsFor(varArray);
     
     # Generate code for functions
     for fun in genClass.functions

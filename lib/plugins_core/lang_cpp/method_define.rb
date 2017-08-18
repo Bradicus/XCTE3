@@ -21,7 +21,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
   # Returns declairation string for this class's define function
   def get_declaration(codeClass, cfg, codeBuilder)
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     eqString = String.new
     seperator = ""
@@ -49,7 +49,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
   # Returns declairation string for this class's define function
   def get_declaration_inline(codeClass, cfg)
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     eqString = String.new
     seperator = ""
@@ -79,7 +79,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
     seperator = ""
     longArrayFound = false;
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     codeBuilder.add("/**\n* Defines the variables in an object\n*/")
     codeBuilder.add("void " << codeClass.name << " :: define(")
@@ -118,10 +118,10 @@ class XCTECpp::MethodDefine < XCTEPlugin
     seperator = ""
     longArrayFound = false;
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE

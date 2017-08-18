@@ -120,7 +120,7 @@ class XCTERuby::ClassXCTEPlugin < XCTEPlugin
     codeBuilder.add
 
     codeBuilder.add('varArray = Array.new')
-    codeBuilder.add('codeClass.getAllVarsFor(cfg, varArray);')
+    codeBuilder.add('codeClass.getAllVarsFor(varArray);')
 
     codeBuilder.startBlock("if codeClass.hasAnArray")
     codeBuilder.add('codeBuilder.add  # If we declaired array size variables add a seperator')

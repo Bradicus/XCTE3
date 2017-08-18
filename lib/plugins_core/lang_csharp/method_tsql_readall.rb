@@ -45,7 +45,7 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
+    dataModel.getAllVarsFor(varArray)
 
     codeBuilder.add('List<' + dataModel.name + '> resultList = new List<' + dataModel.name + '>();')
 
@@ -61,7 +61,9 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
         end
         first = false
 
-        codeBuilder.add(CodeNameStyling.stylePascal(var.name))
+        codeBuilder.add('[' + 
+          XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) + ']'
+        )
       else
         if var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
@@ -89,7 +91,8 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && XCTECSharp::Utils.instance.isPrimitive(var)
-        resultVal = 'results["' + XCTECSharp::Utils.instance.getStyledVariableName(var) + '"]'
+        resultVal = 'results["' + 
+            XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) + '"]'
         objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
 
         if var.nullable

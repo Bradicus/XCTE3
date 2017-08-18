@@ -61,7 +61,7 @@ class XCTECSharp::ClassStandard < XCTEPlugin
     codeBuilder.startClass(classDec)
         
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
+    dataModel.getAllVarsFor(varArray)
 
     # Generate class variables
     for var in varArray

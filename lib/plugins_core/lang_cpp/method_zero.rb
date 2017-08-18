@@ -21,7 +21,7 @@ class XCTECpp::MethodZero < XCTEPlugin
   # Returns declairation string for this class's equality assignment operator
   def get_declaration(codeClass, cfg)
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     eqString = String.new
     seperator = ""
@@ -36,7 +36,7 @@ class XCTECpp::MethodZero < XCTEPlugin
     seperator = ""
     longArrayFound = false;
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     eqString << "/**\n* Defines the variables in an object\n*/\n"
     eqString << "void " << codeClass.name << " :: zero()\n"
@@ -47,7 +47,7 @@ class XCTECpp::MethodZero < XCTEPlugin
 #    end
 
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE

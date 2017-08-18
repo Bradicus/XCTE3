@@ -45,7 +45,7 @@ module XCTETSql
       codeBuilder.indent
 
       varArray = Array.new
-      dataModel.getAllVarsFor(cfg, varArray)
+      dataModel.getAllVarsFor(varArray)
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
@@ -54,7 +54,7 @@ module XCTETSql
           end
           first = false
 
-          codeBuilder.add(XCTETSql::Utils.instance.getVarDec(var))
+          codeBuilder.add(XCTETSql::Utils.instance.getVarDec(var, genClass.varPrefix))
 
           if var.defaultValue != nil
             codeBuilder.sameLine(" default '" << var.defaultValue << "'")
@@ -66,7 +66,7 @@ module XCTETSql
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isPrimary == true
-            primKeys << Utils.instance.getStyledVariableName(var)
+            primKeys << Utils.instance.getStyledVariableName(var, genClass.varPrefix)
           end
         end
       end

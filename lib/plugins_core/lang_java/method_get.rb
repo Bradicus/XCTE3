@@ -22,7 +22,7 @@ class XCTEJava::MethodGet < XCTEPlugin
   def get_definition(codeClass, cfg)
     readDef = String.new
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genGet == "true"

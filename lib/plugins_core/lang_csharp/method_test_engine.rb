@@ -37,6 +37,7 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
   def get_dependencies(dataModel, genClass, cfg, codeBuilder)
     genClass.addInclude('System.Collections.Generic', 'IEnumerable')
     genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
+    genClass.addInclude('System.Configuration', 'ConfigurationManager')
     genClass.addInclude('System', 'Exception')
     genClass.addInclude('Microsoft.VisualStudio.TestTools.UnitTesting', 'TestMethod');
     genClass.addInclude('XCTE.Foundation', Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine'))
@@ -45,10 +46,11 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
 
   def get_body(dataModel, genClass, cfg, codeBuilder)
 
-    codeBuilder.add('I' + dataModel.name + 'Engine intf;')
+    codeBuilder.add('I' + dataModel.name + 'Engine intf = new ' + dataModel.name + 'Engine();')
     codeBuilder.add(dataModel.name + ' obj = new ' + dataModel.name + '();')
-    codeBuilder.add('intf = new ' + dataModel.name + 'Engine();')
-    codeBuilder.add('SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=Test; Integrated Security=SSPI;");')
+    codeBuilder.add
+    codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
+    codeBuilder.add('SqlConnection conn = new SqlConnection(connString);')
     codeBuilder.add('conn.Open();')
     codeBuilder.add('SqlTransaction trans = conn.BeginTransaction();')
 
@@ -57,14 +59,13 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
     codeBuilder.startBlock('try')
 
     varArray = Array.new
-    dataModel.getAllVarsFor(cfg, varArray)
+    dataModel.getNonIdentityVars(varArray)
 
     # Generate class variables
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.identity.nil?
           if var.vtype == 'String'
-            codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "Test String";')
+            codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "TS";')
           elsif var.vtype.start_with?('Int')
             codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
           elsif var.vtype.start_with?('Decimal')
@@ -73,7 +74,6 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
             codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
           end
         end
-      end
     end
 
     codeBuilder.add

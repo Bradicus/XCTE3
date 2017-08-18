@@ -41,7 +41,7 @@ class XCTEJava::MethodLogIt < XCTEPlugin
     logItString << indent << "    pStream.println(indent + \" -- " << codeClass.name << " begin -- \");\n"
         
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE

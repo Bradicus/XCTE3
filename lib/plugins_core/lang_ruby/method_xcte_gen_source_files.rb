@@ -24,7 +24,7 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
     codeBuilder.add("# This class generates a definition for this function")
     codeBuilder.startClass("def get_definition(codeClass, cfg, codeBuilder)")
     codeBuilder.add("varArray = Array.new")
-    codeBuilder.add("codeClass.getAllVarsFor(cfg, varArray)")
+    codeBuilder.add("codeClass.getAllVarsFor(varArray)")
     codeBuilder.add
 
     codeBuilder.startBlock("for varSec in varArray")

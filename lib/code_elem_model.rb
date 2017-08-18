@@ -217,7 +217,7 @@ module CodeStructure
       fun.isInline = (tmpFunXML.attributes["inline"] == "true")
 
       varArray = Array.new
-      getAllVarsFor(nil, varArray)
+      getAllVarsFor(varArray)
       tmpFunXML.elements.each("var_ref") {|refXml|
         fun.variableReferences << varArray.find { |var| var.name == refXml.attributes["name"] }
       }
@@ -336,25 +336,67 @@ module CodeStructure
     end
 
     # Returns all variables in this class that match the cfg
-    def self.getVarsFor(vGroup, cfg, vArray)
+    def self.getVarsFor(vGroup, vArray)
       for var in vGroup.vars
         vArray << var
       end
 
       for grp in vGroup.groups
-        getVarsFor(grp, cfg, vArray)
+        getVarsFor(grp, vArray)
       end
 
       # puts vArray.size
     end
 
     # Returns all variables in this class that match the cfg
-    def getAllVarsFor(cfg, varArray)
-      for vGrp in @groups
-        CodeElemModel.getVarsFor(vGrp, cfg, varArray)
+    def getAllVarsFor(varArray)
+      for vGroup in @groups
+        CodeElemModel.getVarsFor(vGroup, varArray)
       end
     end
 
+    def getScreenVars(varArray, screenFunction)
+      for vGroup in @groups
+        getScreenGroup(vGroup, varArray, screenFunction)
+      end
+    end
+
+    # Screen variables based on pass functoin
+    def getScreenGroup(vGroup, varArray, screenFunction)
+      for var in vGroup.vars
+        if screenFunction.call(var)
+          varArray << var
+        end
+      end
+
+      for grp in vGroup.groups
+        getScreenGroup(grp, varArray, screenFunction)
+      end
+    end
+
+    # Returns add primary keys from vGroup
+    def getPrimaryKeyVars(varArray)
+      getScreenVars(varArray, lambda {|var| var.isPrimary == true })
+    end
+    
+    # Returns add primary keys from vGroup
+    def getNonIdentityVars(varArray)
+      getScreenVars(varArray, lambda {|var| var.identity == nil })
+    end
+    
+    # Returns add primary keys from vGroup
+    def getIdentityVar()
+      varArray = Array.new
+      getScreenVars(varArray, lambda {|var| var.identity != nil })
+
+      if (varArray.length > 0)
+        return(varArray[0])
+      end
+
+      return nil
+    end
+
+    # Returns namespaces separated by .
     def getNamespaceList(cfg, varArray)
       if @namespaceList != nil
         return @namespaceList.join('.')
@@ -362,5 +404,6 @@ module CodeStructure
         return ''
       end
     end
+
   end
 end

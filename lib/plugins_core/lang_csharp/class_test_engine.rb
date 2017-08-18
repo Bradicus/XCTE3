@@ -32,6 +32,7 @@ class XCTECSharp::TestEngine < XCTEPlugin
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
     codeBuilder.lfExtension = Utils.instance.getExtension('body')
+
     genFileContent(dataModel, genClass, cfg, codeBuilder)
 
     srcFiles << codeBuilder

@@ -96,7 +96,7 @@ class XCTEJava::ClassStandard < XCTEPlugin
     
     # Do automatic static array size declairations at top of class
     varArray = Array.new
-    codeClass.getAllVarsFor(cfg, varArray);
+    codeClass.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0

@@ -20,10 +20,10 @@ module XCTETSql
     end
     
     # Returns variable declaration for the specified variable
-    def getVarDec(var)
+    def getVarDec(var, varPrefix = '')
       vDec = String.new
       
-      vDec << "[" << CodeNameStyling.getStyled(var.name, @langProfile.variableNameStyle) << "] "
+      vDec << CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
 
       tName = getTypeName(var)
 
@@ -67,7 +67,7 @@ module XCTETSql
 
     # Returns the version of this name styled for this language
     def getStyledVariableName(var, prefix = '')
-      return '[' + CodeNameStyling.getStyled(prefix + var.name, @langProfile.variableNameStyle) + ']'
+      return CodeNameStyling.getStyled(prefix + var.name, @langProfile.variableNameStyle)
     end
 
     # These are comments declaired in the COMMENT element,

@@ -18,7 +18,7 @@
 	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" ></gen_class>
 	
 	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" modelns="XCTE.Foundation" ></gen_class>	
-	<gen_class language="tsql" type="statement_create" namespace="XCTE.Database" path="XCTE.Database" ></gen_class>
+	<gen_class language="tsql" type="statement_create" namespace="XCTE.Database" path="XCTE.Database" var_prefix = "a "></gen_class>
 
 	<gen_class type="tsql_engine" namespace="XCTE.Data" path="XCTE.Data"
 			   var_prefix = "a "
