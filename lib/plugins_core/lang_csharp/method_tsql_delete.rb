@@ -25,7 +25,8 @@ class XCTECSharp::MethodTsqlDelete < XCTEPlugin
     codeBuilder.add("/// Delete the record for the model with this id")
     codeBuilder.add("///")
 
-    codeBuilder.startClass("public void Delete(SqlTransaction trans, int id)")
+    identVar = dataModel.getIdentityVar();
+    codeBuilder.startClass('public void Delete(SqlTransaction trans, ' + Utils.instance.getParamDec(identVar.getParam()) + ')')
 
     get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -33,7 +34,8 @@ class XCTECSharp::MethodTsqlDelete < XCTEPlugin
   end
 
   def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-    codeBuilder.add("void Delete(SqlTransaction trans, int id);")
+    identVar = dataModel.getIdentityVar();
+    codeBuilder.add('void Delete(SqlTransaction trans, ' + Utils.instance.getParamDec(identVar.getParam()) + ');')
   end
 
   def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -43,23 +45,27 @@ class XCTECSharp::MethodTsqlDelete < XCTEPlugin
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
+
+    identVar = dataModel.getIdentityVar();
+    identParamName = Utils.instance.getStyledVariableName(identVar.getParam())
+
     dataModel.getAllVarsFor(varArray)
 
-    codeBuilder.add('string sql = @"DELETE FROM ' + dataModel.name +
-                        ' WHERE ' + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) +
-                        '=@' + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) + '";')
+    codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) +
+                        ' WHERE [' + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
+                                "] = @" + identParamName	+ '";')
 
     codeBuilder.add
 
     codeBuilder.startBlock("try")
     codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
-    codeBuilder.add('cmd.Parameters.AddWithValue("@' + XCTECSharp::Utils.instance.getStyledVariableName(varArray[0]) +
-                        '", id);')
+    codeBuilder.add('cmd.Parameters.AddWithValue("@' + identParamName +
+                        '", ' + identParamName + ');')
     codeBuilder.endBlock
     codeBuilder.endBlock
     codeBuilder.startBlock("catch(Exception e)")
     codeBuilder.add('throw new Exception("Error deleting ' + dataModel.name + ' with ' +
-                        varArray[0].name + ' = "' + ' + id, e);')
+                identVar.name + ' = "' + ' + ' + identParamName + ', e);')
     codeBuilder.endBlock
   end
 

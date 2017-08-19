@@ -54,8 +54,8 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         codeBuilder.sameLine(separater)        
-        codeBuilder.add(XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
-            " = @" + Utils.instance.getStyledVariableName(var))              
+        codeBuilder.add('[' + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
+            "] = @" + Utils.instance.getStyledVariableName(var))              
       elsif var.elementId == CodeElem::ELEM_FORMAT
         codeBuilder.add(var.formatText)
       end
@@ -65,8 +65,8 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
     codeBuilder.unindent
     
     identVar = dataModel.getIdentityVar();
-    codeBuilder.add('WHERE ' + Utils.instance.getStyledVariableName(identVar) +
-		" = @" + Utils.instance.getStyledVariableName(identVar)	+ '";')
+    codeBuilder.add('WHERE [' + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
+		        "] = @" + Utils.instance.getStyledVariableName(identVar)	+ '";')
 
     codeBuilder.add
 

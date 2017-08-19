@@ -79,6 +79,35 @@ module XCTETSql
     def isPrimitive(var)
       return @langProfile.isPrimitive(var)
     end
+
+    # Generate a list of @'d parameters
+    def genParamList(varArray, codeBuilder, varPrefix = '')
+      separator = ''
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          codeBuilder.sameLine(separator)
+          codeBuilder.add("@" +  XCTETSql::Utils.instance.getStyledVariableName(var.getParam(), varPrefix))        
+          separator=','
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
+        end
+      end
+    end
+
+    # Generate a list of variables
+    def genVarList(varArray, codeBuilder, varPrefix = '')
+      separator = ''
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          codeBuilder.sameLine(separator)
+          codeBuilder.add('[' + getStyledVariableName(var, varPrefix) + ']')
+          separator=','
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
+        end
+      end
+    end
+
   end
 end
 

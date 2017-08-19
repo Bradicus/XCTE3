@@ -34,7 +34,9 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
   end
 
   def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-    codeBuilder.add("IEnumerable<" + dataModel.name + "> RetrieveAll(SqlTransaction trans);")
+    codeBuilder.add("IEnumerable<" +
+        Utils.instance.getStyledClassName(dataModel.name) + 
+        "> RetrieveAll(SqlTransaction trans);")
   end
 
   def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -47,70 +49,34 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
     varArray = Array.new
     dataModel.getAllVarsFor(varArray)
 
-    codeBuilder.add('List<' + dataModel.name + '> resultList = new List<' + dataModel.name + '>();')
-
+    tableName = Utils.instance.getStyledClassName(dataModel.name)
+    codeBuilder.add('List<' + tableName + '> resultList = new List<' + tableName + '>();')
     codeBuilder.add('string sql = @"SELECT ')
 
     codeBuilder.indent
 
-    first = true;
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if !first
-          codeBuilder.sameLine(',')
-        end
-        first = false
-
-        codeBuilder.add('[' + 
-          XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) + ']'
-        )
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
-    end
+    XCTETSql::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
 
     codeBuilder.unindent
 
-    codeBuilder.add('FROM ' + dataModel.name + '";')
-
-
+    codeBuilder.add('FROM ' + tableName + '";')
     codeBuilder.add
-
     codeBuilder.startBlock("try")
     codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
-
     codeBuilder.add
-
     codeBuilder.add('SqlDataReader results = cmd.ExecuteReader();')
-
     codeBuilder.startBlock('while(results.Read())')
 
-    codeBuilder.add('var o = new ' + dataModel.name + '();')
+    codeBuilder.add('var o = new ' + tableName + '();')
 
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && XCTECSharp::Utils.instance.isPrimitive(var)
-        resultVal = 'results["' + 
-            XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) + '"]'
-        objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
-
-        if var.nullable
-            codeBuilder.add(objVar + ' = ' + resultVal + ' == DBNull.Value ? null : Convert.To' +
-                                var.vtype + "(" + resultVal + ");")
-        else
-          codeBuilder.add(objVar + ' = Convert.To' +
-                              var.vtype + "(" + resultVal + ");")
-        end
-      end
-    end
+    Utils.instance.genAssignResults(varArray, genClass, codeBuilder)
 
     codeBuilder.endBlock
     codeBuilder.endBlock
 
     codeBuilder.endBlock
     codeBuilder.startBlock("catch(Exception e)")
-    codeBuilder.add('throw new Exception("Error retrieving all items from ' + dataModel.name + '", e);')
+    codeBuilder.add('throw new Exception("Error retrieving all items from ' + tableName + '", e);')
     codeBuilder.endBlock(';')
 
     codeBuilder.add

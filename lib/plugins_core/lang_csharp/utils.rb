@@ -280,6 +280,24 @@ module XCTECSharp
       end
     end
 
+    def genAssignResults(varArray, genClass, codeBuilder) 
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && isPrimitive(var)
+          resultVal = 'results["' + 
+              XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) + '"]'
+          objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
+  
+          if var.nullable
+              codeBuilder.add(objVar + ' = ' + resultVal + ' == DBNull.Value ? null : Convert.To' +
+                                  var.vtype + "(" + resultVal + ");")
+          else
+            codeBuilder.add(objVar + ' = Convert.To' +
+                                var.vtype + "(" + resultVal + ");")
+          end
+        end
+      end
+    end
+
     def genNamespaceStart(namespaceList, codeBuilder)
       # Process namespace items
       if namespaceList != nil

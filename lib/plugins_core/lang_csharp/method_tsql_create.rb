@@ -45,51 +45,19 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    dataModel.getAllVarsFor(varArray)
+    dataModel.getNonIdentityVars(varArray)
 
     codeBuilder.add('string sql = @"INSERT INTO ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + '(')
 
     codeBuilder.indent
 
-    seperator = '';
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if (var.identity == nil)
-          codeBuilder.sameLine(seperator)
-
-          codeBuilder.add(
-            XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix)
-          )
-        end
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
-      seperator = ',';
-    end
+    XCTETSql::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
 
     codeBuilder.unindent
     codeBuilder.add(") VALUES (")
     codeBuilder.indent
 
-    first = true;
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if (var.identity == nil)
-          if !first
-            codeBuilder.sameLine(',')
-          end
-          first = false;
-
-          codeBuilder.add('@' +  XCTECSharp::Utils.instance.getStyledVariableName(var))
-        end
-      else
-        if var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
-    end
+    XCTETSql::Utils.instance.genParamList(varArray, codeBuilder)
 
     codeBuilder.unindent
     codeBuilder.add(')";')

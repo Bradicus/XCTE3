@@ -61,21 +61,7 @@ module XCTECSharp
 
       codeBuilder.indent
 
-      first = true;
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if !first
-            codeBuilder.sameLine(',')
-          end
-          first = false
-
-          codeBuilder.add(XCTETSql::Utils.instance.getStyledVariableName(var))
-        else
-          if var.elementId == CodeElem::ELEM_FORMAT
-            codeBuilder.add(var.formatText)
-          end
-        end
-      end
+      XCTETSql::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
 
       codeBuilder.unindent
 
@@ -86,9 +72,9 @@ module XCTECSharp
 
       whereItems = Array.new
       genFun.variableReferences.each() {|param|
-        whereCondition =
-              XCTETSql::Utils.instance.getStyledVariableName(param.getParam()) +
-                " = @" +  XCTETSql::Utils.instance.getStyledVariableName(param.getParam())
+        whereCondition = '[' + 
+            XCTETSql::Utils.instance.getStyledVariableName(param, genClass.varPrefix) +
+                "] = @" + Utils.instance.getStyledVariableName(param.getParam())
 
         whereItems << whereCondition
       }
@@ -113,20 +99,7 @@ module XCTECSharp
 
       codeBuilder.startBlock('while(results.Read())')
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && XCTECSharp::Utils.instance.isPrimitive(var)
-          resultVal = 'results["' + XCTETSql::Utils.instance.getStyledVariableName(var) + '"]'
-          objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
-
-          if var.nullable
-            codeBuilder.add(objVar + ' = ' + resultVal + ' == DBNull.Value ? null : Convert.To' +
-                                var.vtype + "(" + resultVal + ");")
-          else
-            codeBuilder.add(objVar + ' = Convert.To' +
-                                var.vtype + "(" + resultVal + ");")
-          end
-        end
-      end
+      Utils.instance.genAssignResults(varArray, genClass, codeBuilder) 
 
       codeBuilder.endBlock
       codeBuilder.endBlock
