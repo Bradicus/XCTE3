@@ -20,8 +20,6 @@ require 'x_c_t_e_plugin.rb'
 
 class XCTECpp::ClassStandard < XCTEPlugin
   def initialize
-    XCTECpp::Utils::init
-    
     @name = "standard"
     @language = "cpp"
     @category = XCTEPlugin::CAT_CLASS

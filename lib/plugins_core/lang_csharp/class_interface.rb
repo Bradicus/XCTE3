@@ -11,8 +11,6 @@ require 'code_elem_parent.rb'
 require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
-using XCTECSharp
-
 class XCTECSharp::ClassInterface < XCTEPlugin
 
   def initialize

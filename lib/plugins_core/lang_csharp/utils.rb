@@ -128,86 +128,12 @@ module XCTECSharp
       return @langProfile.getExtension(eType)
     end
     
-    # # Should move this into language def xml 
-    def getTypeAbbrev(var)
-        if var.vtype == "Boolean"
-          return "Bool"
-        end
-        if var.vtype == "Char"  	
-          return "Char"
-        end
-        if var.vtype == "Int8"  	
-          return "Char"
-        end
-        if var.vtype == "UChar"  	
-          return "UChar"
-        end
-        if var.vtype == "Int16"  
-          return "Short"
-        end
-        if var.vtype == "Int32"  
-          return "Int"
-        end
-        if var.vtype == "UInt8"  
-          return "UChar"
-        end
-        if var.vtype == "UInt16" 
-          return "UShort"
-        end
-        if var.vtype == "UInt32" 
-          return "UInt"
-        end
-        if var.vtype == "Float32"
-          return "Float"
-        end
-        if var.vtype == "Float64"
-          return "Double"
-        end
-        if var.vtype == "Decimal"
-          return "Decimal"
-        end
-        if var.vtype == "UNC16"  
-          return "WChar"
-        end
-        
-        if var.vtype == "String"
-          return "String"
-        end
-        
-        # It all else fails just return the type sent in
-        return var.vtype
-    end
-    
     def getComment(var)
       return "/* " << var.text << " */\n"
     end
 
     # Should move this into language def xml
     def getZero(var)
-        if var.vtype == "Char"
-          return "0"
-        end
-        if var.vtype == "Int8"
-          return "0"
-        end
-        if var.vtype == "UChar"
-          return "0"
-        end
-        if var.vtype == "Int16"
-          return "0"
-        end
-        if var.vtype == "Int32"
-          return "0"
-        end
-        if var.vtype == "UInt8"
-          return "0"
-        end
-        if var.vtype == "UInt16"
-          return "0"
-        end
-        if var.vtype == "UInt32"
-          return "0"
-        end
         if var.vtype == "Float32"
           return "0.0f"
         end

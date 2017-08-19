@@ -9,7 +9,7 @@
 # read in from an xml file
 
 class CodeElemVariable < CodeElem
-  attr_accessor :elementId, :name, :vtype, :templateType, :defaultValue, :comment,
+  attr_accessor :vtype, :templateType, :defaultValue, :comment,
     :visibility, :isConst, :isStatic, :isPointer, :isVirtual, :passBy, :genSet, :genGet,
     :arrayElemCount, :listType, :nullable, :identity, :isPrimary
 
@@ -18,7 +18,6 @@ class CodeElemVariable < CodeElem
     
     @elementId = CodeElem::ELEM_VARIABLE
     
-    @name
     @vtype
     @templateType
     @defaultValue

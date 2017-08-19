@@ -25,6 +25,7 @@ class CodeElemClassGen < CodeElem
 
     @language = nil
     @includes = Array.new
+    @uses = Array.new
     @functions = Array.new
     @baseClasses = Array.new
     @namespaceList = Array.new

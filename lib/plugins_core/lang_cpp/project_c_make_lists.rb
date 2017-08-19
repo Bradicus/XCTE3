@@ -16,8 +16,6 @@ require 'x_c_t_e_plugin.rb'
 
 class XCTECpp::ProjectCMakeLists < XCTEPlugin
   def initialize
-    XCTECpp::Utils::init
-
     @name = "cmake"
     @language = "cpp"
     @category = XCTEPlugin::CAT_PROJECT

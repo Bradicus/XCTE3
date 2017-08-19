@@ -11,6 +11,8 @@ require 'lang_profile.rb'
 
 module XCTERuby
   class Utils
+    include Singleton
+    
     @@langProfile = LangProfile.new
 
     def self.init

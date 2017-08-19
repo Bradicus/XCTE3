@@ -21,7 +21,6 @@ require 'x_c_t_e_plugin.rb'
 module XCTECpp
   class ClassDataList < XCTEPlugin
     def initialize
-      XCTECpp::Utils::init
 
       @name = "data_list"
       @language = "cpp"

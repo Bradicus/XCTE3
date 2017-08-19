@@ -15,6 +15,11 @@ class UtilsBase
     @langProfile.loadProfile
   end
   
+  # Returns true if this is a primitive data type
+  def isPrimitive(var)
+    return @langProfile.isPrimitive(var)
+  end
+  
   # Return the language type based on the generic type
   def getTypeName(gType)
     return @langProfile.getTypeName(gType)
@@ -37,6 +42,11 @@ class UtilsBase
   # Returns the version of this file name styled for this language
   def getStyledFileName(fileName)
     return CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
+  end
+  
+  # Get the extension for a file type
+  def getExtension(eType)
+    return @langProfile.getExtension(eType)
   end
 
 end

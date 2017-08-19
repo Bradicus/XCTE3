@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 ##
 # @author Brad Ottoson
 #
@@ -12,7 +14,6 @@ $:.unshift File.dirname(__FILE__)
 
 require 'pathname'
 require 'find.rb'
-require 'fileutils.rb'
 require 'code_elem_model.rb'
 require 'code_elem_project.rb'
 require 'x_c_t_e_plugin.rb'
