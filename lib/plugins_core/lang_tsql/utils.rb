@@ -23,12 +23,12 @@ module XCTETSql
     def getVarDec(var, varPrefix = '')
       vDec = String.new
       
-      vDec << CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
+      vDec << '[' + CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle) + ']'
 
       tName = getTypeName(var)
 
       if tName != var.vtype
-        vDec << tName
+        vDec << ' ' + tName
         if (var.identity)
           vDec << ' IDENTITY' << var.identity
         end

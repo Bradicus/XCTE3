@@ -25,7 +25,7 @@ class ClassBase
     varArray = Array.new
 
     for vGrp in dataModel.groups
-      CodeStructure::CodeElemModel.getVarsFor(vGrp, cfg, varArray)
+      CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
     end
 
     for var in varArray

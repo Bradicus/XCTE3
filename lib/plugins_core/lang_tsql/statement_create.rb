@@ -66,7 +66,7 @@ module XCTETSql
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isPrimary == true
-            primKeys << Utils.instance.getStyledVariableName(var, genClass.varPrefix)
+            primKeys << '[' + Utils.instance.getStyledVariableName(var, genClass.varPrefix) + ']'
           end
         end
       end

@@ -277,7 +277,7 @@ module CodeStructure
       varArray = Array.new
 
       for vGrp in groups
-        CodeElemModel.getVarsFor(vGrp, nil, varArray);
+        CodeElemModel.getVarsFor(vGrp, varArray)
       end
 
       for var in varArray
