@@ -29,8 +29,8 @@ module XCTECSharp
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addInclude('System.Collections.Generic', 'IEnumerable')
-      genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
+      genClass.addUse('System.Collections.Generic', 'IEnumerable')
+      genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
     end
 
     def get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder)

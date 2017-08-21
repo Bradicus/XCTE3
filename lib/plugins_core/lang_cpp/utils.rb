@@ -21,7 +21,7 @@ module XCTECpp
     end
     
     # Get a parameter declaration for a method parameter
-    def self.getParamDec(var)
+    def getParamDec(var)
       pDec = String.new
         
       if var.isConst
@@ -31,7 +31,7 @@ module XCTECpp
         pDec << "static "
       end
         
-      pDec << self.getTypeName(var.vtype);
+      pDec << getTypeName(var.vtype);
         
       if var.passBy.upcase == "REFERENCE"
         pDec << "&"
@@ -40,7 +40,7 @@ module XCTECpp
         pDec << "*"
       end
         
-      pDec << " " << var.name;
+      pDec << " " << getStyledVariableName(var)
       
       if var.arrayElemCount > 0
         pDec << "[]"
@@ -50,7 +50,7 @@ module XCTECpp
     end
     
     # Returns variable declaration for the specified variable
-    def self.getVarDec(var)
+    def getVarDec(var)
       vDec = String.new
         
       if var.isConst
@@ -60,27 +60,29 @@ module XCTECpp
       if var.isStatic
         vDec << "static "
       end
+      
+      typeName = getTypeName(var.vtype);
+
+      if var.isPointer
+        typeName << "*";
+      end
 
       if (var.templateType != nil)
-        vDec << var.templateType << "<" << self.getTypeName(var.vtype) << ">"
+        vDec << var.templateType << "<" << typeName << ">"
       elsif (var.listType != nil)
-        vDec << self.getTypeName(var.listType) << "<" << self.getTypeName(var.vtype) << ">"
+        vDec << getTypeName(var.listType) << "<" << typeName << ">"
       else
-        vDec << self.getTypeName(var.vtype)
+        vDec << typeName
       end
       
       if var.passBy.upcase == "REFERENCE"
         vDec << "&";
       end
       
-      if var.isPointer
-        vDec << "*";
-      end
-      
-      vDec << " " << var.name;
+      vDec << " " << getStyledVariableName(var)
       
       if var.arrayElemCount.to_i > 0
-        vDec << "[" + self.getSizeConst(var) << "]"
+        vDec << "[" + getSizeConst(var) << "]"
       end
         
       vDec << ";"
@@ -93,17 +95,12 @@ module XCTECpp
     end
   
     # Returns a size constant for the specified variable
-    def self.getSizeConst(var)
+    def getSizeConst(var)
       return "ARRAYSZ_" << var.name.upcase
-    end
-        
-    # Get a parameter declaration for a method parameter
-    def self.getTypeName(gType)
-      return @@langProfile.getTypeName(gType)
     end
 
     # Capitalizes the first letter of a string
-    def self.getCapitalizedFirst(str)
+    def getCapitalizedFirst(str)
       newStr = String.new
       newStr += str[0,1].capitalize
 
@@ -114,11 +111,11 @@ module XCTECpp
       return(newStr)
     end
     
-    def self.getComment(var)
+    def getComment(var)
       return "/* " << var.text << " */\n"
     end
 
-    def self.getZero(var)
+    def getZero(var)
         if var.vtype == "Float32"
           return "0.0f"
         end
@@ -129,7 +126,7 @@ module XCTECpp
         return "0"
     end
 
-    def self.getDataListInfo(classXML)
+    def getDataListInfo(classXML)
       dInfo = Hash.new
 
       classXML.elements.each("DATA_LIST_TYPE") { |dataListXML|

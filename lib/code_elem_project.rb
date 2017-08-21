@@ -19,19 +19,18 @@ require 'rexml/document'
 
 module CodeStructure
   class ElemProject < CodeElem
-    attr_accessor :classType, :name, :description, :includes, :parentsList,
+    attr_accessor :classType, :includes, :parentsList,
       :variableSection, :functionSection, :componentGroup, :buildType,
-      :includeDirs, :libraryDirs, :linkLibs, :buildTypes
+      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest
 
 
     def initialize
       @elementId = CodeElem::ELEM_PROJECT
-      @name
       @buildType
+      @dest = '.'
       @templateFolders = Array.new
       @outputLanguages
       @type = String.new
-      @description
       @componentGroup = CodeElemProjectComponentGroup.new
       @includeDirs = Array.new
       @libraryDirs = Array.new
@@ -45,6 +44,10 @@ module CodeStructure
       xmlDoc = REXML::Document.new projFile
 
       @name = xmlDoc.root.attributes["name"]
+      @dest = xmlDoc.root.attributes["dest"]
+      if @dest == nil
+        @dest = '.'
+      end
       @buildType = xmlDoc.root.attributes["build_type"]
 
       @xmlElement = xmlDoc.root

@@ -81,6 +81,8 @@ class LangProfile
         return fType.fExtension
       end
     end
+
+    return nil
   end
   
   def getTypeName(gType)

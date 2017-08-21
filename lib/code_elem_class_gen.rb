@@ -10,11 +10,12 @@
 
 require 'code_elem.rb'
 require 'code_elem_include.rb'
+require 'code_elem_use.rb'
 
 class CodeElemClassGen < CodeElem
   attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
                 :testNamespace, :testPath,
-                :includes, :baseClasses, :language, :path, :varPrefix
+                :includes, :uses, :baseClasses, :language, :path, :varPrefix
   attr_reader   :name
 
   def initialize(parentElem)
@@ -54,6 +55,21 @@ class CodeElemClassGen < CodeElem
       curInc = CodeElemInclude.new(iPath, iName, iType)
       @includes << curInc
     end
+  end
+  
+  def addUse(iNamespace, forClass = nil)  
+      curUse = nil
+  
+      for i in @uses
+        if i.namespace == iNamespace
+          curUse = i
+        end
+      end
+  
+      if curUse == nil
+        curUse = CodeElemUse.new(iNamespace)
+        @uses << curUse
+      end
   end
 
   def setName(newName)

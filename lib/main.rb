@@ -60,7 +60,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                     if genClass.path != nil
                       newPath = genClass.path
                     else
-                      newPath = "./" + genClass.namespaceList.join("/")
+                      newPath = project.dest + "/" + genClass.namespaceList.join("/")
                     end
 
                     if !File.directory?(newPath)

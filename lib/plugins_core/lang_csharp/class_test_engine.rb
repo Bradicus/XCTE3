@@ -47,7 +47,7 @@ class XCTECSharp::TestEngine < XCTEPlugin
     templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
 
     Utils.instance.genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
-    Utils.instance.genIncludes(genClass.includes, codeBuilder)
+    Utils.instance.genUses(genClass.uses, codeBuilder)
 
     Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
 

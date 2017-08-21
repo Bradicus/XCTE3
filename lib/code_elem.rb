@@ -23,6 +23,7 @@ class CodeElem
   ELEM_FORMAT = "format"
   ELEM_FUNCTION = "function"
   ELEM_INCLUDE = "include"
+  ELEM_USE = "use"
   ELEM_PARENT = "parent"
   ELEM_VARIABLE = "variable"
   ELEM_VAR_GROUP = "variable_group"

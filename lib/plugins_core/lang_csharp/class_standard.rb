@@ -35,13 +35,7 @@ class XCTECSharp::ClassStandard < XCTEPlugin
   # Returns the code for the content for this class
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
-    for inc in genClass.includes
-      codeBuilder.add('using ' + inc.split('/').join('.') + ';');
-    end
-    
-    if !genClass.includes.empty?
-      codeBuilder.add
-    end
+    Utils.instance.genUses(genClass.uses, codeBuilder)
 
     # Process namespace items
     if genClass.namespaceList != nil

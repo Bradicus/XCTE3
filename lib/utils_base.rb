@@ -24,6 +24,11 @@ class UtilsBase
   def getTypeName(gType)
     return @langProfile.getTypeName(gType)
   end
+  
+  # Return the language type based on the generic type
+  def getType(gType)
+    return @langProfile.getType(gType)
+  end
 
   # Returns the version of this name styled for this language
   def getStyledVariableName(var, prefix = '')

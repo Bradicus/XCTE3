@@ -40,8 +40,8 @@ class XCTECSharp::MethodTsqlRetrieveAll < XCTEPlugin
   end
 
   def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-    genClass.addInclude('System.Collections.Generic', 'IEnumerable')
-    genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
+    genClass.addUse('System.Collections.Generic', 'IEnumerable')
+    genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
   end
 
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)

@@ -28,7 +28,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
       genClass.setName("I" + dataModel.name)
     end
 
-    genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
+    genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
 
     codeBuilder = SourceRendererCSharp.new
     codeBuilder.lfName = genClass.name
@@ -57,13 +57,7 @@ class XCTECSharp::ClassInterface < XCTEPlugin
       end
     end
 
-    for inc in genClass.includes
-      codeBuilder.add('using ' + inc.path + ';');
-    end
-    
-    if !genClass.includes.empty?
-      codeBuilder.add
-    end
+    Utils.instance.genUses(genClass.uses, codeBuilder)
 
     # Process namespace items
     if genClass.namespaceList != nil

@@ -35,13 +35,13 @@ class XCTECSharp::MethodTestEngine < XCTEPlugin
   end
 
   def get_dependencies(dataModel, genClass, cfg, codeBuilder)
-    genClass.addInclude('System.Collections.Generic', 'IEnumerable')
-    genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
-    genClass.addInclude('System.Configuration', 'ConfigurationManager')
-    genClass.addInclude('System', 'Exception')
-    genClass.addInclude('Microsoft.VisualStudio.TestTools.UnitTesting', 'TestMethod');
-    genClass.addInclude('XCTE.Foundation', Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine'))
-    genClass.addInclude('XCTE.Data', Utils.instance.getStyledClassName(dataModel.name + ' engine'))
+    genClass.addUse('System.Collections.Generic', 'IEnumerable')
+    genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
+    genClass.addUse('System.Configuration', 'ConfigurationManager')
+    genClass.addUse('System', 'Exception')
+    genClass.addUse('Microsoft.VisualStudio.TestTools.UnitTesting', 'TestMethod');
+    genClass.addUse('XCTE.Foundation', Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine'))
+    genClass.addUse('XCTE.Data', Utils.instance.getStyledClassName(dataModel.name + ' engine'))
   end
 
   def get_body(dataModel, genClass, cfg, codeBuilder)

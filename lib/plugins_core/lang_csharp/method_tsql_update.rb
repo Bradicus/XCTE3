@@ -38,7 +38,7 @@ class XCTECSharp::MethodTsqlUpdate < XCTEPlugin
   end
 
   def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-    genClass.addInclude('System.Data.SqlClient', 'SqlTransaction')
+    genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
   end
   
   def get_body(dataModel, genClass, genFun, cfg, codeBuilder)

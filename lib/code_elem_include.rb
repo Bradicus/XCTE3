@@ -11,7 +11,7 @@
 require 'code_elem.rb'
 
 class CodeElemInclude < CodeElem
-  attr_accessor :name, :itype, :path
+  attr_accessor :itype, :path
   
   def initialize(path, name = nil, itype = '"')
     @elementId = CodeElem::ELEM_INCLUDE
