@@ -18,7 +18,7 @@ require 'code_elem_model.rb'
 require 'code_elem_project.rb'
 require 'x_c_t_e_plugin.rb'
 require 'user_settings.rb'
-
+require 'fileutils'
 
 def processProjectComponentGroup(project, pcGroup, cfg)
   currentDir = Dir.pwd
@@ -58,9 +58,9 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                     srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
 
                     if genClass.path != nil
-                      newPath = genClass.path
+                      newPath = pComponent.dest + "/" + genClass.path
                     else
-                      newPath = project.dest + "/" + genClass.namespaceList.join("/")
+                      newPath = pComponent.dest + "/" + genClass.namespaceList.join("/")
                     end
 
                     if !File.directory?(newPath)

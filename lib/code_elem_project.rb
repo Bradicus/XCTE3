@@ -27,7 +27,6 @@ module CodeStructure
     def initialize
       @elementId = CodeElem::ELEM_PROJECT
       @buildType
-      @dest = '.'
       @templateFolders = Array.new
       @outputLanguages
       @type = String.new
@@ -44,7 +43,6 @@ module CodeStructure
       xmlDoc = REXML::Document.new projFile
 
       @name = xmlDoc.root.attributes["name"]
-      @dest = xmlDoc.root.attributes["dest"]
       if @dest == nil
         @dest = '.'
       end
