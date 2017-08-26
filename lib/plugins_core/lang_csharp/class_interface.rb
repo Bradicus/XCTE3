@@ -4,7 +4,6 @@
 #
 
 require 'plugins_core/lang_csharp/utils.rb'
-require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 require 'plugins_core/lang_csharp/source_renderer_csharp.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'
@@ -17,6 +16,14 @@ class XCTECSharp::ClassInterface < XCTEPlugin
     @name = "interface"
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
+  end
+  
+  def getClassName(dataModel, genClass)    
+        if (genClass.parentElem.is_a?(CodeElemClassGen))
+          genClass.setName("I" + genClass.parentElem.name)
+        else
+          genClass.setName("I" + dataModel.name)
+        end
   end
   
   def genSourceFiles(dataModel, genClass, cfg)

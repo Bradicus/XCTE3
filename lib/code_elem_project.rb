@@ -143,6 +143,11 @@ module CodeStructure
     def loadTemplateNode(tNode, tNodeXml)
       tNode.path = tNodeXml.attributes["path"]
       tNode.dest = tNodeXml.attributes["dest"]
+      
+            if tNode.dest == nil
+              tNode.dest = '.'
+            end
+            
       tNode.isStatic = (tNodeXml.attributes["static_code"] == true)
       tNode.languages = tNodeXml.attributes["languages"].split(" ")
       puts "template node loaded with path"

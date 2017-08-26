@@ -15,7 +15,7 @@ require 'code_elem_use.rb'
 class CodeElemClassGen < CodeElem
   attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
                 :testNamespace, :testPath,
-                :includes, :uses, :baseClasses, :language, :path, :varPrefix
+                :includes, :uses, :baseClasses, :language, :path, :varPrefix, :model
   attr_reader   :name
 
   def initialize(parentElem)
@@ -32,6 +32,7 @@ class CodeElemClassGen < CodeElem
     @namespaceList = Array.new
     @varPrefix = ''
     @path = nil
+    @model = nil
   end
 
   def addInclude(iPath, iName, iType = nil)

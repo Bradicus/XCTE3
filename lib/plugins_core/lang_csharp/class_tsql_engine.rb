@@ -4,7 +4,6 @@
 #
 
 require 'plugins_core/lang_csharp/utils.rb'
-require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 require 'plugins_core/lang_csharp/source_renderer_csharp.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'

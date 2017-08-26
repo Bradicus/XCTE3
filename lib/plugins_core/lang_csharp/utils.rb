@@ -99,12 +99,12 @@ module XCTECSharp
     end
 
     # Returns the version of this name styled for this language
-    def getStyledVariableName(var)
+    def getStyledVariableName(var, varPrefix = '')
       if var.is_a?(CodeElemVariable)
         if (var.genGet || var.genSet)
-          return CodeNameStyling.getStyled(var.name, @langProfile.functionNameStyle)
+          return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle)
         else
-          return CodeNameStyling.getStyled(var.name, @langProfile.variableNameStyle)
+          return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
         end
       else
         return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
@@ -202,6 +202,34 @@ module XCTECSharp
           if var.elementId == CodeElem::ELEM_FORMAT
             codeBuilder.add(var.formatText)
           end
+        end
+      end
+    end
+
+    # Generate a list of @'d parameters
+    def genParamList(varArray, codeBuilder, varPrefix = '')
+      separator = ''
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          codeBuilder.sameLine(separator)
+          codeBuilder.add("@" +  getStyledVariableName(var, varPrefix))        
+          separator=','
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
+        end
+      end
+    end
+
+    # Generate a list of variables
+    def genVarList(varArray, codeBuilder, varPrefix = '')
+      separator = ''
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          codeBuilder.sameLine(separator)
+          codeBuilder.add('[' + XCTETSql::Utils.instance.getStyledVariableName(var, varPrefix) + ']')
+          separator=','
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          codeBuilder.add(var.formatText)
         end
       end
     end

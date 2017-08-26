@@ -27,7 +27,7 @@ module CodeStructure
     def initialize
       super()
 
-      @elementId = CodeElem::ELEM_CLASS
+      @elementId = CodeElem::ELEM_MODEL
       @classes = Array.new
       @name
       @case
@@ -64,6 +64,7 @@ module CodeStructure
       xmlDoc.root.elements.each("gen_class") {|genCXML|
         genClass = CodeElemClassGen.new(self)
         loadClassNode(genClass, genCXML)
+        genClass.model = self
         @classes << genClass
 
         if genClass.interfaceNamespace != nil
@@ -74,6 +75,7 @@ module CodeStructure
           intf.language = genClass.language
           intf.ctype = 'interface'
           intf.parentElem = genClass
+          intf.model = self
           @classes << intf
         end
 
@@ -84,6 +86,7 @@ module CodeStructure
           intf.language = genClass.language
           intf.ctype = 'test_engine'
           intf.parentElem = genClass
+          intf.model = self
           @classes << intf
         end
 

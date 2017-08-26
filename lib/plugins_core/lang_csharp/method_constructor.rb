@@ -8,7 +8,6 @@
 # This plugin creates a constructor for a class
  
 require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 
 class XCTECSharp::MethodConstructor < XCTEPlugin
   

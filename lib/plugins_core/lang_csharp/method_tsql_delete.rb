@@ -9,7 +9,6 @@
 
 require 'x_c_t_e_plugin.rb'
 require 'code_name_styling.rb'
-require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 
 class XCTECSharp::MethodTsqlDelete < XCTEPlugin
 

@@ -9,7 +9,6 @@
 
 require 'x_c_t_e_plugin.rb'
 require 'code_name_styling.rb'
-require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 require 'plugins_core/lang_csharp/utils.rb'
 
 class XCTECSharp::MethodTsqlCreate < XCTEPlugin
@@ -51,13 +50,13 @@ class XCTECSharp::MethodTsqlCreate < XCTEPlugin
 
     codeBuilder.indent
 
-    XCTETSql::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
+    Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
 
     codeBuilder.unindent
     codeBuilder.add(") VALUES (")
     codeBuilder.indent
 
-    XCTETSql::Utils.instance.genParamList(varArray, codeBuilder)
+    Utils.instance.genParamList(varArray, codeBuilder)
 
     codeBuilder.unindent
     codeBuilder.add(')";')

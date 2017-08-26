@@ -61,7 +61,7 @@ module XCTECSharp
 
       codeBuilder.indent
 
-      XCTETSql::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
+      XCTECSharp::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
 
       codeBuilder.unindent
 

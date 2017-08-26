@@ -4,7 +4,6 @@
 #
 
 require 'plugins_core/lang_csharp/utils.rb'
-require 'plugins_core/lang_csharp/x_c_t_e_csharp.rb'
 require 'plugins_core/lang_csharp/source_renderer_csharp.rb'
 require 'code_elem.rb'
 require 'code_elem_parent.rb'
@@ -18,13 +17,17 @@ class XCTECSharp::ClassStandard < XCTEPlugin
     @language = "csharp"
     @category = XCTEPlugin::CAT_CLASS
   end
+
+  def getClassName(dataModel)
+    return Utils.instance.getStyledClassName(dataModel.name)
+  end
   
   def genSourceFiles(dataModel, genClass, cfg)
     srcFiles = Array.new
   
     codeBuilder = SourceRendererCSharp.new
-    codeBuilder.lfName = dataModel.name
-    codeBuilder.lfExtension = XCTECSharp::Utils.instance.getExtension('body')
+    codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
+    codeBuilder.lfExtension = Utils.instance.getExtension('body')
     genFileContent(dataModel, genClass, cfg, codeBuilder)
     
     srcFiles << codeBuilder
@@ -36,13 +39,9 @@ class XCTECSharp::ClassStandard < XCTEPlugin
   def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
     Utils.instance.genUses(genClass.uses, codeBuilder)
-
-    # Process namespace items
-    if genClass.namespaceList != nil
-      codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
-    end
+    Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
     
-    classDec = dataModel.visibility + " class " + dataModel.name
+    classDec = dataModel.visibility + " class " + getClassName(dataModel)
         
     for par in (0..genClass.baseClasses.size)
       if par == 0 && genClass.baseClasses[par] != nil
@@ -94,11 +93,7 @@ class XCTECSharp::ClassStandard < XCTEPlugin
     end  # class  + dataModel.name
     codeBuilder.endClass
 
-    # Process namespace items
-    if genClass.namespaceList != nil
-      codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join('.'))
-      codeBuilder.add
-    end
+    genNamespaceEnd(genClass.namespaceList, codeBuilder)
   end
 end
 
