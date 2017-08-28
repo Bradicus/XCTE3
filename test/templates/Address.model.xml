@@ -3,9 +3,7 @@
 
 	<description>
 	</description>
-				
-	<gen_class type="standard" namespace="rmap" ></gen_class>
-				
+								
 	<var_group virtual="true" genGet="true" genSet="true">
 		<var name="id"		type="Int32" pkey="true" identity="(1, 1)" />
 		<var name="street1"	type="String" pkey="true" maxlen="50" />

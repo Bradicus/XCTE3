@@ -28,6 +28,14 @@ module XCTECpp
       @author = "Brad Ottoson"
     end
 
+    def getUnformattedClassName(dataModel, genClass)
+      return dataModel.name + ' container'
+    end    
+
+    def getClassName(dataModel, genClass)
+      return Utils.instance.getStyledClassName(getUnformattedClassName(dataModel, genClass))
+    end
+
     def genSourceFiles(codeClass, cfg)
       srcFiles = Array.new
       

@@ -19,18 +19,24 @@ require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
 module XCTECpp
-  class ClassStandard < XCTEPlugin
+  class ClassStandard < ClassBase
     def initialize
       @name = "standard"
       @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
     end
+
+    def getUnformattedClassName(dataModel, genClass)
+      return dataModel.name
+    end    
     
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
+
+      genClass.setName(getUnformattedClassName(dataModel, genClass)) 
       
       hFile = SourceRendererCpp.new
-      hFile.lfName = dataModel.name
+      hFile.lfName = Utils.instance.getStyledFileName(dataModel.name)
       hFile.lfExtension = Utils.instance.getExtension('header')
       genHeaderComment(dataModel, genClass, cfg, hFile)
       genHeader(dataModel, genClass, cfg, hFile)
@@ -45,8 +51,8 @@ module XCTECpp
       srcFiles << cppFile
       
       return srcFiles
-    end    
-    
+    end  
+
     def genHeaderComment(dataModel, genClass, cfg, hFile)
     
       hFile.add("/**")    
@@ -91,7 +97,7 @@ module XCTECpp
         hFile.add
       end
 
-      ClassBase::genIncludes(dataModel, genClass, cfg, hFile)
+      genIncludes(dataModel, genClass, cfg, hFile)
       
       if genClass.includes.length > 0
         hFile.add

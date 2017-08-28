@@ -9,7 +9,6 @@
 # on this class
  
 require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_tsql/x_c_t_e_t_sql.rb'
 
 module XCTETSql
   class StatementCreate < XCTEPlugin
@@ -21,10 +20,14 @@ module XCTETSql
       @author = "Brad Ottoson"
     end
 
+    def getClassName(dataModel, genClass)
+      return XCTETSql::Utils.instance.getStyledClassName(dataModel.name)
+    end
+
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
 
-      genClass.setName(XCTETSql::Utils.instance.getStyledClassName(dataModel.name))
+      genClass.setName(getClassName(dataModel, genClass))
 
       codeBuilder = SourceRenderer.new
       codeBuilder.lfName = dataModel.name

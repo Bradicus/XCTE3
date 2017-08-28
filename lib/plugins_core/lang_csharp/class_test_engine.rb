@@ -10,57 +10,61 @@ require 'code_elem_parent.rb'
 require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
-include XCTECSharp
+module XCTECSharp
+  class XCTECSharp::TestEngine < XCTEPlugin
 
-class XCTECSharp::TestEngine < XCTEPlugin
-
-  def initialize
-    @name = "test_engine"
-    @language = "csharp"
-    @category = XCTEPlugin::CAT_CLASS
-  end
-
-  def genSourceFiles(dataModel, genClass, cfg)
-    srcFiles = Array.new
-
-    genClass.setName(Utils.instance.getStyledClassName(dataModel.name + ' engine test'))
-    if genClass.interfaceNamespace != nil
-      genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + 'Interface')
+    def initialize
+      @name = "test_engine"
+      @language = "csharp"
+      @category = XCTEPlugin::CAT_CLASS
     end
 
-    codeBuilder = SourceRendererCSharp.new
-    codeBuilder.lfName = genClass.name
-    codeBuilder.lfExtension = Utils.instance.getExtension('body')
+    def getClassName(dataModel, genClass)
+      return Utils.instance.getStyledClassName(dataModel.name + ' engine')
+    end
 
-    genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genSourceFiles(dataModel, genClass, cfg)
+      srcFiles = Array.new
 
-    srcFiles << codeBuilder
+      genClass.setName(Utils.instance.getStyledClassName(dataModel.name + ' engine test'))
+      if genClass.interfaceNamespace != nil
+        genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + 'Interface')
+      end
 
-    return srcFiles
-  end
+      codeBuilder = SourceRendererCSharp.new
+      codeBuilder.lfName = genClass.name
+      codeBuilder.lfExtension = Utils.instance.getExtension('body')
 
-  # Returns the code for the content for this class
-  def genFileContent(dataModel, genClass, cfg, codeBuilder)
+      genFileContent(dataModel, genClass, cfg, codeBuilder)
 
-    templ = XCTEPlugin::findMethodPlugin("csharp", 'method_test_engine')
-    templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
+      srcFiles << codeBuilder
 
-    Utils.instance.genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
-    Utils.instance.genUses(genClass.uses, codeBuilder)
+      return srcFiles
+    end
 
-    Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
+    # Returns the code for the content for this class
+    def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
-    codeBuilder.add('[TestClass]')
-    classDec = dataModel.visibility + " class " + genClass.name
+      templ = XCTEPlugin::findMethodPlugin("csharp", 'method_test_engine')
+      templ.get_dependencies(dataModel, genClass, cfg, codeBuilder)
 
-    codeBuilder.startClass(classDec)
+      Utils.instance.genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
+      Utils.instance.genUses(genClass.uses, codeBuilder)
 
-    templ.get_definition(dataModel, genClass, cfg, codeBuilder)
+      Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
 
-    codeBuilder.endClass
+      codeBuilder.add('[TestClass]')
+      classDec = dataModel.visibility + " class " + genClass.name
 
-    Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
+      codeBuilder.startClass(classDec)
 
+      templ.get_definition(dataModel, genClass, cfg, codeBuilder)
+
+      codeBuilder.endClass
+
+      Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
+
+    end
   end
 end
 

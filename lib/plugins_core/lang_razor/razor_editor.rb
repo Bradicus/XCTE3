@@ -9,7 +9,6 @@
 # on this class
 
 require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_razor/x_c_t_e_razor.rb'
 
 module XCTERazor
   class RazorEditor < XCTEPlugin
@@ -21,11 +20,15 @@ module XCTERazor
       @author = "Brad Ottoson"
     end
 
+    def getClassName(dataModel, genClass)
+      return Utils.instance.getStyledClassName(dataModel.name)
+    end
+
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
 
       codeBuilder = SourceRenderer.new
-      codeBuilder.lfName = dataModel.name
+      codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
       codeBuilder.lfExtension = 'cshtml'
       genFileContent(dataModel, genClass, cfg, codeBuilder)
 

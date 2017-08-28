@@ -64,7 +64,6 @@ def processProjectComponentGroup(project, pcGroup, cfg)
               end
 
               if language.has_key?(genClass.ctype)
-                srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
 
                 if genClass.path != nil
                   newPath = pComponent.dest + "/" + genClass.path
@@ -82,6 +81,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 classPlan.model = dataModel
                 classPlan.class = genClass
                 classPlan.path = newPath
+       #         classPlan.className = language[genClass.ctype].getClassName(dataModel, genClass)
               
                 if classPlans[language] == nil
                   classPlans[language] = Array.new

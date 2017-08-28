@@ -19,10 +19,14 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
+    def getClassName(dataModel, genClass)
+      return Utils.instance.getStyledClassName(dataModel.name + ' engine')
+    end
+
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
 
-      genClass.setName(Utils.instance.getStyledClassName(dataModel.name + ' engine'))
+      genClass.setName(getClassName(dataModel, genClass))
 
       if genClass.interfaceNamespace != nil
         genClass.addUse(genClass.interfaceNamespace, 'I' + dataModel.name + 'Engine')

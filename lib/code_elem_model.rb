@@ -100,7 +100,6 @@ module CodeStructure
       curVar = CodeElemVariable.new(parentElem)
       curVar.xmlElement = varXML
 
-      curVar.name = varXML.attributes["name"]
       curVar.vtype = varXML.attributes["type"]
       curVar.visibility = curVar.attribOrDefault("visibility", curVar.visibility)
       curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
@@ -113,6 +112,7 @@ module CodeStructure
       curVar.nullable = curVar.findAttribute("nullable")
       curVar.identity = varXML.attributes["identity"]
       curVar.isPrimary = varXML.attributes["pkey"] == 'true'
+      curVar.name = varXML.attributes["name"]
 
       curVar.genGet = curVar.findAttribute("genGet")
       curVar.genSet = curVar.findAttribute("genSet")
@@ -166,6 +166,8 @@ module CodeStructure
       genC.language = genCXml.attributes["language"]
       genC.path = genCXml.attributes["path"]
       genC.varPrefix = genCXml.attributes["var_prefix"]
+
+      genC.name = name
 
       genCXml.elements.each("function") {|funXml|
         newFun = CodeElemFunction.new(genC)

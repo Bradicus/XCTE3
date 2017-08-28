@@ -1,10 +1,11 @@
 
 require 'plugins_core/lang_cpp/utils.rb'
+require 'x_c_t_e_plugin.rb'
 
 # This class contains functions that may be usefull in any type of class
 module XCTECpp
-  class ClassBase
-    def self.genIncludes(dataModel, genClass, cfg, hFile)
+  class ClassBase < XCTEPlugin 
+    def genIncludes(dataModel, genClass, cfg, hFile)
       addAutoIncludes(dataModel, genClass, cfg)
 
         for inc in genClass.includes
@@ -24,7 +25,7 @@ module XCTECpp
         end
     end
 
-    def self.addAutoIncludes(dataModel, genClass, cfg)
+    def addAutoIncludes(dataModel, genClass, cfg)
       varArray = Array.new
 
       for vGrp in dataModel.groups
