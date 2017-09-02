@@ -101,6 +101,7 @@ module CodeStructure
       curVar.xmlElement = varXML
 
       curVar.vtype = varXML.attributes["type"]
+      curVar.utype = varXML.attributes["utype"]
       curVar.visibility = curVar.attribOrDefault("visibility", curVar.visibility)
       curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
       curVar.listType = varXML.attributes["collection"]
@@ -410,5 +411,21 @@ module CodeStructure
       end
     end
 
+    def findClassFunction(classPlugName, funPlugName)
+      for c in @classes
+        if (c.name == classPlugName)
+          for fun in c.functions
+            if fun.name == funPlugName
+              return fun
+            end
+          end
+          
+          # if we found the class but not the function, we can return nil here
+          return nil
+        end
+      end
+
+      return nil
+    end
   end
 end

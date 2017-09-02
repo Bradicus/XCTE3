@@ -21,8 +21,12 @@ class UtilsBase
   end
   
   # Return the language type based on the generic type
-  def getTypeName(gType)
-    return @langProfile.getTypeName(gType)
+  def getTypeName(var)
+    if (var.vtype != nil)
+      return @langProfile.getTypeName(var.vtype)
+    else
+      return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+    end
   end
   
   # Return the language type based on the generic type
@@ -31,8 +35,8 @@ class UtilsBase
   end
 
   # Returns the version of this name styled for this language
-  def getStyledVariableName(var, prefix = '')
-    return CodeNameStyling.getStyled(prefix + var.name, @langProfile.variableNameStyle)
+  def getStyledVariableName(var, prefix = '', postfix = '')
+    return CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
   end
 
   def getStyledFunctionName(funName)

@@ -39,7 +39,7 @@ module XCTECSharp
       genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = genClass.name
+      codeBuilder.lfName = Utils.instance.getStyledClassName(genClass.name)
       codeBuilder.lfExtension = Utils.instance.getExtension('body')
       genFileContent(dataModel, genClass, cfg, codeBuilder)
       
@@ -72,7 +72,7 @@ module XCTECSharp
         codeBuilder.startBlock("namespace " << genClass.namespaceList.join('.'))
       end
       
-      classDec = dataModel.visibility + " interface " + genClass.name
+      classDec = dataModel.visibility + " interface " + Utils.instance.getStyledClassName(genClass.name)
           
       for par in (0..genClass.baseClasses.size)
         if par == 0 && genClass.baseClasses[par] != nil

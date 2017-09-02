@@ -21,6 +21,7 @@ require 'user_settings.rb'
 require 'fileutils'
 require 'run_settings'
 require 'class_plan'
+require 'project_plan'
 
 def isModelFile(filePath)
   return FileTest.file?(filePath) && 
@@ -32,7 +33,7 @@ end
 def processProjectComponentGroup(project, pcGroup, cfg)
   currentDir = Dir.pwd
 
-  classPlans = Hash.new
+  projectPlan = ProjectPlan.instance
 
   # preload an extra set of data models, so they can be referenced if needed
   for pComponent in pcGroup.components
@@ -55,6 +56,12 @@ def processProjectComponentGroup(project, pcGroup, cfg)
             if (language == nil)
               puts "No language found for: " + langName
             end
+            
+            if projectPlan.models[langName] == nil
+              projectPlan.models[langName] = Array.new
+            end
+            
+            projectPlan.models[langName] << dataModel
                           
             for genClass in dataModel.classes
               if (genClass.language != nil)
@@ -83,11 +90,11 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 classPlan.path = newPath
        #         classPlan.className = language[genClass.ctype].getClassName(dataModel, genClass)
               
-                if classPlans[language] == nil
-                  classPlans[language] = Array.new
+                if projectPlan.classPlans[language] == nil
+                  projectPlan.classPlans[language] = Array.new
                 end
 
-                classPlans[language] << classPlan
+                projectPlan.classPlans[language] << classPlan
               end
             end
           end          
@@ -96,7 +103,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
     end
   end
 
-  classPlans.each { |language, plans|
+  projectPlan.classPlans.each { |language, plans|
     for plan in plans
       srcFiles = language[plan.class.ctype].genSourceFiles(plan.model, plan.class, cfg)
 

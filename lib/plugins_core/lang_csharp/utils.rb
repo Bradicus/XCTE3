@@ -25,7 +25,7 @@ module XCTECSharp
     def getParamDec(var)
       pDec = String.new
 
-      pDec << self.getTypeName(var.vtype);
+      pDec << self.getTypeName(var);
         
       if var.passBy.upcase == "REFERENCE"
         pDec << ""
@@ -58,11 +58,11 @@ module XCTECSharp
       end
 
       if (var.templateType != nil)
-        vDec << var.templateType << "<" << self.getTypeName(var.vtype) << ">"
+        vDec << var.templateType << "<" << self.getTypeName(var) << ">"
       elsif (var.listType != nil)
-        vDec << var.listType << "<" << self.getTypeName(var.vtype) << ">"
+        vDec << var.listType << "<" << self.getTypeName(var) << ">"
       else
-        vDec << self.getTypeName(var.vtype)
+        vDec << self.getTypeName(var)
       end
 
       vDec << " "

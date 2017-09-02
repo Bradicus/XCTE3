@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="UserPage" >
+
+	<description>
+	Contains users data
+	</description>
+				
+	<gen_class type="standard" namespace="XCTE.Data" path="XCTE.Data" >		
+		<function name="method_save" />
+	</gen_class>
+				
+	<var_group genGet="true" genSet="true">	
+		<var name="users"		utype="role"  collection="List" />
+	</var_group>	
+</model>

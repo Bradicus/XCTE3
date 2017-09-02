@@ -9,7 +9,7 @@
 # read in from an xml file
 
 class CodeElemVariable < CodeElem
-  attr_accessor :vtype, :templateType, :defaultValue, :comment,
+  attr_accessor :vtype, :utype,:templateType, :defaultValue, :comment,
     :visibility, :isConst, :isStatic, :isPointer, :isVirtual, :passBy, :genSet, :genGet,
     :arrayElemCount, :listType, :nullable, :identity, :isPrimary
 
@@ -46,6 +46,7 @@ class CodeElemVariable < CodeElem
     param = CodeElemVariable.new(@parentElem)
     param.name = @name
     param.vtype = @vtype
+    param.utype = @utype
     param.templateType = @templateType
     param.listType = @listType
     param.arrayElemCount = @arrayElemCount

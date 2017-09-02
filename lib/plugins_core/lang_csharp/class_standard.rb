@@ -78,7 +78,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(dataModel, genClass, cfg, codeBuilder)
+              templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
             else
               puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end

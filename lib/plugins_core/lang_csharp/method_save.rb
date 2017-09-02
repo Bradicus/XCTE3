@@ -11,51 +11,55 @@ require 'x_c_t_e_plugin.rb'
 require 'code_name_styling.rb'
 require 'plugins_core/lang_csharp/utils.rb'
 
-class XCTECSharp::MethodSave < XCTEPlugin
+module XCTECSharp
+  class MethodSave < XCTEPlugin
 
-  def initialize
-    @name = "method_tsql_save"
-    @language = "csharp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
+    def initialize
+      @name = "method_save"
+      @language = "csharp"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-  # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-    codeBuilder.add("///")
-    codeBuilder.add("/// Save all components of this ")
-    codeBuilder.add("///")
+    # Returns definition string for this class's constructor
+    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
+      codeBuilder.add("///")
+      codeBuilder.add("/// Save all components of this ")
+      codeBuilder.add("///")
 
-    codeBuilder.startFunction("public void Save()")
+      codeBuilder.startFunction("public void Save()")
 
-    get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
-    codeBuilder.endFunction
-  end
+      codeBuilder.endFunction
+    end
 
-  def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-    codeBuilder.add("void Save();")
-  end
+    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
+      codeBuilder.add("void Save();")
+    end
 
-  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-    genClass.addUse('System', 'Exception')
-    genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
-  end
+    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
+      genClass.addUse('System', 'Exception')
+      genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
+    end
 
-  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
-    conDef = String.new
-    varArray = Array.new
-    dataModel.getAllVars(varArray)
+    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      conDef = String.new
+      varArray = Array.new
+      dataModel.getAllVarsFor(varArray)
 
-    codeBuilder.add('_conn.Open();')
-    codeBuilder.add('SqlTransaction trans = conn.BeginTransaction();')
+      codeBuilder.add('_conn.Open();')
+      codeBuilder.add('SqlTransaction trans = conn.BeginTransaction();')
 
-    for var in varArray
-      if (Utils.instance.isPrimitive(var) == false)
-        codeBuilder.add('_' + Utils.instance.getStyledVariableName(var) + 'interface.Create();')
+      for var in varArray
+        if (Utils.instance.isPrimitive(var) == false)          
+          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.vtype, 'tsql_engine', 'method_tsql_create')          
+            if varCreateFun != nil
+              codeBuilder.add('_' + Utils.instance.getStyledVariableName(var, '', ' interface') + '.Create(o);')
+            end
+        end
       end
     end
   end
-
 end
 
 # Now register an instance of our plugin
