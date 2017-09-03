@@ -26,7 +26,8 @@ module XCTECSharp
       codeBuilder.add("/// Create new record for this model")
       codeBuilder.add("///")
 
-      codeBuilder.startFunction("public void Create(SqlTransaction trans, " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + " o)")
+      codeBuilder.startFunction("public void Create(SqlTransaction trans, " +
+        XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + " o)")
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -34,7 +35,7 @@ module XCTECSharp
     end
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Create(SqlTransaction trans, " + dataModel.name + " o);")
+      codeBuilder.add("void Create(SqlTransaction trans, " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + " o);")
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)

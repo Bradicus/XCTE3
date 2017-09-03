@@ -208,8 +208,15 @@ module CodeStructure
         end
       }
 
-      # Load any auto includes for this class
+      # Load uses
+      genCXml.elements.each("use") {|useXml|
+        if (useXml.attributes["name"] != nil)
+          genC.addUse(useXml.attributes["name"])
+        end
+      }
 
+      # Load any auto includes for this class...
+      # Load any auto uses for this class...
 
       #puts "Loaded class note with function count " + genC.functions.length.to_s
     end
@@ -412,8 +419,9 @@ module CodeStructure
     end
 
     def findClassFunction(classPlugName, funPlugName)
+      cs = @classes # for debugging
       for c in @classes
-        if (c.name == classPlugName)
+        if (c.ctype == classPlugName)
           for fun in c.functions
             if fun.name == funPlugName
               return fun

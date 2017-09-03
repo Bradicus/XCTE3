@@ -28,6 +28,7 @@ class ProjectPlan
     end
 
     def findClassFunction(languageName, modelName, classPlugName, funPlugName)
+      models = @models
       for model in @models[languageName]
         if model.name == modelName
           return model.findClassFunction(classPlugName, funPlugName)

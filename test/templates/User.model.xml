@@ -4,13 +4,15 @@
 	<description>
 	</description>
 				
-	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" ></gen_class>
+	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" >
+		<use name="System.Collections.Generic" />
+	</gen_class>
 				
 	<var_group genGet="true" genSet="true">	
 		<var name="first name"		type="String" maxlen="50" />
 		<var name="last name"		type="String" maxlen="50" />
 		<var name="username"	type="String" maxlen="50" />
 		<var name="address" 	utype="address" />
-		<var name="roles"		type="List" of="Role" genSet="false" />
+		<var name="roles"		utype="role" collection="List" />
 	</var_group>	
 </model>

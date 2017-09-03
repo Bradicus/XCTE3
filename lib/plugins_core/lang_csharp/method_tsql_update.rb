@@ -26,7 +26,7 @@ module XCTECSharp
       codeBuilder.add("/// Update the record for this model")
       codeBuilder.add("///")
 
-      codeBuilder.startClass("public void Update(SqlTransaction trans, " + dataModel.name + " o)")
+      codeBuilder.startClass("public void Update(SqlTransaction trans, " + Utils.instance.getStyledClassName(dataModel.name) + " o)")
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -34,7 +34,7 @@ module XCTECSharp
     end
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Update(SqlTransaction trans, " + dataModel.name + " o);")
+      codeBuilder.add("void Update(SqlTransaction trans, " + Utils.instance.getStyledClassName(dataModel.name) + " o);")
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)

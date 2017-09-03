@@ -52,7 +52,7 @@ module XCTECSharp
 
       for var in varArray
         if (Utils.instance.isPrimitive(var) == false)          
-          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.vtype, 'tsql_engine', 'method_tsql_create')          
+          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, 'tsql_engine', 'method_tsql_create')          
             if varCreateFun != nil
               codeBuilder.add('_' + Utils.instance.getStyledVariableName(var, '', ' interface') + '.Create(o);')
             end

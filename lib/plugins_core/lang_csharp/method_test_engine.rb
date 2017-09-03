@@ -28,7 +28,7 @@ module XCTECSharp
       codeBuilder.add("///")
 
       codeBuilder.add('[TestMethod]')
-      codeBuilder.startFunction('public void ' + Utils.instance.getStyledFunctionName("test " + dataModel.name + " engine()"))
+      codeBuilder.startFunction('public void ' + Utils.instance.getStyledFunctionName("test " + dataModel.name + " engine") + "()")
       get_body(dataModel, genClass, cfg, codeBuilder)
 
       codeBuilder.endFunction
@@ -45,9 +45,10 @@ module XCTECSharp
     end
 
     def get_body(dataModel, genClass, cfg, codeBuilder)
+      stdClassName = Utils.instance.getStyledClassName(dataModel.name)
 
-      codeBuilder.add('I' + dataModel.name + 'Engine intf = new ' + dataModel.name + 'Engine();')
-      codeBuilder.add(dataModel.name + ' obj = new ' + dataModel.name + '();')
+      codeBuilder.add(Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine') + ' intf = new ' + Utils.instance.getStyledClassName(dataModel.name + ' engine') + '();')
+      codeBuilder.add(stdClassName + ' obj = new ' + stdClassName + '();')
       codeBuilder.add
       codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
       codeBuilder.add('SqlConnection conn = new SqlConnection(connString);')
@@ -87,7 +88,7 @@ module XCTECSharp
       codeBuilder.startBlock('catch(Exception er)')
       codeBuilder.add('throw new Exception("Failed to rollback transaction after exception", er);')
       codeBuilder.endBlock
-      codeBuilder.add('throw new Exception("Failed to create new test object for ' + Utils.instance.getStandardName(dataModel) + '", e);')
+      codeBuilder.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
       codeBuilder.endBlock
 
       # Generate code for functions

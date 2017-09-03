@@ -28,11 +28,11 @@ module XCTECSharp
 
       genClass.setName(Utils.instance.getStyledClassName(dataModel.name + ' engine test'))
       if genClass.interfaceNamespace != nil
-        genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + 'Interface')
+        genClass.includes << CodeElemInclude.new(genClass.interfaceNamespace, dataModel.name + ' interface')
       end
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = genClass.name
+      codeBuilder.lfName = Utils.instance.getStyledClassName(genClass.name);
       codeBuilder.lfExtension = Utils.instance.getExtension('body')
 
       genFileContent(dataModel, genClass, cfg, codeBuilder)
@@ -54,7 +54,7 @@ module XCTECSharp
       Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
 
       codeBuilder.add('[TestClass]')
-      classDec = dataModel.visibility + " class " + genClass.name
+      classDec = dataModel.visibility + " class " + Utils.instance.getStyledClassName(genClass.name)
 
       codeBuilder.startClass(classDec)
 
