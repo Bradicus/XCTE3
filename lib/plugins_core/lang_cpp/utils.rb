@@ -61,7 +61,7 @@ module XCTECpp
         vDec << "static "
       end
       
-      typeName = getTypeName(var.vtype);
+      typeName = getTypeName(var);
 
       if var.isPointer
         typeName << "*";
@@ -70,7 +70,7 @@ module XCTECpp
       if (var.templateType != nil)
         vDec << var.templateType << "<" << typeName << ">"
       elsif (var.listType != nil)
-        vDec << getTypeName(var.listType) << "<" << typeName << ">"
+        vDec << getListTypeName(var.listType) << "<" << typeName << ">"
       else
         vDec << typeName
       end
@@ -109,6 +109,19 @@ module XCTECpp
       end
       
       return(newStr)
+    end
+  
+    # Return the language type based on the generic type
+    def getTypeName(var)
+      if (var.vtype != nil)
+        return @langProfile.getTypeName(var.vtype)
+      else
+        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+      end
+    end
+
+    def getListTypeName(listTypeName)
+      return @langProfile.getTypeName(listTypeName)
     end
     
     def getComment(var)
