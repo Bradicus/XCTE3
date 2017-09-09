@@ -1,5 +1,5 @@
 ##
-# @author Brad Ottoson
+
 # 
 # Copyright (C) 2008 Brad Ottoson
 # This file is released under the zlib/libpng license, see license.txt in the 
@@ -97,6 +97,22 @@ module XCTECpp
         hFile.add
       end
 
+      # get list of includes needed by functions
+      
+      # Generate function declarations
+      for funItem in genClass.functions
+        if funItem.elementId == CodeElem::ELEM_FUNCTION
+          if funItem.isTemplate
+            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
+            if templ != nil
+              templ.get_dependencies(dataModel, genClass, funItem, hFile)
+            else
+            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
+            end
+          end
+        end
+      end
+
       genIncludes(dataModel, genClass, cfg, hFile)
       
       if genClass.includes.length > 0
@@ -142,6 +158,27 @@ module XCTECpp
       
       hFile.add("public:")
       hFile.indent
+            
+      # Generate class variables
+      varArray = Array.new
+
+      for vGrp in dataModel.groups
+      getVarsFor(vGrp, cfg, varArray)
+      end
+
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          hFile.add(Utils.instance.getVarDec(var))
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          hFile.add(Utils.instance.getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          hFile.add(var.formatText)
+        end
+      end
+
+      if (genClass.functions.length > 0)
+        hFile.add
+      end
       
       # Generate function declarations
       for funItem in genClass.functions
@@ -150,9 +187,9 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(dataModel, cfg, hFile)
+                templ.get_declaration_inline(dataModel, genClass, funItem, hFile)
               else
-                templ.get_declaration(dataModel, cfg, hFile)
+                templ.get_declaration(dataModel, genClass, funItem, hFile)
               end
             else
             # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -161,9 +198,9 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(funItem, cfg, hFile)
+                templ.get_declaration_inline(genClass, funItem, hFile)
               else
-                templ.get_declaration(funItem, cfg, hFile)
+                templ.get_declaration(genClass, funItem, hFile)
               end
             else
             # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -177,23 +214,6 @@ module XCTECpp
           else
             hFile.sameLine(funItem.formatText)
           end       
-        end
-      end
-              
-      # Generate class variables
-      varArray = Array.new
-
-      for vGrp in dataModel.groups
-        getVarsFor(vGrp, cfg, varArray)
-      end
-      
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          hFile.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          hFile.add(var.formatText)
         end
       end
     
@@ -215,6 +235,7 @@ module XCTECpp
     # Returns the code for the body for this class
     def genBody(dataModel, genClass, cfg, cppGen)
       cppGen.add("#include \"" << dataModel.name << ".h\"")
+      cppGen.add
 
       # Process namespace items
       if genClass.namespaceList != nil
@@ -254,7 +275,7 @@ module XCTECpp
             puts "processing template for function " +fun.name
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(dataModel, cfg, cppGen)
+                templ.get_definition(dataModel, genClass, fun, cppGen)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
@@ -263,7 +284,7 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(dataModel, fun, cppGen)
+                templ.get_definition(dataModel, genClass, funItem, hFile)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'

@@ -1,5 +1,5 @@
 ##
-# @author Brad Ottoson
+
 # 
 # Copyright (C) 2008 Brad Ottoson
 # This file is released under the zlib/libpng license, see license.txt in the 
@@ -13,6 +13,19 @@ class SourceRendererCpp < SourceRendererBraceDelim
 
   def initialize()
     super
+  end
+
+  def genMultiComment(lines)
+    add('/**')
+    for line in lines
+      add(' * ' + line)
+    end
+    add(' */')
+  end
+  
+  def endFunction(afterClose="")
+    endBlock(afterClose)
+    add
   end
   
   def endClass(afterClose="")

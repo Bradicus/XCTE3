@@ -2,10 +2,12 @@
 <model name="role" >
 
 	<description>
-	</description>
+	</description>			
 				
-	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" ></gen_class>
-				
+	<gen_class type="standard" namespace="rmx" >
+		<function name="method_load_from_nlohmann_json" />
+	</gen_class>
+	
 	<var_group genGet="true" genSet="true">	
 		<var name="user role"		type="String" maxlen="50" />
 	</var_group>	

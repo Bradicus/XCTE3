@@ -39,6 +39,20 @@ module XCTECSharp
     # Returns the code for the content for this class
     def genFileContent(dataModel, genClass, cfg, codeBuilder)
 
+      # Add in any dependencies required by functions
+      for fun in genClass.functions
+        if fun.elementId == CodeElem::ELEM_FUNCTION
+          if fun.isTemplate
+            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
+            if templ != nil
+              templ.get_dependencies(dataModel, genClass, fun, codeBuilder)
+            else
+              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+            end
+          end
+        end
+      end
+
       Utils.instance.genUses(genClass.uses, codeBuilder)
       Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
       

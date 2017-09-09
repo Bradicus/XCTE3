@@ -1,5 +1,5 @@
 ##
-# @author Brad Ottoson
+
 # 
 # Copyright (C) 2008 Brad Ottoson
 # This file is released under the zlib/libpng license, see license.txt in the 
@@ -19,36 +19,39 @@ class XCTECpp::MethodConstructor < XCTEPlugin
   end
   
   # Returns declairation string for this class's constructor
-  def get_declaration(codeClass, cfg, codeBuilder)
-    codeBuilder.add(codeClass.name + "();")
+  def get_declaration(dataModel, genClass, funItem, codeBuilder)
+    codeBuilder.add(genClass.name + "();")
   end
 
   # Returns declairation string for this class's constructor
-  def get_declaration_inline(codeClass, cfg, codeBuilder)
-    codeBuilder.startFuction(codeClass.name + "()")
-    codeStr << get_body(codeClass, cfg, codeBuilder)
+  def get_declaration_inline(dataModel, genClass, funItem, codeBuilder)
+    codeBuilder.startFuction(genClass.name + "()")
+    codeStr << get_body(dataModel, genClass, funItem, hFile)
     codeBuilder.endFunction
+  end
+
+  def get_dependencies(dataModel, genClass, funItem, codeBuilder)
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg, codeBuilder)
+  def get_definition(dataModel, genClass, funItem, codeBuilder)
     codeBuilder.add("/**")
     codeBuilder.add("* Constructor")
     codeBuilder.add("*/")
       
     classDef = String.new  
-    classDef << codeClass.name << " :: " << codeClass.name << "()"
+    classDef << genClass.name << " :: " << genClass.name << "()"
     codeBuilder.startClass(classDef)
 
-    get_body(codeClass, cfg, codeBuilder)
+    get_body(dataModel, genClass, funItem, codeBuilder)
         
-    codeBuilder.endClass
+    codeBuilder.endFunction
   end
 
-  def get_body(codeClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, funItem, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    dataModel.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
@@ -69,8 +72,6 @@ class XCTECpp::MethodConstructor < XCTEPlugin
         end
       end
     end
-
-    return(conDef)
   end
   
 end
