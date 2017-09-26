@@ -176,6 +176,13 @@ module CodeStructure
         genC.functions << newFun
       }
 
+      genCXml.elements.each("empty_function") {|funXml|
+        newFun = CodeElemFunction.new(genC)
+        loadEmptyFunctionNode(newFun, funXml)
+        newFun.isTemplate = false
+        genC.functions << newFun
+      }
+
       genCXml.elements.each("include") {|incXml|
         if incXml.attributes["path"] != nil
           iPath = incXml.attributes["path"]
@@ -237,38 +244,36 @@ module CodeStructure
     end
 
     # Loads a function element from an XML function node
-    def loadEmptyFunctionNode(empFunXML)
-      curFunction = CodeElemFunction.new
-      curFunction.loadAttributes(empFunXML)
-      curFunction.name = empFunXML.attributes["name"]
-      curFunction.isInline = (empFunXML.attributes["inline"] == "true")
+    def loadEmptyFunctionNode(newFun, funXml)
+      newFun.loadAttributes(funXml)
+      newFun.name = funXml.attributes["name"]
+      newFun.isInline = (funXml.attributes["inline"] == "true")
 
-      if empFunXML.attributes["const"] != nil && empFunXML.attributes["const"].casecmp("true")
-        curFunction.isConst = true
+      if funXml.attributes["const"] != nil && funXml.attributes["const"].casecmp("true")
+        newFun.isConst = true
       end
-      if empFunXML.attributes["static"] != nil && empFunXML.attributes["static"].casecmp("true")
-        curFunction.isStatic = true
+      if funXml.attributes["static"] != nil && funXml.attributes["static"].casecmp("true")
+        newFun.isStatic = true
       end
-      if empFunXML.attributes["visibility"] != nil
-        curFunction.visibility = empFunXML.attributes["visibility"]
+      if funXml.attributes["visibility"] != nil
+        newFun.visibility = funXml.attributes["visibility"]
       end
-      if empFunXML.attributes["virtual"] != nil && empFunXML.attributes["virtual"].casecmp("true")
-        curFunction.isVirtual = true
+      if funXml.attributes["virtual"] != nil && funXml.attributes["virtual"].casecmp("true")
+        newFun.isVirtual = true
       end
 
-      for funElemXML in empFunXML.elements
+      for funElemXML in funXml.elements
         if funElemXML.name == "parameters"
+          newFun.parameters.loadAttributes(funElemXML)
           for paramXML in funElemXML.elements
-            loadVariableNode(paramXML, curFunction.parameters)
+            loadVariableNode(paramXML, newFun.parameters)
           end
         elsif funElemXML.name == "return_variable"
           retVar = Array.new
           loadVariableNode(funElemXML, retVar)
-          curFunction.returnValue = retVar[0]
+          newFun.returnValue = retVar[0]
         end
       end
-
-      @functionSection << curFunction
     end
 
     # Loads a comment from an XML comment node

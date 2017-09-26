@@ -121,7 +121,7 @@ class XCTERuby::ClassStandard < XCTEPlugin
     headerString << "\n"
 
     # Generate code for functions
-    for fun in codeClass.functionSection
+    for fun in codeClass.functions
       if fun.elementId == CodeElem::ELEM_FUNCTION
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("ruby", fun.name)

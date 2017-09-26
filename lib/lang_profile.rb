@@ -12,7 +12,8 @@ require 'lang_profile_type_map.rb'
 
 class LangProfile
   attr_accessor :name, :fileTypes, :typeMaps, :variableNameStyle,
-                :functionNameStyle, :classNameStyle, :fileNameStyle
+                :functionNameStyle, :classNameStyle, :fileNameStyle,
+                :enumNameStyle
 
   def initialize
     @name       # Defined in the initialize method of child classes
@@ -23,6 +24,7 @@ class LangProfile
     @classNameStyle = nil
     @functionNameStyle = nil
     @fileNameStyle = nil
+    @enumNameStyle = nil
   end
   
   def loadProfile
@@ -57,6 +59,7 @@ class LangProfile
       @classNameStyle =  styling.attributes["class"]
       @functionNameStyle = styling.attributes["function"]
       @fileNameStyle = styling.attributes["file"]
+      @enumNameStyle = styling.attributes["enum"]
     }
 
     if (@fileNameStyle == nil)

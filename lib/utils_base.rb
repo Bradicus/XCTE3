@@ -48,6 +48,10 @@ class UtilsBase
     return CodeNameStyling.getStyled(className, @langProfile.classNameStyle)
   end
 
+  def getStyledEnumName(enumName)
+    return CodeNameStyling.getStyled(enumName, @langProfile.enumNameStyle)
+  end
+
   # Returns the version of this file name styled for this language
   def getStyledFileName(fileName)
     return CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)

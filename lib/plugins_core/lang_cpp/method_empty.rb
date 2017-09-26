@@ -14,104 +14,105 @@ require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
 
-class XCTECpp::MethodEmpty < XCTEPlugin  
-  def initialize
-    @name = "method_empty"
-    @language = "cpp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
-  
-  # Returns declairation string for this empty method
-  def get_declaration(fun, cfg)
-    eDecl = String.new
-
-    eDecl << "        "
-    if fun.isVirtual
-      eDecl << "virtual "
+module XCTECpp
+  class MethodEmpty < XCTEPlugin  
+    def initialize
+      @name = "method_empty"
+      @language = "cpp"
+      @category = XCTEPlugin::CAT_METHOD
     end
+    
+    # Returns declairation string for this empty method
+    def get_declaration(dataModel, genClass, fun, hFile)
+      eDecl = String.new
+
+      if fun.isVirtual
+        eDecl << "virtual "
+      end
+          
+      if fun.isStatic
+        eDecl << "static "
+      end
+
+      if fun.returnValue.isConst
+        eDecl << "const "
+      end
+          
+      eDecl << Utils.instance.getTypeName(fun.returnValue) << " "
+      eDecl << fun.name << "("
+
+      for param in (0..(fun.parameters.vars.size - 1))           
+        if param != 0
+          eDecl << ", "
+        end
         
-    if fun.isStatic
-      eDecl << "static "
-    end
-
-    if fun.returnValue.isConst
-      eDecl << "const "
-    end
-        
-    eDecl << XCTECpp::Utils::getTypeName(fun.returnValue.vtype) << " "
-    eDecl << fun.name << "("
-
-    for param in (0..(fun.parameters.size - 1))           
-      if param != 0
-        eDecl << ", "
+        eDecl << Utils.instance.getParamDec(fun.parameters.vars[param])
       end
       
-      eDecl << XCTECpp::Utils::getParamDec(fun.parameters[param])
-    end
-    
-    eDecl << ")"
+      eDecl << ")"
 
-    if fun.isConst
-      eDecl << " const";
-    end
-
-    eDecl << ";\n";
-  end
-  
-  # Returns definition string for an empty method
-  def get_definition(codeClass, fun)
-    eDef = String.new
-
-    # Skeleton of comment block
-    eDef << "/**\n"
-    eDef << "* \n"
-    eDef << "* \n"
-    
-    for param in fun.parameters
-      eDef << "* @param " << param.name << " \n"
-    end
-        
-    if fun.returnValue.vtype != "void"
-      eDef << "* \n* @return \n"
-    end  
-        
-    eDef << "*/ \n"
-
-    # Function body framework
-    if fun.returnValue.isConst
-      eDef << "const "
-    end
-        
-    eDef << XCTECpp::Utils::getTypeName(fun.returnValue.vtype) << " "
-    eDef << codeClass.name << " :: "
-    eDef << fun.name << "("
-
-    for param in (0..(fun.parameters.size - 1))            
-      if param != 0
-        eDef << ", "
+      if fun.isConst
+        eDecl << " const";
       end
 
-      eDef << XCTECpp::Utils::getParamDec(fun.parameters[param])
-    end
-        
-    eDef << ")"
+      eDecl << ";";
 
-    if fun.isConst
-      eDef << " const"        
+      hFile.add(eDecl)
     end
-        
-    eDef << "\n"
+    
+    # Returns definition string for an empty method
+    def get_definition(dataModel, genClass, fun, codeBuilder)
 
-    eDef << "{\n"
-    eDef << "    \n"
-        
-    if fun.returnValue.vtype != "void"
-      eDef << "    return();\n"
+      # Skeleton of comment block
+      codeBuilder.add("/**")
+      codeBuilder.add("* ")
+      codeBuilder.add("* ")
+      
+      for param in fun.parameters.vars
+        codeBuilder.add("* @param " + Utils.instance.getStyledVariableName(param))
+      end
+          
+      if fun.returnValue.vtype != "void"
+        codeBuilder.add("*")
+        codeBuilder.add("* @return ")
+      end  
+          
+      codeBuilder.add("*/ ")
+
+      funDec = String.new
+
+      # Function body framework
+      if fun.returnValue.isConst
+        funDec << "const "
+      end
+          
+      funDec << Utils.instance.getTypeName(fun.returnValue) + " "
+      funDec << Utils.instance.getStyledClassName(dataModel.name) + " :: "
+      funDec << Utils.instance.getStyledFunctionName(fun.name) << "("
+
+      for param in (0..(fun.parameters.vars.size - 1))            
+        if param != 0
+          funDec << ", "
+        end
+
+        funDec << Utils.instance.getParamDec(fun.parameters.vars[param])
+      end
+          
+      funDec << ")"
+
+      if fun.isConst
+        funDec << " const"        
+      end
+
+      codeBuilder.startFunction(funDec)
+
+      if fun.returnValue.vtype != "void"
+        codeBuilder.add("return();")
+      end
+          
+      codeBuilder.endFunction()
     end
-        
-    eDef << "}\n\n"
-
-    return eDef
+    
   end
 end
 

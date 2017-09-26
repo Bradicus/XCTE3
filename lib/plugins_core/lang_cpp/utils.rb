@@ -31,7 +31,7 @@ module XCTECpp
         pDec << "static "
       end
         
-      pDec << getTypeName(var.vtype);
+      pDec << getTypeName(var);
         
       if var.passBy.upcase == "REFERENCE"
         pDec << "&"

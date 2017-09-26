@@ -33,8 +33,8 @@ module XCTECpp
     def genSourceFiles(dataModel, genClass, cfg)
       srcFiles = Array.new
 
-      genClass.setName(getUnformattedClassName(dataModel, genClass)) 
-      
+      genClass.setName(getUnformattedClassName(dataModel, genClass))
+            
       hFile = SourceRendererCpp.new
       hFile.lfName = Utils.instance.getStyledFileName(dataModel.name)
       hFile.lfExtension = Utils.instance.getExtension('header')
@@ -42,7 +42,7 @@ module XCTECpp
       genHeader(dataModel, genClass, cfg, hFile)
       
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = dataModel.name
+      cppFile.lfName = Utils.instance.getStyledFileName(dataModel.name)
       cppFile.lfExtension = Utils.instance.getExtension('body')
       genHeaderComment(dataModel, genClass, cfg, cppFile)
       genBody(dataModel, genClass, cfg, cppFile)
@@ -87,15 +87,7 @@ module XCTECpp
     # Returns the code for the header for this class
     def genHeader(dataModel, genClass, cfg, hFile)
 
-      if (genClass.namespaceList != nil)
-        hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
-        hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
-        hFile.add
-      else
-        hFile.add("#ifndef _" + genClass.name + "_H")
-        hFile.add("#define _" + genClass.name + "_H")
-        hFile.add
-      end
+      genIfndef(dataModel, genClass, hFile)
 
       # get list of includes needed by functions
       
@@ -198,9 +190,9 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(genClass, funItem, hFile)
+                templ.get_declaration_inline(dataModel, genClass, funItem, hFile)
               else
-                templ.get_declaration(genClass, funItem, hFile)
+                templ.get_declaration(dataModel, genClass, funItem, hFile)
               end
             else
             # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -284,7 +276,7 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(dataModel, genClass, funItem, hFile)
+                templ.get_definition(dataModel, genClass, fun, cppGen)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'

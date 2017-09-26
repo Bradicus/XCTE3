@@ -133,7 +133,7 @@ module XCTECpp
         end
       end
       
-      hFile.endBlock
+      hFile.endBlock(";")
 
       # Process namespace items
       if genClass.namespaceList != nil

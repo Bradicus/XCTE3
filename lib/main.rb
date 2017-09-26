@@ -217,6 +217,10 @@ end
 prj = CodeStructure::ElemProject.new
 prj.loadProject(currentDir + "/xcte.project.xml")
 
+for lpp in prj.langProfilePaths
+  
+end
+
 processProjectComponentGroup(prj, prj.componentGroup, cfg)
 
 

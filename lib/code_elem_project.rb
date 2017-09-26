@@ -21,7 +21,7 @@ module CodeStructure
   class ElemProject < CodeElem
     attr_accessor :classType, :includes, :parentsList,
       :variableSection, :functionSection, :componentGroup, :buildType,
-      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest
+      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths
 
 
     def initialize
@@ -35,6 +35,7 @@ module CodeStructure
       @libraryDirs = Array.new
       @linkLibs = Array.new
       @buildTypes = Array.new
+      @langProfilePaths = Array.new
     end
 
     def loadProject(fName)
@@ -75,6 +76,11 @@ module CodeStructure
         loadTemplateNode(newTDir, tplDir)
         groupNode.components << newTDir
       }
+
+      xmlGroup.elements.each("custom_lang_profiles") { |langProf|
+        @langProfilePaths << langProf.attributes['path']
+      }
+    
       xmlGroup.elements.each("CLASS") { |cclass|
         newClass = CodeElemClassGen.new(this)
         loadClassNode(newClass, cclass)
