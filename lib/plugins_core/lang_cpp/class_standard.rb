@@ -56,7 +56,7 @@ module XCTECpp
     def genHeaderComment(dataModel, genClass, cfg, hFile)
     
       hFile.add("/**")    
-      hFile.add("* @class " + dataModel.name)
+      hFile.add("* @class " + Utils.instance.getStyledClassName(dataModel.name))
       
       if (cfg.codeAuthor != nil)
         hFile.add("* @author " + cfg.codeAuthor)
@@ -136,7 +136,7 @@ module XCTECpp
         hFile.add
       end
       
-      classDec = "class " + dataModel.name
+      classDec = "class " + Utils.instance.getStyledClassName(dataModel.name)
           
       for par in (0..genClass.baseClasses.size)
         if par == 0 && genClass.baseClasses[par] != nil
@@ -244,7 +244,7 @@ module XCTECpp
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isStatic
             cppGen.add(Utils.instance.getTypeName(var.vtype) << " ")
-            cppGen.sameLine(dataModel.name << " :: ")
+            cppGen.sameLine(Utils.instance.getStyledClassName(dataModel.name) << " :: ")
             cppGen.sameLine(var.name)
                       
             if var.arrayElemCount.to_i > 0 # This is an array

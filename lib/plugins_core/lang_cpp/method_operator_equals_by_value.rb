@@ -22,8 +22,8 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
   def get_declaration(codeClass, cfg, codeBuilder)
     eqString = String.new
 
-    codeBuilder.add("const " << codeClass.name << "& operator=" << "(const " << codeClass.name)
-    codeBuilder.sameLine("& src" << codeClass.name << ");")
+    codeBuilder.add("const " << Utils.instance.getStyledClassName(codeClass.name) << "& operator=" << "(const " << Utils.instance.getStyledClassName(codeClass.name))
+    codeBuilder.sameLine("& src" << Utils.instance.getStyledClassName(codeClass.name) << ");")
     codeBuilder.add
 
     return eqString
@@ -34,17 +34,20 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     eqString = String.new
     longArrayFound = false;
 
+    styledCName = Utils.instance.getStyledClassName(codeClass.name)
+
     codeBuilder.add("/**")
     codeBuilder.add(" * Sets this object equal to incoming object")
     codeBuilder.add(" */")
-    codeBuilder.startClass("const " + codeClass.name + "& " + codeClass.name + " :: operator=(const " + codeClass.name + "& src" + codeClass.name + ");")
+    codeBuilder.startClass("const " + styledCName +
+         "& " + styledCName + " :: operator=(const " + styledCName + "& src" + styledCName + ");")
     
 #    if codeClass.hasAnArray
 #      codeBuilder.add("    unsigned int i;\n");
 #    end
 
     for par in codeClass.baseClasses
-      codeBuilder.add("    " << par.name << "::operator=(src" + codeClass.name << ");")
+      codeBuilder.add("    " << par.name << "::operator=(src" + styledCName << ");")
     end
 
     varArray = Array.new
@@ -53,15 +56,15 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         if !var.isStatic   # Ignore static variables
-          if XCTECpp::Utils::isPrimitive(var)
+          if Utils.instance.isPrimitive(var)
             if var.arrayElemCount.to_i > 0	# Array of primitives
               codeBuilder.add("    memcpy(" << var.name << ", ")
-              codeBuilder.sameLine("src" << codeClass.name << ".")
+              codeBuilder.sameLine("src" << styledCName << ".")
               codeBuilder.sameLine(var.name << ", ")
-              codeBuilder.sameLine("sizeof(" + XCTECpp::Utils::getTypeName(var.vtype) << ") * " << XCTECpp::Utils::getSizeConst(var))
+              codeBuilder.sameLine("sizeof(" + Utils.instance.getTypeName(var.vtype) << ") * " << Utils.instance.getSizeConst(var))
               codeBuilder.sameLine(");")
             else
-              codeBuilder.add(var.name << " = src" << codeClass.name << "." << var.name << ";\n")
+              codeBuilder.add(var.name << " = src" << styledCName << "." << var.name << ";\n")
             end
           else	# Not a primitive
             if var.arrayElemCount > 0	# Array of objects
@@ -70,17 +73,17 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
                   codeBuilder.add
                   longArrayFound = true
                 end
-              codeBuilder.startBlock("for (i = 0; i < " << XCTECpp::Utils::getSizeConst(var) << "; i++)")
-              codeBuilder.add(var.name + "[i] = src" + codeClass.name + "." + "[i];")
+              codeBuilder.startBlock("for (i = 0; i < " << Utils.instance.getSizeConst(var) << "; i++)")
+              codeBuilder.add(var.name + "[i] = src" + styledCName + "." + "[i];")
               codeBuilder.endBlock
             else
-              codeBuilder.add(var.name + " = src" + codeClass.name + "." + var.name + ";")
+              codeBuilder.add(var.name + " = src" + styledCName + "." + var.name + ";")
             end
           end
         end
 
       elsif var.elementId == CodeElem::ELEM_COMMENT
-        codeBuilder.add(XCTECpp::Utils::getComment(var))
+        codeBuilder.add(Utils.instance.getComment(var))
       elsif var.elementId == CodeElem::ELEM_FORMAT
         codeBuilder.add(var.formatText)
       end

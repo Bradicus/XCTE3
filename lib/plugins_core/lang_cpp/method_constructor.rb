@@ -20,12 +20,12 @@ class XCTECpp::MethodConstructor < XCTEPlugin
   
   # Returns declairation string for this class's constructor
   def get_declaration(dataModel, genClass, funItem, codeBuilder)
-    codeBuilder.add(genClass.name + "();")
+    codeBuilder.add(Utils.instance.getStyledClassName(dataModel.name) + "();")
   end
 
   # Returns declairation string for this class's constructor
   def get_declaration_inline(dataModel, genClass, funItem, codeBuilder)
-    codeBuilder.startFuction(genClass.name + "()")
+    codeBuilder.startFuction(Utils.instance.getStyledClassName(dataModel.name) + "()")
     codeStr << get_body(dataModel, genClass, funItem, hFile)
     codeBuilder.endFunction
   end
@@ -40,7 +40,7 @@ class XCTECpp::MethodConstructor < XCTEPlugin
     codeBuilder.add("*/")
       
     classDef = String.new  
-    classDef << genClass.name << " :: " << genClass.name << "()"
+    classDef << Utils.instance.getStyledClassName(dataModel.name) << " :: " << Utils.instance.getStyledClassName(dataModel.name) << "()"
     codeBuilder.startClass(classDef)
 
     get_body(dataModel, genClass, funItem, codeBuilder)

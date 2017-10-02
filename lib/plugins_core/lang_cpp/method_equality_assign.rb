@@ -23,13 +23,13 @@ module XCTECpp
     def get_declaration(dataModel, genClass, funItem, hFile)
       eqString = String.new
         
-      hFile.add(genClass.name)
-      hFile.sameLine("(const " + genClass.name)
-      hFile.sameLine("& src" + genClass.name + ");")
+      hFile.add(Utils.instance.getStyledClassName(dataModel.name))
+      hFile.sameLine("(const " + Utils.instance.getStyledClassName(dataModel.name))
+      hFile.sameLine("& src" + Utils.instance.getStyledClassName(dataModel.name) + ");")
           
-      hFile.add("const " + genClass.name)
-      hFile.sameLine("& operator=" + "(const " + genClass.name)
-      hFile.sameLine("& src" + genClass.name + ");\n")
+      hFile.add("const " + Utils.instance.getStyledClassName(dataModel.name))
+      hFile.sameLine("& operator=" + "(const " + Utils.instance.getStyledClassName(dataModel.name))
+      hFile.sameLine("& src" + Utils.instance.getStyledClassName(dataModel.name) + ");\n")
     end
 
     def get_dependencies(dataModel, genClass, funItem, hFile)
@@ -39,17 +39,19 @@ module XCTECpp
     def get_definition(dataModel, genClass, funItem, hFile)
       eqString = String.new
       longArrayFound = false;
+
+      styledCName = Utils.instance.getStyledClassName(dataModel.name)
       
       # First add copy constructor  
       hFile.genMultiComment(['Copy constructor']) 
-      hFile.startFunction(genClass.name + " :: " + genClass.name + "(const " + genClass.name + "& src" + genClass.name + ")")
-      hFile.add("operator=(src" + genClass.name + ");")
+      hFile.startFunction(styledCName + " :: " + styledCName + "(const " + styledCName + "& src" + styledCName + ")")
+      hFile.add("operator=(src" + styledCName + ");")
       hFile.endFunction
       
       hFile.genMultiComment(['Sets this object equal to incoming object']) 
-      hFile.add("const " + genClass.name)
-      hFile.sameLine("& " + genClass.name + " :: operator=" + "(const " + genClass.name)
-      hFile.sameLine("& src" + genClass.name + ")")
+      hFile.add("const " + styledCName)
+      hFile.sameLine("& " + styledCName + " :: operator=" + "(const " + styledCName)
+      hFile.sameLine("& src" + styledCName + ")")
       hFile.add("{")
       hFile.indent
           
@@ -58,7 +60,7 @@ module XCTECpp
   #    end
 
       for par in genClass.baseClasses
-        hFile.add(par.name + "::operator=(src" + genClass.name + ");")
+        hFile.add(par.name + "::operator=(src" + styledCName + ");")
       end
 
       varArray = Array.new
@@ -69,11 +71,11 @@ module XCTECpp
           if !var.isStatic   # Ignore static variables                
             if Utils.instance.isPrimitive(var)
               if var.arrayElemCount.to_i > 0	# Array of primitives
-                hFile.add("memcpy(" + var.name + ", " + "src" + genClass.name + "." + var.name + ", ")
+                hFile.add("memcpy(" + var.name + ", " + "src" + styledCName + "." + var.name + ", ")
                 hFile.sameLine("sizeof(" + Utils.instance.getTypeName(var.vtype) + ") * " + Utils.instance.getSizeConst(var))
                 hFile.sameLine(");")
               else
-                hFile.add(var.name + " = " + "src" + genClass.name + ".")
+                hFile.add(var.name + " = " + "src" + styledCName + ".")
                 hFile.sameLine(var.name + ";")
               end
             else	# Not a primitive
@@ -85,11 +87,11 @@ module XCTECpp
                 hFile.add("for (i = 0; i < " + Utils.instance.getSizeConst(var) + "; i++)")
                 hFile.indent
                 hFile.add(var.name + "[i] = ")
-                hFile.add("src" + genClass.name + ".")
+                hFile.add("src" + styledCName + ".")
                 hFile.add(var.name + "[i];\n")
                 hFile.unindent
               else
-                hFile.add(var.name + " = src" + genClass.name + "." + var.name + ";")
+                hFile.add(var.name + " = src" + styledCName + "." + var.name + ";")
               end
             end
           end
