@@ -19,8 +19,6 @@ require 'lang_file.rb'
 
 class XCTERuby::ClassStandard < XCTEPlugin
   def initialize
-    XCTERuby::Utils::init
-
     @name = "standard"
     @language = "ruby"
     @category = XCTEPlugin::CAT_CLASS

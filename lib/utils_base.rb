@@ -10,9 +10,7 @@ require 'lang_profile.rb'
 class UtilsBase
 
   def initialize(langName)
-    @langProfile = LangProfile.new
-    @langProfile.name = langName
-    @langProfile.loadProfile
+    @langProfile = LangProfiles.instance.profiles[langName]
   end
   
   # Returns true if this is a primitive data type

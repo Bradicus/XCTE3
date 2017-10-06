@@ -33,11 +33,6 @@ class XCTEPlugin
       @@languagePlugins[langDir[5..100]] = Hash.new()
     end
 
-    # Dir.foreach('plugins_custom') do |langDir|
-    #   next if !langDir.include?("lang_")
-    #   @@languagePlugins[langDir[5..100]] = Hash.new()
-    # end
-
     @@languagePlugins.each do |langName, langMethods|
       langDir = codeRootDir + "/plugins_core/lang_" + langName
       if Dir.exist?(langDir)

@@ -19,8 +19,6 @@ require 'lang_file.rb'
 
 class XCTEJavascript::ClassModel < XCTEPlugin
   def initialize
-    XCTEJavascript::Utils::init
-    
     @name = "model"
     @language = "javascript"
     @category = XCTEPlugin::CAT_CLASS

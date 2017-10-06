@@ -8,17 +8,10 @@
 # This class contains utility functions for a language
 
 require 'lang_profile.rb'
+require 'utils_base'
 
 module XCTERuby
-  class Utils
-    include Singleton
-    
-    @@langProfile = LangProfile.new
-
-    def self.init
-      @@langProfile.name = "ruby"
-      @@langProfile.loadProfile
-    end
+  class Utils < UtilsBase
 
     # Get a parameter declaration for a method parameter
     def self.getParamDec(var)

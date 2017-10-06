@@ -18,8 +18,6 @@ require 'lang_file.rb'
 
 class XCTEPhp::ClassStandard < XCTEPlugin
   def initialize
-    XCTEPhp::Utils::init
-    
     @name = "standard"
     @language = "php"
     @category = XCTEPlugin::CAT_CLASS

@@ -8,16 +8,11 @@
 # This class contains utility functions for a language
  
 require 'lang_profile.rb'
+require 'utils_base'
 
 module XCTEPhp
-  class Utils
-    @@langProfile = LangProfile.new
-    
-    def self.init
-      @@langProfile.name = "php"   
-      @@langProfile.loadProfile
-    end
-    
+  class Utils < UtilsBase
+        
     # Get a parameter declaration for a method parameter
     def self.getParamDec(var)
       pDec = String.new

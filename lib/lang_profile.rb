@@ -27,15 +27,7 @@ class LangProfile
     @enumNameStyle = nil
   end
   
-  def loadProfile
-    begin
-      codeRootDir = File.dirname(File.realpath(__FILE__))
-      file = File.new(codeRootDir + "/../lang_profiles/" << name << ".xml")      
-    rescue
-      p 'error loading language profile ' << name << ".xml"
-    end
-    xmlDoc = REXML::Document.new file
-    
+  def load(xmlDoc)
     @fileTypes = Array.new
     
     xmlDoc.elements.each("LANGUAGE_DEFS/FILE_TYPES") { |fTypes|

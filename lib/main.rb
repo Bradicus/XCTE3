@@ -22,6 +22,7 @@ require 'fileutils'
 require 'run_settings'
 require 'class_plan'
 require 'project_plan'
+require 'lang_profiles'
 
 def isModelFile(filePath)
   return FileTest.file?(filePath) && 
@@ -116,90 +117,12 @@ def processProjectComponentGroup(project, pcGroup, cfg)
       end
     end
   }
-
-  # for pComponent in pcGroup.components
-  #   puts "Processing component: " + pComponent.path 
-  #   if (pComponent.elementId == CodeElem::ELEM_TEMPLATE_DIRECTORY)
-  #     puts "Processing component path: " + pComponent.path 
-  #     Find.find(currentDir + "/" + pComponent.path) do |path|
-  #       if isModelFile(path)
-  #         puts "Processing class: " + path
-                
-  #         basepn = Pathname.new(currentDir + "/" + pComponent.path)
-  #         pn = Pathname.new(path)
-
-  #         dataModel = CodeStructure::CodeElemModel.new
-  #         dataModel.loadXMLClassFile(path);
-          
-  #         #puts pComponent.languages.count()
-
-  #         for langName in pComponent.languages
-  #           language = XCTEPlugin::getLanguages()[langName]
-
-  #           if (language == nil)
-  #             puts "No language found for: " + langName
-  #           end
-                          
-  #           for genClass in dataModel.classes
-  #             if (genClass.language != nil)
-  #               language = XCTEPlugin::getLanguages()[genClass.language]
-  #             else
-  #               language = XCTEPlugin::getLanguages()[langName]
-  #             end
-
-  #             if language.has_key?(genClass.ctype)
-  #               srcFiles = language[genClass.ctype].genSourceFiles(dataModel, genClass, cfg)
-
-  #               if genClass.path != nil
-  #                 newPath = pComponent.dest + "/" + genClass.path
-  #               else
-  #                 newPath = pComponent.dest + "/" + genClass.namespaceList.join("/")
-  #               end
-
-  #               if !File.directory?(newPath)
-  #                 FileUtils.mkdir_p(newPath)
-  #             #   puts "Creating folder: " + newPath
-  #               end
-
-  #             #  puts "Current dir " + currentDir
-  #             #  puts "Abs root path " + basepn.to_path
-  #             #  puts "Rel Path " + newPath
-
-  #               for srcFile in srcFiles
-
-  #                 #puts srcFile.lfName
-  #                 #puts "Extension: " + srcFile.lfExtension.to_s
-
-  #                 #puts OS.windows?
-  #                 #if OS.windows?
-  #                 #  sFile = File.new(newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode:"w", crlf_newline: true)
-  #                 #else
-  #                   sFile = File.new(newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode:"w")
-  #                 #end
-  #                 puts "writing file: " + newPath + "/" + srcFile.lfName + "." + srcFile.lfExtension
-  #                 sFile << srcFile.getContents
-  #                 sFile.close                    
-  #               end
-  #             else
-  #               if (genClass.language != nil)
-  #                 puts "Language " + genClass.language + " has no class type defined: " + genClass.ctype
-  #               else
-  #                 puts "Language " + langName + " has no class type defined: " + genClass.ctype
-  #               end
-  #             end        
-  #           end
-  #         end             
-  #       end
-  #     end
-  #   end
-  # end
   
   for pSubgroup in pcGroup.subGroups
     processProjectComponentGroup(project, pSubgroup, cfg)
   end
 end
 
-XCTEPlugin::loadPLugins
 
 codeRootDir = File.dirname(File.realpath(__FILE__))
 
@@ -217,9 +140,10 @@ end
 prj = CodeStructure::ElemProject.new
 prj.loadProject(currentDir + "/xcte.project.xml")
 
-for lpp in prj.langProfilePaths
-  
-end
+# Load language profiles
+LangProfiles.instance.load(prj)
+
+XCTEPlugin::loadPLugins
 
 processProjectComponentGroup(prj, prj.componentGroup, cfg)
 

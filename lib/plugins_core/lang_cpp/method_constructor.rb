@@ -10,70 +10,73 @@
 require 'x_c_t_e_plugin.rb'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
 
-class XCTECpp::MethodConstructor < XCTEPlugin
-  
-  def initialize
-    @name = "method_constructor"
-    @language = "cpp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
-  
-  # Returns declairation string for this class's constructor
-  def get_declaration(dataModel, genClass, funItem, codeBuilder)
-    codeBuilder.add(Utils.instance.getStyledClassName(dataModel.name) + "();")
-  end
+module XCTECpp
+  class MethodConstructor < XCTEPlugin
+    
+    def initialize
+      @name = "method_constructor"
+      @language = "cpp"
+      @category = XCTEPlugin::CAT_METHOD
+    end
+    
+    # Returns declairation string for this class's constructor
+    def get_declaration(dataModel, genClass, funItem, codeBuilder)
+      codeBuilder.add(Utils.instance.getStyledClassName(dataModel.name) + "();")
+    end
 
-  # Returns declairation string for this class's constructor
-  def get_declaration_inline(dataModel, genClass, funItem, codeBuilder)
-    codeBuilder.startFuction(Utils.instance.getStyledClassName(dataModel.name) + "()")
-    codeStr << get_body(dataModel, genClass, funItem, hFile)
-    codeBuilder.endFunction
-  end
+    # Returns declairation string for this class's constructor
+    def get_declaration_inline(dataModel, genClass, funItem, codeBuilder)
+      codeBuilder.startFuction(Utils.instance.getStyledClassName(dataModel.name) + "()")
+      codeStr << get_body(dataModel, genClass, funItem, hFile)
+      codeBuilder.endFunction
+    end
 
-  def get_dependencies(dataModel, genClass, funItem, codeBuilder)
-  end
-  
-  # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, funItem, codeBuilder)
-    codeBuilder.add("/**")
-    codeBuilder.add("* Constructor")
-    codeBuilder.add("*/")
-      
-    classDef = String.new  
-    classDef << Utils.instance.getStyledClassName(dataModel.name) << " :: " << Utils.instance.getStyledClassName(dataModel.name) << "()"
-    codeBuilder.startClass(classDef)
-
-    get_body(dataModel, genClass, funItem, codeBuilder)
+    def get_dependencies(dataModel, genClass, funItem, codeBuilder)
+    end
+    
+    # Returns definition string for this class's constructor
+    def get_definition(dataModel, genClass, funItem, codeBuilder)
+      codeBuilder.add("/**")
+      codeBuilder.add("* Constructor")
+      codeBuilder.add("*/")
         
-    codeBuilder.endFunction
-  end
+      classDef = String.new  
+      classDef << Utils.instance.getStyledClassName(dataModel.name) << " :: " << Utils.instance.getStyledClassName(dataModel.name) << "()"
+      codeBuilder.startClass(classDef)
 
-  def get_body(dataModel, genClass, funItem, codeBuilder)
-    conDef = String.new
-    varArray = Array.new
-    dataModel.getAllVarsFor(varArray);
+      get_body(dataModel, genClass, funItem, codeBuilder)
+          
+      codeBuilder.endFunction
+    end
 
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.defaultValue != nil
-          codeBuilder.add(var.name << " = ")
+    def get_body(dataModel, genClass, funItem, codeBuilder)
+      conDef = String.new
+      varArray = Array.new
+      dataModel.getAllVarsFor(varArray);
 
-          if var.vtype == "String"
-            codeBuilder.sameLine("\"" << var.defaultValue << "\";")
-          else
-            codeBuilder.sameLine(var.defaultValue << ";")
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if var.defaultValue != nil
+            codeBuilder.add(var.name << " = ")
+
+            if var.vtype == "String"
+              codeBuilder.sameLine("\"" << var.defaultValue << "\";")
+            else
+              codeBuilder.sameLine(var.defaultValue << ";")
+            end
+
+            if var.comment != nil
+              codeBuilder.sameLine("\t// " << var.comment)
+            end
+
+            codeBuilder.add
           end
-
-          if var.comment != nil
-            codeBuilder.sameLine("\t// " << var.comment)
-          end
-
-          codeBuilder.add
         end
       end
     end
+    
   end
-  
+ 
 end
 
 # Now register an instance of our plugin
