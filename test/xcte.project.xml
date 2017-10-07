@@ -1,3 +1,5 @@
 <project>
   <template_dir path="templates" languages="csharp" static_code="true" />
+  
+  <custom_lang_profiles path="lang_profiles" />
 </project>

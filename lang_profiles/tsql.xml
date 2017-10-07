@@ -9,7 +9,7 @@
 
 	<!-- Unless you're using some old compilers this should be true -->
 	<TYPE_MAPS>	
-		<TYPE_MAP genType="Boolean"		langType="BOOLEAN(1)" />
+		<TYPE_MAP genType="Boolean"		langType="BIT" />
 		<TYPE_MAP genType="Char" 		langType="VARCHAR(1)" />
 		<TYPE_MAP genType="UChar" 		langType="UNSIGNED TINYINT(1)" />
 		<TYPE_MAP genType="UNC16" 		langType="VARCHAR(2)" />
