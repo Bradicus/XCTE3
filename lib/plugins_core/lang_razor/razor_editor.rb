@@ -54,7 +54,9 @@ module XCTERazor
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.vtype == 'String'
-            codeBuilder.add('<input type="text" name="' + var.name + '" value="model.' + var.name + '" />')
+            codeBuilder.add('<input type="text" name="' + 
+                XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
+                XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
           elsif var.vtype.start_with?('Int')
             codeBuilder.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
           end

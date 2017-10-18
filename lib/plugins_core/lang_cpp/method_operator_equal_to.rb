@@ -22,7 +22,6 @@ class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
   def get_declaration(codeClass, cfg)
     eqString = String.new
 
-
     eqString << "        bool operator==" << "(const " << codeClass.name
     eqString << " src" << codeClass.name << ") const;\n"
 

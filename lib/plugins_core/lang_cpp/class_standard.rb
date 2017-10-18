@@ -226,7 +226,7 @@ module XCTECpp
     
     # Returns the code for the body for this class
     def genBody(dataModel, genClass, cfg, cppGen)
-      cppGen.add("#include \"" << dataModel.name << ".h\"")
+      cppGen.add("#include \"" << Utils.instance.getStyledClassName(dataModel.name) << ".h\"")
       cppGen.add
 
       # Process namespace items

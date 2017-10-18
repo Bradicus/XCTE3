@@ -67,16 +67,17 @@ module XCTECpp
       dataModel.getAllVarsFor(varArray);
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE                
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          fmtVarName = Utils.instance.getStyledVariableName(var)            
           if !var.isStatic   # Ignore static variables                
             if Utils.instance.isPrimitive(var)
               if var.arrayElemCount.to_i > 0	# Array of primitives
-                hFile.add("memcpy(" + var.name + ", " + "src" + styledCName + "." + var.name + ", ")
+                hFile.add("memcpy(" + fmtVarName + ", " + "src" + styledCName + "." + fmtVarName + ", ")
                 hFile.sameLine("sizeof(" + Utils.instance.getTypeName(var.vtype) + ") * " + Utils.instance.getSizeConst(var))
                 hFile.sameLine(");")
               else
-                hFile.add(var.name + " = " + "src" + styledCName + ".")
-                hFile.sameLine(var.name + ";")
+                hFile.add(fmtVarName + " = " + "src" + styledCName + ".")
+                hFile.sameLine(fmtVarName + ";")
               end
             else	# Not a primitive
               if var.arrayElemCount > 0	# Array of objects
@@ -86,12 +87,12 @@ module XCTECpp
                   end
                 hFile.add("for (i = 0; i < " + Utils.instance.getSizeConst(var) + "; i++)")
                 hFile.indent
-                hFile.add(var.name + "[i] = ")
+                hFile.add(fmtVarName + "[i] = ")
                 hFile.add("src" + styledCName + ".")
-                hFile.add(var.name + "[i];\n")
+                hFile.add(fmtVarName + "[i];\n")
                 hFile.unindent
               else
-                hFile.add(var.name + " = src" + styledCName + "." + var.name + ";")
+                hFile.add(fmtVarName + " = src" + styledCName + "." + fmtVarName + ";")
               end
             end
           end

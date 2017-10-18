@@ -55,16 +55,17 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
+        fmtVarName = Utils.instance.getStyledVariableName(var.name)
         if !var.isStatic   # Ignore static variables
           if Utils.instance.isPrimitive(var)
             if var.arrayElemCount.to_i > 0	# Array of primitives
-              codeBuilder.add("    memcpy(" << var.name << ", ")
+              codeBuilder.add("memcpy(" << fmtVarName << ", ")
               codeBuilder.sameLine("src" << styledCName << ".")
-              codeBuilder.sameLine(var.name << ", ")
+              codeBuilder.sameLine(fmtVarName << ", ")
               codeBuilder.sameLine("sizeof(" + Utils.instance.getTypeName(var.vtype) << ") * " << Utils.instance.getSizeConst(var))
               codeBuilder.sameLine(");")
             else
-              codeBuilder.add(var.name << " = src" << styledCName << "." << var.name << ";\n")
+              codeBuilder.add(fmtVarName << " = src" << styledCName << "." << fmtVarName << ";")
             end
           else	# Not a primitive
             if var.arrayElemCount > 0	# Array of objects
@@ -74,10 +75,10 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
                   longArrayFound = true
                 end
               codeBuilder.startBlock("for (i = 0; i < " << Utils.instance.getSizeConst(var) << "; i++)")
-              codeBuilder.add(var.name + "[i] = src" + styledCName + "." + "[i];")
+              codeBuilder.add(fmtVarName + "[i] = src" + styledCName + "." + "[i];")
               codeBuilder.endBlock
             else
-              codeBuilder.add(var.name + " = src" + styledCName + "." + var.name + ";")
+              codeBuilder.add(fmtVarName + " = src" + styledCName + "." + fmtVarName + ";")
             end
           end
         end
