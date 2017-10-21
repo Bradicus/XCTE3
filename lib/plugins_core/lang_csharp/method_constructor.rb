@@ -18,24 +18,32 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, cfg, codeBuilder)
-    codeBuilder.add("/**")
-    codeBuilder.add("* Constructor")
-    codeBuilder.add("*/")
+  def get_definition(dataModel, genClass, fun, cfg, codeBuilder)
+    codeBuilder.add("///")
+    codeBuilder.add("/// Constructor")
+    codeBuilder.add("///")
 
     standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
 
     codeBuilder.startClass(standardClassName + "()")
 
-    get_body(dataModel, genClass, cfg, codeBuilder)
+    get_body(dataModel, genClass, fun, cfg, codeBuilder)
         
     codeBuilder.endClass
   end
+  
+  def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
+    codeBuilder.add("public " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + "();")
+  end
+  
+  # No deps
+  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
+  end
 
-  def get_body(dataModel, genClass, cfg, codeBuilder)
+  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    dataModel.getAllVarsFor(varArray);
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
@@ -43,7 +51,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
           codeBuilder.add(var.name << " = ")
 
           if var.vtype == "String"
-            codeBuilder.sameLine("\"" << var.defaultValue << "\";")
+            codeBuilder.sameLine('"' << var.defaultValue << '";')
           else
             codeBuilder.sameLine(var.defaultValue << ";")
           end

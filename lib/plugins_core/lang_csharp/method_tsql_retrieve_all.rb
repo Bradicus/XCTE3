@@ -26,7 +26,7 @@ module XCTECSharp
 
       standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
 
-      codeBuilder.startClass("public IEnumerable<" + standardClassName + "> RetrieveAll(SqlTransaction trans)")
+      codeBuilder.startClass("public IEnumerable<" + standardClassName + "> RetrieveAll(SqlConnection conn)")
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
           
@@ -36,12 +36,12 @@ module XCTECSharp
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
       codeBuilder.add("IEnumerable<" +
           Utils.instance.getStyledClassName(dataModel.name) + 
-          "> RetrieveAll(SqlTransaction trans);")
+          "> RetrieveAll(SqlConnection conn);")
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
       genClass.addUse('System.Collections.Generic', 'IEnumerable')
-      genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
+      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
     end
 
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -62,7 +62,7 @@ module XCTECSharp
       codeBuilder.add('FROM ' + tableName + '";')
       codeBuilder.add
       codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
+      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
       codeBuilder.add
       codeBuilder.add('SqlDataReader results = cmd.ExecuteReader();')
       codeBuilder.startBlock('while(results.Read())')

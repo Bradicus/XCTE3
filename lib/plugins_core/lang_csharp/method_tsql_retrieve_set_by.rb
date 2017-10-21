@@ -30,7 +30,7 @@ module XCTECSharp
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
       genClass.addUse('System.Collections.Generic', 'IEnumerable')
-      genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
+      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
     end
 
     def get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -46,7 +46,7 @@ module XCTECSharp
 
       return "List<" + standardClassName + "> " +
                                  XCTECSharp::Utils.instance.getStyledFunctionName("retrieve set by " + paramNames.join(" ")) +
-                                 "(SqlTransaction trans, " + paramDec.join(', ') + ")"
+                                 "(SqlConnection conn, " + paramDec.join(', ') + ")"
     end
 
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -86,7 +86,7 @@ module XCTECSharp
       codeBuilder.add
 
       codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, trans.Connection))")
+      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
 
       genFun.variableReferences.each() {|param|
         codeBuilder.add("cmd.Parameters.AddWithValue(" +

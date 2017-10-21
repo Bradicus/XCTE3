@@ -36,7 +36,7 @@ module XCTECSharp
         genClass.setName("i " + dataModel.name)
       end
 
-      genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
+      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
 
       codeBuilder = SourceRendererCSharp.new
       codeBuilder.lfName = Utils.instance.getStyledClassName(genClass.name)

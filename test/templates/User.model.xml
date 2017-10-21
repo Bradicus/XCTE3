@@ -6,6 +6,12 @@
 				
 	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" >
 		<use name="System.Collections.Generic" />
+		<function name="method_constructor" />
+		<function name="method_equality_assign" />
+	</gen_class>
+				
+	<gen_class type="web_api_controller" namespace="XCTE.API" base_class="ApiController" path="XCTE.API" >
+		<function name="method_web_api_read_one" />
 	</gen_class>
 				
 	<var_group genGet="true" genSet="true">	

@@ -36,9 +36,10 @@ module XCTECSharp
 
     def get_dependencies(dataModel, genClass, cfg, codeBuilder)
       genClass.addUse('System.Collections.Generic', 'IEnumerable')
-      genClass.addUse('System.Data.SqlClient', 'SqlTransaction')
+      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
       genClass.addUse('System.Configuration', 'ConfigurationManager')
       genClass.addUse('System', 'Exception')
+      genClass.addUse('System.Transactions', 'TransactionScope')
       genClass.addUse('Microsoft.VisualStudio.TestTools.UnitTesting', 'TestMethod');
       genClass.addUse('XCTE.Foundation', Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine'))
       genClass.addUse('XCTE.Data', Utils.instance.getStyledClassName(dataModel.name + ' engine'))
@@ -51,13 +52,13 @@ module XCTECSharp
       codeBuilder.add(stdClassName + ' obj = new ' + stdClassName + '();')
       codeBuilder.add
       codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
-      codeBuilder.add('SqlConnection conn = new SqlConnection(connString);')
-      codeBuilder.add('conn.Open();')
-      codeBuilder.add('SqlTransaction trans = conn.BeginTransaction();')
 
       codeBuilder.add
 
       codeBuilder.startBlock('try')
+      codeBuilder.startBlock('using (var tScope = new TransactionScope())')
+      codeBuilder.startBlock('using (SqlConnection conn = new SqlConnection(connString))')
+      codeBuilder.add('conn.Open();')
 
       varArray = Array.new
       dataModel.getNonIdentityVars(varArray)
@@ -78,16 +79,17 @@ module XCTECSharp
       end
 
       codeBuilder.add
-      codeBuilder.add('intf.Create(trans, obj);')
+      codeBuilder.add('intf.Create(conn, obj);')
 
       codeBuilder.endBlock
+            
+      codeBuilder.add
+      codeBuilder.add('tScope.Complete();')
+
+      codeBuilder.endBlock
+      codeBuilder.endBlock
+
       codeBuilder.startBlock('catch(Exception e)')
-      codeBuilder.startBlock('try')
-      codeBuilder.add('trans.Rollback();')
-      codeBuilder.endBlock
-      codeBuilder.startBlock('catch(Exception er)')
-      codeBuilder.add('throw new Exception("Failed to rollback transaction after exception", er);')
-      codeBuilder.endBlock
       codeBuilder.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
       codeBuilder.endBlock
 
