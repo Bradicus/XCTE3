@@ -170,6 +170,12 @@ module CodeStructure
 
       genC.name = name
 
+      if (genCXml.attributes["base_class"] != nil)
+        baseClass = CodeElemClassGen.new(CodeElemModel.new)
+        baseClass.name = genCXml.attributes["base_class"]
+        genC.baseClasses << baseClass
+      end
+
       genCXml.elements.each("function") {|funXml|
         newFun = CodeElemFunction.new(genC)
         loadTemplateFunctionNode(newFun, funXml)

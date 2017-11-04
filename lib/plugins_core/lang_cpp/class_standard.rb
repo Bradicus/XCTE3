@@ -140,14 +140,14 @@ module XCTECpp
           
       for par in (0..genClass.baseClasses.size)
         if par == 0 && genClass.baseClasses[par] != nil
-          classDec << " : " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+          classDec << " : " << genClass.baseClasses[par].visibility << " " << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
         elsif genClass.baseClasses[par] != nil
-          classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+          classDec << ", " << genClass.baseClasses[par].visibility << " " << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
         end
       end
       
       hFile.startClass(classDec)
-      
+       
       hFile.add("public:")
       hFile.indent
             
@@ -243,7 +243,7 @@ module XCTECpp
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isStatic
-            cppGen.add(Utils.instance.getTypeName(var.vtype) << " ")
+            cppGen.add(Utils.instance.getTypeName(var) << " ")
             cppGen.sameLine(Utils.instance.getStyledClassName(dataModel.name) << " :: ")
             cppGen.sameLine(var.name)
                       
