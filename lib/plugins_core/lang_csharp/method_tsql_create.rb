@@ -24,10 +24,12 @@ module XCTECSharp
     def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
       codeBuilder.add("/// Create new record for this model")
+      codeBuilder.add("/// If you are not using ambient transactions, trans must be defined!")
       codeBuilder.add("///")
 
-      codeBuilder.startFunction("public void Create(SqlConnection conn, " +
-        XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + " o)")
+      codeBuilder.startFunction("public void Create(" + 
+          XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + 
+          " o, SqlConnection conn, SqlTransaction trans = null)")
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -35,7 +37,9 @@ module XCTECSharp
     end
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Create(SqlConnection conn, " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + " o);")
+      codeBuilder.add("void Create(" +
+          XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) +
+          " o, SqlConnection conn, SqlTransaction trans = null);")
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -67,6 +71,7 @@ module XCTECSharp
 
       codeBuilder.startBlock("try")
       codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      codeBuilder.add("cmd.Transaction = trans;")
 
       Utils.instance.addNonIdentityParams(dataModel, genClass, codeBuilder)
 

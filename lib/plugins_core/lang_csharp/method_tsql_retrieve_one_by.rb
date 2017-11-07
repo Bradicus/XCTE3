@@ -24,7 +24,6 @@ module XCTECSharp
     end
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-
       codeBuilder.add(get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder) + ";")
     end
 
@@ -45,7 +44,7 @@ module XCTECSharp
       }
 
       return standardClassName + ' ' + XCTECSharp::Utils.instance.getStyledFunctionName("retrieve one by " + paramNames.join(" ")) +
-                                 "(SqlConnection conn, " + paramDec.join(', ') + ")"
+                                 "(" + paramDec.join(', ') + ", SqlConnection conn, SqlTransaction trans = null)"
     end
 
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -87,6 +86,8 @@ module XCTECSharp
 
       codeBuilder.startBlock("try")
       codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      codeBuilder.add("cmd.Transaction = trans;")
+      codeBuilder.add
 
       genFun.variableReferences.each() {|param|
         codeBuilder.add("cmd.Parameters.AddWithValue(" +

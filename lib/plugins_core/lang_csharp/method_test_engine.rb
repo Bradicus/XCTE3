@@ -79,7 +79,7 @@ module XCTECSharp
       end
 
       codeBuilder.add
-      codeBuilder.add('intf.Create(conn, obj);')
+      codeBuilder.add('intf.Create(obj, conn);')
 
       codeBuilder.endBlock
             

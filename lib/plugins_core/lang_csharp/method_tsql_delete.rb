@@ -26,7 +26,8 @@ module XCTECSharp
       codeBuilder.add("///")
 
       identVar = dataModel.getIdentityVar();
-      codeBuilder.startClass('public void Delete(SqlConnection conn, ' + Utils.instance.getParamDec(identVar.getParam()) + ')')
+      codeBuilder.startClass('public void Delete(' + Utils.instance.getParamDec(identVar.getParam()) +
+          ', SqlConnection conn, SqlTransaction trans = null)')
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -35,7 +36,8 @@ module XCTECSharp
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
       identVar = dataModel.getIdentityVar();
-      codeBuilder.add('void Delete(SqlConnection conn, ' + Utils.instance.getParamDec(identVar.getParam()) + ');')
+      codeBuilder.add('void Delete(' + Utils.instance.getParamDec(identVar.getParam()) +
+          ', SqlConnection conn, SqlTransaction trans = null);')
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -59,6 +61,8 @@ module XCTECSharp
 
       codeBuilder.startBlock("try")
       codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      codeBuilder.add("cmd.Transaction = trans;")
+      codeBuilder.add
       codeBuilder.add('cmd.Parameters.AddWithValue("@' + identParamName +
                           '", ' + identParamName + ');')
       codeBuilder.endBlock

@@ -42,7 +42,7 @@ module XCTERazor
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@model " + genClass.namespaceList.join('.') + '.' +
+      codeBuilder.add("@Model " + genClass.namespaceList.join('.') + '.' +
                           XCTECSharp::Utils.instance.getStandardName(dataModel))
       codeBuilder.add
       codeBuilder.add("<form>")
