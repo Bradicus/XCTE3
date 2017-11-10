@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LANGUAGE_DEFS>
+
+	<STYLING variable="CAMEL_CASE" class="PASCAL_CASE" function="CAMEL_CASE" file="PASCAL_CASE" />
+
+	<FILE_TYPES>
+		<FILE_TYPE type="body" 		extension="sql" />
+	</FILE_TYPES>
+
+	<!-- Unless you're using some old compilers this should be true -->
+	<TYPE_MAPS>	
+		<TYPE_MAP genType="Boolean"		langType="BIT" />
+		<TYPE_MAP genType="Char" 		langType="VARCHAR(1)" />
+		<TYPE_MAP genType="UChar" 		langType="UNSIGNED TINYINT(1)" />
+		<TYPE_MAP genType="UNC16" 		langType="VARCHAR(2)" />
+		
+		<TYPE_MAP genType="Int8" 		langType="TINYINT" />
+		<TYPE_MAP genType="Int16" 		langType="SMALLINT" />
+		<TYPE_MAP genType="Int32" 		langType="INT" />
+		<TYPE_MAP genType="Int64" 		langType="BIGINT" />
+		
+		<TYPE_MAP genType="UInt8" 		langType="UNSIGNED TINYINT" />
+		<TYPE_MAP genType="UInt16" 		langType="UNSIGNED SMALLINT" />
+		<TYPE_MAP genType="UInt32" 		langType="UNSIGNED INT" />
+		<TYPE_MAP genType="UInt64" 		langType="UNSIGNED BIGINT" />
+		
+		<TYPE_MAP genType="Float32" 	langType="FLOAT" />
+		<TYPE_MAP genType="Float64" 	langType="DOUBLE" />
+		<TYPE_MAP genType="String" 		langType="TEXT" />
+		
+		<TYPE_MAP genType="Date" 		langType="DATE" />
+		<TYPE_MAP genType="Time" 		langType="TIME" />
+		<TYPE_MAP genType="DateTime"	langType="DATETIME" />
+	</TYPE_MAPS>
+	
+</LANGUAGE_DEFS>
