@@ -15,10 +15,11 @@ require 'code_elem_use.rb'
 class CodeElemClassGen < CodeElem
   attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
                 :testNamespace, :testPath,
-                :includes, :uses, :baseClasses, :language, :path, :varPrefix, :model
+                :includes, :uses, :baseClasses, :language, :path, :varPrefix, :model,
+                :dontModifyCode
   attr_reader   :name
 
-  def initialize(parentElem)
+  def initialize(parentElem, model, isStatic)
     super(parentElem)
 
     @elementId = CodeElem::ELEM_CLASS_GEN
@@ -32,7 +33,8 @@ class CodeElemClassGen < CodeElem
     @namespaceList = Array.new
     @varPrefix = ''
     @path = nil
-    @model = nil
+    @model = model
+    @dontModifyCode = isStatic
   end
 
   def addInclude(iPath, iName, iType = nil)

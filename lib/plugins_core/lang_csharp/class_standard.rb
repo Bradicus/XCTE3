@@ -67,6 +67,10 @@ module XCTECSharp
       end
       
       codeBuilder.startClass(classDec)
+
+      if genClass.dontModifyCode
+        codeBuilder.add("#region DON'T MODYFY THIS CLASS, IT WILL BE OVERWRITTEN BY GENERATOR")
+      end
           
       varArray = Array.new
       dataModel.getAllVarsFor(varArray)
@@ -87,25 +91,13 @@ module XCTECSharp
       end
 
       # Generate code for functions
-      for fun in genClass.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
-              templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
-            else
-              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          else  # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
-            if templ != nil
-              templ.get_definition(dataModel, genClass, cfg, codeBuilder)
-            else
-              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          end
-        end
-      end  # class  + dataModel.name
+      Utils.instance.genFunctions(dataModel, genClass, codeBuilder)
+      
+      
+      if genClass.dontModifyCode
+        codeBuilder.add("#endregion")
+      end
+
       codeBuilder.endClass
 
       Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)

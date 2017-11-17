@@ -49,7 +49,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
           pn = Pathname.new(path)
 
           dataModel = CodeStructure::CodeElemModel.new
-          dataModel.loadXMLClassFile(path);
+          dataModel.loadXMLClassFile(path, pComponent.isStatic);
 
           for langName in pComponent.languages
             language = XCTEPlugin::getLanguages()[langName]

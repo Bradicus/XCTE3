@@ -23,22 +23,26 @@ class LangProfiles
   # Load any language profiles from the directory path
   def loadFromPath(project, path)
     # Load the default language profles
-    for fileName in Dir.entries(path)
-      if fileName.include?(".xml")
-        langName = fileName[0..-5]
+    if (File.directory?(path))
+      for fileName in Dir.entries(path)
+        if fileName.include?(".xml")
+          langName = fileName[0..-5]
 
-        langProfile = LangProfile.new
-        langProfile.name = langName
+          langProfile = LangProfile.new
+          langProfile.name = langName
 
-        filePath = path + '/' + fileName
-        file = File.new filePath
+          filePath = path + '/' + fileName
+          file = File.new filePath
 
-        xmlDoc = REXML::Document.new file      
+          xmlDoc = REXML::Document.new file      
+            
+          langProfile.load(xmlDoc)
           
-        langProfile.load(xmlDoc)
-        
-        @profiles[langName] = langProfile
+          @profiles[langName] = langProfile
+        end
       end
+    else
+      puts "ERROR loadin language profile path: " + path
     end
   end
 end

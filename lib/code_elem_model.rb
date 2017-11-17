@@ -38,7 +38,7 @@ module CodeStructure
 
     ##
     # Loads an XML class definition and stores it in this object
-    def loadXMLClassFile(fName)
+    def loadXMLClassFile(fName, isStatic)
       file = File.new(fName)
       @xmlFileName = fName
 
@@ -62,13 +62,13 @@ module CodeStructure
       }
 
       xmlDoc.root.elements.each("gen_class") {|genCXML|
-        genClass = CodeElemClassGen.new(self)
-        loadClassNode(genClass, genCXML)
+        genClass = CodeElemClassGen.new(self, self, isStatic)
+        loadClassNode(genClass, genCXML, self)
         genClass.model = self
         @classes << genClass
 
         if genClass.interfaceNamespace != nil
-          intf = CodeElemClassGen.new(genClass)
+          intf = CodeElemClassGen.new(genClass, self, isStatic)
           intf.namespaceList = genClass.interfaceNamespace.split('.')
           intf.path = genClass.interfacePath
           intf.functions = genClass.functions
@@ -80,7 +80,7 @@ module CodeStructure
         end
 
         if genClass.testNamespace != nil
-          intf = CodeElemClassGen.new(genClass)
+          intf = CodeElemClassGen.new(genClass, self, isStatic)
           intf.namespaceList = genClass.testNamespace.split('.')
           intf.path = genClass.testPath
           intf.language = genClass.language
@@ -157,7 +157,7 @@ module CodeStructure
 
     end
 
-    def loadClassNode(genC, genCXml)
+    def loadClassNode(genC, genCXml, model)
       genC.ctype = genCXml.attributes["type"]
       genC.namespaceList = genCXml.attributes["namespace"].split('.')
       genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
@@ -171,7 +171,7 @@ module CodeStructure
       genC.name = name
 
       if (genCXml.attributes["base_class"] != nil)
-        baseClass = CodeElemClassGen.new(CodeElemModel.new)
+        baseClass = CodeElemClassGen.new(CodeElemModel.new, nil, false)
         baseClass.name = genCXml.attributes["base_class"]
         genC.baseClasses << baseClass
       end

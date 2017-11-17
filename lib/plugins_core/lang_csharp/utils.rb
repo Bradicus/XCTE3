@@ -252,6 +252,31 @@ module XCTECSharp
       end
     end
 
+    def genFunctions(dataModel, genClass, codeBuilder)      
+      # Generate code for functions
+      for fun in genClass.functions
+        if fun.elementId == CodeElem::ELEM_FUNCTION
+          if fun.isTemplate
+            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
+            if templ != nil
+              templ.get_definition(dataModel, genClass, fun, nil, codeBuilder)
+            else
+              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+            end
+          else  # Must be empty function
+            templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
+            if templ != nil
+              templ.get_definition(dataModel, genClass, fun, nil, codeBuilder)
+            else
+              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+            end
+          end
+
+          codeBuilder.add
+        end
+      end  
+    end
+
     def genNamespaceStart(namespaceList, codeBuilder)
       # Process namespace items
       if namespaceList != nil
