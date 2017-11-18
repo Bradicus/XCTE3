@@ -55,7 +55,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        fmtVarName = Utils.instance.getStyledVariableName(var.name)
+        fmtVarName = Utils.instance.getStyledVariableName(var)
         if !var.isStatic   # Ignore static variables
           if Utils.instance.isPrimitive(var)
             if var.arrayElemCount.to_i > 0	# Array of primitives

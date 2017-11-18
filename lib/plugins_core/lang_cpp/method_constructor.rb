@@ -57,7 +57,7 @@ module XCTECpp
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.defaultValue != nil
-            codeBuilder.add(var.name << " = ")
+            codeBuilder.add(Utils.instance.getStyledVariableName(var) << " = ")
 
             if var.vtype == "String"
               codeBuilder.sameLine("\"" << var.defaultValue << "\";")

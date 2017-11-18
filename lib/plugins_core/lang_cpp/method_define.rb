@@ -126,9 +126,9 @@ class XCTECpp::MethodDefine < XCTEPlugin
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         if !var.isStatic   # Ignore static variables
-          if XCTECpp::Utils::isPrimitive(var)
+          if Utils.instance.isPrimitive(var)
               eqString << indent << var.name << " = "
-              eqString << "new" << XCTECpp::Utils::getCapitalizedFirst(var.name) << ";\n"
+              eqString << "new" << Utils.instance.getStyledVariableName(var) << ";\n"
             end
           end
         end

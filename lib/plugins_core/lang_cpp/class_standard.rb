@@ -245,7 +245,7 @@ module XCTECpp
           if var.isStatic
             cppGen.add(Utils.instance.getTypeName(var) << " ")
             cppGen.sameLine(Utils.instance.getStyledClassName(dataModel.name) << " :: ")
-            cppGen.sameLine(var.name)
+            cppGen.sameLine(Utils.instance.getStyledVariableName(var))
                       
             if var.arrayElemCount.to_i > 0 # This is an array
               cppGen.sameLine("[" + Utils.instance.getSizeConst(var) << "]")

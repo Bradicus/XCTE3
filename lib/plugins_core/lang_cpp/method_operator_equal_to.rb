@@ -49,9 +49,9 @@ class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
         if !var.isStatic   # Ignore static variables
           if XCTECpp::Utils::isPrimitive(var)
             if var.arrayElemCount.to_i == 0	# Array of primitives
-              eqString << "        " << seperator << var.name << " == "
+              eqString << "        " << seperator << Utils.instance.getStyledVariableName(var) << " == "
               eqString << "src" << codeClass.name << "."
-              eqString << var.name << "\n"
+              eqString << Utils.instance.getStyledVariableName(var) << "\n"
 
               seperator = "&& "
             end
