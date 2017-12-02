@@ -10,15 +10,17 @@
 # This file loads user settings generates code files off of template files in
 # the templates folder and saves them in the generated folder
 
-$:.unshift File.dirname(__FILE__)
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'pathname'
-require 'find.rb'
+require 'find'
+require 'fileutils'
+
 require 'code_elem_model.rb'
 require 'code_elem_project.rb'
 require 'x_c_t_e_plugin.rb'
 require 'user_settings.rb'
-require 'fileutils'
+
 require 'run_settings'
 require 'class_plan'
 require 'project_plan'
