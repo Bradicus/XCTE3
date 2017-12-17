@@ -21,12 +21,12 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
   
   # Returns declairation string for this class's constructor
   def get_declaration(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.add("void loadFromJson(nlohmann::json json);")
+    codeBuilder.add("void loadFromJson(const nlohmann::json& json);")
   end
 
   # Returns declairation string for this class's constructor
   def get_declaration_inline(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.startFuction("void loadFromJson(nlohmann::json json)")
+    codeBuilder.startFuction("void loadFromJson(const nlohmann::json& json)")
     codeStr << get_body(dataModel, genClass, codeFun, codeBuilder)
     codeBuilder.endFunction
   end
@@ -43,7 +43,7 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
       
     classDef = String.new  
     classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " << 
-      Utils.instance.getStyledClassName(genClass.name) << " :: " << "loadFromJson(nlohmann::json json)"
+      Utils.instance.getStyledClassName(genClass.name) << " :: " << "loadFromJson(const nlohmann::json& json)"
     codeBuilder.startClass(classDef)
 
     get_body(dataModel, genClass, codeFun, codeBuilder)
