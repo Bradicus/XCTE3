@@ -60,7 +60,7 @@ module XCTECpp
   #    end
 
       for par in genClass.baseClasses
-        hFile.add(par.name + "::operator=(src" + styledCName + ");")
+        hFile.add(Utils.instance.getStyledClassName(par.name) + "::operator=(src" + styledCName + ");")
       end
 
       varArray = Array.new
