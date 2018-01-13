@@ -105,7 +105,7 @@ module XCTECpp
         CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
       end
 
-      classDec = "enum " + dataModel.name
+      classDec = "enum class " + dataModel.name
       
       hFile.startBlock(classDec)
                   
