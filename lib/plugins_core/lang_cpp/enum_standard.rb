@@ -81,12 +81,12 @@ module XCTECpp
     def genHeader(dataModel, genClass, cfg, hFile)
 
       if (genClass.namespaceList != nil)
-        hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
-        hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + dataModel.name + "_H")
+        hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
+        hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
         hFile.add
       else
-        hFile.add("#ifndef _" + genClass.name + "_H")
-        hFile.add("#define _" + genClass.name + "_H")
+        hFile.add("#ifndef _" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
+        hFile.add("#define _" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
         hFile.add
       end
 
@@ -105,7 +105,7 @@ module XCTECpp
         CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
       end
 
-      classDec = "enum class " + dataModel.name
+      classDec = "enum class " + Utils.instance.getStyledClassName(dataModel.name)
       
       hFile.startBlock(classDec)
                   
