@@ -139,7 +139,8 @@ module CodeStructure
           loadVariableNode(varElem, vgNode)
         elsif (varElem.name == "var_group")
           newVG = CodeElemVarGroup.new
-          loadVarGroupNode(subvgXML, newVG)
+          newVG.loadAttributes(varElem)
+          loadVarGroupNode(newVG, varElem)
           vgNode.groups << newVG
         elsif (varElem.name == "comment")
           loadCommentNode(varElem, vgNode.vars)
@@ -276,8 +277,8 @@ module CodeStructure
           end
         elsif funElemXML.name == "return_variable"
           retVar = Array.new
-          loadVariableNode(funElemXML, retVar)
-          newFun.returnValue = retVar[0]
+          loadVariableNode(funElemXML, funXml)
+          newFun.returnValue = parentElem.vars[0]
         end
       end
     end

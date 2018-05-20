@@ -28,6 +28,8 @@ class XCTEPlugin
   # Recursively load all plugins from the plugins folder
   def self.loadPLugins
     codeRootDir = File.dirname(File.realpath(__FILE__))
+    workingDir = Dir.pwd
+
     Dir.foreach(codeRootDir + '/plugins_core') do |langDir|
       next if !langDir.include?("lang_")
       @@languagePlugins[langDir[5..100]] = Hash.new()
@@ -45,13 +47,13 @@ class XCTEPlugin
           end
         end
       end
-      langDir = "plugins_custom/lang_" + langName
+      langDir = "xcte/plugins_custom/lang_" + langName
       if Dir.exist?(langDir)
         Find.find(langDir) do |path|
           if FileTest.file?(path)
             if path.include?(".rb") && !path.include?(".svn") # not perfect but good enough
               #puts "Loading plugin: " + path
-              require path
+              require workingDir + '/' + path
             end
           end
         end
