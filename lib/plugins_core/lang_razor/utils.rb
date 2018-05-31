@@ -66,8 +66,16 @@ module XCTERazor
     end
 
     # Returns the version of this name styled for this language
-    def getStyledVariableName(var, prefix = '')
-      return CodeNameStyling.getStyled(prefix + var.name, @langProfile.variableNameStyle)
+    def getStyledVariableName(var, varPrefix = '')
+      if var.is_a?(CodeElemVariable)
+        if (var.genGet || var.genSet)
+          return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle)
+        else
+          return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
+        end
+      else
+        return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
+      end
     end
 
     # These are comments declaired in the COMMENT element,

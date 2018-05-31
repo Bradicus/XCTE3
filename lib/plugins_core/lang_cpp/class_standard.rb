@@ -139,10 +139,19 @@ module XCTECpp
       classDec = "class " + Utils.instance.getStyledClassName(dataModel.name)
           
       for par in (0..genClass.baseClasses.size)
+        nameSp = ""
         if par == 0 && genClass.baseClasses[par] != nil
-          classDec << " : " << genClass.baseClasses[par].visibility << " " << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
+          classDec << " : "
         elsif genClass.baseClasses[par] != nil
-          classDec << ", " << genClass.baseClasses[par].visibility << " " << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
+          classDec << ", "
+        end
+
+        if genClass.baseClasses[par] != nil
+          if genClass.baseClasses[par].namespaceList != nil && genClass.baseClasses[par].namespaceList.size > 0
+            nameSp = genClass.baseClasses[par].namespaceList.join("::") + "::"
+          end
+
+          classDec << genClass.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
         end
       end
       

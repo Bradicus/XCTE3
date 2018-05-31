@@ -160,7 +160,9 @@ module CodeStructure
 
     def loadClassNode(genC, genCXml, model)
       genC.ctype = genCXml.attributes["type"]
-      genC.namespaceList = genCXml.attributes["namespace"].split('.')
+      if (genCXml.attributes["namespace"] != nil)
+        genC.namespaceList = genCXml.attributes["namespace"].split('.')
+      end
       genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
       genC.interfacePath = genCXml.attributes["interface_path"]
       genC.testNamespace = genCXml.attributes["test_namespace"]
@@ -171,11 +173,14 @@ module CodeStructure
 
       genC.name = name
 
-      if (genCXml.attributes["base_class"] != nil)
+      genCXml.elements.each("base_class") {|bcXml|
         baseClass = CodeElemClassGen.new(CodeElemModel.new, nil, false)
-        baseClass.name = genCXml.attributes["base_class"]
+        baseClass.name = bcXml.attributes["name"]
+        if bcXml.attributes["namespace"] != nil
+          baseClass.namespaceList = bcXml.attributes["namespace"].split('.')
+        end
         genC.baseClasses << baseClass
-      end
+      }
 
       genCXml.elements.each("function") {|funXml|
         newFun = CodeElemFunction.new(genC)
