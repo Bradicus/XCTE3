@@ -21,12 +21,14 @@ class MethodWriteToNlohmannJson < XCTEPlugin
   
   # Returns declairation string for this class's constructor
   def get_declaration(dataModel, genClass, codeFun, rend)
-    rend.add("void writeToJson(nlohmann::json& j) const;")
+    rend.add("void writeToJson(const nlohmann::json& json, " +
+      Utils.instance.getStyledClassName(genClass.name) + "& item) const;")
   end
 
   # Returns declairation string for this class's constructor
   def get_declaration_inline(dataModel, genClass, codeFun, rend)
-    rend.startFuction("void writeToJson(nlohmann::json& j) const")
+    rend.startFuction("void writeToJson(const nlohmann::json& json, " +
+      Utils.instance.getStyledClassName(genClass.name) + "& item) const")
     codeStr << get_body(dataModel, genClass, codeFun, rend)
     rend.endFunction
   end
@@ -43,7 +45,8 @@ class MethodWriteToNlohmannJson < XCTEPlugin
       
     classDef = String.new  
     classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " << 
-      Utils.instance.getStyledClassName(genClass.name) << " :: " << "writeToJson(nlohmann::json& j) const"
+      Utils.instance.getStyledClassName(genClass.name) << " :: " << "writeToJson(const nlohmann::json& json, const " +
+      Utils.instance.getStyledClassName(genClass.name) + "& item) const"
     rend.startClass(classDef)
 
     get_body(dataModel, genClass, codeFun, rend)
@@ -68,13 +71,17 @@ class MethodWriteToNlohmannJson < XCTEPlugin
             rend.add('j["' + curVarName + '"].push_back(val);')
             rend.endBlock
           end
+        elsif (var.vtype.downcase.end_with?('type'))
+          rend.add('j["' + curVarName + '"] = (int)' + curVarName + ';')
         else
           if var.listType == nil            
-            rend.add(curVarName + '.writeToJson(j["' + curVarName + '"]' + ');')
+            rend.add(
+              Utils.instance.getTypeName(var) + 'JsonEngine::writeToJson(j["' + curVarName + '"]' + ', ' + Utils.instance.getStyledVariableName(var) + ');')
           else
             rend.startBlock('for (auto const& val: ' + curVarName + ')')
             rend.add('nlohmann::json newNode;')
-            rend.add('val.writeToJson(newNode);')
+            rend.add(
+              Utils.instance.getTypeName(var) + 'JsonEngine::writeToJson(newNode, ' + Utils.instance.getStyledVariableName(var) + ');')
             rend.add('j["' + curVarName + '"] = newNode;')
             rend.endBlock
           end

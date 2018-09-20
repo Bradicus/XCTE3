@@ -21,12 +21,14 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
   
   # Returns declairation string for this class's constructor
   def get_declaration(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.add("void loadFromJson(const nlohmann::json& json);")
+    codeBuilder.add("void loadFromJson(const nlohmann::json& json, " +
+      Utils.instance.getStyledClassName(genClass.name) + "& item);")
   end
 
   # Returns declairation string for this class's constructor
   def get_declaration_inline(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.startFuction("void loadFromJson(const nlohmann::json& json)")
+    codeBuilder.startFuction("void loadFromJson(const nlohmann::json& json, " + 
+      Utils.instance.getStyledClassName(genClass.name) + "& item);")
     codeStr << get_body(dataModel, genClass, codeFun, codeBuilder)
     codeBuilder.endFunction
   end
@@ -43,7 +45,8 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
       
     classDef = String.new  
     classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " << 
-      Utils.instance.getStyledClassName(genClass.name) << " :: " << "loadFromJson(const nlohmann::json& json)"
+      Utils.instance.getStyledClassName(genClass.name) << " :: " << "loadFromJson(const nlohmann::json& json, " +
+      Utils.instance.getStyledClassName(genClass.name) + "& item)"
     codeBuilder.startClass(classDef)
 
     get_body(dataModel, genClass, codeFun, codeBuilder)
@@ -62,7 +65,7 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
       if var.elementId == CodeElem::ELEM_VARIABLE
         if (Utils.instance.isPrimitive(var))
           if var.listType == nil
-            codeBuilder.add(Utils.instance.getStyledVariableName(var) + 
+            codeBuilder.add("item." + Utils.instance.getStyledVariableName(var) + 
               ' = json["' + Utils.instance.getStyledVariableName(var) + '"].get<' + Utils.instance.getTypeName(var) + '>();')
           else            
             codeBuilder.startBlock('for (auto item : json["' + Utils.instance.getStyledVariableName(var) + '"])')
@@ -71,15 +74,17 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
           end
         else
           if var.listType == nil
-            codeBuilder.add(Utils.instance.getStyledVariableName(var) + 
-                '.loadFromJson(json["' + Utils.instance.getStyledVariableName(var) + '"]);')
+            codeBuilder.add(
+              Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(' +
+              Utils.instance.getStyledVariableName(var) + 
+                '(json["' + Utils.instance.getStyledVariableName(var) + '"], ' + Utils.instance.getStyledVariableName(var) + ');')
           else
-            codeBuilder.startBlock('for (auto item : json["' + Utils.instance.getStyledVariableName(var) + '"])')
+            codeBuilder.startBlock('for (auto aJson : json["' + Utils.instance.getStyledVariableName(var) + '"])')
             if (var.listType == nil)
-              codeBuilder.add(Utils.instance.getStyledVariableName(var) + '.loadFromJson(item);')
+              codeBuilder.add(Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(aJson, item);')
             else
               codeBuilder.add(Utils.instance.getTypeName(var) + ' newVar;')
-              codeBuilder.add('newVar.loadFromJson(item);')
+              codeBuilder.add(Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(aJson, item);')
               codeBuilder.add(Utils.instance.getStyledVariableName(var) + '.push_back(newVar);')
             end
             codeBuilder.endBlock
