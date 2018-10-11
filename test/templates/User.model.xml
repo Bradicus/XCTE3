@@ -10,6 +10,11 @@
 		<function name="method_equality_assign" />
 	</gen_class>
 				
+	<gen_class type="ef_configuration" namespace="XCTE.Data" path="XCTE.Data" >
+		<use name="System.Collections.Generic" />
+		<function name="method_ef_configuration" />
+	</gen_class>
+				
 	<gen_class type="web_api_controller" namespace="XCTE.API" base_class="ApiController" path="XCTE.API" >
 		<function name="method_web_api_read_one" />
 	</gen_class>

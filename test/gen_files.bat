@@ -1,1 +1,1 @@
-ruby ..\lib\main.rb 
+ruby ..\bin\xcte3.rb 
