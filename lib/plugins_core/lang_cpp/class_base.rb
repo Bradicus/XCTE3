@@ -42,6 +42,12 @@ module XCTECpp
         end
     end
 
+    def genUsings(dataModel, genClass, cfg, hFile)
+      for us in genClass.uses
+        hFile.add('using namespace ' + us.namespace.split('.').join("::") + ';')
+      end
+  end
+
     def addAutoIncludes(dataModel, genClass, cfg)
       varArray = Array.new
 

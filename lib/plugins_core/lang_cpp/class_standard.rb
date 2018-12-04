@@ -111,6 +111,12 @@ module XCTECpp
         hFile.add
       end
 
+      genUsings(dataModel, genClass, cfg, hFile)
+      
+      if genClass.uses.length > 0
+        hFile.add
+      end
+
       # Process namespace items
       if genClass.namespaceList != nil
         for nsItem in genClass.namespaceList
@@ -147,7 +153,9 @@ module XCTECpp
         end
 
         if genClass.baseClasses[par] != nil
-          if genClass.baseClasses[par].namespaceList != nil && genClass.baseClasses[par].namespaceList.size > 0
+          if genClass.baseClasses[par].namespaceList != nil && genClass.baseClasses[par].namespaceList.size > 0 &&
+             genClass.baseClasses[par].namespaceList.join('.') != genClass.namespaceList.join('.') &&
+             !genClass.hasUsing(genClass.baseClasses[par].namespaceList.join('.'))
             nameSp = genClass.baseClasses[par].namespaceList.join("::") + "::"
           end
 

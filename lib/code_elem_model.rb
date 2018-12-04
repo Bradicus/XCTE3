@@ -234,6 +234,11 @@ module CodeStructure
         end
       }
 
+      # Load uses from higher level
+      self.xmlElement.elements.each("use"){|gUseXml|        
+        genC.addUse(gUseXml.attributes["name"])
+      }
+
       # Load any auto includes for this class...
       # Load any auto uses for this class...
 

@@ -60,19 +60,29 @@ class CodeElemClassGen < CodeElem
     end
   end
   
-  def addUse(iNamespace, forClass = nil)  
+  def addUse(use, forClass = nil)  
       curUse = nil
   
       for i in @uses
-        if i.namespace == iNamespace
+        if i.namespace == use
           curUse = i
         end
       end
   
       if curUse == nil
-        curUse = CodeElemUse.new(iNamespace)
+        curUse = CodeElemUse.new(use)
         @uses << curUse
       end
+  end
+
+  def hasUsing(useName)  
+    for i in @uses
+      if i.namespace == useName
+        return true
+      end
+    end
+
+    return false
   end
 
   def setName(newName)
