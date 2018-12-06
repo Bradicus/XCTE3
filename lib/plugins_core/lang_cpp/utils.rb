@@ -52,6 +52,7 @@ module XCTECpp
     # Returns variable declaration for the specified variable
     def getVarDec(var)
       vDec = String.new
+      typeName = String.new
         
       if var.isConst
         vDec << "const "
@@ -60,7 +61,7 @@ module XCTECpp
       if var.isStatic
         vDec << "static "
       end
-      
+
       typeName = getTypeName(var);
 
       if var.isPointer
@@ -113,10 +114,16 @@ module XCTECpp
   
     # Return the language type based on the generic type
     def getTypeName(var)
+
+      nsPrefix = ''
+      if var.namespace != nil
+        nsPrefix = var.namespace.gsub('.', '::') + '::'
+      end
+
       if (var.vtype != nil)
-        return @langProfile.getTypeName(var.vtype)
+        return nsPrefix + @langProfile.getTypeName(var.vtype)
       else
-        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+        return nsPrefix + CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
       end
     end
 

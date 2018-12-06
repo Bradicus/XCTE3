@@ -109,6 +109,7 @@ module CodeStructure
       curVar.isConst = varXML.attributes["const"]
       curVar.isStatic = varXML.attributes["static"]
       curVar.isPointer = varXML.attributes["pointer"]
+      curVar.namespace = varXML.attributes["ns"]
       curVar.isVirtual = curVar.findAttribute("virtual")
       curVar.nullable = curVar.findAttribute("nullable")
       curVar.identity = varXML.attributes["identity"]
