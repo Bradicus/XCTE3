@@ -10,6 +10,7 @@
 
 require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
 
+module XCTECpp
 class XCTECpp::MethodLogIt < XCTEPlugin
   
   def initialize
@@ -19,88 +20,79 @@ class XCTECpp::MethodLogIt < XCTEPlugin
   end  
   
   # Returns declairation string for this class's logIt method
-  def get_declaration(codeClass, cfg)
-    logItString = String.new
-      
-    logItString << "\n#ifdef _LOG_IT\n"
-    logItString << "        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const;\n"
-    logItString << "#else\n"
-    logItString << "        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const{;};\n"
-    logItString << "#endif\n"
-      
-    return logItString
+  def get_declaration(dataModel, genClass, funItem, codeBuilder)      
+    codeBuilder.add("        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const;")    
   end 
+
+  def get_dependencies(dataModel, genClass, funItem, codeBuilder)
+  end
   
   # Returns definition string for this class's logIt method
-  def get_definition(codeClass, cfg)
-    logItString = String.new
+  def get_definition(dataModel, genClass, funItem, codeBuilder)
         
-    logItString << "/**\n* Logs this class's info to a stream\n"
-    logItString << "* \n"
-    logItString << "* @param outStr The stream theis class is being logged to\n"
-    logItString << "* @param indent The amount we we indent each line in the class output\n"
-    logItString << "* @param logChildren Whether or not we will write objects side this object\n"
-    logItString << "* to the debug stream\n"
-    logItString << "*/\n";
+    codeBuilder.add("/**\n* Logs this class's info to a stream")
+    codeBuilder.add("* ")
+    codeBuilder.add("* @param outStr The stream theis class is being logged to")
+    codeBuilder.add("* @param indent The amount we we indent each line in the class output")
+    codeBuilder.add("* @param logChildren Whether or not we will write objects side this object")
+    codeBuilder.add("* to the debug stream")
+    codeBuilder.add("*/")
             
-    logItString << "#ifdef _LOG_IT\n"
-    logItString << "void " << codeClass.name << " :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const\n"
-    logItString << "{\n"
+    codeBuilder.add("void " << dataModel.name << " :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const")
+    codeBuilder.add("{")
         
-    if codeClass.hasAnArray
-      logItString << "    unsigned int i;\n\n"
+    if dataModel.hasAnArray
+      codeBuilder.add("    unsigned int i;")
     end
         
-    logItString << "    outStr << indent << \" -- " << codeClass.name << " begin -- \" << std::endl;\n"
+    codeBuilder.add("    outStr << indent << \" -- " << dataModel.name << " begin -- \" << std::endl;")
 
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    dataModel.getAllVarsFor(varArray);
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE
         if !varSec.isPointer
           if varSec.arrayElemCount > 0
-            if XCTECpp::Utils::isPrimitive(varSec)
-              logItString << "    outStr << indent << \"" << varSec.name << ": \";"                            
-              logItString << "\n    for (i = 0; i < " << XCTECpp::Utils::getSizeConst(varSec) << "; i++)\n"
-              logItString << "        outStr << "
-              logItString << varSec.name << "[i] << \"  \";\n"
-              logItString << "    outStr << std::endl;\n\n"
+            if Utils.instance.isPrimitive(varSec)
+              codeBuilder.add("    outStr << indent << \"" << varSec.name << ": \";")
+              codeBuilder.add("\n    for (i = 0; i < " << Utils.instance.getSizeConst(varSec) << "; i++)")
+              codeBuilder.add("        outStr << ")
+              codeBuilder.add(varSec.name << "[i] << \"  \";")
+              codeBuilder.add("    outStr << std::endl;\n")
             else
-              logItString << "    outStr << indent << \"" << varSec.name << ": \";"
+              codeBuilder.add("    outStr << indent << \"" << varSec.name << ": \";")
                             
-              logItString << "\n    if (logChildren)\n"
-              logItString << "        for (i = 0; i < " << XCTECpp::Utils::getSizeConst(varSec) + "; i++)\n"
-              logItString << "            " << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
-              logItString << "        outStr << std::endl;\n\n"
+              codeBuilder.add("\n    if (logChildren) {")
+              codeBuilder.add("        for (i = 0; i < " << Utils.instance.getSizeConst(varSec) + "; i++)")
+              codeBuilder.add("            " << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n")
+              codeBuilder.add("        outStr << std::endl;\n")
             end
           else  # Not an array                
-            if XCTECpp::Utils::isPrimitive(varSec)                        
-              logItString << "    outStr << indent << \"" << varSec.name << ": \" << "
-              logItString << varSec.name +  " << std::endl;\n"                        
+            if Utils.instance.isPrimitive(varSec)                        
+              codeBuilder.add("    outStr << indent << \"" << varSec.name << ": \" << ")
+              codeBuilder.add(varSec.name +  " << std::endl;")
             else                        
-              logItString << "    outStr << indent << \"Object " << varSec.name << ": \";"
-              logItString << "\n    if (logChildren)\n"
-              logItString << "        " << varSec.name << ".logIt(outStr,  indent + \"  \");\n"
+              codeBuilder.add("    outStr << indent << \"Object " << varSec.name << ": \";")
+              codeBuilder.add("\n    if (logChildren) {")
+              codeBuilder.add("        " << varSec.name << ".logIt(outStr,  indent + \"  \");")
             end
           end  
         else
-          logItString << "    outStr << indent << " << varSec.name << " << std::endl;\n"
+          codeBuilder.add("    outStr << indent << " << varSec.name << " << std::endl;")
         end
       elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        logItString << "    " << XCTECpp::Utils::getComment(varSec);
+        codeBuilder.add("    " + Utils.instance.getComment(varSec))
       elsif varSec.elementId == CodeElem::ELEM_FORMAT
-        logItString << varSec.formatText
+        codeBuilder.add(varSec.formatText)
       end
-    end
  
-    logItString << "    outStr << indent << \" -- " << codeClass.name << " end -- \" << std::endl;\n"
+    codeBuilder.add("    outStr << indent << \" -- " << dataModel.name << " end -- \" << std::endl;")
         
-    logItString << "}\n"
-    logItString << "#endif\n\n"
-        
-    return logItString
-  end       
+    codeBuilder.add("}")
+  end
+end   
+end
 end
 
 # Now register an instance of our plugin

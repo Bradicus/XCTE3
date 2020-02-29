@@ -127,6 +127,14 @@ module XCTECpp
       end
     end
 
+    def getClassName(var)
+      if (var.vtype != nil)
+        return @langProfile.getTypeName(var.vtype)
+      else
+        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+      end
+    end
+
     def getListTypeName(listTypeName)
       return @langProfile.getTypeName(listTypeName)
     end

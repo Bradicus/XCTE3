@@ -19,7 +19,7 @@ class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
   end
 
   # Returns declairation string for this class's equality assignment operator
-  def get_declaration(codeClass, cfg)
+  def get_declaration(dataModel, genClass, funItem, codeBuilder)
     eqString = String.new
 
     eqString << "        bool operator==" << "(const " << codeClass.name
@@ -28,8 +28,11 @@ class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
     return eqString
   end
 
+  def get_dependencies(dataModel, genClass, funItem, codeBuilder)
+  end
+
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, cfg)
+  def get_definition(dataModel, genClass, funItem, codeBuilder)
     eqString = String.new
     longArrayFound = false;
     seperator = ""

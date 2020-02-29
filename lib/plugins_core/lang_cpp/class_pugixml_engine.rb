@@ -16,15 +16,15 @@ require 'lang_file.rb'
 require 'x_c_t_e_plugin.rb'
 
 module XCTECpp
-  class ClassJsonEngine < ClassBase
+  class ClassPugiXmlEngine < ClassBase
     def initialize
-      @name = "json_engine"
+      @name = "pugixml_engine"
       @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def getUnformattedClassName(dataModel, genClass)
-      return dataModel.name + ' json engine'
+      return dataModel.name
     end    
     
     def genSourceFiles(dataModel, genClass, cfg)
@@ -33,13 +33,13 @@ module XCTECpp
       genClass.setName(getUnformattedClassName(dataModel, genClass))
             
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(dataModel.name + 'JsonEngine')
+      hFile.lfName = Utils.instance.getStyledFileName(dataModel.name + 'PugiXmlEngine')
       hFile.lfExtension = Utils.instance.getExtension('header')
       genHeaderComment(dataModel, genClass, cfg, hFile)
       genHeader(dataModel, genClass, cfg, hFile)
       
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(dataModel.name + 'JsonEngine')
+      cppFile.lfName = Utils.instance.getStyledFileName(dataModel.name + 'PugiXmlEngine')
       cppFile.lfExtension = Utils.instance.getExtension('body')
       genHeaderComment(dataModel, genClass, cfg, cppFile)
       genBody(dataModel, genClass, cfg, cppFile)
@@ -53,7 +53,7 @@ module XCTECpp
     def genHeaderComment(dataModel, genClass, cfg, hFile)
     
       hFile.add("/**")    
-      hFile.add("* @class " + Utils.instance.getStyledClassName(dataModel.name + 'JsonEngine'))
+      hFile.add("* @class " + Utils.instance.getStyledClassName(dataModel.name + 'PugiXmlEngine'))
       
       if (cfg.codeAuthor != nil)
         hFile.add("* @author " + cfg.codeAuthor)
@@ -88,7 +88,7 @@ module XCTECpp
 
       # get list of includes needed by functions
       
-      # Get dependencies for functions
+      # Generate function declarations
       for funItem in genClass.functions
         if funItem.elementId == CodeElem::ELEM_FUNCTION
           if funItem.isTemplate
@@ -115,8 +115,25 @@ module XCTECpp
         end
         hFile.add
       end
+
+      # Do automatic static array size declairations above class def
+      varArray = Array.new
+
+      for vGrp in dataModel.groups
+        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
+      end
+
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0
+          hFile.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
+        end
+      end
+          
+      if dataModel.hasAnArray
+        hFile.add
+      end
       
-      classDec = "class " + Utils.instance.getStyledClassName(dataModel.name + 'JsonEngine')
+      classDec = "class " + Utils.instance.getStyledClassName(dataModel.name + 'PugiXmlEngine')
           
       for par in (0..genClass.baseClasses.size)
         nameSp = ""
@@ -142,6 +159,24 @@ module XCTECpp
             
       # Generate class variables
       varArray = Array.new
+
+      for vGrp in dataModel.groups
+      getVarsFor(vGrp, cfg, varArray)
+      end
+
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          hFile.add(Utils.instance.getVarDec(var))
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          hFile.add(Utils.instance.getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          hFile.add(var.formatText)
+        end
+      end
+
+      if (genClass.functions.length > 0)
+        hFile.add
+      end
       
       # Generate function declarations
       for funItem in genClass.functions
@@ -197,7 +232,7 @@ module XCTECpp
     
     # Returns the code for the body for this class
     def genBody(dataModel, genClass, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(dataModel.name + 'JsonEngine') << '.h"')
+      cppGen.add("#include \"" << Utils.instance.getStyledClassName(dataModel.name) << ".h\"")
       cppGen.add
 
       # Process namespace items
@@ -279,4 +314,4 @@ module XCTECpp
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECpp::ClassJsonEngine.new)
+XCTEPlugin::registerPlugin(XCTECpp::ClassPugiXmlEngine.new)

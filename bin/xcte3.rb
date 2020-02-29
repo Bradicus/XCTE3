@@ -25,6 +25,7 @@ require 'run_settings'
 require 'class_plan'
 require 'project_plan'
 require 'lang_profiles'
+require 'data_loader'
 
 def isModelFile(filePath)
   return FileTest.file?(filePath) && 
@@ -42,7 +43,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
   for pComponent in pcGroup.components
     #puts "Processing component: " + pComponent.path 
     if (pComponent.elementId == CodeElem::ELEM_TEMPLATE_DIRECTORY)
-      #puts "Processing component path: " + pComponent.path 
+      puts "Processing component path: " + pComponent.path 
       Find.find(currentDir + "/" + pComponent.path) do |path|
         if isModelFile(path)
           puts "Processing class: " + path
@@ -51,7 +52,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
           pn = Pathname.new(path)
 
           dataModel = CodeStructure::CodeElemModel.new
-          dataModel.loadXMLClassFile(path, pComponent.isStatic);
+          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic);
 
           for langName in pComponent.languages
             language = XCTEPlugin::getLanguages()[langName]

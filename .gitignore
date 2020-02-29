@@ -1,0 +1,9 @@
+lib/doc/classes/CodeElem.html
+templates/MyPerson.xml
+lib/doc/
+lib/.vscode/
+test/gen_cpp/Address.cpp
+test/gen_cpp/
+test/bin/
+test/packages/
+.idea/

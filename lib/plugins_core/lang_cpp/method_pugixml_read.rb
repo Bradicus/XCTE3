@@ -11,41 +11,41 @@ require 'x_c_t_e_plugin.rb'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
 
 module XCTECpp
-class MethodLoadFromNlohmannJson < XCTEPlugin
+class MethodPugiXmlRead < XCTEPlugin
   
   def initialize
-    @name = "method_load_from_nlohmann_json"
+    @name = "method_pugixml_read"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
   end
   
   # Returns declairation string for this class's constructor
   def get_declaration(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.add("void loadFromJson(const nlohmann::json& json, " +
+    codeBuilder.add("void load(pugi::xml_node node, " +
       Utils.instance.getStyledClassName(genClass.name) + "& item);")
   end
 
   # Returns declairation string for this class's constructor
   def get_declaration_inline(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.startFuction("void loadFromJson(const nlohmann::json& json, " + 
+    codeBuilder.startFuction("void load(pugi::xml_node node, " + 
       Utils.instance.getStyledClassName(genClass.name) + "& item);")
     codeStr << get_body(dataModel, genClass, codeFun, codeBuilder)
     codeBuilder.endFunction
   end
 
   def get_dependencies(dataModel, genClass, codeFun, codeBuilder)
-    genClass.addInclude('', 'json.hpp')
+    genClass.addInclude('', 'pugixml.hpp')
   end
   
   # Returns definition string for this class's constructor
   def get_definition(dataModel, genClass, codeFun, codeBuilder)
     codeBuilder.add("/**")
-    codeBuilder.add("* Load this classes primitives from a json element")
+    codeBuilder.add("* Load this classes primitives from a xml element")
     codeBuilder.add("*/")
       
     classDef = String.new  
     classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " << 
-      Utils.instance.getStyledClassName(genClass.name) << " :: " << "loadFromJson(const nlohmann::json& json, " +
+      Utils.instance.getStyledClassName(genClass.name) << " :: " << "read(pugi::xml_node node, " +
       Utils.instance.getStyledClassName(genClass.name) + "& item)"
     codeBuilder.startClass(classDef)
 
@@ -59,17 +59,24 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
     varArray = Array.new
     dataModel.getAllVarsFor(varArray);
 
-    codeBuilder.startBlock('if (json.is_null() == false)')
-
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
+        styledVarName = Utils.instance.getStyledVariableName(var)
+
+        pugiCast = 'to_string()';
+        if (var.vtype.start_with?'Int')
+          pugiCast = 'to_int()'
+        end
+        if (var.vtype.start_with?'Float')
+          pugiCast = 'to_float()'
+        end
+
         if (Utils.instance.isPrimitive(var))
           if var.listType == nil
-            codeBuilder.add("item." + Utils.instance.getStyledVariableName(var) + 
-              ' = json["' + Utils.instance.getStyledVariableName(var) + '"].get<' + Utils.instance.getTypeName(var) + '>();')
+            codeBuilder.add(styledVarName + " = item.child(" + styledVarName + ")." + pugiCast + ";")
           else            
-            codeBuilder.startBlock('for (auto item : json["' + Utils.instance.getStyledVariableName(var) + '"])')
-            codeBuilder.add(Utils.instance.getStyledVariableName(var) + '.push_back(item.get<' + Utils.instance.getTypeName(var) + '>());')
+            codeBuilder.startBlock('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
+            codeBuilder.add(styledVarName + '.push_back(pNode.'+ pugiCast + ');')
             codeBuilder.endBlock
           end
         else
@@ -92,12 +99,10 @@ class MethodLoadFromNlohmannJson < XCTEPlugin
         end
       end
     end
-
-    codeBuilder.endBlock
   end
   
 end
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTECpp::MethodLoadFromNlohmannJson.new)
+XCTEPlugin::registerPlugin(XCTECpp::MethodPugiXmlRead.new)
