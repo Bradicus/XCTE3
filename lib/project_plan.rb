@@ -1,40 +1,39 @@
-
-require 'singleton'
+require "singleton"
+require "classes"
 
 class ProjectPlan
-    attr_accessor :classPlans, :models
+  attr_accessor :classPlans, :models
 
-    include Singleton
+  include Singleton
 
-    def initialize
-      @classPlans = Hash.new
-      @models = Hash.new
+  def initialize
+    @classPlans = Hash.new
+    @models = Hash.new
+  end
+
+  def findClassPlan(unformattedName)
+    for cp in @classPlans
     end
+  end
 
-    def findClassPlan(unformattedName)
-      for cp in @classPlans
-        
+  def findModel(unformattedName)
+    for model in @models
+      if model.name == unformattedName
+        return model
       end
     end
-    
-    def findModel(unformattedName)
-      for model in @models
-        if model.name == unformattedName
-          return model
-        end
-      end
 
-      return nil
+    return nil
+  end
+
+  def findClassFunction(languageName, modelName, classPlugName, funPlugName)
+    models = @models
+    for model in @models[languageName]
+      if model.name == modelName
+        return Classes.findClassFunction(classPlugName, funPlugName)
+      end
     end
 
-    def findClassFunction(languageName, modelName, classPlugName, funPlugName)
-      models = @models
-      for model in @models[languageName]
-        if model.name == modelName
-          return model.findClassFunction(classPlugName, funPlugName)
-        end
-      end
-
-      return nil
-    end
+    return nil
+  end
 end

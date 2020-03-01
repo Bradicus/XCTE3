@@ -7,12 +7,11 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'code_name_styling.rb'
+require "x_c_t_e_plugin.rb"
+require "code_name_styling.rb"
 
 module XCTECSharp
   class MethodTsqlUpdate < XCTEPlugin
-
     def initialize
       @name = "method_tsql_update"
       @language = "csharp"
@@ -26,9 +25,9 @@ module XCTECSharp
       codeBuilder.add("/// Update the record for this model")
       codeBuilder.add("///")
 
-      codeBuilder.startClass("public void Update(" + 
-          Utils.instance.getStyledClassName(dataModel.name) + 
-          " o, SqlConnection conn, SqlTransaction trans)")
+      codeBuilder.startClass("public void Update(" +
+                             Utils.instance.getStyledClassName(dataModel.name) +
+                             " o, SqlConnection conn, SqlTransaction trans)")
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -36,61 +35,64 @@ module XCTECSharp
     end
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Update(" + 
-          Utils.instance.getStyledClassName(dataModel.name) + 
-          " o, SqlConnection conn, SqlTransaction trans);")
+      codeBuilder.add("void Update(" +
+                      Utils.instance.getStyledClassName(dataModel.name) +
+                      " o, SqlConnection conn, SqlTransaction trans);")
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
+      genClass.addUse("System.Data.SqlClient", "SqlConnection")
     end
-    
+
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
       conDef = String.new
 
-      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + ' SET ')
+      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + " SET ")
 
       codeBuilder.indent
 
-      separater = ''
+      separater = ""
       varArray = Array.new
       dataModel.getNonIdentityVars(varArray)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.sameLine(separater)        
-          codeBuilder.add('[' + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
-              "] = @" + Utils.instance.getStyledVariableName(var))              
+          codeBuilder.sameLine(separater)
+          codeBuilder.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
+                          "] = @" + Utils.instance.getStyledVariableName(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
         end
-        separater = ','
+        separater = ","
       end
 
       codeBuilder.unindent
-      
-      identVar = dataModel.getIdentityVar();
-      codeBuilder.add('WHERE [' + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
-              "] = @" + Utils.instance.getStyledVariableName(identVar)	+ '";')
+
+      identVar = dataModel.getIdentityVar()
+
+      if identVar
+        codeBuilder.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
+                        "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
+      end
 
       codeBuilder.add
 
       codeBuilder.startBlock("try")
       codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add('cmd.Transaction = trans;');
+      codeBuilder.add("cmd.Transaction = trans;")
 
       varArray = Array.new
       dataModel.getAllVarsFor(varArray)
 
       Utils.instance.addParameters(varArray, genClass, codeBuilder)
-      
+
       codeBuilder.add
-      codeBuilder.add('cmd.ExecuteScalar();')
+      codeBuilder.add("cmd.ExecuteScalar();")
       codeBuilder.endBlock
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error updating ' + dataModel.name + ' with ' +
-                          varArray[0].name + ' = "' + ' + o.' + CodeNameStyling.stylePascal(varArray[0].name) + ', e);')
-      codeBuilder.endBlock(';')
+      codeBuilder.add('throw new Exception("Error updating ' + dataModel.name + " with " +
+                      varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
+      codeBuilder.endBlock(";")
     end
   end
 end

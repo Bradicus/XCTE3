@@ -7,12 +7,11 @@
 #
 # This plugin deletes a record from the database
 
-require 'x_c_t_e_plugin.rb'
-require 'code_name_styling.rb'
+require "x_c_t_e_plugin.rb"
+require "code_name_styling.rb"
 
 module XCTECSharp
   class MethodTsqlDelete < XCTEPlugin
-
     def initialize
       @name = "method_tsql_delete"
       @language = "csharp"
@@ -25,9 +24,12 @@ module XCTECSharp
       codeBuilder.add("/// Delete the record for the model with this id")
       codeBuilder.add("///")
 
-      identVar = dataModel.getIdentityVar();
-      codeBuilder.startClass('public void Delete(' + Utils.instance.getParamDec(identVar.getParam()) +
-          ', SqlConnection conn, SqlTransaction trans = null)')
+      identVar = dataModel.getIdentityVar()
+
+      if (identVar)
+        codeBuilder.startClass("public void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
+                               ", SqlConnection conn, SqlTransaction trans = null)")
+      end
 
       get_body(dataModel, genClass, genFun, cfg, codeBuilder)
 
@@ -35,44 +37,49 @@ module XCTECSharp
     end
 
     def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      identVar = dataModel.getIdentityVar();
-      codeBuilder.add('void Delete(' + Utils.instance.getParamDec(identVar.getParam()) +
-          ', SqlConnection conn, SqlTransaction trans = null);')
+      identVar = dataModel.getIdentityVar()
+
+      if (identVar)
+        codeBuilder.add("void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
+                        ", SqlConnection conn, SqlTransaction trans = null);")
+      end
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
+      genClass.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
 
-      identVar = dataModel.getIdentityVar();
-      identParamName = Utils.instance.getStyledVariableName(identVar.getParam())
+      identVar = dataModel.getIdentityVar()
 
-      dataModel.getAllVarsFor(varArray)
+      if (identVar)
+        identParamName = Utils.instance.getStyledVariableName(identVar.getParam())
 
-      codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) +
-                          ' WHERE [' + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
-                                  "] = @" + identParamName	+ '";')
+        dataModel.getAllVarsFor(varArray)
 
-      codeBuilder.add
+        codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) +
+                        " WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
+                        "] = @" + identParamName + '";')
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
-      codeBuilder.add
-      codeBuilder.add('cmd.Parameters.AddWithValue("@' + identParamName +
-                          '", ' + identParamName + ');')
-      codeBuilder.endBlock
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error deleting ' + dataModel.name + ' with ' +
-                  identVar.name + ' = "' + ' + ' + identParamName + ', e);')
-      codeBuilder.endBlock
+        codeBuilder.add
+
+        codeBuilder.startBlock("try")
+        codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+        codeBuilder.add("cmd.Transaction = trans;")
+        codeBuilder.add
+        codeBuilder.add('cmd.Parameters.AddWithValue("@' + identParamName +
+                        '", ' + identParamName + ");")
+        codeBuilder.endBlock
+        codeBuilder.endBlock
+        codeBuilder.startBlock("catch(Exception e)")
+        codeBuilder.add('throw new Exception("Error deleting ' + dataModel.name + " with " +
+                        identVar.name + ' = "' + " + " + identParamName + ", e);")
+        codeBuilder.endBlock
+      end
     end
-
   end
 end
 

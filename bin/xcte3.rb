@@ -10,28 +10,29 @@
 # This file loads user settings generates code files off of template files in
 # the templates folder and saves them in the generated folder
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
-require 'pathname'
-require 'find'
-require 'fileutils'
+require "pathname"
+require "find"
+require "fileutils"
 
-require 'code_elem_model.rb'
-require 'code_elem_project.rb'
-require 'x_c_t_e_plugin.rb'
-require 'user_settings.rb'
+require "code_elem_model.rb"
+require "code_elem_project.rb"
+require "x_c_t_e_plugin.rb"
+require "user_settings.rb"
 
-require 'run_settings'
-require 'class_plan'
-require 'project_plan'
-require 'lang_profiles'
-require 'data_loader'
+require "run_settings"
+require "class_plan"
+require "project_plan"
+require "lang_profiles"
+require "data_loader"
+require "classes"
 
 def isModelFile(filePath)
-  return FileTest.file?(filePath) && 
-      filePath.include?(".xml") && 
-      !filePath.include?(".svn") && 
-      (filePath.include?(".model.xml") || filePath.include?(".class.xml") )
+  return FileTest.file?(filePath) &&
+           filePath.include?(".xml") &&
+           !filePath.include?(".svn") &&
+           (filePath.include?(".model.xml") || filePath.include?(".class.xml"))
 end
 
 def processProjectComponentGroup(project, pcGroup, cfg)
@@ -41,18 +42,18 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
   # preload an extra set of data models, so they can be referenced if needed
   for pComponent in pcGroup.components
-    #puts "Processing component: " + pComponent.path 
+    #puts "Processing component: " + pComponent.path
     if (pComponent.elementId == CodeElem::ELEM_TEMPLATE_DIRECTORY)
-      puts "Processing component path: " + pComponent.path 
+      puts "Processing component path: " + pComponent.path
       Find.find(currentDir + "/" + pComponent.path) do |path|
         if isModelFile(path)
-          puts "Processing class: " + path
-                    
+          puts "Processing model: " + path
+
           basepn = Pathname.new(currentDir + "/" + pComponent.path)
           pn = Pathname.new(path)
 
           dataModel = CodeStructure::CodeElemModel.new
-          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic);
+          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic)
 
           for langName in pComponent.languages
             language = XCTEPlugin::getLanguages()[langName]
@@ -60,13 +61,13 @@ def processProjectComponentGroup(project, pcGroup, cfg)
             if (language == nil)
               puts "No language found for: " + langName
             end
-            
+
             if projectPlan.models[langName] == nil
               projectPlan.models[langName] = Array.new
             end
-            
+
             projectPlan.models[langName] << dataModel
-                          
+
             for genClass in dataModel.classes
               if (genClass.language != nil)
                 language = XCTEPlugin::getLanguages()[genClass.language]
@@ -75,7 +76,6 @@ def processProjectComponentGroup(project, pcGroup, cfg)
               end
 
               if language.has_key?(genClass.ctype)
-
                 if genClass.path != nil
                   newPath = pComponent.dest + "/" + genClass.path
                 else
@@ -84,7 +84,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
                 if !File.directory?(newPath)
                   FileUtils.mkdir_p(newPath)
-              #   puts "Creating folder: " + newPath
+                  #   puts "Creating folder: " + newPath
                 end
 
                 classPlan = ClassPlan.new
@@ -92,8 +92,8 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 classPlan.model = dataModel
                 classPlan.class = genClass
                 classPlan.path = newPath
-       #         classPlan.className = language[genClass.ctype].getClassName(dataModel, genClass)
-              
+                #         classPlan.className = language[genClass.ctype].getClassName(dataModel, genClass)
+
                 if projectPlan.classPlans[language] == nil
                   projectPlan.classPlans[language] = Array.new
                 end
@@ -101,7 +101,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                 projectPlan.classPlans[language] << classPlan
               end
             end
-          end          
+          end
         end
       end
     end
@@ -112,20 +112,19 @@ def processProjectComponentGroup(project, pcGroup, cfg)
       srcFiles = language[plan.class.ctype].genSourceFiles(plan.model, plan.class, cfg)
 
       for srcFile in srcFiles
-        sFile = File.new(plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode:"w")
-        
+        sFile = File.new(plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode: "w")
+
         puts "writing file: " + plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension
         sFile << srcFile.getContents
-        sFile.close                    
+        sFile.close
       end
     end
   }
-  
+
   for pSubgroup in pcGroup.subGroups
     processProjectComponentGroup(project, pSubgroup, cfg)
   end
 end
-
 
 codeRootDir = File.dirname(File.realpath(__FILE__))
 
@@ -137,7 +136,7 @@ currentDir = Dir.pwd
 
 if (!FileTest.file?(currentDir + "/xcte.project.xml"))
   puts "Unable to find project config file " + currentDir + "/xcte.project.xml"
-  exit 0;
+  exit 0
 end
 
 prj = CodeStructure::ElemProject.new
@@ -150,6 +149,4 @@ XCTEPlugin::loadPLugins
 
 processProjectComponentGroup(prj, prj.componentGroup, cfg)
 
-
 #XCTEPlugin::listPlugins
-

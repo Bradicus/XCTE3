@@ -8,12 +8,11 @@
 # This plugin generates a create statement for a database based
 # on this class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_razor/source_renderer_razor.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_razor/source_renderer_razor.rb"
 
 module XCTERazor
   class RazorEditor < XCTEPlugin
-
     def initialize
       @name = "razor_edit"
       @language = "razor"
@@ -30,7 +29,7 @@ module XCTERazor
 
       codeBuilder = SourceRendererRazor.new
       codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      codeBuilder.lfExtension = 'cshtml'
+      codeBuilder.lfExtension = "cshtml"
       genFileContent(dataModel, genClass, cfg, codeBuilder)
 
       srcFiles << codeBuilder
@@ -43,8 +42,8 @@ module XCTERazor
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@Model " + genClass.namespaceList.join('.') + '.' +
-                          XCTECSharp::Utils.instance.getStandardName(dataModel))
+      codeBuilder.add("@Model " + genClass.namespaceList.join(".") + "." +
+                      XCTECSharp::Utils.instance.getStandardName(dataModel))
       codeBuilder.add
       codeBuilder.add("<form>")
       codeBuilder.indent
@@ -53,29 +52,26 @@ module XCTERazor
 
       codeBuilder.unindent
       codeBuilder.add("</form>")
-
     end
 
     def processVarGroup(dataModel, genClass, cfg, codeBuilder, varGroup)
-      
       for grp in varGroup
         for var in grp.vars
           if var.elementId == CodeElem::ELEM_VARIABLE
-            if var.vtype == 'String'
-              codeBuilder.add('<input type="text" name="' + 
-                  XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
-                  XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
-            elsif var.vtype.start_with?('Int')
+            if var.vtype == "String"
+              codeBuilder.add('<input type="text" name="' +
+                              XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
+                              XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
+            elsif (var.vtype != nil && var.vtype.start_with?("Int")) || (var.utype != nil && var.utype.start_with?("int"))
               codeBuilder.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
             end
           end
         end
 
-        processVarGroup(dataModel, genClass, cfg, codeBuilder, grp.groups)        
+        processVarGroup(dataModel, genClass, cfg, codeBuilder, grp.groups)
       end
     end
   end
 end
 
 XCTEPlugin::registerPlugin(XCTERazor::RazorEditor.new)
-

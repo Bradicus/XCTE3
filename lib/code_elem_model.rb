@@ -1,23 +1,23 @@
 ##
 
-# 
+#
 # Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This class stores information for the class code structure
 # read in from an xml file
 
-require 'code_elem.rb'
-require 'code_elem_class_gen.rb'
-require 'code_elem_comment.rb'
-require 'code_elem_format.rb'
-require 'code_elem_function.rb'
-require 'code_elem_include.rb'
-require 'code_elem_parent.rb'
-require 'code_elem_variable.rb'
-require 'code_elem_var_group.rb'
-require 'rexml/document'
+require "code_elem.rb"
+require "code_elem_class_gen.rb"
+require "code_elem_comment.rb"
+require "code_elem_format.rb"
+require "code_elem_function.rb"
+require "code_elem_include.rb"
+require "code_elem_parent.rb"
+require "code_elem_variable.rb"
+require "code_elem_var_group.rb"
+require "rexml/document"
 
 module CodeStructure
   class CodeElemModel < CodeElem
@@ -28,10 +28,10 @@ module CodeStructure
       super()
 
       @elementId = CodeElem::ELEM_MODEL
-      @classes = Array.new
       @name
       @case
       @description
+      @classes = Array.new
       @groups = Array.new
       @xmlFileName = ""
     end
@@ -71,9 +71,9 @@ module CodeStructure
       lowName = lowName.downcase
 
       if (@case != nil && lowName != nil)
-        return(lowName + ".o");
+        return(lowName + ".o")
       else
-        return(@name + ".o");
+        return(@name + ".o")
       end
     end
 
@@ -82,9 +82,9 @@ module CodeStructure
       lowName = lowName.downcase
 
       if (@case != nil && lowName != nil)
-        return(lowName + ".cpp");
+        return(lowName + ".cpp")
       else
-        return(@name + ".cpp");
+        return(@name + ".cpp")
       end
     end
 
@@ -93,9 +93,9 @@ module CodeStructure
       lowName = lowName.downcase
 
       if (@case != nil && lowName != nil)
-        return(lowName + ".h");
+        return(lowName + ".h")
       else
-        return(@name + ".h");
+        return(@name + ".h")
       end
     end
 
@@ -140,18 +140,18 @@ module CodeStructure
 
     # Returns add primary keys from vGroup
     def getPrimaryKeyVars(varArray)
-      getScreenVars(varArray, lambda {|var| var.isPrimary == true })
+      getScreenVars(varArray, lambda { |var| var.isPrimary == true })
     end
-    
+
     # Returns add primary keys from vGroup
     def getNonIdentityVars(varArray)
-      getScreenVars(varArray, lambda {|var| var.identity == nil })
+      getScreenVars(varArray, lambda { |var| var.identity == nil })
     end
-    
+
     # Returns add primary keys from vGroup
     def getIdentityVar()
       varArray = Array.new
-      getScreenVars(varArray, lambda {|var| var.identity != nil })
+      getScreenVars(varArray, lambda { |var| var.identity != nil })
 
       if (varArray.length > 0)
         return(varArray[0])
@@ -163,34 +163,17 @@ module CodeStructure
     # Returns namespaces separated by .
     def getNamespaceList(cfg, varArray)
       if @namespaceList != nil
-        return @namespaceList.join('.')
+        return @namespaceList.join(".")
       else
-        return ''
+        return ""
       end
     end
 
+    # Find class
     def findClass(classPlugName)
       for c in @classes
         if (c.ctype == classPlugName)
           return c
-        end
-      end
-
-      return nil
-    end
-
-    def findClassFunction(classPlugName, funPlugName)
-      cs = @classes # for debugging
-      for c in @classes
-        if (c.ctype == classPlugName)
-          for fun in c.functions
-            if fun.name == funPlugName
-              return fun
-            end
-          end
-          
-          # if we found the class but not the function, we can return nil here
-          return nil
         end
       end
 

@@ -36,7 +36,8 @@ class DataLoader
       genClass = CodeStructure::CodeElemClassGen.new(model, model, isStatic)
       loadClassNode(genClass, genCXML, model)
       genClass.model = model
-      Classes::list << genClass
+      Classes.list << genClass
+      model.classes << genClass
 
       if genClass.interfaceNamespace != nil
         intf = CodeStructure::CodeElemClassGen.new(genClass, model, isStatic)
@@ -48,6 +49,7 @@ class DataLoader
         intf.parentElem = genClass
         intf.model = model
         Classes.list << intf
+        model.classes << genClass
       end
 
       if genClass.testNamespace != nil
@@ -59,6 +61,7 @@ class DataLoader
         intf.parentElem = genClass
         intf.model = model
         Classes.list << intf
+        model.classes << genClass
       end
 
       #puts "Loaded clss node with function count " + genClass.functions.length.to_s
@@ -219,7 +222,10 @@ class DataLoader
 
     varArray = Array.new
     tmpFunXML.elements.each("var_ref") { |refXml|
-      fun.variableReferences << varArray.find { |var| var.name == refXml.attributes["name"] }
+      ref = varArray.find { |var| var.name == refXml.attributes["name"] }
+      if ref
+        fun.variableReferences << ref
+      end
     }
   end
 

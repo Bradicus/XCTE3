@@ -7,13 +7,12 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'code_name_styling.rb'
-require 'plugins_core/lang_csharp/utils.rb'
+require "x_c_t_e_plugin.rb"
+require "code_name_styling.rb"
+require "plugins_core/lang_csharp/utils.rb"
 
 module XCTECSharp
   class MethodSave < XCTEPlugin
-
     def initialize
       @name = "method_save"
       @language = "csharp"
@@ -38,8 +37,8 @@ module XCTECSharp
     end
 
     def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse('System', 'Exception')
-      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
+      genClass.addUse("System", "Exception")
+      genClass.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
     def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
@@ -47,14 +46,14 @@ module XCTECSharp
       varArray = Array.new
       dataModel.getAllVarsFor(varArray)
 
-      codeBuilder.add('_conn.Open();')
+      codeBuilder.add("_conn.Open();")
 
       for var in varArray
-        if (Utils.instance.isPrimitive(var) == false)          
-          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, 'tsql_engine', 'method_tsql_create')          
-            if varCreateFun != nil
-              codeBuilder.add('_' + Utils.instance.getStyledVariableName(var, '', ' interface') + '.Create(o);')
-            end
+        if (Utils.instance.isPrimitive(var) == false)
+          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, "tsql_engine", "method_tsql_create")
+          if varCreateFun != nil
+            codeBuilder.add("_" + Utils.instance.getStyledVariableName(var, "") + ".Create(o);")
+          end
         end
       end
     end
