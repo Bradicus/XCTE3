@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem type" >
+
+	<description>
+	Code Element Types
+	</description>
+				
+	<gen_class type="enum" >
+	</gen_class>
+
+	<var_group>
+		<var name="ELEM_MODEL	type="String"	default="class" />
+	  <var name="ELEM_CLASS_GEN	type="String"	default="class_gen" />
+	  <var name="ELEM_HEADER	type="String"	default="header" />
+	  <var name="ELEM_LIBRARY	type="String"	default="library" />
+	  <var name="ELEM_APPLICATION	type="String"	default="app" />
+	  <var name="ELEM_BODY	type="String"	default="body" />
+	  <var name="ELEM_BUILD_OPTION	type="String"	default="build_option" />
+	  <var name="ELEM_BUILD_TYPE	type="String"	default="build_type" />
+	  <var name="ELEM_COMMENT	type="String"	default="comment" />
+	  <var name="ELEM_FORMAT	type="String"	default="format" />
+	  <var name="ELEM_FUNCTION	type="String"	default="function" />
+	  <var name="ELEM_INCLUDE	type="String"	default="include" />
+	  <var name="ELEM_USE	type="String"	default="use" />
+	  <var name="ELEM_PARENT	type="String"	default="parent" />
+	  <var name="ELEM_VARIABLE	type="String"	default="variable" />
+	  <var name="ELEM_VAR_GROUP	type="String"	default="variable_group" />
+
+	  <var name="ELEM_PROJECT	type="String"	default="project" />
+	  <var name="ELEM_PROJECT_COMPONENT_GROUP	type="String"	default="project_cg" />
+	  <var name="ELEM_TEMPLATE_DIRECTORY	type="String"	default="templates" />
+	</var_group>		
+	
+</model>

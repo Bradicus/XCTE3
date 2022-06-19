@@ -20,17 +20,17 @@ module XCTERazor
       @author = "Brad Ottoson"
     end
 
-    def getClassName(dataModel, genClass)
-      return Utils.instance.getStyledClassName(dataModel.name)
+    def getClassName(cls)
+      return Utils.instance.getStyledClassName(cls.model.name)
     end
 
-    def genSourceFiles(dataModel, genClass, cfg)
+    def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       codeBuilder = SourceRendererRazor.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name)
       codeBuilder.lfExtension = "cshtml"
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
+      genFileContent(cls, cfg, codeBuilder)
 
       srcFiles << codeBuilder
 
@@ -38,23 +38,23 @@ module XCTERazor
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, cfg, codeBuilder)
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@Model " + genClass.namespaceList.join(".") + "." +
-                      XCTECSharp::Utils.instance.getStandardName(dataModel))
+      codeBuilder.add("@Model " + cls.namespaceList.join(".") + "." +
+                      XCTECSharp::Utils.instance.getStandardName(cls.model))
       codeBuilder.add
       codeBuilder.add("<form>")
       codeBuilder.indent
 
-      processVarGroup(dataModel, genClass, cfg, codeBuilder, dataModel.groups)
+      processVarGroup(cls, cfg, codeBuilder, cls.model.groups)
 
       codeBuilder.unindent
       codeBuilder.add("</form>")
     end
 
-    def processVarGroup(dataModel, genClass, cfg, codeBuilder, varGroup)
+    def processVarGroup(cls, cfg, codeBuilder, varGroup)
       for grp in varGroup
         for var in grp.vars
           if var.elementId == CodeElem::ELEM_VARIABLE
@@ -68,7 +68,7 @@ module XCTERazor
           end
         end
 
-        processVarGroup(dataModel, genClass, cfg, codeBuilder, grp.groups)
+        processVarGroup(cls, cfg, codeBuilder, grp.groups)
       end
     end
   end

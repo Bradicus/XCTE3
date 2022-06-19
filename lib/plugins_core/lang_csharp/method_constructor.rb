@@ -1,49 +1,48 @@
 ##
 
-# 
+#
 # Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a constructor for a class
- 
-require 'x_c_t_e_plugin.rb'
+
+require "x_c_t_e_plugin.rb"
 
 class XCTECSharp::MethodConstructor < XCTEPlugin
-  
   def initialize
     @name = "method_constructor"
     @language = "csharp"
     @category = XCTEPlugin::CAT_METHOD
   end
-  
+
   # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, fun, cfg, codeBuilder)
+  def get_definition(cls, fun, cfg, codeBuilder)
     codeBuilder.add("///")
     codeBuilder.add("/// Constructor")
     codeBuilder.add("///")
 
-    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
+    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
 
     codeBuilder.startClass(standardClassName + "()")
 
-    get_body(dataModel, genClass, fun, cfg, codeBuilder)
-        
+    get_body(cls, fun, cfg, codeBuilder)
+
     codeBuilder.endClass
   end
-  
-  def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-    codeBuilder.add("public " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + "();")
-  end
-  
-  # No deps
-  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
+
+  def get_declairation(cls, genFun, cfg, codeBuilder)
+    codeBuilder.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.model.name) + "();")
   end
 
-  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+  # No deps
+  def get_dependencies(cls, genFun, cfg, codeBuilder)
+  end
+
+  def get_body(cls, genFun, cfg, codeBuilder)
     conDef = String.new
     varArray = Array.new
-    dataModel.getAllVarsFor(varArray);
+    cls.model.getAllVarsFor(varArray)
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
@@ -67,7 +66,6 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
 
     return(conDef)
   end
-  
 end
 
 # Now register an instance of our plugin

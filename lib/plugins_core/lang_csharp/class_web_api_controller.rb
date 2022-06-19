@@ -3,101 +3,100 @@
 # Author:: Brad Ottoson
 #
 
-require 'plugins_core/lang_csharp/utils.rb'
-require 'plugins_core/lang_csharp/source_renderer_csharp.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_csharp/utils.rb"
+require "plugins_core/lang_csharp/source_renderer_csharp.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
   class ClassWebApiController < XCTEPlugin
-
     def initialize
       @name = "web_api_controller"
       @language = "csharp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(dataModel)
-      return Utils.instance.getStyledClassName(dataModel.name)
+    def getClassName(cls)
+      return Utils.instance.getStyledClassName(cls.model.name)
     end
-    
-    def genSourceFiles(dataModel, genClass, cfg)
+
+    def genSourceFiles(cls, cfg)
       srcFiles = Array.new
-    
+
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      codeBuilder.lfExtension = Utils.instance.getExtension('body')
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
-      
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      codeBuilder.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, cfg, codeBuilder)
+
       srcFiles << codeBuilder
-      
+
       return srcFiles
     end
-    
+
     # Returns the code for the content for this class
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, cfg, codeBuilder)
 
       # Add in any dependencies required by functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.get_dependencies(cls, fun, cfg, codeBuilder)
             else
-              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           end
         end
       end
 
-      Utils.instance.genUses(genClass.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
-      
-      classDec = dataModel.visibility + " class " + getClassName(dataModel)
+      Utils.instance.genUses(cls.uses, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
+
+      classDec = cls.model.visibility + " class " + getClassName(cls)
 
       classDec << " < ApiController"
-          
-      for par in (0..genClass.baseClasses.size)
-        if genClass.baseClasses[par] != nil
-          classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+
+      for par in (0..cls.baseClasses.size)
+        if cls.baseClasses[par] != nil
+          classDec << ", " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         end
       end
-      
-      codeBuilder.startClass(classDec)
-          
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
 
-      if (genClass.functions.length > 0)
+      codeBuilder.startClass(classDec)
+
+      varArray = Array.new
+      cls.model.getAllVarsFor(varArray)
+
+      if (cls.functions.length > 0)
         codeBuilder.add
       end
 
       # Generate code for functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.get_definition(cls, fun, cfg, codeBuilder)
             else
-              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
-          else  # Must be empty function
+          else # Must be empty function
             templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
             if templ != nil
-              templ.get_definition(dataModel, genClass, cfg, codeBuilder)
+              templ.get_definition(cls, cfg, codeBuilder)
             else
               #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
           end
         end
-      end  # class  + dataModel.name
+      end  # class  + cls.model.name
       codeBuilder.endClass
 
-      Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespaceList, codeBuilder)
     end
   end
 end

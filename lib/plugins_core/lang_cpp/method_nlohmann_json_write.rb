@@ -6,7 +6,6 @@
 # root directory
 #
 # This plugin creates a constructor for a class
-
 require "x_c_t_e_plugin.rb"
 require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
@@ -16,73 +15,62 @@ module XCTECpp
       @name = "method_nlohmann_json_write"
       @language = "cpp"
       @category = XCTEPlugin::CAT_METHOD
-      @standardClass
-      @standardClassType
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(dataModel, genClass, codeFun, rend)
-      getStandardClassInfo(dataModel, genClass, codeFun, rend)
+    def get_declaration(cls, codeFun, rend)
+      Utils.instance.getStandardClassInfo(cls)
 
       rend.add("static void write(nlohmann::json& json, const " +
-               @standardClassType + "& item);")
+               cls.standardClassType + "& item);")
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration_inline(dataModel, genClass, codeFun, rend)
-      getStandardClassInfo(dataModel, genClass, codeFun, rend)
+    def get_declaration_inline(cls)
+      Utils.instance.getStandardClassInfo(cls)
 
       rend.startFuction("static void write(nlohmann::json& json, const " +
-                        @standardClassType + "& item)")
-      codeStr << get_body(dataModel, genClass, codeFun, rend)
+                        cls.standardClassType + "& item)")
+      codeStr << get_body(cls)
       rend.endFunction
     end
 
-    #
-    def getStandardClassInfo(dataModel, genClass, codeFun, rend)
-      @standardClass = dataModel.findClass("standard")
+    def get_dependencies(cls, codeFun, rend)
+      cls.addInclude("", "json.hpp")
+      Utils.instance.getStandardClassInfo(cls)
 
-      if (@standardClass.namespaceList != nil)
-        ns = @standardClass.namespaceList.join("::") + "::"
-      else
-        ns = ""
-      end
-
-      @standardClassType = ns + Utils.instance.getStyledClassName(@standardClass.name)
-
-      if (@standardClass != nil)
-        genClass.addInclude(@standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(dataModel.name))
+      for bc in cls.standardClass.baseClasses
+        cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
       end
     end
 
-    def get_dependencies(dataModel, genClass, codeFun, rend)
-      genClass.addInclude("", "json.hpp")
-      getStandardClassInfo(dataModel, genClass, codeFun, rend)
-    end
-
-    def get_definition(dataModel, genClass, codeFun, rend)
+    def get_definition(cls, codeFun, rend)
       rend.add("/**")
       rend.add("* Writes this classes primitives to a json element")
       rend.add("*/")
 
       classDef = String.new
       classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " <<
-        Utils.instance.getStyledClassName(genClass.name) << " :: " << "write(nlohmann::json& json, const " +
-                                                                      @standardClassType + "& item)"
+        Utils.instance.getStyledClassName(cls.name) << " :: " << "write(nlohmann::json& json, const " +
+                                                                 cls.standardClassType + "& item)"
       rend.startClass(classDef)
 
-      get_body(dataModel, genClass, codeFun, rend)
+      get_body(cls, codeFun, rend)
 
       rend.endFunction
     end
 
-    def get_body(dataModel, genClass, codeFun, rend)
+    def get_body(cls, codeFun, rend)
       conDef = String.new
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      cls.model.getAllVarsFor(varArray)
+
+      for bc in cls.standardClass.baseClasses
+        rend.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::write(json, item);")
+      end
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
           curVarClass = Classes.findVarClass(var)
@@ -90,7 +78,11 @@ module XCTECpp
 
           if (Utils.instance.isPrimitive(var) || isEnum)
             if var.listType == nil
-              rend.add('json["' + curVarName + '"] = item.' + curVarName + ";")
+              if (var.vtype.downcase == "string")
+                rend.add("if (item." + curVarName + '.size() > 0) json["' + curVarName + '"] = item.' + curVarName + ";")
+              else
+                rend.add('json["' + curVarName + '"] = item.' + curVarName + ";")
+              end
             else
               rend.add('json["' + curVarName + '"] = nlohmann::json::array();')
               rend.startBlock("for (auto const& val: item." + curVarName + ")")
@@ -109,7 +101,11 @@ module XCTECpp
               rend.add()
               rend.startBlock("for (auto const& val: item." + curVarName + ")")
               rend.add("nlohmann::json newNode;")
-              rend.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, val);")
+              if (var.isSharedPointer)
+                rend.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, *val);")
+              else
+                rend.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, val);")
+              end
               rend.add(curVarName + "Node.push_back(newNode);")
               rend.endBlock
               rend.add('json["' + curVarName + '"] = ' + curVarName + "Node;")

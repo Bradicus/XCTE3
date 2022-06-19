@@ -20,31 +20,31 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
       codeBuilder.add("/// Save all components of this ")
       codeBuilder.add("///")
 
       codeBuilder.startFunction("public void Save()")
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, codeBuilder)
 
       codeBuilder.endFunction
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_declairation(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("void Save();")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System", "Exception")
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def get_dependencies(cls, genFun, cfg, codeBuilder)
+      cls.addUse("System", "Exception")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      cls.model.getAllVarsFor(varArray)
 
       codeBuilder.add("_conn.Open();")
 

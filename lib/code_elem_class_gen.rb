@@ -15,9 +15,10 @@ require "code_elem_use.rb"
 module CodeStructure
   class CodeElemClassGen < CodeElem
     attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
-                  :testNamespace, :testPath,
-                  :includes, :uses, :baseClasses, :language, :path, :varPrefix, :model,
-                  :dontModifyCode
+                  :testNamespace, :testPath, :templateParams,
+                  :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
+                  :dontModifyCode,
+                  :filePath, :name, :standardClass, :standardClassType, :customCode
     attr_reader :name
 
     def initialize(parentElem, model, isStatic)
@@ -31,11 +32,20 @@ module CodeStructure
       @uses = Array.new
       @functions = Array.new
       @baseClasses = Array.new
+      @interfaces = Array.new
       @namespaceList = Array.new
+      @templateParams = Array.new
       @varPrefix = ""
       @path = nil
       @model = model
       @dontModifyCode = isStatic
+
+      # Used by per lang instance of class
+      @name = nil
+      @filePath = nil
+      @standardClass = nil
+      @standardClassType = nil
+      @customCode = nil
     end
 
     def addInclude(iPath, iName, iType = nil)

@@ -33,38 +33,38 @@ class DataLoader
     }
 
     xmlDoc.root.elements.each("gen_class") { |genCXML|
-      genClass = CodeStructure::CodeElemClassGen.new(model, model, isStatic)
-      loadClassNode(genClass, genCXML, model)
-      genClass.model = model
-      Classes.list << genClass
-      model.classes << genClass
+      cls = CodeStructure::CodeElemClassGen.new(model, model, isStatic)
+      loadClassNode(cls, genCXML, model)
+      cls.model = model
+      Classes.list << cls
+      model.classes << cls
 
-      if genClass.interfaceNamespace != nil
-        intf = CodeStructure::CodeElemClassGen.new(genClass, model, isStatic)
-        intf.namespaceList = genClass.interfaceNamespace.split(".")
-        intf.path = genClass.interfacePath
-        intf.functions = genClass.functions
-        intf.language = genClass.language
+      if cls.interfaceNamespace != nil
+        intf = CodeStructure::CodeElemClassGen.new(cls, model, isStatic)
+        intf.namespaceList = cls.interfaceNamespace.split(".")
+        intf.path = cls.interfacePath
+        intf.functions = cls.functions
+        intf.language = cls.language
         intf.ctype = "interface"
-        intf.parentElem = genClass
+        intf.parentElem = cls
         intf.model = model
         Classes.list << intf
-        model.classes << genClass
+        model.classes << cls
       end
 
-      if genClass.testNamespace != nil
-        intf = CodeStructure::CodeElemClassGen.new(genClass, model, isStatic)
-        intf.namespaceList = genClass.testNamespace.split(".")
-        intf.path = genClass.testPath
-        intf.language = genClass.language
+      if cls.testNamespace != nil
+        intf = CodeStructure::CodeElemClassGen.new(cls, model, isStatic)
+        intf.namespaceList = cls.testNamespace.split(".")
+        intf.path = cls.testPath
+        intf.language = cls.language
         intf.ctype = "test_engine"
-        intf.parentElem = genClass
+        intf.parentElem = cls
         intf.model = model
         Classes.list << intf
-        model.classes << genClass
+        model.classes << cls
       end
 
-      #puts "Loaded clss node with function count " + genClass.functions.length.to_s
+      #puts "Loaded clss node with function count " + cls.functions.length.to_s
       #puts "classes count " + Classes.list.length.to_s
     }
   end
@@ -78,20 +78,28 @@ class DataLoader
     curVar.utype = varXML.attributes["utype"]
     curVar.visibility = curVar.attribOrDefault("visibility", curVar.visibility)
     curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
-    curVar.listType = varXML.attributes["collection"]
+    if (varXML.attributes.get_attribute("collection") != nil)
+      curVar.listType = varXML.attributes["collection"]
+    elsif (varXML.attributes.get_attribute("set") != nil)
+      curVar.listType = varXML.attributes["set"]
+    elsif (varXML.attributes.get_attribute("tpl") != nil)
+      curVar.templateType = varXML.attributes["tpl"]
+    end
     curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
-    curVar.isConst = varXML.attributes["const"]
-    curVar.isStatic = varXML.attributes["static"]
-    curVar.isPointer = varXML.attributes["pointer"]
+    curVar.isConst = varXML.attributes.get_attribute("const") != nil
+    curVar.isStatic = varXML.attributes.get_attribute("static") != nil
+    curVar.isPointer = varXML.attributes.get_attribute("pointer") != nil || varXML.attributes.get_attribute("ptr") != nil
+    curVar.isSharedPointer = varXML.attributes.get_attribute("sharedptr") != nil
+    curVar.init = varXML.attributes["init"]
     curVar.namespace = varXML.attributes["ns"]
-    curVar.isVirtual = curVar.findAttribute("virtual")
-    curVar.nullable = curVar.findAttribute("nullable")
+    curVar.isVirtual = curVar.findAttributeExists("virtual")
+    curVar.nullable = curVar.findAttributeExists("nullable")
     curVar.identity = varXML.attributes["identity"]
     curVar.isPrimary = varXML.attributes["pkey"] == "true"
     curVar.name = varXML.attributes["name"]
 
-    curVar.genGet = curVar.findAttribute("genGet")
-    curVar.genSet = curVar.findAttribute("genSet")
+    curVar.genGet = curVar.findAttributeExists("genGet")
+    curVar.genSet = curVar.findAttributeExists("genSet")
 
     curVar.comment = varXML.attributes["comm"]
     curVar.defaultValue = varXML.attributes["default"]
@@ -138,7 +146,7 @@ class DataLoader
     genC.path = genCXml.attributes["path"]
     genC.varPrefix = genCXml.attributes["var_prefix"]
 
-    genC.name = name
+    #genC.name
 
     genCXml.elements.each("base_class") { |bcXml|
       baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
@@ -146,7 +154,23 @@ class DataLoader
       if bcXml.attributes["namespace"] != nil
         baseClass.namespaceList = bcXml.attributes["namespace"].split(".")
       end
+
+      bcXml.elements.each("tpl_param") { |tplXml|
+        tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
+        tplParam.name = tplXml.attributes["name"]
+        baseClass.templateParams << tplParam
+      }
+
       genC.baseClasses << baseClass
+    }
+
+    genCXml.elements.each("interface") { |ifXml|
+      intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
+      intf.name = ifXml.attributes["name"]
+      if ifXml.attributes["namespace"] != nil
+        intf.namespaceList = ifXml.attributes["namespace"].split(".")
+      end
+      genC.interfaces << intf
     }
 
     genCXml.elements.each("function") { |funXml|
@@ -274,5 +298,9 @@ class DataLoader
     brk = CodeElemFormat.new("\n")
     brk.loadAttributes(brXML)
     section << brk
+  end
+
+  def self.loadList(str, separator)
+    return str.split(separator).map!(&:trim)
   end
 end

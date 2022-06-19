@@ -36,6 +36,19 @@ module CodeStructure
       @xmlFileName = ""
     end
 
+    #
+    # Finds a class that this model has by type name
+    #
+    def findClassByType(classType)
+      for cls in @classes
+        if cls.ctype == classType
+          return cls
+        end
+      end
+
+      return nil
+    end
+
     # Returns whether or not this class has an array variable
     def hasAnArray
       varArray = Array.new

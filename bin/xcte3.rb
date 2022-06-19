@@ -22,7 +22,6 @@ require "x_c_t_e_plugin.rb"
 require "user_settings.rb"
 
 require "run_settings"
-require "class_plan"
 require "project_plan"
 require "lang_profiles"
 require "data_loader"
@@ -68,18 +67,19 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
             projectPlan.models[langName] << dataModel
 
-            for genClass in dataModel.classes
-              if (genClass.language != nil)
-                language = XCTEPlugin::getLanguages()[genClass.language]
+            for cls in dataModel.classes
+              cls.model = dataModel
+              if (cls.language != nil)
+                language = XCTEPlugin::getLanguages()[cls.language]
               else
                 language = XCTEPlugin::getLanguages()[langName]
               end
 
-              if language.has_key?(genClass.ctype)
-                if genClass.path != nil
-                  newPath = pComponent.dest + "/" + genClass.path
+              if language.has_key?(cls.ctype)
+                if cls.path != nil
+                  newPath = pComponent.dest + "/" + cls.path
                 else
-                  newPath = pComponent.dest + "/" + genClass.namespaceList.join("/")
+                  newPath = pComponent.dest + "/" + cls.namespaceList.join("/")
                 end
 
                 if !File.directory?(newPath)
@@ -87,18 +87,15 @@ def processProjectComponentGroup(project, pcGroup, cfg)
                   #   puts "Creating folder: " + newPath
                 end
 
-                classPlan = ClassPlan.new
-
-                classPlan.model = dataModel
-                classPlan.class = genClass
-                classPlan.path = newPath
-                #         classPlan.className = language[genClass.ctype].getClassName(dataModel, genClass)
+                lClass = cls.clone()
+                lClass.filePath = newPath
+                lClass.name = language[lClass.ctype].getClassName(lClass)
 
                 if projectPlan.classPlans[language] == nil
                   projectPlan.classPlans[language] = Array.new
                 end
 
-                projectPlan.classPlans[language] << classPlan
+                projectPlan.classPlans[language] << lClass
               end
             end
           end
@@ -109,12 +106,24 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
   projectPlan.classPlans.each { |language, plans|
     for plan in plans
-      srcFiles = language[plan.class.ctype].genSourceFiles(plan.model, plan.class, cfg)
+      srcFiles = language[plan.ctype].genSourceFiles(plan, cfg)
 
       for srcFile in srcFiles
-        sFile = File.new(plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode: "w")
+        foundStart = false
+        foundEnd = false
+        fName = plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
 
-        puts "writing file: " + plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension
+        if (File.file?(fName))
+          plan.customCode = extractCustomCode(fName)
+
+          if (plan.customCode != nil && plan.customCode.strip.length > 0)
+            srcFile.lines = insertCustomCode(plan.customCode, srcFile)
+          end
+        end
+
+        sFile = File.new(plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode: "w")
+
+        puts "writing file: " + plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
         sFile << srcFile.getContents
         sFile.close
       end
@@ -124,6 +133,59 @@ def processProjectComponentGroup(project, pcGroup, cfg)
   for pSubgroup in pcGroup.subGroups
     processProjectComponentGroup(project, pSubgroup, cfg)
   end
+end
+
+def extractCustomCode(fName)
+  customCode = nil
+  foundStart = false
+  foundEnd = false
+  customCodeStart = "//+XCTE Custom Code Area"
+  customCodeEnd = "//-XCTE Custom Code Area"
+
+  File.open(fName).each_line do |line|
+    if (!foundStart)
+      if (line.include?(customCodeStart))
+        foundStart = true
+        customCode = ""
+      end
+    else
+      if (!foundEnd)
+        foundEnd = line.include?(customCodeEnd)
+        if (line.include?(customCodeEnd))
+          foundEnd = true
+        else
+          customCode += line
+        end
+      end
+    end
+  end
+
+  return customCode
+end
+
+def insertCustomCode(customCode, srcRend)
+  customCodeStart = "//+XCTE Custom Code Area"
+  customCodeEnd = "//-XCTE Custom Code Area"
+
+  finalLines = []
+  started = false
+  ended = false
+
+  srcRend.lines.each_with_index { |line, index|
+    if (!started && line.include?(customCodeStart))
+      started = true
+      finalLines << line
+    elsif (started && !ended)
+      if (line.include? customCodeEnd)
+        ended = true
+        finalLines << customCode + line
+      end
+    else
+      finalLines << line
+    end
+  }
+
+  return finalLines
 end
 
 codeRootDir = File.dirname(File.realpath(__FILE__))

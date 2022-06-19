@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem" >
+
+	<description>
+	Code Element
+	</description>
+				
+	<gen_class type="standard" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="elementId"		type="String" />
+		<var name="name"			type="String" />
+		<var name="displayName"		type="String" />
+		<var name="description"		type="String" />
+		<var name="visibility"		type="String" />
+		<var name="parentElem"		type="code elem" ptr="true" />
+		<var name="xmlElement"		type="XmlNode" ptr="true" />
+		<var name="osInclude"		type="String" set="List" init="true" comm="What os's this node is limited to" />
+		<var name="langInclude"		type="String" set="List" init="true" comm="What languages this node generates code in" />
+	</var_group>		
+	
+</model>

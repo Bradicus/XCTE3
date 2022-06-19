@@ -21,33 +21,33 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, cfg, codeBuilder)
+    def get_definition(cls, cfg, codeBuilder)
       codeBuilder.add("///")
       codeBuilder.add("/// Constructor")
       codeBuilder.add("///")
 
       codeBuilder.add("[TestMethod]")
-      codeBuilder.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + dataModel.name + " engine") + "()")
-      get_body(dataModel, genClass, cfg, codeBuilder)
+      codeBuilder.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.model.name + " engine") + "()")
+      get_body(cls, cfg, codeBuilder)
 
       codeBuilder.endFunction
     end
 
-    def get_dependencies(dataModel, genClass, cfg, codeBuilder)
-      genClass.addUse("System.Collections.Generic", "IEnumerable")
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
-      genClass.addUse("System.Configuration", "ConfigurationManager")
-      genClass.addUse("System", "Exception")
-      genClass.addUse("System.Transactions", "TransactionScope")
-      genClass.addUse("Microsoft.VisualStudio.TestTools.UnitTesting", "TestMethod")
-      genClass.addUse("XCTE.Foundation", Utils.instance.getStyledClassName("i " + dataModel.name + " engine"))
-      genClass.addUse("XCTE.Data", Utils.instance.getStyledClassName(dataModel.name + " engine"))
+    def get_dependencies(cls, cfg, codeBuilder)
+      cls.addUse("System.Collections.Generic", "IEnumerable")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
+      cls.addUse("System.Configuration", "ConfigurationManager")
+      cls.addUse("System", "Exception")
+      cls.addUse("System.Transactions", "TransactionScope")
+      cls.addUse("Microsoft.VisualStudio.TestTools.UnitTesting", "TestMethod")
+      cls.addUse("XCTE.Foundation", Utils.instance.getStyledClassName("i " + cls.model.name + " engine"))
+      cls.addUse("XCTE.Data", Utils.instance.getStyledClassName(cls.model.name + " engine"))
     end
 
-    def get_body(dataModel, genClass, cfg, codeBuilder)
-      stdClassName = Utils.instance.getStyledClassName(dataModel.name)
+    def get_body(cls, cfg, codeBuilder)
+      stdClassName = Utils.instance.getStyledClassName(cls.model.name)
 
-      codeBuilder.add(Utils.instance.getStyledClassName("i " + dataModel.name + " engine") + " intf = new " + Utils.instance.getStyledClassName(dataModel.name + " engine") + "();")
+      codeBuilder.add(Utils.instance.getStyledClassName("i " + cls.model.name + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.model.name + " engine") + "();")
       codeBuilder.add(stdClassName + " obj = new " + stdClassName + "();")
       codeBuilder.add
       codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
@@ -60,7 +60,7 @@ module XCTECSharp
       codeBuilder.add("conn.Open();")
 
       varArray = Array.new
-      dataModel.getNonIdentityVars(varArray)
+      cls.model.getNonIdentityVars(varArray)
 
       # # Generate class variables
       # for var in varArray
@@ -93,12 +93,12 @@ module XCTECSharp
       codeBuilder.endBlock
 
       # Generate code for functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.get_definition(cls, fun, cfg, codeBuilder)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -106,7 +106,7 @@ module XCTECSharp
             codeBuilder.add
           end
         end
-      end  # class  + dataModel.name
+      end  # class  + cls.model.name
     end
   end
 end

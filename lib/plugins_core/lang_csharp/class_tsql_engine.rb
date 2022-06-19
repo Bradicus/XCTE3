@@ -3,39 +3,38 @@
 # Author:: Brad Ottoson
 #
 
-require 'plugins_core/lang_csharp/utils.rb'
-require 'plugins_core/lang_csharp/source_renderer_csharp.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_csharp/utils.rb"
+require "plugins_core/lang_csharp/source_renderer_csharp.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
   class ClassTsqlEngine < XCTEPlugin
-
     def initialize
       @name = "tsql_engine"
       @language = "csharp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(dataModel, genClass)
-      return Utils.instance.getStyledClassName(dataModel.name + ' engine')
+    def getClassName(cls)
+      return Utils.instance.getStyledClassName(cls.model.name + " engine")
     end
 
-    def genSourceFiles(dataModel, genClass, cfg)
+    def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      genClass.setName(getClassName(dataModel, genClass))
+      cls.setName(getClassName(cls))
 
-      if genClass.interfaceNamespace != nil
-        genClass.addUse(genClass.interfaceNamespace, 'I' + dataModel.name + 'Engine')
+      if cls.interfaceNamespace != nil
+        cls.addUse(cls.interfaceNamespace, "I" + cls.model.name + "Engine")
       end
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = genClass.name
-      codeBuilder.lfExtension = Utils.instance.getExtension('body')
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
+      codeBuilder.lfName = cls.name
+      codeBuilder.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, cfg, codeBuilder)
 
       srcFiles << codeBuilder
 
@@ -43,21 +42,20 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, cfg, codeBuilder)
+      Utils.instance.genFunctionDependencies(cls, cfg, codeBuilder)
+      Utils.instance.genUses(cls.uses, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
 
-      Utils.instance.genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
-      Utils.instance.genUses(genClass.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
-
-      classDec = dataModel.visibility + " class " + genClass.name
+      classDec = cls.model.visibility + " class " + cls.name
 
       inheritsFrom = Array.new
 
-      for baseClass in genClass.baseClasses
+      for baseClass in cls.baseClasses
         inheritsFrom << baseClass.name
       end
-      if genClass.interfaceNamespace != nil
-        inheritsFrom << Utils.instance.getStyledClassName('i ' + dataModel.name + ' engine')
+      if cls.interfaceNamespace != nil
+        inheritsFrom << Utils.instance.getStyledClassName("i " + cls.model.name + " engine")
       end
 
       for par in (0..inheritsFrom.size)
@@ -70,11 +68,11 @@ module XCTECSharp
 
       codeBuilder.startClass(classDec)
 
-      Utils.instance.genFunctions(dataModel, genClass, codeBuilder)
+      Utils.instance.genFunctions(cls, codeBuilder)
 
       codeBuilder.endClass
 
-      Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespaceList, codeBuilder)
     end
   end
 end

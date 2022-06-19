@@ -5,9 +5,10 @@ class Classes
     return @@list
   end
 
-  def self.findClass(classPlugName)
+  def self.findClass(classType, classPlugName)
     for c in @@list
-      if (c.ctype == classPlugName)
+      puts c.ctype + " " + c.model.name
+      if (c.ctype == classType && c.model.name == classPlugName)
         return c
       end
     end

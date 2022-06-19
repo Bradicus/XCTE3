@@ -1,22 +1,22 @@
 ##
 
-# 
+#
 # Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes, 
+# This class generates source files for "standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_cpp/utils.rb'
-require 'plugins_core/lang_cpp/method_empty.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "plugins_core/lang_cpp/method_empty.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 module XCTECpp
   class EnumStandard < ClassBase
@@ -26,73 +26,75 @@ module XCTECpp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(dataModel, genClass)
-      return dataModel.name
-    end    
-    
-    def genSourceFiles(dataModel, genClass, cfg)
+    def getClassName(cls)
+      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
+    end
+
+    def getUnformattedClassName(cls)
+      return cls.model.name
+    end
+
+    def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      genClass.setName(getUnformattedClassName(dataModel, genClass)) 
-      
-      hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      hFile.lfExtension = Utils.instance.getExtension('header')
-      genHeaderComment(dataModel, genClass, cfg, hFile)
-      genHeader(dataModel, genClass, cfg, hFile)
-      
-      srcFiles << hFile
-      
-      return srcFiles
-    end  
+      cls.setName(getUnformattedClassName(cls))
 
-    def genHeaderComment(dataModel, genClass, cfg, hFile)
-    
-      hFile.add("/**")    
-      hFile.add("* @enum " + dataModel.name)
-      
+      hFile = SourceRendererCpp.new
+      hFile.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      hFile.lfExtension = Utils.instance.getExtension("header")
+      genHeaderComment(cls, cfg, hFile)
+      genHeader(cls, cfg, hFile)
+
+      srcFiles << hFile
+
+      return srcFiles
+    end
+
+    def genHeaderComment(cls, cfg, hFile)
+      hFile.add("/**")
+      hFile.add("* @enum " + cls.model.name)
+
       if (cfg.codeAuthor != nil)
         hFile.add("* @author " + cfg.codeAuthor)
       end
-          
+
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
         hFile.add("* " + cfg.codeCompany)
       end
-      
+
       if cfg.codeLicense != nil && cfg.codeLicense.size > 0
         hFile.add("*")
         hFile.add("* " + cfg.codeLicense)
       end
-          
+
       hFile.add("* ")
-      
-      if (dataModel.description != nil)
-        dataModel.description.each_line { |descLine|
+
+      if (cls.model.description != nil)
+        cls.model.description.each_line { |descLine|
           if descLine.strip.size > 0
             hFile.add("* " << descLine.strip)
           end
-        }      
-      end    
-      
+        }
+      end
+
       hFile.add("*/")
     end
 
     # Returns the code for the header for this class
-    def genHeader(dataModel, genClass, cfg, hFile)
-
-      if (genClass.namespaceList != nil)
-        hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
-        hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
+    def genHeader(cls, cfg, hFile)
+      if (cls.namespaceList != nil)
+        hFile.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
+        hFile.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
         hFile.add
       else
-        hFile.add("#ifndef _" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
-        hFile.add("#define _" + Utils.instance.getStyledClassName(dataModel.name) + "_H")
+        hFile.add("#ifndef _" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
+        hFile.add("#define _" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
         hFile.add
       end
 
       # Process namespace items
-      if genClass.namespaceList != nil
-        for nsItem in genClass.namespaceList
+      if cls.namespaceList != nil
+        for nsItem in cls.namespaceList
           hFile.startBlock("namespace " << nsItem)
         end
         hFile.add
@@ -101,25 +103,25 @@ module XCTECpp
       # Do automatic static array size declairations above class def
       varArray = Array.new
 
-      for vGrp in dataModel.groups
+      for vGrp in cls.model.groups
         CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
       end
 
-      classDec = "enum class " + Utils.instance.getStyledClassName(dataModel.name)
-      
+      classDec = "enum class " + Utils.instance.getStyledClassName(cls.model.name)
+
       hFile.startBlock(classDec)
-                  
+
       # Generate class variables
       varArray = Array.new
 
-      for vGrp in dataModel.groups
-      dataModel.getAllVarsFor(varArray)
+      for vGrp in cls.model.groups
+        cls.model.getAllVarsFor(varArray)
       end
 
       for i in 0..(varArray.length - 1)
-        var = varArray[i];
+        var = varArray[i]
         if var.elementId == CodeElem::ELEM_VARIABLE
-          hFile.add(Utils.instance.getStyledEnumName(var.name)          )
+          hFile.add(Utils.instance.getStyledEnumName(var.name))
           if (var.defaultValue != nil)
             hFile.sameLine(" = " + var.defaultValue)
           end
@@ -132,12 +134,12 @@ module XCTECpp
           hFile.add(var.formatText)
         end
       end
-      
+
       hFile.endBlock(";")
 
       # Process namespace items
-      if genClass.namespaceList != nil
-        genClass.namespaceList.reverse_each do |nsItem|
+      if cls.namespaceList != nil
+        cls.namespaceList.reverse_each do |nsItem|
           hFile.endBlock("  // namespace " << nsItem)
         end
         hFile.add

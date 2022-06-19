@@ -11,7 +11,7 @@
 module CodeStructure
   class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
-      :visibility, :isConst, :isStatic, :isPointer, :isVirtual, :passBy, :genSet, :genGet,
+      :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
       :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace
 
     def initialize(parentElem)
@@ -27,6 +27,8 @@ module CodeStructure
       @isConst = false
       @isStatic = false
       @isPointer = false
+      @isSharedPointer = false
+      @init = nil
       @namespace = nil
       @passBy = "value"
       @genSet = false

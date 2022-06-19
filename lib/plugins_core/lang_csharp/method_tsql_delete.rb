@@ -19,25 +19,25 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
       codeBuilder.add("/// Delete the record for the model with this id")
       codeBuilder.add("///")
 
-      identVar = dataModel.getIdentityVar()
+      identVar = cls.model.getIdentityVar()
 
       if (identVar)
         codeBuilder.startClass("public void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
                                ", SqlConnection conn, SqlTransaction trans = null)")
       end
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, codeBuilder)
 
       codeBuilder.endClass
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      identVar = dataModel.getIdentityVar()
+    def get_declairation(cls, genFun, cfg, codeBuilder)
+      identVar = cls.model.getIdentityVar()
 
       if (identVar)
         codeBuilder.add("void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
@@ -45,23 +45,23 @@ module XCTECSharp
       end
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def get_dependencies(cls, genFun, cfg, codeBuilder)
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
 
-      identVar = dataModel.getIdentityVar()
+      identVar = cls.model.getIdentityVar()
 
       if (identVar)
         identParamName = Utils.instance.getStyledVariableName(identVar.getParam())
 
-        dataModel.getAllVarsFor(varArray)
+        cls.model.getAllVarsFor(varArray)
 
-        codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) +
-                        " WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
+        codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(cls.model.name) +
+                        " WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
                         "] = @" + identParamName + '";')
 
         codeBuilder.add
@@ -75,7 +75,7 @@ module XCTECSharp
         codeBuilder.endBlock
         codeBuilder.endBlock
         codeBuilder.startBlock("catch(Exception e)")
-        codeBuilder.add('throw new Exception("Error deleting ' + dataModel.name + " with " +
+        codeBuilder.add('throw new Exception("Error deleting ' + cls.model.name + " with " +
                         identVar.name + ' = "' + " + " + identParamName + ", e);")
         codeBuilder.endBlock
       end

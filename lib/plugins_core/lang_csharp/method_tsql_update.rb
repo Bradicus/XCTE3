@@ -20,44 +20,44 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
       codeBuilder.add("/// Update the record for this model")
       codeBuilder.add("///")
 
       codeBuilder.startClass("public void Update(" +
-                             Utils.instance.getStyledClassName(dataModel.name) +
+                             Utils.instance.getStyledClassName(cls.model.name) +
                              " o, SqlConnection conn, SqlTransaction trans)")
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, codeBuilder)
 
       codeBuilder.endClass
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_declairation(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("void Update(" +
-                      Utils.instance.getStyledClassName(dataModel.name) +
+                      Utils.instance.getStyledClassName(cls.model.name) +
                       " o, SqlConnection conn, SqlTransaction trans);")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def get_dependencies(cls, genFun, cfg, codeBuilder)
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
 
-      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + " SET ")
+      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.model.name) + " SET ")
 
       codeBuilder.indent
 
       separater = ""
       varArray = Array.new
-      dataModel.getNonIdentityVars(varArray)
+      cls.model.getNonIdentityVars(varArray)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           codeBuilder.sameLine(separater)
-          codeBuilder.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
+          codeBuilder.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) +
                           "] = @" + Utils.instance.getStyledVariableName(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
           codeBuilder.add(var.formatText)
@@ -67,10 +67,10 @@ module XCTECSharp
 
       codeBuilder.unindent
 
-      identVar = dataModel.getIdentityVar()
+      identVar = cls.model.getIdentityVar()
 
       if identVar
-        codeBuilder.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
+        codeBuilder.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
                         "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
       end
 
@@ -81,16 +81,16 @@ module XCTECSharp
       codeBuilder.add("cmd.Transaction = trans;")
 
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      cls.model.getAllVarsFor(varArray)
 
-      Utils.instance.addParameters(varArray, genClass, codeBuilder)
+      Utils.instance.addParameters(varArray, cls, codeBuilder)
 
       codeBuilder.add
       codeBuilder.add("cmd.ExecuteScalar();")
       codeBuilder.endBlock
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error updating ' + dataModel.name + " with " +
+      codeBuilder.add('throw new Exception("Error updating ' + cls.model.name + " with " +
                       varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
       codeBuilder.endBlock(";")
     end

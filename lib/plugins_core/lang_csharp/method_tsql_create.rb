@@ -7,13 +7,12 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'code_name_styling.rb'
-require 'plugins_core/lang_csharp/utils.rb'
+require "x_c_t_e_plugin.rb"
+require "code_name_styling.rb"
+require "plugins_core/lang_csharp/utils.rb"
 
 module XCTECSharp
   class MethodTsqlCreate < XCTEPlugin
-
     def initialize
       @name = "method_tsql_create"
       @language = "csharp"
@@ -21,42 +20,42 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
       codeBuilder.add("/// Create new record for this model")
       codeBuilder.add("/// If you are not using ambient transactions, trans must be defined!")
       codeBuilder.add("///")
 
-      codeBuilder.startFunction("public void Create(" + 
-          XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + 
-          " o, SqlConnection conn, SqlTransaction trans = null)")
+      codeBuilder.startFunction("public void Create(" +
+                                XCTECSharp::Utils.instance.getStyledClassName(cls.model.name) +
+                                " o, SqlConnection conn, SqlTransaction trans = null)")
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, codeBuilder)
 
       codeBuilder.endFunction
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_declairation(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("void Create(" +
-          XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) +
-          " o, SqlConnection conn, SqlTransaction trans = null);")
+                      XCTECSharp::Utils.instance.getStyledClassName(cls.model.name) +
+                      " o, SqlConnection conn, SqlTransaction trans = null);")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse('System', 'Exception')
-      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
+    def get_dependencies(cls, genFun, cfg, codeBuilder)
+      cls.addUse("System", "Exception")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
-      dataModel.getNonIdentityVars(varArray)
+      cls.model.getNonIdentityVars(varArray)
 
-      codeBuilder.add('string sql = @"INSERT INTO ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + '(')
+      codeBuilder.add('string sql = @"INSERT INTO ' + XCTETSql::Utils.instance.getStyledClassName(cls.model.name) + "(")
 
       codeBuilder.indent
 
-      Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
+      Utils.instance.genVarList(varArray, codeBuilder, cls.varPrefix)
 
       codeBuilder.unindent
       codeBuilder.add(") VALUES (")
@@ -73,26 +72,25 @@ module XCTECSharp
       codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
       codeBuilder.add("cmd.Transaction = trans;")
 
-      Utils.instance.addNonIdentityParams(dataModel, genClass, codeBuilder)
+      Utils.instance.addNonIdentityParams(cls, codeBuilder)
 
       codeBuilder.add
 
-      identVar = dataModel.getIdentityVar();
+      identVar = cls.model.getIdentityVar()
 
       if identVar != nil
-        codeBuilder.add('var newId = cmd.ExecuteScalar();')
-        codeBuilder.add("o." + Utils.instance.getStyledVariableName(identVar) + 
-                        ' = Convert.To' + identVar.vtype + '(newId);')
+        codeBuilder.add("var newId = cmd.ExecuteScalar();")
+        codeBuilder.add("o." + Utils.instance.getStyledVariableName(identVar) +
+                        " = Convert.To" + identVar.vtype + "(newId);")
       end
 
       codeBuilder.endBlock
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error inserting ' + 
-          XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + ' into database", e);')
-      codeBuilder.endBlock(';')
+      codeBuilder.add('throw new Exception("Error inserting ' +
+                      XCTETSql::Utils.instance.getStyledClassName(cls.model.name) + ' into database", e);')
+      codeBuilder.endBlock(";")
     end
-
   end
 end
 

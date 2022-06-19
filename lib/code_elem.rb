@@ -1,16 +1,16 @@
 ##
 
-# 
+#
 # Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This class is the base class for all code elements
 
 class CodeElem
   attr_accessor :elementId, :xmlElement, :osInclude, :parentElem, :visibility,
-  :name, :displayName, :description
-  
+                :name, :displayName, :description
+
   ELEM_MODEL = "class"
   ELEM_CLASS_GEN = "class_gen"
   ELEM_HEADER = "header"
@@ -34,7 +34,7 @@ class CodeElem
 
   def initialize(parentElem = nil)
     @elementId
-    
+
     @osInclude = Array.new   # What os's this node is processed on
     @langInclude = Array.new # What languages this node generates code in
 
@@ -66,7 +66,7 @@ class CodeElem
     end
   end
 
-  # Find an attribute searching through parent elements if it doesn't exist 
+  # Find an attribute searching through parent elements if it doesn't exist
   # on this element
   def findAttribute(attribName)
     if @xmlElement.attributes[attribName] != nil
@@ -75,9 +75,23 @@ class CodeElem
       if @parentElem != nil
         return(@parentElem.findAttribute(attribName))
       end
-    end  
+    end
 
-    return nil  
+    return nil
+  end
+
+  # Find an attribute searching through parent elements if it doesn't exist
+  # on this element
+  def findAttributeExists(attribName)
+    if @xmlElement.attributes.get_attribute(attribName) != nil
+      return true
+    else
+      if @parentElem != nil
+        return(@parentElem.findAttributeExists(attribName))
+      end
+    end
+
+    return false
   end
 
   def attribOrDefault(attribName, default)
@@ -87,5 +101,4 @@ class CodeElem
 
     return default
   end
-  
 end

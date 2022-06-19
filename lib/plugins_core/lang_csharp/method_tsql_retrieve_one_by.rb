@@ -11,28 +11,28 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("/// <summary>")
       codeBuilder.add("/// Reads one result using the specified filter parameters")
       codeBuilder.add("/// </summary>")
-      codeBuilder.startFunction("public " + get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder))
+      codeBuilder.startFunction("public " + get_function_signature(cls, genFun, cfg, codeBuilder))
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, codeBuilder)
 
       codeBuilder.endFunction
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add(get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder) + ";")
+    def get_declairation(cls, genFun, cfg, codeBuilder)
+      codeBuilder.add(get_function_signature(cls, genFun, cfg, codeBuilder) + ";")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System.Collections.Generic", "IEnumerable")
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def get_dependencies(cls, genFun, cfg, codeBuilder)
+      cls.addUse("System.Collections.Generic", "IEnumerable")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder)
-      standardClassName = Utils.instance.getStyledClassName(dataModel.name)
+    def get_function_signature(cls, genFun, cfg, codeBuilder)
+      standardClassName = Utils.instance.getStyledClassName(cls.model.name)
 
       paramDec = Array.new
       paramNames = Array.new
@@ -46,24 +46,24 @@ module XCTECSharp
                "(" + paramDec.join(", ") + ", SqlConnection conn, SqlTransaction trans = null)"
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      cls.model.getAllVarsFor(varArray)
 
-      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
+      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
 
-      codeBuilder.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + "();")
+      codeBuilder.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(cls.model.name) + "();")
 
       codeBuilder.add('string sql = @"SELECT TOP 1 ')
 
       codeBuilder.indent
 
-      XCTECSharp::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
+      XCTECSharp::Utils.instance.genVarList(varArray, codeBuilder, cls.varPrefix)
 
       codeBuilder.unindent
 
-      codeBuilder.add("FROM " + dataModel.name)
+      codeBuilder.add("FROM " + cls.model.name)
       codeBuilder.add("WHERE ")
 
       codeBuilder.indent
@@ -71,7 +71,7 @@ module XCTECSharp
       whereItems = Array.new
       genFun.variableReferences.each() { |param|
         whereCondition = "[" +
-                         XCTETSql::Utils.instance.getStyledVariableName(param, genClass.varPrefix) +
+                         XCTETSql::Utils.instance.getStyledVariableName(param, cls.varPrefix) +
                          "] = @" + Utils.instance.getStyledVariableName(param.getParam())
 
         whereItems << whereCondition
@@ -98,14 +98,14 @@ module XCTECSharp
 
       codeBuilder.startBlock("while(results.Read())")
 
-      Utils.instance.genAssignResults(varArray, genClass, codeBuilder)
+      Utils.instance.genAssignResults(varArray, cls, codeBuilder)
 
       codeBuilder.endBlock
       codeBuilder.endBlock
 
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving one item from ' + dataModel.name + '", e);')
+      codeBuilder.add('throw new Exception("Error retrieving one item from ' + cls.model.name + '", e);')
       codeBuilder.endBlock(";")
 
       codeBuilder.add

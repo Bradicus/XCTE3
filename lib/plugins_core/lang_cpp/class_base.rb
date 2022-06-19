@@ -1,64 +1,60 @@
-
-require 'plugins_core/lang_cpp/utils.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "x_c_t_e_plugin.rb"
 
 # This class contains functions that may be usefull in any type of class
 module XCTECpp
-  class ClassBase < XCTEPlugin 
-
-    def genIfndef(dataModel, genClass, hFile)
-      if (genClass.namespaceList != nil)
-        hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + getStyledClassName(dataModel) + "_H")
-        hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + getStyledClassName(dataModel) + "_H")
+  class ClassBase < XCTEPlugin
+    def genIfndef(cls, hFile)
+      if (cls.namespaceList != nil)
+        hFile.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+        hFile.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
         hFile.add
       else
-        hFile.add("#ifndef _" + getStyledClassName(dataModel) + "_H")
-        hFile.add("#define _" + getStyledClassName(dataModel) + "_H")
+        hFile.add("#ifndef _" + cls.name + "_H")
+        hFile.add("#define _" + cls.name + "_H")
         hFile.add
       end
     end
 
-    def getStyledClassName(dataModel)
-      return Utils.instance.getStyledClassName(dataModel.name)
-    end
+    def genIncludes(cls, cfg, hFile)
+      addAutoIncludes(cls, cfg)
 
-    def genIncludes(dataModel, genClass, cfg, hFile)
-      addAutoIncludes(dataModel, genClass, cfg)
-
-        for inc in genClass.includes
-          if (inc.path.length > 0)
-            incPathAndName = inc.path + '/' + inc.name
-          else
-            incPathAndName = inc.name
-          end
-
-          if inc.itype == '<'
-            hFile.add("#include <" << incPathAndName << '>')
-          elsif inc.name.count(".") > 0
-            hFile.add('#include "' << incPathAndName << '"')
-          else
-            hFile.add('#include "' << incPathAndName << "." << Utils.instance.getExtension('header') << '"')
-          end
+      for inc in cls.includes
+        if (inc.path.length > 0)
+          incPathAndName = inc.path + "/" + inc.name
+        else
+          incPathAndName = inc.name
         end
-    end
 
-    def genUsings(dataModel, genClass, cfg, hFile)
-      for us in genClass.uses
-        hFile.add('using namespace ' + us.namespace.split('.').join("::") + ';')
+        if inc.itype == "<"
+          hFile.add("#include <" << incPathAndName << ">")
+        elsif inc.name.count(".") > 0
+          hFile.add('#include "' << incPathAndName << '"')
+        else
+          hFile.add('#include "' << incPathAndName << "." << Utils.instance.getExtension("header") << '"')
+        end
       end
     end
 
-    def addAutoIncludes(dataModel, genClass, cfg)
+    def genUsings(cls, cfg, hFile)
+      for us in cls.uses
+        hFile.add("using namespace " + us.namespace.split(".").join("::") + ";")
+      end
+    end
+
+    def addAutoIncludes(cls, cfg)
       varArray = Array.new
 
-      for vGrp in dataModel.groups
+      for vGrp in cls.model.groups
         CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
       end
 
       for var in varArray
-        varTypeMap = Utils.instance.getType(var.vtype)
-        if (varTypeMap != nil && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?)
-          genClass.addInclude(varTypeMap.autoInclude.path, varTypeMap.autoInclude.name, varTypeMap.autoInclude.itype)
+        if (var.respond_to? :vtype)
+          varTypeMap = Utils.instance.getType(var.vtype)
+          if (varTypeMap != nil && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?)
+            cls.addInclude(varTypeMap.autoInclude.path, varTypeMap.autoInclude.name, varTypeMap.autoInclude.itype)
+          end
         end
       end
     end

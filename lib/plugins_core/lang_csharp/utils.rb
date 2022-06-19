@@ -169,14 +169,14 @@ module XCTECSharp
       end
     end
 
-    def genFunctionDependencies(dataModel, genClass, cfg, codeBuilder)
+    def genFunctionDependencies(cls, cfg, codeBuilder)
       # Add in any dependencies required by functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.get_dependencies(cls, fun, cfg, codeBuilder)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -185,14 +185,14 @@ module XCTECSharp
       end
     end
 
-    def addNonIdentityParams(dataModel, genClass, codeBuilder)
+    def addNonIdentityParams(cls, codeBuilder)
       varArray = Array.new
-      dataModel.getNonIdentityVars(varArray)
+      cls.model.getNonIdentityVars(varArray)
 
-      addParameters(varArray, genClass, codeBuilder)
+      addParameters(varArray, cls, codeBuilder)
     end
 
-    def addParameters(varArray, genClass, codeBuilder)
+    def addParameters(varArray, cls, codeBuilder)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           codeBuilder.add('cmd.Parameters.AddWithValue("@' +
@@ -234,11 +234,11 @@ module XCTECSharp
       end
     end
 
-    def genAssignResults(varArray, genClass, codeBuilder)
+    def genAssignResults(varArray, cls, codeBuilder)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && isPrimitive(var)
           resultVal = 'results["' +
-                      XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) + '"]'
+                      XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) + '"]'
           objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
 
           if var.nullable
@@ -252,21 +252,21 @@ module XCTECSharp
       end
     end
 
-    def genFunctions(dataModel, genClass, codeBuilder)
+    def genFunctions(cls, codeBuilder)
       # Generate code for functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(dataModel, genClass, fun, nil, codeBuilder)
+              templ.get_definition(cls, fun, nil, codeBuilder)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           else # Must be empty function
             templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
             if templ != nil
-              templ.get_definition(dataModel, genClass, fun, nil, codeBuilder)
+              templ.get_definition(cls, fun, nil, codeBuilder)
             else
               #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
@@ -289,10 +289,6 @@ module XCTECSharp
         codeBuilder.endBlock(" // namespace " + namespaceList.join("."))
         codeBuilder.add
       end
-    end
-
-    def getStandardName(dataModel)
-      return self.getStyledClassName(dataModel.name)
     end
 
     def getLangugageProfile

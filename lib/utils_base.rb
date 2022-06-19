@@ -5,19 +5,22 @@
 #
 # This class contains utility functions useful for all languages.
 
-require 'lang_profile.rb'
+require "lang_profile.rb"
 
 class UtilsBase
-
   def initialize(langName)
     @langProfile = LangProfiles.instance.profiles[langName]
+
+    if (@langProfile == nil)
+      puts("Profile " + langName + " not found")
+    end
   end
-  
+
   # Returns true if this is a primitive data type
   def isPrimitive(var)
     return @langProfile.isPrimitive(var)
   end
-  
+
   # Return the language type based on the generic type
   def getTypeName(var)
     if (var.vtype != nil)
@@ -26,14 +29,14 @@ class UtilsBase
       return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
     end
   end
-  
+
   # Return the language type based on the generic type
   def getType(gType)
     return @langProfile.getType(gType)
   end
 
   # Returns the version of this name styled for this language
-  def getStyledVariableName(var, prefix = '', postfix = '')
+  def getStyledVariableName(var, prefix = "", postfix = "")
     return CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
   end
 
@@ -54,10 +57,9 @@ class UtilsBase
   def getStyledFileName(fileName)
     return CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
   end
-  
+
   # Get the extension for a file type
   def getExtension(eType)
     return @langProfile.getExtension(eType)
   end
-
 end
