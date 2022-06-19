@@ -36,6 +36,7 @@ class DataLoader
       cls = CodeStructure::CodeElemClassGen.new(model, model, isStatic)
       loadClassNode(cls, genCXML, model)
       cls.model = model
+      cls.xmlElement = genCXML
       Classes.list << cls
       model.classes << cls
 

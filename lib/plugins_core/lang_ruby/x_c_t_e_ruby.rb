@@ -8,5 +8,4 @@
 # Declaration of the XCTERuby module
 
 module XCTERuby
-
 end

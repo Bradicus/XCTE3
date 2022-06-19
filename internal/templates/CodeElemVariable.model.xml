@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model name="code elem variable">
 
-	<gen_class type="standard" namespace="xcte" >
+	<gen_class type="standard" >
 		<description>
 			This class stores information on variables in a model.
 		</description>
