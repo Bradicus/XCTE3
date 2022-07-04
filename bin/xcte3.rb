@@ -52,7 +52,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
           pn = Pathname.new(path)
 
           dataModel = CodeStructure::CodeElemModel.new
-          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic)
+          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic, pComponent)
 
           for langName in pComponent.languages
             language = XCTEPlugin::getLanguages()[langName]
@@ -121,9 +121,9 @@ def processProjectComponentGroup(project, pcGroup, cfg)
           end
         end
 
-        sFile = File.new(plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode: "w")
+        sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
 
-        puts "writing file: " + plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
+        puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
         sFile << srcFile.getContents
         sFile.close
       end

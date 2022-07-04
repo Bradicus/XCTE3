@@ -237,6 +237,8 @@ module XCTECpp
       if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
         cls.addInclude(cls.standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(cls.model.name))
       end
+
+      return cls.standardClass
     end
   end
 end

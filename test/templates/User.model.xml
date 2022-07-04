@@ -4,18 +4,18 @@
 	<description>
 	</description>
 				
-	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" >
+	<gen_class type="standard" namespace="XCTE.Base.Model" path="XCTE.Base/Model" >
 		<use name="System.Collections.Generic" />
 		<function name="method_constructor" />
 		<function name="method_equality_assign" />
 	</gen_class>
 				
-	<gen_class type="ef_configuration" namespace="XCTE.Data" path="XCTE.Data" >
+	<gen_class type="ef_configuration" namespace="XCTE.Base.DB" path="XCTE.Base/DB" >
 		<use name="System.Collections.Generic" />
 		<function name="method_ef_configuration" />
 	</gen_class>
 				
-	<gen_class type="web_api_controller" namespace="XCTE.API" base_class="ApiController" path="XCTE.API" >
+	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
 				

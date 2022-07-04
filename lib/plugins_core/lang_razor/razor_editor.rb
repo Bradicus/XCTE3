@@ -42,8 +42,7 @@ module XCTERazor
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@Model " + cls.namespaceList.join(".") + "." +
-                      XCTECSharp::Utils.instance.getStandardName(cls.model))
+      codeBuilder.add("@Model " + XCTECSharp::Utils.instance.getClassTypeName(cls))
       codeBuilder.add
       codeBuilder.add("<form>")
       codeBuilder.indent

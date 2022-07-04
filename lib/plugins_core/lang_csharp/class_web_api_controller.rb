@@ -26,7 +26,7 @@ module XCTECSharp
       srcFiles = Array.new
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name + "Controller")
       codeBuilder.lfExtension = Utils.instance.getExtension("body")
       genFileContent(cls, cfg, codeBuilder)
 
@@ -55,7 +55,7 @@ module XCTECSharp
       Utils.instance.genUses(cls.uses, codeBuilder)
       Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
 
-      classDec = cls.model.visibility + " class " + getClassName(cls)
+      classDec = cls.model.visibility + " class " + getClassName(cls) + "Controller"
 
       classDec << " < ApiController"
 

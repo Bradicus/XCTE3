@@ -1,0 +1,5 @@
+<project>
+  <template_dir path="internal/templates" dest="./internal/gen" languages="ruby" static_code="true" />
+  
+  <custom_lang_profiles path="lang_profiles" />
+</project>

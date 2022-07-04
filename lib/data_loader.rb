@@ -9,7 +9,7 @@ class DataLoader
 
   ##
   # Loads an XML class definition and stores it in this object
-  def self.loadXMLClassFile(model, fName, isStatic)
+  def self.loadXMLClassFile(model, fName, isStatic, pComponent)
     file = File.new(fName)
     model.xmlFileName = fName
 
@@ -34,7 +34,7 @@ class DataLoader
 
     xmlDoc.root.elements.each("gen_class") { |genCXML|
       cls = CodeStructure::CodeElemClassGen.new(model, model, isStatic)
-      loadClassNode(cls, genCXML, model)
+      loadClassNode(cls, genCXML, model, pComponent)
       cls.model = model
       cls.xmlElement = genCXML
       Classes.list << cls
@@ -134,11 +134,9 @@ class DataLoader
     end
   end
 
-  def self.loadClassNode(genC, genCXml, model)
+  def self.loadClassNode(genC, genCXml, model, pComponent)
     genC.ctype = genCXml.attributes["type"]
-    if (genCXml.attributes["namespace"] != nil)
-      genC.namespaceList = genCXml.attributes["namespace"].split(".")
-    end
+    genC.namespaceList = loadNamespaces(genCXml)
     genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
     genC.interfacePath = genCXml.attributes["interface_path"]
     genC.testNamespace = genCXml.attributes["test_namespace"]
@@ -147,14 +145,17 @@ class DataLoader
     genC.path = genCXml.attributes["path"]
     genC.varPrefix = genCXml.attributes["var_prefix"]
 
+    # Add base namespace to class namespace lists
+    if (pComponent.namespaceList.size() > 0)
+      genC.namespaceList = pComponent.namespaceList + genC.namespaceList
+    end
+
     #genC.name
 
     genCXml.elements.each("base_class") { |bcXml|
       baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
       baseClass.name = bcXml.attributes["name"]
-      if bcXml.attributes["namespace"] != nil
-        baseClass.namespaceList = bcXml.attributes["namespace"].split(".")
-      end
+      baseClass.namespaceList = loadNamespaces(bcXml)
 
       bcXml.elements.each("tpl_param") { |tplXml|
         tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
@@ -168,9 +169,7 @@ class DataLoader
     genCXml.elements.each("interface") { |ifXml|
       intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
       intf.name = ifXml.attributes["name"]
-      if ifXml.attributes["namespace"] != nil
-        intf.namespaceList = ifXml.attributes["namespace"].split(".")
-      end
+      intf.namespaceList = loadNamespaces(ifXml)
       genC.interfaces << intf
     }
 
@@ -292,6 +291,19 @@ class DataLoader
     comNode = CodeElemComment.new(parXML.attributes["text"])
     comNode.loadAttributes(parXML)
     section << comNode
+  end
+
+  # Load a list of namespaces on a node
+  def self.loadNamespaces(xml)
+    if (xml.attributes["namespace"] != nil)
+      return xml.attributes["namespace"].split(".")
+    end
+
+    if (xml.attributes["ns"] != nil)
+      return xml.attributes["ns"].split(".")
+    end
+
+    return Array.new
   end
 
   # Loads a br format element from an XML br node

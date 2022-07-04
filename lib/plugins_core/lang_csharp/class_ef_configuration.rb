@@ -18,6 +18,10 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
+    def getClassName(cls)
+      return Utils.instance.getStyledClassName(cls.model.name)
+    end
+
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 

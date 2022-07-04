@@ -5,7 +5,7 @@
 	Regular unspecialized ruby class
 	</description>
 				
-	<gen_class type="xcte_class_plugin" lang="ruby" >
+	<gen_class type="xcte_class_plugin" ns="XCTEJava" path="XCTEJava" lang="java" >
 	</gen_class>	
 	
 </model>

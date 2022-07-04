@@ -7,22 +7,21 @@
 #
 # This class stores data for the project level
 
-require 'code_elem.rb'
-require 'code_elem_model.rb'
-require 'code_elem_header.rb'
-require 'code_elem_template_directory.rb'
-require 'code_elem_build_type.rb'
-require 'code_elem_build_option.rb'
-require 'code_elem_project_component_group.rb'
+require "code_elem.rb"
+require "code_elem_model.rb"
+require "code_elem_header.rb"
+require "code_elem_template_directory.rb"
+require "code_elem_build_type.rb"
+require "code_elem_build_option.rb"
+require "code_elem_project_component_group.rb"
 
-require 'rexml/document'
+require "rexml/document"
 
 module CodeStructure
   class ElemProject < CodeElem
     attr_accessor :classType, :includes, :parentsList,
       :variableSection, :functionSection, :componentGroup, :buildType,
       :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths
-
 
     def initialize
       @elementId = CodeElem::ELEM_PROJECT
@@ -45,22 +44,20 @@ module CodeStructure
 
       @name = xmlDoc.root.attributes["name"]
       if @dest == nil
-        @dest = '.'
+        @dest = "."
       end
       @buildType = xmlDoc.root.attributes["build_type"]
 
       @xmlElement = xmlDoc.root
 
       xmlDoc.elements.each("project") { |prj|
-        loadComponentGroup(@componentGroup, prj);
+        loadComponentGroup(@componentGroup, prj)
       }
-
     end
 
     def loadComponentGroup(groupNode, xmlGroup)
-
       groupNode.name = xmlGroup.attributes["name"]
-      
+
       if (xmlGroup.attributes["case"] != nil)
         groupNode.case = xmlGroup.attributes["case"]
       end
@@ -78,9 +75,9 @@ module CodeStructure
       }
 
       xmlGroup.elements.each("custom_lang_profiles") { |langProf|
-        @langProfilePaths << langProf.attributes['path']
+        @langProfilePaths << langProf.attributes["path"]
       }
-    
+
       xmlGroup.elements.each("CLASS") { |cclass|
         newClass = CodeElemClassGen.new(this)
         loadClassNode(newClass, cclass)
@@ -101,7 +98,7 @@ module CodeStructure
         loadComponentGroup(newCGroup, cgroup)
         groupNode.subGroups << newCGroup
 
-       # puts "Loaded component group: " << newCGroup.name << "\n"
+        # puts "Loaded component group: " << newCGroup.name << "\n"
       }
 
       xmlGroup.elements.each("INCLUDE_DIRS") { |inc_d|
@@ -128,7 +125,6 @@ module CodeStructure
           buildTypes << newBT
         }
       }
-
     end
 
     def loadClassNode(cNode, cNodeXML)
@@ -149,13 +145,17 @@ module CodeStructure
     def loadTemplateNode(tNode, tNodeXml)
       tNode.path = tNodeXml.attributes["path"]
       tNode.dest = tNodeXml.attributes["dest"]
-      
-            if tNode.dest == nil
-              tNode.dest = '.'
-            end
-            
+
+      if tNode.dest == nil
+        tNode.dest = "."
+      end
+
       tNode.isStatic = (tNodeXml.attributes["static_code"] == true)
       tNode.languages = tNodeXml.attributes["languages"].split(" ")
+
+      if (tNodeXml.attributes["base_namespace"] != nil)
+        tNode.namespaceList = tNodeXml.attributes["base_namespace"].split(".")
+      end
       puts "template node loaded with path"
     end
 
@@ -165,6 +165,5 @@ module CodeStructure
         btNode.buildOptions << newOpt
       }
     end
-    
   end
 end

@@ -37,35 +37,35 @@ module XCTERuby
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      codeBuilder = SourceRendererRuby.new
-      codeBuilder.lfName = cls.name
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
-      genFileComment(cls, cfg, codeBuilder)
-      genFileContent(cls, cfg, codeBuilder)
+      bld = SourceRendererRuby.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileComment(cls, cfg, bld)
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
-    def genFileComment(cls, cfg, codeBuilder)
-      codeBuilder.add("##")
-      codeBuilder.add("# Class:: " + cls.name)
+    def genFileComment(cls, cfg, bld)
+      bld.add("##")
+      bld.add("# Class:: " + cls.name)
 
       if cfg.codeAuthor != nil
-        codeBuilder.add("# Author:: " + cfg.codeAuthor)
+        bld.add("# Author:: " + cfg.codeAuthor)
       end
 
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        codeBuilder.add("# " + cfg.codeCompany)
+        bld.add("# " + cfg.codeCompany)
       end
 
       if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        codeBuilder.add("#")
-        codeBuilder.add("# License:: " + cfg.codeLicense)
+        bld.add("#")
+        bld.add("# License:: " + cfg.codeLicense)
       end
 
-      codeBuilder.add("#")
+      bld.add("#")
 
       if (cls.description != nil)
         cls.description.each_line { |descLine|
@@ -77,107 +77,148 @@ module XCTERuby
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
       for inc in cls.includes
-        codeBuilder.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
+        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
       end
 
       if !cls.includes.empty?
-        codeBuilder.add
+        bld.add
       end
 
-      codeBuilder.startClass("class XCTERuby::Class" + Utils.instance.getStyledClassName(cls.model.name) + " < XCTEPlugin")
+      # Process namespace items
+      if cls.namespaceList != nil
+        for nsItem in cls.namespaceList
+          bld.startBlock("module " << nsItem)
+        end
+      end
 
-      codeBuilder.startFunction("def initialize")
-      codeBuilder.add("Utils.instance.init")
-      codeBuilder.add
-      codeBuilder.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.model.name) + '"')
-      codeBuilder.add('@language = "' + cls.xmlElement.attributes["lang"] + '"')
-      codeBuilder.add("@category = XCTEPlugin::CAT_CLASS")
+      bld.startClass("class " + getClassName(cls) + " < XCTEPlugin")
+
+      bld.startFunction("def initialize")
+      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.model.name) + '"')
+      bld.add('@language = "' + cls.xmlElement.attributes["lang"] + '"')
+      bld.add("@category = XCTEPlugin::CAT_CLASS")
       if cfg.codeAuthor
-        codeBuilder.add('@author = "' + cfg.codeAuthor + '"')
+        bld.add('@author = "' + cfg.codeAuthor + '"')
       end
-      codeBuilder.endFunction
-      codeBuilder.add
+      bld.endFunction
+      bld.add
 
-      codeBuilder.startFunction("def genSourceFiles(cls, cfg)")
-      codeBuilder.add("srcFiles = Array.new")
-      codeBuilder.add
-      codeBuilder.add("codeBuilder = SourceRendererRuby.new")
-      codeBuilder.add("codeBuilder.lfName = cls.name")
-      codeBuilder.add("codeBuilder.lfExtension = Utils.instance.getExtension('body')")
-      codeBuilder.add("genRubyFileComment(cls, cfg, codeBuilder)")
-      codeBuilder.add("genRubyFileContent(cls, cfg, codeBuilder)")
-      codeBuilder.add
-      codeBuilder.add("srcFiles << rubyFile")
-      codeBuilder.add
-      codeBuilder.add("return srcFiles")
-      codeBuilder.endFunction
-      codeBuilder.add
+      bld.startFunction("getClassName(cls)")
+      bld.add("return Utils.instance.getStyledClassName(getUnformattedClassName(cls))")
+      bld.endFunction
 
-      codeBuilder.add("# Returns the code for the content for this class")
-      codeBuilder.startFunction("def genFileContent(cls, cfg, codeBuilder)")
-      codeBuilder.add
-      codeBuilder.startBlock("for inc in cls.includesList")
-      codeBuilder.add('codeBuilder.add("require \'" + inc.path + inc.name + "." + Utils.instance.getExtension(\'body\') + "\'")')
-      codeBuilder.endBlock
-      codeBuilder.add
-      codeBuilder.startBlock("if !cls.includesList.empty?")
-      codeBuilder.add("codeBuilder.add")
-      codeBuilder.endBlock
-      codeBuilder.add
+      bld.startFunction("getUnformattedClassName(cls)")
+      bld.add("return cls.model.name")
+      bld.endFunction
 
-      codeBuilder.add("varArray = Array.new")
-      codeBuilder.add("cls.getAllVarsFor(varArray);")
+      bld.startFunction("def genSourceFiles(cls, cfg)")
+      bld.add("srcFiles = Array.new")
+      bld.add
+      bld.add("bld = SourceRendererRuby.new")
+      bld.add("bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))")
+      bld.add("bld.lfExtension = Utils.instance.getExtension('body')")
+      bld.add("genRubyFileComment(cls, cfg, bld)")
+      bld.add("genRubyFileContent(cls, cfg, bld)")
+      bld.add
+      bld.add("srcFiles << rubyFile")
+      bld.add
+      bld.add("return srcFiles")
+      bld.endFunction
+      bld.add
 
-      codeBuilder.startBlock("if cls.hasAnArray")
-      codeBuilder.add("codeBuilder.add  # If we declaired array size variables add a seperator")
-      codeBuilder.endBlock
+      bld.add("# Returns the code for the content for this class")
+      bld.startFunction("def genFileContent(cls, cfg, bld)")
+      bld.add
+      bld.startBlock("for inc in cls.includesList")
+      bld.add('bld.add("require \'" + inc.path + inc.name + "." + Utils.instance.getExtension(\'body\') + "\'")')
+      bld.endBlock
+      bld.add
+      bld.startBlock("if !cls.includesList.empty?")
+      bld.add("bld.add")
+      bld.endBlock
+      bld.add
 
-      codeBuilder.add("# Generate class variables")
-      codeBuilder.add('codeBuilder.add("    # -- Variables --")')
+      bld.startBlock("if cls.hasAnArray")
+      bld.add("bld.add  # If we declaired array size variables add a seperator")
+      bld.endBlock
 
-      codeBuilder.startBlock("for var in varArray")
-      codeBuilder.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
-      codeBuilder.add('codeBuilder.add("    " + Utils.instance.getVarDec(var))')
-      codeBuilder.midBlock("elsif var.elementId == CodeElem::ELEM_COMMENT")
-      codeBuilder.add('codeBuilder.sameLine("    " +  Utils.instance.getComment(var))')
-      codeBuilder.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
-      codeBuilder.add("codeBuilder.add(var.formatText)")
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.add("# Generate class variables")
+      bld.add('bld.add("    # -- Variables --")')
 
-      codeBuilder.add("codeBuilder.add")
+      bld.startBlock("for group in vGroup.groups")
+      bld.add("process_var_group(cls, cfg, bld, group)")
+      bld.endBlock
 
-      codeBuilder.add("# Generate code for functions")
-      codeBuilder.startBlock("for fun in cls.functionSection")
-      codeBuilder.startBlock("if fun.elementId == CodeElem::ELEM_FUNCTION")
-      codeBuilder.startBlock("if fun.isTemplate")
-      codeBuilder.add('templ = XCTEPlugin::findMethodPlugin("ruby", fun.name)')
-      codeBuilder.add("if templ != nil")
-      codeBuilder.iadd(1, "codeBuilder.add(templ.get_definition(cls, cfg))")
-      codeBuilder.add("else")
-      codeBuilder.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: java'")
-      codeBuilder.add("end")
-      codeBuilder.midBlock("else  # Must be empty function")
-      codeBuilder.add('templ = XCTEPlugin::findMethodPlugin("ruby", "method_empty")')
-      codeBuilder.startBlock("if templ != nil")
-      codeBuilder.add("codeBuilder.add(templ.get_definition(fun, cfg))")
-      codeBuilder.midBlock("else")
-      codeBuilder.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: java'")
-      codeBuilder.endBlock
-      codeBuilder.endBlock
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.add("bld.add")
 
-      codeBuilder.add("end  # class  + cls.name")
-      codeBuilder.add
-      codeBuilder.endBlock
+      bld.add("# Generate code for functions")
 
-      codeBuilder.endBlock
-      codeBuilder.add
+      bld.startBlock("for fun in cls.functionSection")
+      bld.add("process_function(cls, cfg, bld, fun)")
+      bld.endBlock
 
-      codeBuilder.add("XCTEPlugin::registerPlugin(XCTERuby::Class" + cls.name + " < XCTEPlugin.new)")
+      bld.add
+
+      bld.endFunction
+      bld.add
+
+      bld.add("# process variable group")
+      bld.startFunction("def process_var_group(cls, cfg, bld, vGroup)")
+      bld.startBlock("for var in vGroup.vars")
+      bld.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
+      bld.add('bld.add("    " + Utils.instance.getVarDec(var))')
+      bld.midBlock("elsif var.elementId == CodeElem::ELEM_COMMENT")
+      bld.add('bld.sameLine("    " +  Utils.instance.getComment(var))')
+      bld.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
+      bld.add("bld.add(var.formatText)")
+      bld.endBlock
+      bld.startBlock("for group in vGroup.groups")
+      bld.add("process_var_group(cls, cfg, bld, group)")
+      bld.endBlock
+      bld.endBlock
+      bld.endFunction()
+
+      bld.add
+
+      bld.startFunction("def process_function(cls, cfg, bld, fun)")
+      bld.startBlock("if fun.elementId == CodeElem::ELEM_FUNCTION")
+      bld.startBlock("if fun.isTemplate")
+      bld.add('templ = XCTEPlugin::findMethodPlugin("' + cls.xmlElement.attributes["lang"] + '", fun.name)')
+      bld.add("if templ != nil")
+      bld.iadd(1, "bld.add(templ.get_definition(cls, cfg))")
+      bld.add("else")
+      bld.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: '" + cls.xmlElement.attributes["lang"])
+      bld.add("end")
+      bld.midBlock("else  # Must be empty function")
+      bld.add('templ = XCTEPlugin::findMethodPlugin("' + cls.xmlElement.attributes["lang"] + '", "method_empty")')
+      bld.startBlock("if templ != nil")
+      bld.add("bld.add(templ.get_definition(fun, cfg))")
+      bld.midBlock("else")
+      bld.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: '" + cls.xmlElement.attributes["lang"])
+      bld.endBlock
+      bld.endBlock
+      bld.endBlock
+      bld.endFunction
+      bld.endBlock
+
+      # Process namespace items
+      if cls.namespaceList != nil
+        for nsItem in cls.namespaceList
+          bld.endBlock
+        end
+      end
+
+      bld.add
+
+      prefix = cls.namespaceList.join("::")
+
+      if (prefix.size > 0)
+        prefix += "::"
+      end
+
+      bld.add("XCTEPlugin::registerPlugin(" + prefix + getClassName(cls) + ".new)")
     end
   end
 end

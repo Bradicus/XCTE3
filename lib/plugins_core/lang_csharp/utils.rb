@@ -294,5 +294,46 @@ module XCTECSharp
     def getLangugageProfile
       return @langProfile
     end
+
+    def getClassTypeName(cls)
+      nsPrefix = ""
+      if cls.namespaceList.length > 0
+        nsPrefix = cls.namespaceList.join(".") + "."
+      end
+
+      baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
+      baseTypeName = nsPrefix + baseTypeName
+
+      if (cls.templateParams.length > 0)
+        allParams = Array.new
+
+        for param in cls.templateParams
+          allParams.push(CodeNameStyling.getStyled(param.name, @langProfile.classNameStyle))
+        end
+
+        baseTypeName += "<" + allParams.join(", ") + ">"
+      end
+
+      return baseTypeName
+    end
+
+    # Retrieve the standard version of this model's class
+    def getStandardClassInfo(cls)
+      cls.standardClass = cls.model.findClassByType("standard")
+
+      if (cls.standardClass.namespaceList != nil)
+        ns = cls.standardClass.namespaceList.join(".") + "."
+      else
+        ns = ""
+      end
+
+      cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.model.name)
+
+      if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
+        cls.addInclude(cls.standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(cls.model.name))
+      end
+
+      return cls.standardClass
+    end
   end
 end
