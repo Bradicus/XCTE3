@@ -7,12 +7,13 @@
 #
 # This class renders php code
 
-require "source_renderer_brace_delim.rb"
+require "source_renderer.rb"
 
-class SourceRendererTypescript < SourceRendererBraceDelim
+class SourceRendererHtml < SourceRenderer
   def initialize()
     super
 
-    @hangingFunctionBraces = true
+    @blockDelimOpen = ""
+    @blockDelimClose = ""
   end
 end

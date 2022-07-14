@@ -105,37 +105,48 @@ module XCTERuby
       bld.endFunction
       bld.add
 
-      bld.startFunction("getClassName(cls)")
+      bld.startFunction("def getClassName(cls)")
       bld.add("return Utils.instance.getStyledClassName(getUnformattedClassName(cls))")
       bld.endFunction
 
-      bld.startFunction("getUnformattedClassName(cls)")
+      bld.add
+
+      bld.startFunction("def getUnformattedClassName(cls)")
       bld.add("return cls.model.name")
       bld.endFunction
+
+      bld.add
 
       bld.startFunction("def genSourceFiles(cls, cfg)")
       bld.add("srcFiles = Array.new")
       bld.add
-      bld.add("bld = SourceRendererRuby.new")
+      bld.add("bld = SourceRenderer" +
+              CodeNameStyling.getStyled(cls.xmlElement.attributes["lang"], "PASCAL_CASE") + ".new")
       bld.add("bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))")
       bld.add("bld.lfExtension = Utils.instance.getExtension('body')")
-      bld.add("genRubyFileComment(cls, cfg, bld)")
-      bld.add("genRubyFileContent(cls, cfg, bld)")
+      bld.add("genFileComment(cls, cfg, bld)")
+      bld.add("genFileContent(cls, cfg, bld)")
       bld.add
-      bld.add("srcFiles << rubyFile")
+      bld.add("srcFiles << bld")
       bld.add
       bld.add("return srcFiles")
       bld.endFunction
       bld.add
 
       bld.add("# Returns the code for the content for this class")
+      bld.startFunction("def genFileComment(cls, cfg, bld)")
+      bld.add
+      bld.endFunction
+      bld.add
+
+      bld.add("# Returns the code for the content for this class")
       bld.startFunction("def genFileContent(cls, cfg, bld)")
       bld.add
-      bld.startBlock("for inc in cls.includesList")
+      bld.startBlock("for inc in cls.includes")
       bld.add('bld.add("require \'" + inc.path + inc.name + "." + Utils.instance.getExtension(\'body\') + "\'")')
       bld.endBlock
       bld.add
-      bld.startBlock("if !cls.includesList.empty?")
+      bld.startBlock("if !cls.includes.empty?")
       bld.add("bld.add")
       bld.endBlock
       bld.add
@@ -146,8 +157,9 @@ module XCTERuby
 
       bld.add("# Generate class variables")
       bld.add('bld.add("    # -- Variables --")')
+      bld.add
 
-      bld.startBlock("for group in vGroup.groups")
+      bld.startBlock("for group in cls.model.groups")
       bld.add("process_var_group(cls, cfg, bld, group)")
       bld.endBlock
 
@@ -155,7 +167,7 @@ module XCTERuby
 
       bld.add("# Generate code for functions")
 
-      bld.startBlock("for fun in cls.functionSection")
+      bld.startBlock("for fun in cls.functions")
       bld.add("process_function(cls, cfg, bld, fun)")
       bld.endBlock
 
@@ -168,9 +180,9 @@ module XCTERuby
       bld.startFunction("def process_var_group(cls, cfg, bld, vGroup)")
       bld.startBlock("for var in vGroup.vars")
       bld.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
-      bld.add('bld.add("    " + Utils.instance.getVarDec(var))')
+      bld.add("bld.add(Utils.instance.getVarDec(var))")
       bld.midBlock("elsif var.elementId == CodeElem::ELEM_COMMENT")
-      bld.add('bld.sameLine("    " +  Utils.instance.getComment(var))')
+      bld.add("bld.sameLine(Utils.instance.getComment(var))")
       bld.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
       bld.add("bld.add(var.formatText)")
       bld.endBlock

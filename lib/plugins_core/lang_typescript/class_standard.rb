@@ -26,124 +26,124 @@ module XCTETypescript
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name)
+      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
     end
 
-    def genSourceFiles(codeClass, cfg)
+    def getUnformattedClassName(cls)
+      return cls.model.name
+    end
+
+    def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      codeBuilder = SourceRendererTypescript.new
-      codeBuilder.lfName = codeClass.name
-      codeBuilder.lfExtension = XCTETypescript::Utils::getExtension("body")
-      codeBuilder.lfContents = genFileComment(codeClass, cfg, codeBuilder)
-      codeBuilder.lfContents << genFileContent(codeClass, cfg, codeBuilder)
+      bld = SourceRendererTypescript.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileComment(cls, cfg, bld)
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
-    def genFileComment(codeClass, cfg, codeBuilder)
+    def genFileComment(cls, cfg, bld)
       headerString = String.new
 
-      headerString << "/**\n"
-      headerString << "* @class " + codeClass.name + "\n"
+      bld.add("/**")
+      bld.add("* @class " + cls.name)
 
       if (cfg.codeAuthor != nil)
-        headerString << "* @author " + cfg.codeAuthor + "\n"
+        bld.add("* @author " + cfg.codeAuthor)
       end
 
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        headerString << "* " + cfg.codeCompany + "\n"
+        bld.add("* " + cfg.codeCompany)
       end
 
       if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        headerString << "*\n* " + cfg.codeLicense + "\n"
+        bld.add("*\n* " + cfg.codeLicense)
       end
 
-      headerString << "* \n"
+      bld.add("* ")
 
-      if (codeClass.description != nil)
-        codeClass.description.each_line { |descLine|
+      if (cls.description != nil)
+        cls.description.each_line { |descLine|
           if descLine.strip.size > 0
-            headerString << "* " << descLine.chomp << "\n"
+            bld.add("* " << descLine.chomp)
           end
         }
       end
 
-      headerString << "*/\n\n"
+      bld.add("*/")
 
       return(headerString)
     end
 
     # Returns the code for the header for this class
-    def genFileContent(codeClass, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
       headerString = String.new
 
-      headerString << "\n"
+      bld.add
 
-      for inc in codeClass.includes
-        headerString << 'import "' << inc.path << inc.name << "\";\n"
+      for inc in cls.includes
+        bld.add('import "' << inc.path << inc.name << '\";')
       end
 
-      if !codeClass.includes.empty?
-        headerString << "\n"
+      if !cls.includes.empty?
+        bld.add
       end
 
-      if codeClass.hasAnArray
-        headerString << "\n"
-      end
-
-      headerString << "angular.module('" << "'), []).controller(" << codeClass.name << ", "
-      headerString << "function ($scope) {\n"
-
-      # Do automatic static array size declairations at top of class
-      varArray = Array.new
-      codeClass.getAllVarsFor(varArray)
-
-      if codeClass.hasAnArray
-        headerString << "\n"  # If we declaired array size variables add a seperator
-      end
+      bld.startClass("class " + getClassName(cls))
 
       # Generate class variables
-      headerString << "    // -- Variables --\n"
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          headerString << "    " << XCTETypescript::Utils::getVarDec(var) << "\n"
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          headerString << "    " << XCTETypescript::Utils::getComment(var)
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          headerString << var.formatText
-        end
+      for group in cls.model.groups
+        process_var_group(cls, cfg, bld, group)
       end
 
-      headerString << "\n"
-
+      bld.add
       # Generate code for functions
-      for fun in codeClass.functionSection
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("java", fun.name)
-            if templ != nil
-              headerString << templ.get_definition(codeClass, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("java", "method_empty")
-            if templ != nil
-              headerString << templ.get_definition(fun, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
-            end
+      for fun in cls.functions
+        process_function(cls, cfg, bld, fun)
+      end
+
+      bld.endClass
+    end
+
+    # process variable group
+    def process_var_group(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          bld.add(Utils.instance.getVarDec(var))
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          bld.sameLine(Utils.instance.getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          bld.add(var.formatText)
+        end
+        for group in vGroup.groups
+          process_var_group(cls, cfg, bld, group)
+        end
+      end
+    end
+
+    def process_function(cls, cfg, bld, fun)
+      if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
+          if templ != nil
+            bld.add(templ.get_definition(cls, cfg))
+          else
+            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
+          end
+        else # Must be empty function
+          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
+          if templ != nil
+            bld.add(templ.get_definition(fun, cfg))
+          else
+            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         end
       end
-
-      headerString << "}\n\n"
-
-      return(headerString)
     end
   end
 end

@@ -23,6 +23,10 @@
 		<function name="method_web_api_read_one" />
 	</gen_class>
 	
+	<gen_class type="class_angular_component" namespace="" path="AppClient/src/app/address-edit" >
+		
+	</gen_class>
+	
 	<gen_class type="tsql_engine" namespace="XCTE.Base.Engine" path="XCTE.Base/Engine"
 			   var_prefix = "a "
 			   interface_namespace="XCTE.Base.Engine" 
