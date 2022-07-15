@@ -14,14 +14,14 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.model.name + " edit component"
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " edit" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
@@ -39,7 +39,7 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      filePart = Utils.instance.getStyledFileName(cls.model.name)
 
       # import { Component, OnInit } from '@angular/core';
 
@@ -74,6 +74,9 @@ module XCTETypescript
         process_var_group(cls, cfg, bld, group)
       end
       bld.add
+      bld.add("constructor(private fb: FormBuilder) { }")
+      bld.add
+
       # Generate code for functions
       for fun in cls.functions
         process_function(cls, cfg, bld, fun)
@@ -84,12 +87,13 @@ module XCTETypescript
 
     # process variable group
     def process_var_group(cls, cfg, bld, vGroup)
-      bld.add(Utils.instance.getStyledVariableName(cls) + " = new FormGroup({")
+      clsVar = CodeNameStyling.getStyled(cls.model.name, Utils.instance.langProfile.variableNameStyle)
+      bld.add(clsVar + " = this.fb.group({")
       bld.indent
 
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getStyledVariableName(var) + ": new FormControl(''),")
+          bld.add(Utils.instance.getStyledVariableName(var) + ": [''],")
         end
         for group in vGroup.groups
           process_var_group(cls, cfg, bld, group)

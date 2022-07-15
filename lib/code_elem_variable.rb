@@ -57,5 +57,13 @@ module CodeStructure
 
       return param
     end
+
+    def getDisplayName()
+      if displayName != nil
+        return displayName
+      end
+
+      return name
+    end
   end
 end

@@ -8,6 +8,8 @@
 require "lang_profile.rb"
 
 class UtilsBase
+  attr_accessor :langProfile
+
   def initialize(langName)
     @langProfile = LangProfiles.instance.profiles[langName]
 

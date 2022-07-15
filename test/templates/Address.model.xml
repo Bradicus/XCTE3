@@ -15,6 +15,8 @@
 	</var_group>
 
 	<gen_class type="standard" namespace="XCTE.Base.Model" path="XCTE.Base/Model" ></gen_class>
+	<gen_class type="class_angular_component" namespace="" path="AppClient/src/app/address-edit" ></gen_class>
+	<gen_class type="class_angular_reactive_form" namespace="" path="AppClient/src/app/address-edit" ></gen_class>
 	
 	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" ></gen_class>	
 	<gen_class language="tsql" type="statement_create" namespace="Database" path="sql" var_prefix = "a "></gen_class>
@@ -22,11 +24,7 @@
 	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
-	
-	<gen_class type="class_angular_component" namespace="" path="AppClient/src/app/address-edit" >
 		
-	</gen_class>
-	
 	<gen_class type="tsql_engine" namespace="XCTE.Base.Engine" path="XCTE.Base/Engine"
 			   var_prefix = "a "
 			   interface_namespace="XCTE.Base.Engine" 

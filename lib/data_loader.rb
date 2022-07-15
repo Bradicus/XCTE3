@@ -98,6 +98,7 @@ class DataLoader
     curVar.identity = varXML.attributes["identity"]
     curVar.isPrimary = varXML.attributes["pkey"] == "true"
     curVar.name = varXML.attributes["name"]
+    curVar.displayName = varXML.attributes["display"]
 
     curVar.genGet = curVar.findAttributeExists("genGet")
     curVar.genSet = curVar.findAttributeExists("genSet")

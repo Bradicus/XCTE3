@@ -1,6 +1,6 @@
 <project>
   <template_dir dest="./csharp_razor" path="templates" languages="csharp" static_code="true" />
-  <template_dir dest="./angular" path="templates" languages="typescript" static_code="true" />
+  <template_dir dest="./angular" path="templates" languages="typescript html" static_code="true" />
   
   <custom_lang_profiles path="lang_profiles" />
 </project>

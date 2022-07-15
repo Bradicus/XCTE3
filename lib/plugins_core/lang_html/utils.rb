@@ -31,8 +31,8 @@ module XCTEHtml
 
     def getInputType(var)
       if (var.vtype != nil)
-        lowType = var.vtype.to_lower()
-        if (lowType.starts_with("int") || lowType.starts_with("float"))
+        lowType = var.vtype.downcase
+        if (lowType.start_with?("int") || lowType.start_with?("float"))
           return "number"
         end
       end
