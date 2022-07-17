@@ -63,7 +63,7 @@ module CodeStructure
         return displayName
       end
 
-      return name
+      return name.capitalize
     end
   end
 end

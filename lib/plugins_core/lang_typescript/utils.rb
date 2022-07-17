@@ -139,5 +139,42 @@ module XCTETypescript
 
       return(newStr)
     end
+
+    # process variable group
+    def getFormgroup(cls, bld, vGroup)
+      bld.sameLine("this.fb.group({")
+      bld.indent
+
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if Utils.instance.isPrimitive(var)
+            if var.listType == nil
+              bld.add(Utils.instance.getStyledVariableName(var) + ": [''],")
+            else
+              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({}),")
+            end
+          else
+            otherClass = Classes.findVarClass(var)
+
+            if var.listType == nil
+              bld.add(Utils.instance.getStyledVariableName(var) + ": ")
+              if otherClass != nil
+                for group in otherClass.model.groups
+                  getFormgroup(otherClass, bld, group)
+                end
+              end
+            else
+              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({}),")
+            end
+          end
+        end
+        # for group in vGroup.groups
+        #   process_var_group(cls, cfg, bld, group)
+        # end
+      end
+
+      bld.unindent
+      bld.add("});")
+    end
   end
 end

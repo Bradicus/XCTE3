@@ -45,7 +45,7 @@ module XCTEHtml
         bld.add  # If we declaired array size variables add a seperator
       end
 
-      bld.startBlock('<div [formGroup]="' + Utils.instance.getStyledClassName(getUnformattedClassName(cls) + "form") + '">')
+      bld.startBlock('<div [formGroup]="' + CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle) + '">')
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
@@ -60,9 +60,15 @@ module XCTEHtml
     def process_var_group(cls, cfg, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          varName = Utils.instance.getStyledVariableName(var)
-          bld.add('<label [attr.for]="' + varName + '">' + var.getDisplayName() + "</label>")
-          bld.add('<input [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
+          if Utils.instance.isPrimitive(var)
+            varName = Utils.instance.getStyledVariableName(var)
+            prefix = CodeNameStyling.getStyled(getUnformattedClassName(cls), Utils.instance.langProfile.variableNameStyle)
+            bld.add('<label for="' + prefix + "-" + varName + '">' + var.getDisplayName() + "</label>")
+            bld.add('<input id="' + prefix + "-" + varName + '" [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
+          else
+            bld.add("<app-" + Utils.instance.getStyledFileName(var.utype) + ">" +
+                    "</app-" + Utils.instance.getStyledFileName(var.utype) + ">")
+          end
         elsif var.elementId == CodeElem::ELEM_COMMENT
           bld.sameLine(Utils.instance.getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
