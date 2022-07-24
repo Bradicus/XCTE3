@@ -1,8 +1,10 @@
+require "plugins_core/lang_typescript/class_base.rb"
+
 ##
 # Class:: ClassAngularComponent
 #
 module XCTETypescript
-  class ClassAngularComponent < XCTEPlugin
+  class ClassAngularComponent < ClassBase
     def initialize
       @name = "class_angular_component"
       @language = "typescript"
@@ -24,6 +26,7 @@ module XCTETypescript
       bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " edit" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
+      get_dependencies(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
 
       srcFiles << bld
@@ -31,31 +34,19 @@ module XCTETypescript
       return srcFiles
     end
 
+    def get_dependencies(cls, codeFun, codeBuilder)
+      cls.addInclude("@angular/core", "Component, OnInit")
+      cls.addInclude("@angular/forms", "FormControl, FormGroup")
+    end
+
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
-      end
+      genImports(cls, cfg, bld)
 
       bld.add
 
       filePart = Utils.instance.getStyledFileName(cls.model.name)
 
-      # import { Component, OnInit } from '@angular/core';
-
-      # @Component({
-      #   selector: 'app-address-edit',
-      #   templateUrl: './address-edit.component.html',
-      #   styleUrls: ['./address-edit.component.css']
-      # })
-      # export class AddressEditComponent implements OnInit {
-
-      #   constructor() { }
-
-      #   ngOnInit(): void {
-      #   }
-
-      # }
       clsVar = CodeNameStyling.getStyled(cls.model.name, Utils.instance.langProfile.variableNameStyle)
 
       bld.add("@Component({")

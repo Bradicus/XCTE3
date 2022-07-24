@@ -14,6 +14,7 @@ require "code_elem_template_directory.rb"
 require "code_elem_build_type.rb"
 require "code_elem_build_option.rb"
 require "code_elem_project_component_group.rb"
+require "lang_generator_config.rb"
 
 require "rexml/document"
 
@@ -37,6 +38,7 @@ module CodeStructure
       @langProfilePaths = Array.new
     end
 
+    # Move into a data loader some day
     def loadProject(fName)
       projFile = File.new(fName)
 
@@ -68,9 +70,15 @@ module CodeStructure
       xmlGroup.elements.each("DESCRIPTION") { |desc|
         groupNode.description = desc.text
       }
-      xmlGroup.elements.each("template_dir") { |tplDir|
-        newTDir = CodeElemTemplateDirectory.new
-        loadTemplateNode(newTDir, tplDir)
+      # xmlGroup.elements.each("template_dir") { |tplDir|
+      #   newTDir = CodeElemTemplateDirectory.new
+      #   loadTemplateNode(newTDir, tplDir)
+      #   groupNode.components << newTDir
+      # }
+
+      xmlGroup.elements.each("generate") { |tplDir|
+        newTDir = LangGeneratorConfig.new
+        loadGeneratorNode(newTDir, tplDir)
         groupNode.components << newTDir
       }
 
@@ -152,6 +160,21 @@ module CodeStructure
 
       tNode.isStatic = (tNodeXml.attributes["static_code"] == true)
       tNode.languages = tNodeXml.attributes["languages"].split(" ")
+
+      if (tNodeXml.attributes["base_namespace"] != nil)
+        tNode.namespaceList = tNodeXml.attributes["base_namespace"].split(".")
+      end
+      puts "template node loaded with path"
+    end
+
+    def loadGeneratorNode(tNode, tNodeXml)
+      tNode.language = tNodeXml.attributes["language"]
+      tNode.tplPath = tNodeXml.attributes["tpl_path"]
+      tNode.dest = tNodeXml.attributes["dest"]
+
+      if tNode.dest == nil
+        tNode.dest = "."
+      end
 
       if (tNodeXml.attributes["base_namespace"] != nil)
         tNode.namespaceList = tNodeXml.attributes["base_namespace"].split(".")

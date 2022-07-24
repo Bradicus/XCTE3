@@ -4,7 +4,7 @@
 module XCTETypescript
   class ClassInterface < XCTEPlugin
     def initialize
-      @name = "class_interface"
+      @name = "interface"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -20,40 +20,32 @@ module XCTETypescript
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      bld = SourceRendererRuby.new
+      bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
-      genRubyFileComment(cls, cfg, bld)
-      genRubyFileContent(cls, cfg, bld)
+      genFileComment(cls, cfg, bld)
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << rubyFile
+      srcFiles << bld
 
       return srcFiles
     end
 
+    def genFileComment(cls, cfg, bld)
+    end
+
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      for inc in cls.includesList
+      for inc in cls.includes
         bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
       end
 
-      if !cls.includesList.empty?
-        bld.add
-      end
-
+      bld.separate
       bld.startBlock("export interface " + getClassName(cls))
 
-      if cls.hasAnArray
-        bld.add  # If we declaired array size variables add a seperator
-      end
       # Generate class variables
-      for group in vGroup.groups
+      for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
-      end
-      bld.add
-      # Generate code for functions
-      for fun in cls.functionSection
-        process_function(cls, cfg, bld, fun)
       end
 
       bld.endBlock
@@ -71,26 +63,6 @@ module XCTETypescript
         end
         for group in vGroup.groups
           process_var_group(cls, cfg, bld, group)
-        end
-      end
-    end
-
-    def process_function(cls, cfg, bld, fun)
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
-          if templ != nil
-            bld.add(templ.get_definition(cls, cfg))
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: java'
-          end
-        else # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
-          if templ != nil
-            bld.add(templ.get_definition(fun, cfg))
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: java'
-          end
         end
       end
     end

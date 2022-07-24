@@ -1,10 +1,10 @@
 ##
-# Class:: ClassAngularReactiveForm
+# Class:: ClassAngularReactiveEdit
 #
 module XCTEHtml
-  class ClassAngularReactiveForm < XCTEPlugin
+  class ClassAngularReactiveEdit < XCTEPlugin
     def initialize
-      @name = "class_angular_reactive_form"
+      @name = "class_angular_reactive_edit"
       @language = "html"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -21,7 +21,7 @@ module XCTEHtml
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " edit" + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " edit.component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
@@ -33,25 +33,17 @@ module XCTEHtml
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
-      end
-
-      if !cls.includes.empty?
-        bld.add
-      end
-
       if cls.model.hasAnArray
         bld.add  # If we declaired array size variables add a seperator
       end
 
-      bld.startBlock('<div [formGroup]="' + CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle) + '">')
+      bld.startBlock('<form [formGroup]="' + Utils.instance.getStyledVariableName(getUnformattedClassName(cls) + " form") + '"  (ngSubmit)="onSubmit()">')
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
       end
 
-      bld.endBlock("</div>")
+      bld.endBlock("</form>")
 
       bld.add
     end
@@ -62,12 +54,11 @@ module XCTEHtml
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
             varName = Utils.instance.getStyledVariableName(var)
-            prefix = CodeNameStyling.getStyled(getUnformattedClassName(cls), Utils.instance.langProfile.variableNameStyle)
-            bld.add('<label for="' + prefix + "-" + varName + '">' + var.getDisplayName() + "</label>")
-            bld.add('<input id="' + prefix + "-" + varName + '" [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
+            bld.add('<label for="' + varName + '">' + var.getDisplayName() + "</label>")
+            bld.add('<input id="' + varName + '" [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
           else
-            bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType()) + ">" +
-                    "</app-" + Utils.instance.getStyledFileName(var.getUType) + ">")
+            bld.add("<app-" + Utils.instance.getStyledFileName(var.utype) + ">" +
+                    "</app-" + Utils.instance.getStyledFileName(var.utype) + ">")
           end
         elsif var.elementId == CodeElem::ELEM_COMMENT
           bld.sameLine(Utils.instance.getComment(var))
@@ -82,4 +73,4 @@ module XCTEHtml
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEHtml::ClassAngularReactiveForm.new)
+XCTEPlugin::registerPlugin(XCTEHtml::ClassAngularReactiveEdit.new)

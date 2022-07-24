@@ -12,6 +12,7 @@
 
 require "plugins_core/lang_ruby/x_c_t_e_ruby.rb"
 require "plugins_core/lang_ruby/utils.rb"
+require "plugins_core/lang_ruby/class_base.rb"
 require "x_c_t_e_plugin.rb"
 require "code_elem.rb"
 require "code_elem_parent.rb"
@@ -19,7 +20,7 @@ require "code_elem_model.rb"
 require "lang_file.rb"
 
 module XCTERuby
-  class ClassStandard < XCTEPlugin
+  class ClassStandard < ClassBase
     def initialize
       @name = "standard"
       @language = "ruby"
@@ -37,130 +38,149 @@ module XCTERuby
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      rubyFile = LangFile.new
-      rubyFile.lfName = cls.name
-      rubyFile.lfExtension = Utils.instance.getExtension("body")
-      rubyFile.lfContents = genRubyFileComment(cls, cfg)
-      rubyFile.lfContents << genRubyFileContent(cls, cfg)
+      bld = SourceRendererRuby.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileComment(cls, cfg, bld)
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << rubyFile
+      srcFiles << bld
 
       return srcFiles
     end
 
-    def genRubyFileComment(cls, cfg)
-      headerString = String.new
-
-      headerString << "##\n"
-      headerString << "# Class:: " + cls.name + "\n"
+    def genFileComment(cls, cfg, bld)
+      bld.add("##")
+      bld.add("# Class:: " + cls.name)
 
       if (cfg.codeAuthor != nil)
-        headerString << "# Author:: " + cfg.codeAuthor + "\n"
+        bld.add("# Author:: " + cfg.codeAuthor)
       end
 
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        headerString << "# " + cfg.codeCompany + "\n"
+        bld.add("# " + cfg.codeCompany)
       end
 
       if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        headerString << "#\n# License:: " + cfg.codeLicense + "\n"
+        bld.add("#")
+        bld.add("# License:: " + cfg.codeLicense)
       end
 
-      headerString << "# \n"
+      bld.add("#")
 
       if (cls.description != nil)
         cls.description.each_line { |descLine|
           if descLine.strip.size > 0
-            headerString << "# " << descLine.chomp << "\n"
+            bld.add("# " + descLine.chomp)
           end
         }
       end
-
-      return(headerString)
     end
 
     # Returns the code for the header for this class
-    def genRubyFileContent(cls, cfg)
-      headerString = String.new
-
-      headerString << "\n"
+    def genFileContent(cls, cfg, bld)
+      bld.separate
 
       for inc in cls.includes
-        headerString << "require '" << inc.path << inc.name << "." << Utils.instance.getExtension("body") << "'\n"
+        bld.add("require '" << inc.path << inc.name << "." << Utils.instance.getExtension("body"))
       end
 
-      if !cls.includes.empty?
-        headerString << "\n"
+      bld.separate
+
+      startNamespaces(cls, bld)
+      bld.startClass("class " << getClassName(cls))
+
+      accessors = Accessors.new
+      # Do automatic static array size declairations at top of class
+      for group in cls.model.groups
+        process_var_accessors(accessors, cls, cfg, bld, group)
       end
 
-      if cls.model.hasAnArray
-        headerString << "\n"
-      end
+      add_accessors("attr_accessor", accessors.both, bld)
+      add_accessors("attr_attr_reader", accessors.readers, bld)
+      add_accessors("attr_attr_writer", accessors.writers, bld)
 
-      headerString << "class " << getClassName(cls) << "\n"
+      bld.separate
 
       # Do automatic static array size declairations at top of class
-      varArray = Array.new varArray = Array.new
-
-      for vGrp in cls.model.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
+      for group in cls.model.groups
+        process_var_group(cls, cfg, bld, group)
       end
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0
-          hFile.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
-        end
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0
-          headerString << "    " << Utils.instance.getSizeConst(var) << " = " << var.arrayElemCount.to_s << "\n"
-        end
-      end
-
-      if cls.model.hasAnArray
-        headerString << "\n"  # If we declaired array size variables add a seperator
-      end
-
-      # Generate class variables
-      headerString << "    # -- Variables --\n"
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          headerString << "    " << Utils.instance.getVarDec(var)
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          headerString << "    " << Utils.instance.getComment(var)
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          headerString << var.formatText
-        end
-      end
-
-      headerString << "\n"
-
+      bld.separate
       # Generate code for functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("ruby", fun.name)
-            if templ != nil
-              headerString << templ.get_definition(cls, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("ruby", "method_empty")
-            if templ != nil
-              headerString << templ.get_definition(fun, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
-            end
+        process_function(cls, cfg, bld, fun)
+      end
+
+      bld.endClass
+      endNamespaces(cls, bld)
+    end
+
+    # process variable group
+    def process_var_accessors(accessors, cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.genGet || var.genSet
+          accessors.add(Accessor.new(var, var.genGet, var.genSet))
+        end
+
+        for group in vGroup.groups
+          process_var_accessors(accessors, cls, cfg, bld, group)
+        end
+      end
+    end
+
+    def add_accessors(accName, accList, bld)
+      if accList.length > 0
+        bld.add(accName + " :")
+        bld.sameLine(get_accessor_var_list(accList).join(", :"))
+      end
+    end
+
+    def get_accessor_var_list(accList)
+      vList = Array.new
+
+      for acc in accList
+        vList.push(Utils.instance.getStyledVariableName(acc.var))
+      end
+
+      return vList
+    end
+
+    # process variable group
+    def process_var_group(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          bld.add(Utils.instance.getVarDec(var))
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          bld.sameLine(Utils.instance.getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          bld.add(var.formatText)
+        end
+        for group in vGroup.groups
+          process_var_group(cls, cfg, bld, group)
+        end
+      end
+    end
+
+    def process_function(cls, cfg, bld, fun)
+      if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("ruby", fun.name)
+          if templ != nil
+            bld.add(templ.get_definition(cls, cfg))
+          else
+            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
+          end
+        else # Must be empty function
+          templ = XCTEPlugin::findMethodPlugin("ruby", "method_empty")
+          if templ != nil
+            bld.add(templ.get_definition(fun, cfg))
+          else
+            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
           end
         end
       end
-
-      headerString << "end  # class " << cls.name << "\n\n"
-
-      return(headerString)
     end
   end
 end

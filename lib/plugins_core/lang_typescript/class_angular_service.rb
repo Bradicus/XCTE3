@@ -2,7 +2,7 @@
 # Class:: ClassAngularService
 #
 module XCTETypescript
-  class ClassAngularService < XCTEPlugin
+  class ClassAngularService < ClassBase
     def initialize
       @name = "class_angular_service"
       @language = "typescript"
@@ -14,7 +14,11 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      if cls.name != nil
+        return cls.name
+      end
+
+      return cls.model.name + " service"
     end
 
     def genSourceFiles(cls, cfg)
@@ -33,9 +37,9 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      for inc in cls.includes
-        bld.add("import '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
-      end
+      genImports(cls, cfg, bld)
+
+      bld.add
 
       if !cls.includes.empty?
         bld.add

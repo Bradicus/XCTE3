@@ -46,7 +46,7 @@ module XCTERuby
         vDec << "@"
       end
 
-      vDec << "@" << var.name
+      vDec << "@" << getStyledVariableName(var)
 
       if var.arrayElemCount.to_i > 0
         vDec << " = Array.new(" << getSizeConst(var) << ")"
@@ -55,8 +55,6 @@ module XCTERuby
       if var.comment != nil
         vDec << "\t# " << var.comment
       end
-
-      vDec << "\n"
 
       return vDec
     end

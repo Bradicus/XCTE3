@@ -19,7 +19,8 @@ module CodeStructure
 
       @elementId = CodeElem::ELEM_VARIABLE
 
-      @vtype
+      @vtype  # Type name
+      @utype  # Unformatted type name
       @templateType
       @defaultValue
       @comment
@@ -56,6 +57,14 @@ module CodeStructure
       param.arrayElemCount = @arrayElemCount
 
       return param
+    end
+
+    def getUType()
+      if (utype == nil)
+        return vtype
+      end
+
+      return utype
     end
 
     def getDisplayName()

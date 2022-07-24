@@ -14,9 +14,11 @@
 		<var name="zip code"		type="String" maxlen="20" />
 	</var_group>
 
-	<gen_class type="standard" namespace="XCTE.Base.Model" path="XCTE.Base/Model" ></gen_class>
-	<gen_class type="class_angular_component" namespace="" path="AppClient/src/app/address-edit" ></gen_class>
-	<gen_class type="class_angular_reactive_form" namespace="" path="AppClient/src/app/address-edit" ></gen_class>
+	<gen_class type="standard" 
+		type-typescript="interface" path-typescript="shared/interfaces"
+		ns-csharp="XCTE.Base.Model" path-csharp="XCTE.Base/Model" ></gen_class>
+	<gen_class type="class_angular_component" namespace="" path="address-edit" ></gen_class>
+	<gen_class type="class_angular_reactive_form" namespace="" path="address-edit" ></gen_class>
 	
 	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" ></gen_class>	
 	<gen_class language="tsql" type="statement_create" namespace="Database" path="sql" var_prefix = "a "></gen_class>

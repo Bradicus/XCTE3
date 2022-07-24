@@ -84,16 +84,13 @@ module XCTETypescript
     def genFileContent(cls, cfg, bld)
       headerString = String.new
 
-      bld.add
+      bld.separate
 
       for inc in cls.includes
-        bld.add('import "' << inc.path << inc.name << '\";')
+        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
       end
 
-      if !cls.includes.empty?
-        bld.add
-      end
-
+      bld.separate
       bld.startClass("class " + getClassName(cls))
 
       # Generate class variables

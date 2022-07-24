@@ -22,6 +22,7 @@ require "x_c_t_e_plugin.rb"
 require "user_settings.rb"
 
 require "run_settings"
+require "project_plans"
 require "project_plan"
 require "lang_profiles"
 require "data_loader"
@@ -37,75 +38,69 @@ end
 def processProjectComponentGroup(project, pcGroup, cfg)
   currentDir = Dir.pwd
 
-  projectPlan = ProjectPlan.instance
-
   # preload an extra set of data models, so they can be referenced if needed
   for pComponent in pcGroup.components
-    #puts "Processing component: " + pComponent.path
-    if (pComponent.elementId == CodeElem::ELEM_TEMPLATE_DIRECTORY)
-      puts "Processing component path: " + pComponent.path
-      Find.find(currentDir + "/" + pComponent.path) do |path|
-        if isModelFile(path)
-          puts "Processing model: " + path
+    #puts "Processing component: " + pComponent.tplPath
+    projectPlan = ProjectPlan.new
+    ProjectPlans.instance.plans[pComponent.language] = projectPlan
 
-          basepn = Pathname.new(currentDir + "/" + pComponent.path)
-          pn = Pathname.new(path)
+    puts "Processing component path: " + pComponent.tplPath
+    Find.find(currentDir + "/" + pComponent.tplPath) do |path|
+      if isModelFile(path)
+        puts "Processing model: " + path
 
-          dataModel = CodeStructure::CodeElemModel.new
-          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic, pComponent)
+        basepn = Pathname.new(currentDir + "/" + pComponent.tplPath)
+        pn = Pathname.new(path)
 
-          for langName in pComponent.languages
-            language = XCTEPlugin::getLanguages()[langName]
+        dataModel = CodeStructure::CodeElemModel.new
+        DataLoader.loadXMLClassFile(dataModel, path, pComponent)
 
-            if (language == nil)
-              puts "No language found for: " + langName
+        language = XCTEPlugin::getLanguages()[pComponent.language]
+
+        if (language == nil)
+          puts "No language found for: " + pComponent.language
+        end
+
+        projectPlan.models << dataModel
+
+        for cls in dataModel.classes
+          cls.model = dataModel
+          if (cls.language != nil)
+            language = XCTEPlugin::getLanguages()[cls.language]
+          else
+            language = XCTEPlugin::getLanguages()[pComponent.language]
+          end
+
+          if language.has_key?(cls.ctype)
+            if cls.path != nil
+              newPath = pComponent.dest + "/" + cls.path
+            else
+              newPath = pComponent.dest + "/" + cls.namespaceList.join("/")
             end
 
-            if projectPlan.models[langName] == nil
-              projectPlan.models[langName] = Array.new
+            lClass = cls.clone()
+            lClass.filePath = newPath
+            lClass.name = language[lClass.ctype].getClassName(lClass)
+
+            if (lClass.language == nil)
+              lClass.language = pComponent.language
             end
 
-            projectPlan.models[langName] << dataModel
-
-            for cls in dataModel.classes
-              cls.model = dataModel
-              if (cls.language != nil)
-                language = XCTEPlugin::getLanguages()[cls.language]
-              else
-                language = XCTEPlugin::getLanguages()[langName]
+            if (cls.language == nil || cls.language == pComponent.language)
+              if !File.directory?(newPath)
+                FileUtils.mkdir_p(newPath)
+                #   puts "Creating folder: " + newPath
               end
 
-              if language.has_key?(cls.ctype)
-                if cls.path != nil
-                  newPath = pComponent.dest + "/" + cls.path
-                else
-                  newPath = pComponent.dest + "/" + cls.namespaceList.join("/")
-                end
-
-                if !File.directory?(newPath)
-                  FileUtils.mkdir_p(newPath)
-                  #   puts "Creating folder: " + newPath
-                end
-
-                lClass = cls.clone()
-                lClass.filePath = newPath
-                lClass.name = language[lClass.ctype].getClassName(lClass)
-
-                if projectPlan.classPlans[language] == nil
-                  projectPlan.classPlans[language] = Array.new
-                end
-
-                projectPlan.classPlans[language] << lClass
-              end
+              projectPlan.classes << lClass
             end
           end
         end
       end
     end
-  end
 
-  projectPlan.classPlans.each { |language, plans|
-    for plan in plans
+    for plan in projectPlan.classes
+      language = XCTEPlugin::getLanguages()[plan.language]
       srcFiles = language[plan.ctype].genSourceFiles(plan, cfg)
 
       for srcFile in srcFiles
@@ -128,10 +123,10 @@ def processProjectComponentGroup(project, pcGroup, cfg)
         sFile.close
       end
     end
-  }
 
-  for pSubgroup in pcGroup.subGroups
-    processProjectComponentGroup(project, pSubgroup, cfg)
+    for pSubgroup in pcGroup.subGroups
+      processProjectComponentGroup(project, pSubgroup, cfg)
+    end
   end
 end
 

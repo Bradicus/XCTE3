@@ -4,7 +4,10 @@
 	<description>
 	</description>			
 				
-	<gen_class type="standard" namespace="XCTE.Base.Model" path="XCTE.Base/Model" ></gen_class>
+	<gen_class type="standard" type-typescript="interface"
+		ns-csharp="XCTE.Base.Model" path-csharp="XCTE.Base/Model" 
+		path-typescript="shared/interfaces" >
+	</gen_class>
 		
 	<var_group genGet="true" genSet="true">	
 		<var name="user role"		type="String" maxlen="50" />

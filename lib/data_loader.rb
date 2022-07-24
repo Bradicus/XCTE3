@@ -9,7 +9,7 @@ class DataLoader
 
   ##
   # Loads an XML class definition and stores it in this object
-  def self.loadXMLClassFile(model, fName, isStatic, pComponent)
+  def self.loadXMLClassFile(model, fName, pComponent)
     file = File.new(fName)
     model.xmlFileName = fName
 
@@ -25,15 +25,15 @@ class DataLoader
     }
 
     xmlDoc.root.elements.each("var_group") { |vargXML|
-      puts "loading var group"
+      #puts "loading var group"
       newVGroup = CodeStructure::CodeElemVarGroup.new
       newVGroup.loadAttributes(vargXML)
-      loadVarGroupNode(newVGroup, vargXML)
+      loadVarGroupNode(newVGroup, vargXML, pComponent)
       model.groups << newVGroup
     }
 
     xmlDoc.root.elements.each("gen_class") { |genCXML|
-      cls = CodeStructure::CodeElemClassGen.new(model, model, isStatic)
+      cls = CodeStructure::CodeElemClassGen.new(model, model, true)
       loadClassNode(cls, genCXML, model, pComponent)
       cls.model = model
       cls.xmlElement = genCXML
@@ -41,7 +41,7 @@ class DataLoader
       model.classes << cls
 
       if cls.interfaceNamespace != nil
-        intf = CodeStructure::CodeElemClassGen.new(cls, model, isStatic)
+        intf = CodeStructure::CodeElemClassGen.new(cls, model, true)
         intf.namespaceList = cls.interfaceNamespace.split(".")
         intf.path = cls.interfacePath
         intf.functions = cls.functions
@@ -54,7 +54,7 @@ class DataLoader
       end
 
       if cls.testNamespace != nil
-        intf = CodeStructure::CodeElemClassGen.new(cls, model, isStatic)
+        intf = CodeStructure::CodeElemClassGen.new(cls, model, true)
         intf.namespaceList = cls.testNamespace.split(".")
         intf.path = cls.testPath
         intf.language = cls.language
@@ -71,7 +71,7 @@ class DataLoader
   end
 
   # Loads a variable from an XML variable node
-  def self.loadVariableNode(varXML, parentElem)
+  def self.loadVariableNode(varXML, parentElem, pComponent)
     curVar = CodeStructure::CodeElemVariable.new(parentElem)
     curVar.xmlElement = varXML
 
@@ -112,20 +112,20 @@ class DataLoader
   end
 
   # Loads a group node from an XML template vargroup node
-  def self.loadVarGroupNode(vgNode, vgXML)
+  def self.loadVarGroupNode(vgNode, vgXML, pComponent)
     if (vgXML.attributes["name"] != nil)
       vgNode.name = vgXML.attributes["name"]
     end
 
-    puts "[ElemClass::loadVarGroupNode] loading var node "
+    #puts "[ElemClass::loadVarGroupNode] loading var node "
 
     for varElem in vgXML.elements
       if (varElem.name.downcase == "variable" || varElem.name.downcase == "var")
-        loadVariableNode(varElem, vgNode)
+        loadVariableNode(varElem, vgNode, pComponent)
       elsif (varElem.name == "var_group")
         newVG = CodeStructure::CodeElemVarGroup.new
         newVG.loadAttributes(varElem)
-        loadVarGroupNode(newVG, varElem)
+        loadVarGroupNode(newVG, varElem, pComponent)
         vgNode.groups << newVG
       elsif (varElem.name == "comment")
         loadCommentNode(varElem, vgNode.vars)
@@ -136,15 +136,16 @@ class DataLoader
   end
 
   def self.loadClassNode(genC, genCXml, model, pComponent)
-    genC.ctype = genCXml.attributes["type"]
-    genC.namespaceList = loadNamespaces(genCXml)
+    genC.ctype = loadAttribute(genCXml, "type", pComponent.language)
+    genC.name = genCXml.attributes["name"]
+    genC.namespaceList = loadNamespaces(genCXml, pComponent)
     genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
     genC.interfacePath = genCXml.attributes["interface_path"]
     genC.testNamespace = genCXml.attributes["test_namespace"]
-    genC.testPath = genCXml.attributes["test_path"]
+    genC.testPath = loadAttribute(genCXml, "test_path", pComponent.language)
     genC.language = genCXml.attributes["language"]
-    genC.path = genCXml.attributes["path"]
-    genC.varPrefix = genCXml.attributes["var_prefix"]
+    genC.path = loadAttribute(genCXml, "path", pComponent.language)
+    genC.varPrefix = loadAttribute(genCXml, "var_prefix", pComponent.language)
 
     # Add base namespace to class namespace lists
     if (pComponent.namespaceList.size() > 0)
@@ -156,7 +157,7 @@ class DataLoader
     genCXml.elements.each("base_class") { |bcXml|
       baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
       baseClass.name = bcXml.attributes["name"]
-      baseClass.namespaceList = loadNamespaces(bcXml)
+      baseClass.namespaceList = loadNamespaces(bcXml, pComponent)
 
       bcXml.elements.each("tpl_param") { |tplXml|
         tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
@@ -170,7 +171,7 @@ class DataLoader
     genCXml.elements.each("interface") { |ifXml|
       intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
       intf.name = ifXml.attributes["name"]
-      intf.namespaceList = loadNamespaces(ifXml)
+      intf.namespaceList = loadNamespaces(ifXml, pComponent)
       genC.interfaces << intf
     }
 
@@ -182,7 +183,7 @@ class DataLoader
 
     genCXml.elements.each("empty_function") { |funXml|
       newFun = CodeStructure::CodeElemFunction.new(genC)
-      loadEmptyFunctionNode(newFun, funXml)
+      loadEmptyFunctionNode(newFun, funXml, pComponent)
       newFun.isTemplate = false
       genC.functions << newFun
     }
@@ -226,6 +227,12 @@ class DataLoader
       end
     }
 
+    genCXml.elements.each("use-" + pComponent.language) { |useXml|
+      if (useXml.attributes["name"] != nil)
+        genC.addUse(useXml.attributes["name"])
+      end
+    }
+
     # Load uses from higher level
     model.xmlElement.elements.each("use") { |gUseXml|
       genC.addUse(gUseXml.attributes["name"])
@@ -241,7 +248,7 @@ class DataLoader
   def self.loadTemplateFunctionNode(fun, tmpFunXML)
     fun.loadAttributes(tmpFunXML)
     fun.name = tmpFunXML.attributes["name"]
-    puts "Loading function: " + fun.name
+    #puts "Loading function: " + fun.name
     fun.isTemplate = true
     fun.isInline = (tmpFunXML.attributes["inline"] == "true")
 
@@ -255,7 +262,7 @@ class DataLoader
   end
 
   # Loads a function element from an XML function node
-  def self.loadEmptyFunctionNode(newFun, funXml)
+  def self.loadEmptyFunctionNode(newFun, funXml, pComponent)
     newFun.loadAttributes(funXml)
     newFun.name = funXml.attributes["name"]
     newFun.isInline = (funXml.attributes["inline"] == "true")
@@ -277,7 +284,7 @@ class DataLoader
       if funElemXML.name == "parameters"
         newFun.parameters.loadAttributes(funElemXML)
         for paramXML in funElemXML.elements
-          loadVariableNode(paramXML, newFun.parameters)
+          loadVariableNode(paramXML, newFun.parameters, pComponent)
         end
       elsif funElemXML.name == "return_variable"
         retVar = Array.new
@@ -295,13 +302,33 @@ class DataLoader
   end
 
   # Load a list of namespaces on a node
-  def self.loadNamespaces(xml)
-    if (xml.attributes["namespace"] != nil)
-      return xml.attributes["namespace"].split(".")
+  def self.loadNamespaces(xml, pComponent)
+    return loadAttributeArray(xml, Array["ns", "namespace"], pComponent.language, ".")
+  end
+
+  def self.loadAttribute(xml, atrNames, language)
+    if !atrNames.kind_of?(Array)
+      atrNames = Array[atrNames]
     end
 
-    if (xml.attributes["ns"] != nil)
-      return xml.attributes["ns"].split(".")
+    for atrName in atrNames
+      atr = xml.attributes[atrName + "-" + language]
+      if atr != nil
+        return atr
+      end
+      atr = xml.attributes[atrName]
+      if atr != nil
+        return atr
+      end
+    end
+
+    return nil
+  end
+
+  def self.loadAttributeArray(xml, atrNames, language, separator)
+    atr = loadAttribute(xml, atrNames, language)
+    if atr != nil
+      return atr.split(separator)
     end
 
     return Array.new

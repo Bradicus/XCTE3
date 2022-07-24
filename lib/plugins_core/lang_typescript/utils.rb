@@ -72,7 +72,7 @@ module XCTETypescript
       typeName = getSingleItemTypeName(var)
 
       if (var.listType != nil)
-        typeName = getListTypeName(var.listType) + "<" + typeName + ">"
+        typeName = "[]"
       end
 
       return typeName
@@ -162,6 +162,8 @@ module XCTETypescript
                 for group in otherClass.model.groups
                   getFormgroup(otherClass, bld, group)
                 end
+              else
+                bld.sameLine("[''],")
               end
             else
               bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({}),")
@@ -174,7 +176,7 @@ module XCTETypescript
       end
 
       bld.unindent
-      bld.add("});")
+      bld.add("}),")
     end
   end
 end

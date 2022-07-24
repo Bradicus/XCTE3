@@ -145,25 +145,16 @@ module XCTERuby
       bld.startBlock("for inc in cls.includes")
       bld.add('bld.add("require \'" + inc.path + inc.name + "." + Utils.instance.getExtension(\'body\') + "\'")')
       bld.endBlock
-      bld.add
-      bld.startBlock("if !cls.includes.empty?")
-      bld.add("bld.add")
-      bld.endBlock
-      bld.add
-
-      bld.startBlock("if cls.hasAnArray")
-      bld.add("bld.add  # If we declaired array size variables add a seperator")
-      bld.endBlock
+      bld.separate
+      bld.add("bld.separate")
 
       bld.add("# Generate class variables")
-      bld.add('bld.add("    # -- Variables --")')
-      bld.add
-
       bld.startBlock("for group in cls.model.groups")
       bld.add("process_var_group(cls, cfg, bld, group)")
       bld.endBlock
 
-      bld.add("bld.add")
+      bld.separate
+      bld.add("bld.separate")
 
       bld.add("# Generate code for functions")
 
@@ -171,8 +162,9 @@ module XCTERuby
       bld.add("process_function(cls, cfg, bld, fun)")
       bld.endBlock
 
-      bld.add
+      bld.separate
 
+      bld.add("bld.endClass")
       bld.endFunction
       bld.add
 
@@ -190,9 +182,9 @@ module XCTERuby
       bld.add("process_var_group(cls, cfg, bld, group)")
       bld.endBlock
       bld.endBlock
-      bld.endFunction()
+      bld.endFunction
 
-      bld.add
+      bld.separate
 
       bld.startFunction("def process_function(cls, cfg, bld, fun)")
       bld.startBlock("if fun.elementId == CodeElem::ELEM_FUNCTION")

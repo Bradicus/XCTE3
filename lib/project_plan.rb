@@ -2,17 +2,15 @@ require "singleton"
 require "classes"
 
 class ProjectPlan
-  attr_accessor :classPlans, :models
-
-  include Singleton
+  attr_accessor :classes, :models
 
   def initialize
-    @classPlans = Hash.new
-    @models = Hash.new
+    @classes = Array.new
+    @models = Array.new
   end
 
   def findClassPlan(unformattedName)
-    for cp in @classPlans
+    for cp in @classes
     end
   end
 
@@ -27,8 +25,7 @@ class ProjectPlan
   end
 
   def findClassFunction(languageName, modelName, classPlugName, funPlugName)
-    models = @models
-    for model in @models[languageName]
+    for model in @models
       if model.name == modelName
         return Classes.findClassFunction(classPlugName, funPlugName)
       end

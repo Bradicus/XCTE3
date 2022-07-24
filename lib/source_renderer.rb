@@ -44,7 +44,11 @@ class SourceRenderer
         self.add(item)
       }
     elsif (line.is_a?(String))
-      @lines.push(getIndent() << line)
+      if (line.length > 0)
+        @lines.push(getIndent() << line)
+      else
+        @lines.push(getIndent() << line)
+      end
     else
       raise TypeError, "invalid type " + line.inspect
     end
@@ -56,6 +60,13 @@ class SourceRenderer
 
   def sameLine(line)
     @lines.last << line
+  end
+
+  # if the last line isn't a blank line, add one for separation
+  def separate
+    if (@lines.count > 0 && !@lines.last.strip.empty?)
+      add
+    end
   end
 
   def getIndent(extraIndent = 0)

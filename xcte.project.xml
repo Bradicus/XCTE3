@@ -1,5 +1,5 @@
 <project>
-  <template_dir path="internal/templates" dest="./internal/gen" languages="ruby" static_code="true" />
+  <generate tpl_path="internal/templates" dest="./internal/gen" language="ruby" />
   
   <custom_lang_profiles path="lang_profiles" />
 </project>
