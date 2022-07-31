@@ -102,7 +102,7 @@ module XCTECpp
         end
       end
 
-      genIncludes(cls, cfg, hFile)
+      process_dependencies(cls, cfg, bld)
 
       if cls.includes.length > 0
         hFile.add

@@ -1,10 +1,10 @@
 ##
-# Class:: ClassAngularService
+# Class:: ClassAngularListing
 #
 module XCTETypescript
-  class ClassAngularService < ClassBase
+  class ClassAngularListing < ClassBase
     def initialize
-      @name = "class_angular_service"
+      @name = "class_angular_listing"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -14,7 +14,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " service"
+      return cls.model.name + " listing"
     end
 
     def genSourceFiles(cls, cfg)
@@ -31,7 +31,7 @@ module XCTETypescript
       return srcFiles
     end
 
-    # Returns the code for the content for this class
+    # Returns the code for the comment for this class
     def genFileComment(cls, cfg, bld)
     end
 
@@ -39,17 +39,28 @@ module XCTETypescript
     def genFileContent(cls, cfg, bld)
       process_dependencies(cls, cfg, bld)
 
-      bld.add("@Injectable()")
-      bld.startClass("export class " + getClassName(cls))
+      bld.add
 
-      bld.add("private apiUrl='';")
-      # bld.add("private dataExpires: Number = 600; // Seconds")
-      # bld.add("private items: " + Utils.instance.getStyledClassName(cls.model.name) + "[];")
+      filePart = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+
+      clsVar = CodeNameStyling.getStyled(getUnformattedClassName(cls), Utils.instance.langProfile.variableNameStyle)
+
+      bld.add("@Component({")
+      bld.indent
+      bld.add("selector: 'app-" + filePart + "',")
+      bld.add("templateUrl: './" + filePart + ".component.html',")
+      bld.add("styleUrls: ['./" + filePart + ".component.css']")
+      bld.unindent
+      bld.add(")}")
 
       bld.separate
-      bld.startFunction("constructor(private httpClient: HttpClient)")
-      bld.endFunction
 
+      bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
+
+      bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.model.name) + "Service)")
+      bld.endBlock
+
+      bld.separate
       # Generate code for functions
       for fun in cls.functions
         process_function(cls, cfg, bld, fun)
@@ -81,14 +92,14 @@ module XCTETypescript
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
           if templ != nil
-            templ.get_definition(cls, cfg, bld)
+            bld.add(templ.get_definition(cls, cfg))
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         else # Must be empty function
           templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
           if templ != nil
-            templ.get_definition(fun, cfg)
+            bld.add(templ.get_definition(fun, cfg))
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
@@ -98,4 +109,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularService.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularListing.new)

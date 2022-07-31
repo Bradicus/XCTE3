@@ -178,5 +178,9 @@ module XCTETypescript
       bld.unindent
       bld.add("}),")
     end
+
+    def getStyledUrlName(name)
+      return CodeNameStyling.getStyled(name, "DASH_LOWER")
+    end
   end
 end

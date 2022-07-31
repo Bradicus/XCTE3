@@ -41,7 +41,7 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      genImports(cls, cfg, bld)
+      process_dependencies(cls, cfg, bld)
 
       bld.add
 

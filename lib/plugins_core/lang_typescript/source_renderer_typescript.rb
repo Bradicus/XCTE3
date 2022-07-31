@@ -13,6 +13,6 @@ class SourceRendererTypescript < SourceRendererBraceDelim
   def initialize()
     super
 
-    @hangingFunctionBraces = true
+    @hangingFunctionStart = true
   end
 end

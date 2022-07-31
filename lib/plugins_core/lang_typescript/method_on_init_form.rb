@@ -10,7 +10,7 @@ module XCTETypescript
     # Returns the code for the content for this function
     def get_definition(cls, cfg, bld)
       # process class variables
-      for group in vGroup.groups
+      for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
       end
     end

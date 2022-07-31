@@ -36,11 +36,11 @@ module XCTECpp
 
       cls.setName(getUnformattedClassName(cls))
 
-      hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.model.name + "JsonEngine")
-      hFile.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, hFile)
-      genHeader(cls, cfg, hFile)
+      bld = SourceRendererCpp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + "JsonEngine")
+      bld.lfExtension = Utils.instance.getExtension("header")
+      genHeaderComment(cls, cfg, bld)
+      genHeader(cls, cfg, bld)
 
       cppFile = SourceRendererCpp.new
       cppFile.lfName = Utils.instance.getStyledFileName(cls.model.name + "JsonEngine")
@@ -48,45 +48,45 @@ module XCTECpp
       genHeaderComment(cls, cfg, cppFile)
       genBody(cls, cfg, cppFile)
 
-      srcFiles << hFile
+      srcFiles << bld
       srcFiles << cppFile
 
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, hFile)
-      hFile.add("/**")
-      hFile.add("* @class " + Utils.instance.getStyledClassName(cls.model.name + "JsonEngine"))
+    def genHeaderComment(cls, cfg, bld)
+      bld.add("/**")
+      bld.add("* @class " + Utils.instance.getStyledClassName(cls.model.name + "JsonEngine"))
 
       if (cfg.codeAuthor != nil)
-        hFile.add("* @author " + cfg.codeAuthor)
+        bld.add("* @author " + cfg.codeAuthor)
       end
 
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        hFile.add("* " + cfg.codeCompany)
+        bld.add("* " + cfg.codeCompany)
       end
 
       if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
 
-      hFile.add("* ")
+      bld.add("* ")
 
       if (cls.model.description != nil)
         cls.model.description.each_line { |descLine|
           if descLine.strip.size > 0
-            hFile.add("* " << descLine.strip)
+            bld.add("* " << descLine.strip)
           end
         }
       end
 
-      hFile.add("*/")
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, cfg, hFile)
-      genIfndef(cls, hFile)
+    def genHeader(cls, cfg, bld)
+      genIfndef(cls, bld)
 
       # get list of includes needed by functions
 
@@ -96,7 +96,7 @@ module XCTECpp
           if funItem.isTemplate
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
-              templ.get_dependencies(cls, funItem, hFile)
+              templ.get_dependencies(cls, funItem, bld)
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
@@ -104,18 +104,18 @@ module XCTECpp
         end
       end
 
-      genIncludes(cls, cfg, hFile)
+      process_dependencies(cls, cfg, bld)
 
       if cls.includes.length > 0
-        hFile.add
+        bld.add
       end
 
       # Process namespace items
       if cls.namespaceList != nil
         for nsItem in cls.namespaceList
-          hFile.startBlock("namespace " << nsItem)
+          bld.startBlock("namespace " << nsItem)
         end
-        hFile.add
+        bld.add
       end
 
       classDec = "class " + Utils.instance.getDerivedClassPrefix(cls)
@@ -137,10 +137,10 @@ module XCTECpp
         end
       end
 
-      hFile.startClass(classDec)
+      bld.startClass(classDec)
 
-      hFile.add("public:")
-      hFile.indent
+      bld.add("public:")
+      bld.indent
 
       # Generate class variables
       varArray = Array.new
@@ -152,9 +152,9 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(cls, funItem, hFile)
+                templ.get_declaration_inline(cls, funItem, bld)
               else
-                templ.get_declaration(cls, funItem, hFile)
+                templ.get_declaration(cls, funItem, bld)
               end
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -163,38 +163,38 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(cls, funItem, hFile)
+                templ.get_declaration_inline(cls, funItem, bld)
               else
-                templ.get_declaration(cls, funItem, hFile)
+                templ.get_declaration(cls, funItem, bld)
               end
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
           end
         elsif funItem.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(funItem))
+          bld.add(Utils.instance.getComment(funItem))
         elsif funItem.elementId == CodeElem::ELEM_FORMAT
           if (funItem.formatText == "\n")
-            hFile.add
+            bld.add
           else
-            hFile.sameLine(funItem.formatText)
+            bld.sameLine(funItem.formatText)
           end
         end
       end
 
-      hFile.unindent
+      bld.unindent
 
-      hFile.endClass
+      bld.endClass
 
       # Process namespace items
       if cls.namespaceList != nil
         cls.namespaceList.reverse_each do |nsItem|
-          hFile.endBlock("  // namespace " << nsItem)
+          bld.endBlock("  // namespace " << nsItem)
         end
-        hFile.add
+        bld.add
       end
 
-      hFile.add("#endif")
+      bld.add("#endif")
     end
 
     # Returns the code for the body for this class

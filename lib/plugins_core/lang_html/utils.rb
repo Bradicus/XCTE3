@@ -34,6 +34,10 @@ module XCTEHtml
         lowType = var.vtype.downcase
         if (lowType.start_with?("int") || lowType.start_with?("float"))
           return "number"
+        elsif lowType == "datetime"
+          return "datetime-local"
+        elsif lowType == "date"
+          return "date"
         end
       end
 

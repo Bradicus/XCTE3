@@ -133,7 +133,7 @@ module XCTERuby
       bld.endFunction
       bld.add
 
-      bld.add("# Returns the code for the content for this class")
+      bld.add("# Returns the code for the comment for this class")
       bld.startFunction("def genFileComment(cls, cfg, bld)")
       bld.add
       bld.endFunction
@@ -141,10 +141,8 @@ module XCTERuby
 
       bld.add("# Returns the code for the content for this class")
       bld.startFunction("def genFileContent(cls, cfg, bld)")
-      bld.add
-      bld.startBlock("for inc in cls.includes")
-      bld.add('bld.add("require \'" + inc.path + inc.name + "." + Utils.instance.getExtension(\'body\') + "\'")')
-      bld.endBlock
+      bld.separate
+      bld.add("process_dependencies(cls, cfg, bld)")
       bld.separate
       bld.add("bld.separate")
 
@@ -191,14 +189,14 @@ module XCTERuby
       bld.startBlock("if fun.isTemplate")
       bld.add('templ = XCTEPlugin::findMethodPlugin("' + cls.xmlElement.attributes["lang"] + '", fun.name)')
       bld.add("if templ != nil")
-      bld.iadd(1, "bld.add(templ.get_definition(cls, cfg))")
+      bld.iadd(1, "templ.get_definition(cls, cfg)")
       bld.add("else")
       bld.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: '" + cls.xmlElement.attributes["lang"])
       bld.add("end")
       bld.midBlock("else  # Must be empty function")
       bld.add('templ = XCTEPlugin::findMethodPlugin("' + cls.xmlElement.attributes["lang"] + '", "method_empty")')
       bld.startBlock("if templ != nil")
-      bld.add("bld.add(templ.get_definition(fun, cfg))")
+      bld.add("templ.get_definition(fun, cfg)")
       bld.midBlock("else")
       bld.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: '" + cls.xmlElement.attributes["lang"])
       bld.endBlock

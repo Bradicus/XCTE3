@@ -4,19 +4,19 @@ require "x_c_t_e_plugin.rb"
 # This class contains functions that may be usefull in any type of class
 module XCTECpp
   class ClassBase < XCTEPlugin
-    def genIfndef(cls, hFile)
+    def genIfndef(cls, bld)
       if (cls.namespaceList != nil)
-        hFile.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
-        hFile.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
-        hFile.add
+        bld.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+        bld.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+        bld.add
       else
-        hFile.add("#ifndef _" + cls.name + "_H")
-        hFile.add("#define _" + cls.name + "_H")
-        hFile.add
+        bld.add("#ifndef _" + cls.name + "_H")
+        bld.add("#define _" + cls.name + "_H")
+        bld.add
       end
     end
 
-    def genIncludes(cls, cfg, hFile)
+    def process_dependencies(cls, cfg, bld)
       addAutoIncludes(cls, cfg)
 
       for inc in cls.includes
@@ -27,18 +27,18 @@ module XCTECpp
         end
 
         if inc.itype == "<"
-          hFile.add("#include <" << incPathAndName << ">")
+          bld.add("#include <" << incPathAndName << ">")
         elsif inc.name.count(".") > 0
-          hFile.add('#include "' << incPathAndName << '"')
+          bld.add('#include "' << incPathAndName << '"')
         else
-          hFile.add('#include "' << incPathAndName << "." << Utils.instance.getExtension("header") << '"')
+          bld.add('#include "' << incPathAndName << "." << Utils.instance.getExtension("header") << '"')
         end
       end
     end
 
-    def genUsings(cls, cfg, hFile)
+    def genUsings(cls, cfg, bld)
       for us in cls.uses
-        hFile.add("using namespace " + us.namespace.split(".").join("::") + ";")
+        bld.add("using namespace " + us.namespace.split(".").join("::") + ";")
       end
     end
 

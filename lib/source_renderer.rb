@@ -89,7 +89,7 @@ class SourceRenderer
 
   def endBlock(afterClose = "")
     unindent
-    @lines.push(getIndent() + @blockDelimClose + afterClose)
+    add(@blockDelimClose + afterClose)
   end
 
   def startFunction(functionDeclairation)
@@ -106,7 +106,7 @@ class SourceRenderer
 
   def endClass(afterClose = "")
     unindent
-    @lines.last << @blockDelimClose + afterClose
+    add(@blockDelimClose + afterClose)
   end
 
   def startBlock(statement)

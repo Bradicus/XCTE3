@@ -107,7 +107,7 @@ module XCTERuby
 
       bld.add("# process class variables")
 
-      bld.startBlock("for group in vGroup.groups")
+      bld.startBlock("for group in cls.model.groups")
       bld.add("process_var_group(cls, cfg, bld, group)")
       bld.endBlock
       bld.endFunction
@@ -120,36 +120,36 @@ module XCTERuby
 
       bld.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
       bld.startBlock("if !var.isStatic   # Ignore static variables")
-      bld.startBlock("if XCTECpp::Utils::isPrimitive(var)")
+      bld.startBlock("if Utils.instance.isPrimitive(var)")
       bld.startBlock("if var.arrayElemCount.to_i > 0	# Array of primitives)")
       bld.add('bld.startBlock("for i in 0..@" << var.name << ".size")')
-      bld.add('bld.add(var.name + "[i] = src" + codeClass.name + "[i]")')
+      bld.add('bld.add(var.name + "[i] = src" + cls.name + "[i]")')
       bld.add("bld.endBlock")
 
       bld.midBlock("else")
-      bld.add('bld.add(var.name + " = " + "src" + codeClass.name + "." + var.name)')
+      bld.add('bld.add(var.name + " = " + "src" + cls.name + "." + var.name)')
       bld.endBlock
 
       bld.midBlock("else")
       bld.startBlock("if var.arrayElemCount > 0	# Array of objects")
       bld.add('bld.startBlock("for i in 0..@" << var.name << ".size")')
-      bld.add('bld.add(var.name << "[i] = src" << codeClass.name << "[i]")')
+      bld.add('bld.add(var.name << "[i] = src" << cls.name << "[i]")')
       bld.add("bld.endBlock")
 
       bld.midBlock("else")
-      bld.add('bld.add(var.name + " = " + "src" + codeClass.name + "." + var.name)')
+      bld.add('bld.add(var.name + " = " + "src" + cls.name + "." + var.name)')
       bld.endBlock
       bld.endBlock
       bld.endBlock
 
       bld.midBlock("elsif var.elementId == CodeElem::ELEM_COMMENT")
-      bld.add("bld.add(XCTECpp::Utils::getComment(var))")
+      bld.add("bld.add(Utils.instance.getComment(var))")
       bld.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
       bld.add("bld.add(var.formatText)")
       bld.endBlock
 
       bld.endBlock
-      bld.startBlock("for group in cls.model.groups")
+      bld.startBlock("for group in vGroup")
       bld.add("process_var_group(cls, cfg, bld, group)")
       bld.endBlock
       bld.endFunction
@@ -170,7 +170,7 @@ module XCTERuby
         prefix += "::"
       end
 
-      bld.add("XCTEPlugin::registerPlugin(" + prefix + cls.name + " < XCTEPlugin.new)")
+      bld.add("XCTEPlugin::registerPlugin(" + prefix + getClassName(cls) + ".new)")
     end
   end
 end
