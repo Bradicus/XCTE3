@@ -37,7 +37,8 @@ module XCTEHtml
         bld.add  # If we declaired array size variables add a seperator
       end
 
-      bld.startBlock('<form [formGroup]="' + Utils.instance.getStyledVariableName(getUnformattedClassName(cls) + " form") + '"  (ngSubmit)="onSubmit()">')
+      formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
+      bld.startBlock('<form [formGroup]="' + formName + '"  (ngSubmit)="onSubmit()">')
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
@@ -54,8 +55,10 @@ module XCTEHtml
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
             varName = Utils.instance.getStyledVariableName(var)
+            bld.startBlock("<div>")
             bld.add('<label for="' + varName + '">' + var.getDisplayName() + "</label>")
             bld.add('<input id="' + varName + '" [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
+            bld.endBlock("</div>")
           else
             bld.add("<app-" + Utils.instance.getStyledFileName(var.utype) + ">" +
                     "</app-" + Utils.instance.getStyledFileName(var.utype) + ">")

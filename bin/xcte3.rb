@@ -116,11 +116,13 @@ def processProjectComponentGroup(project, pcGroup, cfg)
           end
         end
 
+        # if (!File.file?(fName) || File.mtime(fName) < plan.model.lastModified)
         sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
 
         puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
         sFile << srcFile.getContents
         sFile.close
+        # end
       end
     end
 

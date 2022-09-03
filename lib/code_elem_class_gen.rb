@@ -18,7 +18,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :dontModifyCode,
-                  :filePath, :name, :standardClass, :standardClassType, :customCode
+                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs
     attr_reader :name
 
     def initialize(parentElem, model, isStatic)
@@ -36,6 +36,7 @@ module CodeStructure
       @namespaceList = Array.new
       @templateParams = Array.new
       @varPrefix = ""
+      @preDefs = Array.new
       @path = nil
       @model = model
       @dontModifyCode = isStatic

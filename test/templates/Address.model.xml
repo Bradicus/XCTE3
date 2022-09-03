@@ -12,7 +12,7 @@
 		<var name="state"	type="String" maxlen="2" />
 		<var name="country"	type="String" maxlen="2" />
 		<var name="zip code"		type="String" maxlen="20" />
-	</var_group>
+	</var_group> 
 
 	<gen_class type="standard" 
 		type-typescript="interface" path-typescript="shared/interfaces"

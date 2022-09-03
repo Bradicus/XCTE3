@@ -12,7 +12,7 @@ class DataLoader
   def self.loadXMLClassFile(model, fName, pComponent)
     file = File.new(fName)
     model.xmlFileName = fName
-
+    model.lastModified = file.mtime
     xmlString = file.read
     xmlDoc = REXML::Document.new xmlString
 
@@ -166,6 +166,10 @@ class DataLoader
       }
 
       genC.baseClasses << baseClass
+    }
+
+    genCXml.elements.each("pre_def") { |pdXml|
+      genC.preDefs << pdXml.attributes["name"]
     }
 
     genCXml.elements.each("interface") { |ifXml|

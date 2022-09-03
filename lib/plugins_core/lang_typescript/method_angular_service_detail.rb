@@ -13,7 +13,7 @@ module XCTETypescript
       urlName = Utils.instance.getStyledUrlName(cls.model.name)
 
       bld.startFunction("detail(id: any): Observable<" + className + ">")
-      bld.add("return httpClient.get<" + className + "[]>(`${this.apiURL}/" + urlName + "/${id}`);")
+      bld.add("return httpClient.get<" + className + ">(`${this.apiURL}/" + urlName + "/${id}`);")
       bld.endFunction()
     end
   end

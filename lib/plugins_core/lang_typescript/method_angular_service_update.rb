@@ -13,7 +13,7 @@ module XCTETypescript
       urlName = Utils.instance.getStyledUrlName(cls.model.name)
 
       bld.startFunction("update(item: " + className + "): any")
-      bld.add("return httpClient.put<" + className + "[]>(`${this.apiURL}/" + urlName + "/${id}`, item);")
+      bld.add("return httpClient.put<" + className + ">(`${this.apiURL}/" + urlName + "/${id}`, item);")
       bld.endFunction()
     end
   end

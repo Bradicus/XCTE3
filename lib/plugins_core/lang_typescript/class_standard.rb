@@ -117,9 +117,9 @@ module XCTETypescript
         elsif var.elementId == CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
-        for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
-        end
+      end
+      for group in vGroup.groups
+        process_var_group(cls, cfg, bld, group)
       end
     end
 

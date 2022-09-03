@@ -14,14 +14,14 @@ module XCTEHtml
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.model.name + " listing"
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " listing" + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
@@ -46,10 +46,24 @@ module XCTEHtml
       end
 
       bld.startBlock('<table id="' + CodeNameStyling.getStyled(getUnformattedClassName(cls) + "", Utils.instance.langProfile.variableNameStyle) + '">')
-      # Generate class variables
+
+      # Generate table header
+      bld.startBlock("<thead>")
+      bld.startBlock("<tr>")
       for group in cls.model.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group_header(cls, cfg, bld, group)
       end
+      bld.endBlock("</tr>")
+      bld.endBlock("</thead>")
+
+      # Generate table body
+      bld.startBlock("<body>")
+      bld.startBlock('<tr *ngFor="let item of itemList">')
+      for group in cls.model.groups
+        process_var_group_body(cls, cfg, bld, group)
+      end
+      bld.endBlock("</tr>")
+      bld.endBlock("</body>")
 
       bld.endBlock("</table>")
 
@@ -57,25 +71,33 @@ module XCTEHtml
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group_header(cls, cfg, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
             varName = Utils.instance.getStyledVariableName(var)
-            prefix = CodeNameStyling.getStyled(getUnformattedClassName(cls), Utils.instance.langProfile.variableNameStyle)
-            bld.add('<label for="' + prefix + "-" + varName + '">' + var.getDisplayName() + "</label>")
-            bld.add('<input id="' + prefix + "-" + varName + '" [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
-          else
-            bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType()) + ">" +
-                    "</app-" + Utils.instance.getStyledFileName(var.getUType) + ">")
+
+            bld.add("<th>" + var.getDisplayName() + "</th>")
           end
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
         end
         for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
+          process_var_group_header(cls, cfg, bld, group)
+        end
+      end
+    end
+
+    # process variable group
+    def process_var_group_body(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if Utils.instance.isPrimitive(var)
+            varName = Utils.instance.getStyledVariableName(var)
+
+            bld.add("<td>{{item." + varName + "}}</td>")
+          end
+        end
+        for group in vGroup.groups
+          process_var_group_body(cls, cfg, bld, group)
         end
       end
     end

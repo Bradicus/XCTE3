@@ -3,39 +3,39 @@
 
 	<description>
 	</description>
-				
+
 	<gen_class type="standard" type-typescript="interface"
 		path-typescript="shared/interfaces"
 		path-csharp="XCTE.Base/Model" >
-		<use-csharp name="System.Collections.Generic" />		
+		<use-csharp name="System.Collections.Generic" />
 	</gen_class>
-	
-	<gen_class type="class_angular_component" path="user-edit" ></gen_class>
-	<gen_class type="class_angular_reactive_form" path="user-edit" ></gen_class>	
+
+	<gen_class type="class_angular_listing" path="user-listing" ></gen_class>
+	<gen_class type="class_angular_reactive_edit" path="user-edit" ></gen_class>
 	<gen_class type="class_angular_service" path="shared/services" >
 		<function name="method_angular_service_detail" />
 		<function name="method_angular_service_listing" />
 		<function name="method_angular_service_create" />
 		<function name="method_angular_service_update" />
-	</gen_class>	
-				
+	</gen_class>
+
 	<gen_class type="ef_configuration" namespace="XCTE.Base.DB" path="XCTE.Base/DB" >
 		<use-csharp name="System.Collections.Generic" />
 		<function name="method_ef_configuration" />
 	</gen_class>
-				
+
 	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
-				
-	<var_group genGet="true" genSet="true">	
+
+	<var_group genGet="true" genSet="true">
 		<var name="first name"		type="String" maxlen="50" />
 		<var name="last name"		type="String" maxlen="50" />
-		<var name="createdDate" type="DateTime" />
-		<var name="lastLoginDate" type="DateTime" />
 		<var name="username"	type="String" maxlen="50" />
+		<var name="created date" type="DateTime" />
+		<var name="last login date" type="DateTime" />
 		<var name="mailing address" 	utype="address" />
 		<var name="physical address" 	utype="address" />
 		<var name="roles"		utype="role" set="List" />
-	</var_group>	
+	</var_group>
 </model>

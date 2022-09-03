@@ -24,6 +24,7 @@ module XCTECpp
       @name = "standard"
       @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
+      @activeVisibility = ""
     end
 
     def getClassName(cls)
@@ -87,11 +88,12 @@ module XCTECpp
 
     # Returns the code for the header for this class
     def genHeader(cls, cfg, bld)
+      @activeVisibility = ""
       genIfndef(cls, bld)
 
       # get list of includes needed by functions
 
-      # Generate function declarations
+      # Generate function dependencies
       for funItem in cls.functions
         if funItem.elementId == CodeElem::ELEM_FUNCTION
           if funItem.isTemplate
@@ -136,6 +138,10 @@ module XCTECpp
         bld.add
       end
 
+      for pd in cls.preDefs
+        bld.add("class " + pd + ";")
+      end
+
       classDec = "class " + Utils.instance.getStyledClassName(cls.model.name)
 
       inheritFrom = Array.new
@@ -154,24 +160,11 @@ module XCTECpp
 
       bld.startClass(classDec)
 
-      bld.add("public:")
       bld.indent
 
       # Generate class variables
-      varArray = Array.new
-
-      for vGrp in cls.model.groups
-        getVarsFor(vGrp, cfg, varArray)
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.add(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
+      for group in cls.model.groups
+        process_header_var_group(cls, cfg, bld, group)
       end
 
       if (cls.functions.length > 0)
@@ -181,6 +174,13 @@ module XCTECpp
       # Generate function declarations
       for funItem in cls.functions
         if funItem.elementId == CodeElem::ELEM_FUNCTION
+          if funItem.visibility != @activeVisibility
+            @activeVisibility = funItem.visibility
+            bld.unindent
+            bld.add(funItem.visibility + ":")
+            bld.indent
+          end
+
           if funItem.isTemplate
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
@@ -232,6 +232,40 @@ module XCTECpp
       end
 
       bld.add("#endif")
+    end
+
+    # process variable group
+    def process_header_var_group(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if var.visibility != @activeVisibility
+            @activeVisibility = var.visibility
+            bld.unindent
+            bld.add(var.visibility + ":")
+            bld.indent
+          end
+          bld.add(Utils.instance.getVarDec(var))
+          if (var.genGet)
+            templ = XCTEPlugin::findMethodPlugin("cpp", "method_get")
+            if templ != nil
+              templ.get_declaration(var, cfg, bld)
+            end
+          end
+          if (var.genSet)
+            templ = XCTEPlugin::findMethodPlugin("cpp", "method_set")
+            if templ != nil
+              templ.get_declaration(var, cfg, bld)
+            end
+          end
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          bld.sameLine(Utils.instance.getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          bld.add(var.formatText)
+        end
+      end
+      for group in vGroup.groups
+        process_header_var_group(cls, cfg, bld, group)
+      end
     end
 
     # Returns the code for the body for this class

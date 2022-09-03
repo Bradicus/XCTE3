@@ -21,7 +21,7 @@ module XCTETypescript
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)

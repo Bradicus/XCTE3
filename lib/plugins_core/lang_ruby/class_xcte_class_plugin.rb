@@ -176,9 +176,9 @@ module XCTERuby
       bld.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
       bld.add("bld.add(var.formatText)")
       bld.endBlock
+      bld.endBlock
       bld.startBlock("for group in vGroup.groups")
       bld.add("process_var_group(cls, cfg, bld, group)")
-      bld.endBlock
       bld.endBlock
       bld.endFunction
 
