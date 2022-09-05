@@ -31,7 +31,7 @@ module XCTECpp
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " container"
+      return cls.getUName() + " container"
     end
 
     def getClassName(cls)

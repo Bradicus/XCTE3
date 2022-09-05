@@ -28,7 +28,7 @@ module XCTECpp
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " json engine"
+      return cls.getUName() + " json engine"
     end
 
     def genSourceFiles(cls, cfg)
@@ -37,13 +37,13 @@ module XCTECpp
       cls.setName(getUnformattedClassName(cls))
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + "JsonEngine")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
       bld.lfExtension = Utils.instance.getExtension("header")
       genHeaderComment(cls, cfg, bld)
       genHeader(cls, cfg, bld)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.model.name + "JsonEngine")
+      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
       cppFile.lfExtension = Utils.instance.getExtension("body")
       genHeaderComment(cls, cfg, cppFile)
       genBody(cls, cfg, cppFile)
@@ -56,7 +56,7 @@ module XCTECpp
 
     def genHeaderComment(cls, cfg, bld)
       bld.add("/**")
-      bld.add("* @class " + Utils.instance.getStyledClassName(cls.model.name + "JsonEngine"))
+      bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine"))
 
       if (cfg.codeAuthor != nil)
         bld.add("* @author " + cfg.codeAuthor)
@@ -199,7 +199,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.model.name + "JsonEngine") << '.h"')
+      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine") << '.h"')
       cppGen.add
 
       # Process namespace items

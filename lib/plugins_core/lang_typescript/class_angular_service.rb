@@ -14,7 +14,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " service"
+      return cls.getUName() + " service"
     end
 
     def genSourceFiles(cls, cfg)
@@ -44,7 +44,7 @@ module XCTETypescript
 
       bld.add("private apiUrl='';")
       # bld.add("private dataExpires: Number = 600; // Seconds")
-      # bld.add("private items: " + Utils.instance.getStyledClassName(cls.model.name) + "[];")
+      # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
 
       bld.separate
       bld.startFunction("constructor(private httpClient: HttpClient)")

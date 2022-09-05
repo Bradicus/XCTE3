@@ -21,14 +21,14 @@ module XCTERazor
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name)
+      return Utils.instance.getStyledClassName(cls.getUName())
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       codeBuilder = SourceRendererRazor.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName())
       codeBuilder.lfExtension = "cshtml"
       genFileContent(cls, cfg, codeBuilder)
 

@@ -28,20 +28,20 @@ module XCTECpp
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " pugi xml engine"
+      return cls.getUName() + " pugi xml engine"
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.model.name + "PugiXmlEngine")
+      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "PugiXmlEngine")
       hFile.lfExtension = Utils.instance.getExtension("header")
       genHeaderComment(cls, cfg, hFile)
       genHeader(cls, cfg, hFile)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.model.name + "PugiXmlEngine")
+      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "PugiXmlEngine")
       cppFile.lfExtension = Utils.instance.getExtension("body")
       genHeaderComment(cls, cfg, cppFile)
       genBody(cls, cfg, cppFile)
@@ -232,7 +232,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.model.name) << ".h\"")
+      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
       cppGen.add
 
       # Process namespace items
@@ -250,7 +250,7 @@ module XCTECpp
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isStatic
             cppGen.add(Utils.instance.getTypeName(var) << " ")
-            cppGen.sameLine(Utils.instance.getStyledClassName(cls.model.name) << " :: ")
+            cppGen.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
             cppGen.sameLine(Utils.instance.getStyledVariableName(var))
 
             if var.arrayElemCount.to_i > 0 # This is an array

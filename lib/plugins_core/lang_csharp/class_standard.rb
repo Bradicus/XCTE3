@@ -19,14 +19,14 @@ module XCTECSharp
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name)
+      return Utils.instance.getStyledClassName(cls.getUName())
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName())
       codeBuilder.lfExtension = Utils.instance.getExtension("body")
       genFileContent(cls, cfg, codeBuilder)
 

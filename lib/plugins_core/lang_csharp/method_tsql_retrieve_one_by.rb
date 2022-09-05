@@ -32,7 +32,7 @@ module XCTECSharp
     end
 
     def get_function_signature(cls, genFun, cfg, codeBuilder)
-      standardClassName = Utils.instance.getStyledClassName(cls.model.name)
+      standardClassName = Utils.instance.getStyledClassName(cls.getUName())
 
       paramDec = Array.new
       paramNames = Array.new
@@ -51,9 +51,9 @@ module XCTECSharp
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
 
-      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
+      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(cls.model.name) + "();")
+      codeBuilder.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
 
       codeBuilder.add('string sql = @"SELECT TOP 1 ')
 
@@ -63,7 +63,7 @@ module XCTECSharp
 
       codeBuilder.unindent
 
-      codeBuilder.add("FROM " + cls.model.name)
+      codeBuilder.add("FROM " + cls.getUName())
       codeBuilder.add("WHERE ")
 
       codeBuilder.indent
@@ -105,7 +105,7 @@ module XCTECSharp
 
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving one item from ' + cls.model.name + '", e);')
+      codeBuilder.add('throw new Exception("Error retrieving one item from ' + cls.getUName() + '", e);')
       codeBuilder.endBlock(";")
 
       codeBuilder.add

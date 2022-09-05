@@ -32,7 +32,7 @@ module XCTERuby
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)

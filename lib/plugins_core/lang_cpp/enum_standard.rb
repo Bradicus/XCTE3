@@ -31,7 +31,7 @@ module XCTECpp
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)
@@ -40,7 +40,7 @@ module XCTECpp
       cls.setName(getUnformattedClassName(cls))
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
       hFile.lfExtension = Utils.instance.getExtension("header")
       genHeaderComment(cls, cfg, hFile)
       genHeader(cls, cfg, hFile)
@@ -52,7 +52,7 @@ module XCTECpp
 
     def genHeaderComment(cls, cfg, hFile)
       hFile.add("/**")
-      hFile.add("* @enum " + cls.model.name)
+      hFile.add("* @enum " + cls.getUName())
 
       if (cfg.codeAuthor != nil)
         hFile.add("* @author " + cfg.codeAuthor)
@@ -83,12 +83,12 @@ module XCTECpp
     # Returns the code for the header for this class
     def genHeader(cls, cfg, hFile)
       if (cls.namespaceList != nil)
-        hFile.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
-        hFile.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
+        hFile.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        hFile.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
         hFile.add
       else
-        hFile.add("#ifndef _" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
-        hFile.add("#define _" + Utils.instance.getStyledClassName(cls.model.name) + "_H")
+        hFile.add("#ifndef _" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        hFile.add("#define _" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
         hFile.add
       end
 
@@ -107,7 +107,7 @@ module XCTECpp
         CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
       end
 
-      classDec = "enum class " + Utils.instance.getStyledClassName(cls.model.name)
+      classDec = "enum class " + Utils.instance.getStyledClassName(cls.getUName())
 
       hFile.startBlock(classDec)
 

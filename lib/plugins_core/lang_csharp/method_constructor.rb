@@ -22,7 +22,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
     codeBuilder.add("/// Constructor")
     codeBuilder.add("///")
 
-    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
+    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
     codeBuilder.startClass(standardClassName + "()")
 
@@ -32,7 +32,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
 
   def get_declairation(cls, genFun, cfg, codeBuilder)
-    codeBuilder.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.model.name) + "();")
+    codeBuilder.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
   end
 
   # No deps

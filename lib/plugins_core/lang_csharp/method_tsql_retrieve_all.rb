@@ -23,7 +23,7 @@ module XCTECSharp
       codeBuilder.add("/// Reads data set from sql database")
       codeBuilder.add("/// </summary>")
 
-      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
+      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
       codeBuilder.startClass("public IEnumerable<" + standardClassName +
                              "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)")
@@ -35,7 +35,7 @@ module XCTECSharp
 
     def get_declairation(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("IEnumerable<" +
-                      Utils.instance.getStyledClassName(cls.model.name) +
+                      Utils.instance.getStyledClassName(cls.getUName()) +
                       "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);")
     end
 
@@ -49,7 +49,7 @@ module XCTECSharp
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
 
-      tableName = Utils.instance.getStyledClassName(cls.model.name)
+      tableName = Utils.instance.getStyledClassName(cls.getUName())
       codeBuilder.add("List<" + tableName + "> resultList = new List<" + tableName + ">();")
       codeBuilder.add('string sql = @"SELECT ')
 

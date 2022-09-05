@@ -16,14 +16,14 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " edit component"
+      return cls.getUName() + " edit component"
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " edit" + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " edit" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       get_dependencies(cls, cfg, bld)
@@ -45,9 +45,9 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.getStyledFileName(cls.model.name)
+      filePart = Utils.instance.getStyledFileName(cls.getUName())
 
-      clsVar = CodeNameStyling.getStyled(cls.model.name, Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.getUName(), Utils.instance.langProfile.variableNameStyle)
 
       bld.add("@Component({")
       bld.indent
@@ -69,7 +69,7 @@ module XCTETypescript
       end
 
       bld.add
-      bld.startBlock("constructor(private fb: FormBuilder, private service: " + Utils.instance.getStyledClassName(cls.model.name) + "Service)")
+      bld.startBlock("constructor(private fb: FormBuilder, private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
       bld.endBlock
 
       bld.add
@@ -92,7 +92,7 @@ module XCTETypescript
 
     # process variable group
     def process_var_group(cls, cfg, bld, vGroup)
-      clsVar = CodeNameStyling.getStyled(cls.model.name, Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.getUName(), Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + " = ")
 
       Utils.instance.getFormgroup(cls, bld, vGroup)

@@ -22,7 +22,7 @@ module XCTECSharp
       if (cls.parentElem.is_a?(CodeElemClassGen))
         return "i " + cls.parentElem.name
       else
-        return "i " + cls.model.name
+        return "i " + cls.getUName()
       end
     end
 
@@ -32,7 +32,7 @@ module XCTECSharp
       if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
         cls.setName("i " + cls.parentElem.name)
       else
-        cls.setName("i " + cls.model.name)
+        cls.setName("i " + cls.getUName())
       end
 
       cls.addUse("System.Data.SqlClient", "SqlConnection")
@@ -105,7 +105,7 @@ module XCTECSharp
             end
           end
         end
-      end  # class  + cls.model.name
+      end  # class  + cls.getUName()
       codeBuilder.endClass
 
       # Process namespace items

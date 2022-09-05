@@ -20,7 +20,7 @@ module XCTETSql
     end
 
     def getClassName(cls)
-      return XCTETSql::Utils.instance.getStyledClassName(cls.model.name)
+      return XCTETSql::Utils.instance.getStyledClassName(cls.getUName())
     end
 
     def genSourceFiles(cls, cfg)
@@ -29,7 +29,7 @@ module XCTETSql
       cls.setName(getClassName(cls))
 
       codeBuilder = SourceRenderer.new
-      codeBuilder.lfName = cls.model.name
+      codeBuilder.lfName = cls.getUName()
       codeBuilder.lfExtension = "sql"
       genFileContent(cls, cfg, codeBuilder)
 

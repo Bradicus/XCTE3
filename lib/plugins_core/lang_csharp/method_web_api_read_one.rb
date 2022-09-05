@@ -22,10 +22,10 @@ module XCTECSharp
     # Returns definition string for this class's constructor
     def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
-      codeBuilder.add("/// Web API get single " + cls.model.name)
+      codeBuilder.add("/// Web API get single " + cls.getUName())
       codeBuilder.add("///")
 
-      codeBuilder.startFunction("public IQueryable<" + Utils.instance.getStyledClassName(cls.model.name) + "> Get" + Utils.instance.getStyledClassName(cls.model.name) + "(int id)")
+      codeBuilder.startFunction("public IQueryable<" + Utils.instance.getStyledClassName(cls.getUName()) + "> Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id)")
 
       get_body(cls, genFun, cfg, codeBuilder)
 
@@ -33,8 +33,8 @@ module XCTECSharp
     end
 
     def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("public IQueryable<" + Utils.instance.getStyledClassName(cls.model.name) +
-                      "> Get" + Utils.instance.getStyledClassName(cls.model.name) + "(int id);")
+      codeBuilder.add("public IQueryable<" + Utils.instance.getStyledClassName(cls.getUName()) +
+                      "> Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
     def get_dependencies(cls, genFun, cfg, codeBuilder)
@@ -45,7 +45,7 @@ module XCTECSharp
     def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
-      engineName = Utils.instance.getStyledClassName(cls.model.name) + "Engine"
+      engineName = Utils.instance.getStyledClassName(cls.getUName()) + "Engine"
       cls.model.getAllVarsFor(varArray)
 
       codeBuilder.add("using (SqlConnection conn = new SqlConnection())")

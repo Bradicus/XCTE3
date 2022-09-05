@@ -22,13 +22,13 @@ module XCTECpp
     def get_declaration(cls, funItem, hFile)
       eqString = String.new
 
-      hFile.add(Utils.instance.getStyledClassName(cls.model.name))
-      hFile.sameLine("(const " + Utils.instance.getStyledClassName(cls.model.name))
-      hFile.sameLine("& src" + Utils.instance.getStyledClassName(cls.model.name) + ");")
+      hFile.add(Utils.instance.getStyledClassName(cls.getUName()))
+      hFile.sameLine("(const " + Utils.instance.getStyledClassName(cls.getUName()))
+      hFile.sameLine("& src" + Utils.instance.getStyledClassName(cls.getUName()) + ");")
 
-      hFile.add("const " + Utils.instance.getStyledClassName(cls.model.name))
-      hFile.sameLine("& operator=" + "(const " + Utils.instance.getStyledClassName(cls.model.name))
-      hFile.sameLine("& src" + Utils.instance.getStyledClassName(cls.model.name) + ");\n")
+      hFile.add("const " + Utils.instance.getStyledClassName(cls.getUName()))
+      hFile.sameLine("& operator=" + "(const " + Utils.instance.getStyledClassName(cls.getUName()))
+      hFile.sameLine("& src" + Utils.instance.getStyledClassName(cls.getUName()) + ");\n")
     end
 
     def get_dependencies(cls, funItem, hFile)
@@ -39,7 +39,7 @@ module XCTECpp
       eqString = String.new
       longArrayFound = false
 
-      styledCName = Utils.instance.getStyledClassName(cls.model.name)
+      styledCName = Utils.instance.getStyledClassName(cls.getUName())
 
       # First add copy constructor
       hFile.genMultiComment(["Copy constructor"])

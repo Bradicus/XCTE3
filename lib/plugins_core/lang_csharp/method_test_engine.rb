@@ -27,7 +27,7 @@ module XCTECSharp
       codeBuilder.add("///")
 
       codeBuilder.add("[TestMethod]")
-      codeBuilder.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.model.name + " engine") + "()")
+      codeBuilder.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.getUName() + " engine") + "()")
       get_body(cls, cfg, codeBuilder)
 
       codeBuilder.endFunction
@@ -40,14 +40,14 @@ module XCTECSharp
       cls.addUse("System", "Exception")
       cls.addUse("System.Transactions", "TransactionScope")
       cls.addUse("Microsoft.VisualStudio.TestTools.UnitTesting", "TestMethod")
-      cls.addUse("XCTE.Foundation", Utils.instance.getStyledClassName("i " + cls.model.name + " engine"))
-      cls.addUse("XCTE.Data", Utils.instance.getStyledClassName(cls.model.name + " engine"))
+      cls.addUse("XCTE.Foundation", Utils.instance.getStyledClassName("i " + cls.getUName() + " engine"))
+      cls.addUse("XCTE.Data", Utils.instance.getStyledClassName(cls.getUName() + " engine"))
     end
 
     def get_body(cls, cfg, codeBuilder)
-      stdClassName = Utils.instance.getStyledClassName(cls.model.name)
+      stdClassName = Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.add(Utils.instance.getStyledClassName("i " + cls.model.name + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.model.name + " engine") + "();")
+      codeBuilder.add(Utils.instance.getStyledClassName("i " + cls.getUName() + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.getUName() + " engine") + "();")
       codeBuilder.add(stdClassName + " obj = new " + stdClassName + "();")
       codeBuilder.add
       codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
@@ -106,7 +106,7 @@ module XCTECSharp
             codeBuilder.add
           end
         end
-      end  # class  + cls.model.name
+      end  # class  + cls.getUName()
     end
   end
 end

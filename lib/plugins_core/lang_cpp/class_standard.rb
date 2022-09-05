@@ -32,20 +32,20 @@ module XCTECpp
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
       bld.lfExtension = Utils.instance.getExtension("header")
       genHeaderComment(cls, cfg, bld)
       genHeader(cls, cfg, bld)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
       cppFile.lfExtension = Utils.instance.getExtension("body")
       genHeaderComment(cls, cfg, cppFile)
       genBody(cls, cfg, cppFile)
@@ -58,7 +58,7 @@ module XCTECpp
 
     def genHeaderComment(cls, cfg, bld)
       bld.add("/**")
-      bld.add("* @class " + Utils.instance.getStyledClassName(cls.model.name))
+      bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName()))
 
       if (cfg.codeAuthor != nil)
         bld.add("* @author " + cfg.codeAuthor)
@@ -142,7 +142,7 @@ module XCTECpp
         bld.add("class " + pd + ";")
       end
 
-      classDec = "class " + Utils.instance.getStyledClassName(cls.model.name)
+      classDec = "class " + Utils.instance.getStyledClassName(cls.getUName())
 
       inheritFrom = Array.new
 
@@ -270,7 +270,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.model.name) << ".h\"")
+      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
       cppGen.add
 
       # Process namespace items
@@ -288,7 +288,7 @@ module XCTECpp
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isStatic
             cppGen.add(Utils.instance.getTypeName(var) << " ")
-            cppGen.sameLine(Utils.instance.getStyledClassName(cls.model.name) << " :: ")
+            cppGen.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
             cppGen.sameLine(Utils.instance.getStyledVariableName(var))
 
             if var.arrayElemCount.to_i > 0 # This is an array

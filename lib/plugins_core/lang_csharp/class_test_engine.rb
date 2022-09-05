@@ -19,15 +19,15 @@ module XCTECSharp
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name + " engine")
+      return Utils.instance.getStyledClassName(cls.getUName() + " engine")
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      cls.setName(Utils.instance.getStyledClassName(cls.model.name + " engine test"))
+      cls.setName(Utils.instance.getStyledClassName(cls.getUName() + " engine test"))
       if cls.interfaceNamespace != nil
-        cls.includes << CodeElemInclude.new(cls.interfaceNamespace, cls.model.name + " interface")
+        cls.includes << CodeElemInclude.new(cls.interfaceNamespace, cls.getUName() + " interface")
       end
 
       codeBuilder = SourceRendererCSharp.new

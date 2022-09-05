@@ -26,7 +26,7 @@ module XCTECSharp
       codeBuilder.add("///")
 
       codeBuilder.startClass("public void Update(" +
-                             Utils.instance.getStyledClassName(cls.model.name) +
+                             Utils.instance.getStyledClassName(cls.getUName()) +
                              " o, SqlConnection conn, SqlTransaction trans)")
 
       get_body(cls, genFun, cfg, codeBuilder)
@@ -36,7 +36,7 @@ module XCTECSharp
 
     def get_declairation(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("void Update(" +
-                      Utils.instance.getStyledClassName(cls.model.name) +
+                      Utils.instance.getStyledClassName(cls.getUName()) +
                       " o, SqlConnection conn, SqlTransaction trans);")
     end
 
@@ -47,7 +47,7 @@ module XCTECSharp
     def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
 
-      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.model.name) + " SET ")
+      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + " SET ")
 
       codeBuilder.indent
 
@@ -90,7 +90,7 @@ module XCTECSharp
       codeBuilder.endBlock
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error updating ' + cls.model.name + " with " +
+      codeBuilder.add('throw new Exception("Error updating ' + cls.getUName() + " with " +
                       varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
       codeBuilder.endBlock(";")
     end

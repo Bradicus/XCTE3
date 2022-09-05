@@ -19,14 +19,14 @@ module XCTECSharp
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name)
+      return Utils.instance.getStyledClassName(cls.getUName())
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.model.name + "Configuration")
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName() + "Configuration")
       codeBuilder.lfExtension = Utils.instance.getExtension("body")
       genFileContent(cls, cfg, codeBuilder)
 
@@ -55,7 +55,7 @@ module XCTECSharp
       Utils.instance.genUses(cls.uses, codeBuilder)
       Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
 
-      classDec = cls.model.visibility + " class " + getClassName(cls) + " : IEntityTypeConfiguration<" + Utils.instance.getStyledClassName(cls.model.name) + ">"
+      classDec = cls.model.visibility + " class " + getClassName(cls) + " : IEntityTypeConfiguration<" + Utils.instance.getStyledClassName(cls.getUName()) + ">"
 
       for par in (0..cls.baseClasses.size)
         if par == 0 && cls.baseClasses[par] != nil

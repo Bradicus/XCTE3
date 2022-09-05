@@ -32,7 +32,7 @@ module XCTECSharp
     end
 
     def get_function_signature(cls, genFun, cfg, codeBuilder)
-      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
+      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
       paramDec = Array.new
       paramNames = Array.new
@@ -52,7 +52,7 @@ module XCTECSharp
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
 
-      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
+      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
       codeBuilder.add("List<" + styledClassName + "> resultList = new List<" + styledClassName + ">();")
 
       codeBuilder.add('string sql = @"SELECT ')
@@ -63,7 +63,7 @@ module XCTECSharp
 
       codeBuilder.unindent
 
-      codeBuilder.add("FROM " + XCTETSql::Utils.instance.getStyledClassName(cls.model.name))
+      codeBuilder.add("FROM " + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()))
       codeBuilder.add("WHERE ")
 
       codeBuilder.indent
@@ -96,7 +96,7 @@ module XCTECSharp
 
       codeBuilder.startBlock("while(results.Read())")
 
-      codeBuilder.add("var o = new " + Utils.instance.getStyledClassName(cls.model.name) + "();")
+      codeBuilder.add("var o = new " + Utils.instance.getStyledClassName(cls.getUName()) + "();")
       codeBuilder.add
 
       Utils.instance.genAssignResults(varArray, cls, codeBuilder)
@@ -109,7 +109,7 @@ module XCTECSharp
 
       codeBuilder.endBlock
       codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving all items from ' + cls.model.name + '", e);')
+      codeBuilder.add('throw new Exception("Error retrieving all items from ' + cls.getUName() + '", e);')
       codeBuilder.endBlock(";")
 
       codeBuilder.add

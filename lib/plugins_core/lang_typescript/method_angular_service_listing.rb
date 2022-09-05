@@ -9,8 +9,8 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def get_definition(cls, cfg, bld)
-      className = Utils.instance.getStyledClassName(cls.model.name)
-      urlName = Utils.instance.getStyledUrlName(cls.model.name)
+      className = Utils.instance.getStyledClassName(cls.getUName())
+      urlName = Utils.instance.getStyledUrlName(cls.getUName())
 
       bld.startFunction("listing(): Observable<" + className + ">")
       bld.add("return httpClient.get<" + className + "[]>(`${this.apiURL}/" + urlName + "`);")

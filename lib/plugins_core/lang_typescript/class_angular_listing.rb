@@ -14,7 +14,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " listing"
+      return cls.getUName() + " listing"
     end
 
     def genSourceFiles(cls, cfg)
@@ -57,7 +57,7 @@ module XCTETypescript
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
 
-      bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.model.name) + "Service)")
+      bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
       bld.endBlock
 
       bld.separate

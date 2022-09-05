@@ -14,14 +14,14 @@ module XCTEHtml
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.model.name + " edit.component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " edit.component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)

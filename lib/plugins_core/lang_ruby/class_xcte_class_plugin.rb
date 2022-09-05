@@ -31,7 +31,7 @@ module XCTERuby
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)
@@ -96,7 +96,7 @@ module XCTERuby
       bld.startClass("class " + getClassName(cls) + " < XCTEPlugin")
 
       bld.startFunction("def initialize")
-      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.model.name) + '"')
+      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName()) + '"')
       bld.add('@language = "' + cls.xmlElement.attributes["lang"] + '"')
       bld.add("@category = XCTEPlugin::CAT_CLASS")
       if cfg.codeAuthor
@@ -112,7 +112,7 @@ module XCTERuby
       bld.add
 
       bld.startFunction("def getUnformattedClassName(cls)")
-      bld.add("return cls.model.name")
+      bld.add("return cls.getUName()")
       bld.endFunction
 
       bld.add

@@ -20,12 +20,12 @@ module XCTECpp
 
     # Returns declairation string for this class's constructor
     def get_declaration(cls, funItem, codeBuilder)
-      codeBuilder.add(Utils.instance.getStyledClassName(cls.model.name) + "();")
+      codeBuilder.add(Utils.instance.getStyledClassName(cls.getUName()) + "();")
     end
 
     # Returns declairation string for this class's constructor
     def get_declaration_inline(cls, funItem, codeBuilder)
-      codeBuilder.startFuction(Utils.instance.getStyledClassName(cls.model.name) + "()")
+      codeBuilder.startFuction(Utils.instance.getStyledClassName(cls.getUName()) + "()")
       codeStr << get_body(cls, funItem, hFile)
       codeBuilder.endFunction
     end
@@ -40,7 +40,7 @@ module XCTECpp
       codeBuilder.add("*/")
 
       classDef = String.new
-      classDef << Utils.instance.getStyledClassName(cls.model.name) << " :: " << Utils.instance.getStyledClassName(cls.model.name) << "()"
+      classDef << Utils.instance.getStyledClassName(cls.getUName()) << " :: " << Utils.instance.getStyledClassName(cls.getUName()) << "()"
       codeBuilder.startClass(classDef)
 
       get_body(cls, funItem, codeBuilder)

@@ -12,6 +12,7 @@
 
 	<gen_class type="class_angular_listing" path="user-listing" ></gen_class>
 	<gen_class type="class_angular_reactive_edit" path="user-edit" ></gen_class>
+  <gen_class type="class_angular_component" namespace="" path="user-edit" ></gen_class>
 	<gen_class type="class_angular_service" path="shared/services" >
 		<function name="method_angular_service_detail" />
 		<function name="method_angular_service_listing" />

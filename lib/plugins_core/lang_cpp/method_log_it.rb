@@ -36,14 +36,14 @@ module XCTECpp
       codeBuilder.add("* to the debug stream")
       codeBuilder.add("*/")
 
-      codeBuilder.add("void " << cls.model.name << " :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const")
+      codeBuilder.add("void " << cls.getUName() << " :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const")
       codeBuilder.add("{")
 
       if cls.model.hasAnArray
         codeBuilder.add("    unsigned int i;")
       end
 
-      codeBuilder.add("    outStr << indent << \" -- " << cls.model.name << " begin -- \" << std::endl;")
+      codeBuilder.add("    outStr << indent << \" -- " << cls.getUName() << " begin -- \" << std::endl;")
 
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
@@ -85,7 +85,7 @@ module XCTECpp
           codeBuilder.add(varSec.formatText)
         end
 
-        codeBuilder.add("    outStr << indent << \" -- " << cls.model.name << " end -- \" << std::endl;")
+        codeBuilder.add("    outStr << indent << \" -- " << cls.getUName() << " end -- \" << std::endl;")
 
         codeBuilder.add("}")
       end

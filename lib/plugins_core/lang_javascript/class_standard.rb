@@ -26,7 +26,7 @@ module XCTEJavascript
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name)
+      return Utils.instance.getStyledClassName(cls.getUName())
     end
 
     def genSourceFiles(codeClass, cfg)

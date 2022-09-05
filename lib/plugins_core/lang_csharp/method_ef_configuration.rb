@@ -22,7 +22,7 @@ class XCTECSharp::MethodEFConfiguration < XCTEPlugin
     codeBuilder.add("// Configuration ")
     codeBuilder.add("//")
 
-    entityClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.model.name)
+    entityClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
     configFunName = "Configure(EntityTypeBuilder<" + entityClassName + "> builder)"
 
     codeBuilder.startFunction("public void " + configFunName)
@@ -40,7 +40,7 @@ class XCTECSharp::MethodEFConfiguration < XCTEPlugin
     varArray = Array.new
     cls.model.getAllVarsFor(varArray)
 
-    codeBuilder.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.model.name) + '", "dbo");')
+    codeBuilder.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + '", "dbo");')
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE

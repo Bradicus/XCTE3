@@ -14,7 +14,7 @@ module XCTEHtml
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name + " listing"
+      return cls.getUName() + " listing"
     end
 
     def genSourceFiles(cls, cfg)

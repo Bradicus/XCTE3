@@ -232,10 +232,10 @@ module XCTECpp
         ns = ""
       end
 
-      cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.model.name)
+      cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.getUName())
 
       if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
-        cls.addInclude(cls.standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(cls.model.name))
+        cls.addInclude(cls.standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(cls.getUName()))
       end
 
       return cls.standardClass

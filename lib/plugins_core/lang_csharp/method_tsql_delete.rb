@@ -60,7 +60,7 @@ module XCTECSharp
 
         cls.model.getAllVarsFor(varArray)
 
-        codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(cls.model.name) +
+        codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) +
                         " WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
                         "] = @" + identParamName + '";')
 
@@ -75,7 +75,7 @@ module XCTECSharp
         codeBuilder.endBlock
         codeBuilder.endBlock
         codeBuilder.startBlock("catch(Exception e)")
-        codeBuilder.add('throw new Exception("Error deleting ' + cls.model.name + " with " +
+        codeBuilder.add('throw new Exception("Error deleting ' + cls.getUName() + " with " +
                         identVar.name + ' = "' + " + " + identParamName + ", e);")
         codeBuilder.endBlock
       end

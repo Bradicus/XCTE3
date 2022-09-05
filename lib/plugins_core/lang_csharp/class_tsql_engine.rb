@@ -19,7 +19,7 @@ module XCTECSharp
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.model.name + " engine")
+      return Utils.instance.getStyledClassName(cls.getUName() + " engine")
     end
 
     def genSourceFiles(cls, cfg)
@@ -28,7 +28,7 @@ module XCTECSharp
       cls.setName(getClassName(cls))
 
       if cls.interfaceNamespace != nil
-        cls.addUse(cls.interfaceNamespace, "I" + cls.model.name + "Engine")
+        cls.addUse(cls.interfaceNamespace, "I" + cls.getUName() + "Engine")
       end
 
       codeBuilder = SourceRendererCSharp.new
@@ -55,7 +55,7 @@ module XCTECSharp
         inheritsFrom << baseClass.name
       end
       if cls.interfaceNamespace != nil
-        inheritsFrom << Utils.instance.getStyledClassName("i " + cls.model.name + " engine")
+        inheritsFrom << Utils.instance.getStyledClassName("i " + cls.getUName() + " engine")
       end
 
       for par in (0..inheritsFrom.size)

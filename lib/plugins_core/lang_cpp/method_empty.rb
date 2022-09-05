@@ -87,7 +87,7 @@ module XCTECpp
       end
 
       funDec << Utils.instance.getTypeName(fun.returnValue) + " "
-      funDec << Utils.instance.getStyledClassName(cls.model.name) + " :: "
+      funDec << Utils.instance.getStyledClassName(cls.getUName()) + " :: "
       funDec << Utils.instance.getStyledFunctionName(fun.name) << "("
 
       for param in (0..(fun.parameters.vars.size - 1))

@@ -25,7 +25,7 @@ module XCTECSharp
     end
 
     def getUnformattedClassName(cls)
-      return cls.model.name
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)
@@ -34,7 +34,7 @@ module XCTECSharp
       cls.setName(getUnformattedClassName(cls))
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.model.name)
+      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
       hFile.lfExtension = Utils.instance.getExtension("header")
       genHeaderComment(cls, cfg, hFile)
       getBody(cls, cfg, hFile)
@@ -46,7 +46,7 @@ module XCTECSharp
 
     def genHeaderComment(cls, cfg, hFile)
       hFile.add("/**")
-      hFile.add("* @enum " + cls.model.name)
+      hFile.add("* @enum " + cls.getUName())
 
       if (cfg.codeAuthor != nil)
         hFile.add("* @author " + cfg.codeAuthor)

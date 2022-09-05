@@ -137,7 +137,7 @@ class DataLoader
 
   def self.loadClassNode(genC, genCXml, model, pComponent)
     genC.ctype = loadAttribute(genCXml, "type", pComponent.language)
-    genC.name = genCXml.attributes["name"]
+    genC.className = genCXml.attributes["name"]
     genC.namespaceList = loadNamespaces(genCXml, pComponent)
     genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
     genC.interfacePath = genCXml.attributes["interface_path"]

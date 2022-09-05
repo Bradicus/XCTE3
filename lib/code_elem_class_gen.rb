@@ -18,7 +18,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :dontModifyCode,
-                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs
+                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className
     attr_reader :name
 
     def initialize(parentElem, model, isStatic)
@@ -26,6 +26,7 @@ module CodeStructure
 
       @elementId = CodeElem::ELEM_CLASS_GEN
       @name = nil
+      @className = nil # Override name for generated class
 
       @language = nil
       @includes = Array.new
@@ -95,6 +96,14 @@ module CodeStructure
       end
 
       return false
+    end
+
+    def getUName()
+      if (@className != nil)
+        return @className
+      end
+
+      return @model.name
     end
 
     def setName(newName)
