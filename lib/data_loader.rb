@@ -15,6 +15,7 @@ class DataLoader
     model.lastModified = file.mtime
     xmlString = file.read
     xmlDoc = REXML::Document.new xmlString
+    depthStack = Array.new
 
     model.name = xmlDoc.root.attributes["name"]
 
@@ -77,7 +78,7 @@ class DataLoader
 
     curVar.vtype = varXML.attributes["type"]
     curVar.utype = varXML.attributes["utype"]
-    curVar.visibility = curVar.attribOrDefault("visibility", curVar.visibility)
+    curVar.visibility = loadAttribute(varXML, "visibility", pComponent.language, curVar.visibility)
     curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
     if (varXML.attributes.get_attribute("collection") != nil)
       curVar.listType = varXML.attributes["collection"]
@@ -100,8 +101,8 @@ class DataLoader
     curVar.name = varXML.attributes["name"]
     curVar.displayName = varXML.attributes["display"]
 
-    curVar.genGet = curVar.findAttributeExists("genGet")
-    curVar.genSet = curVar.findAttributeExists("genSet")
+    curVar.genGet = loadAttribute(varXML, "genGet", pComponent.language, curVar.genGet) == "true"
+    curVar.genSet = loadAttribute(varXML, "genSet", pComponent.language, curVar.genSet) == "true"
 
     curVar.comment = varXML.attributes["comm"]
     curVar.defaultValue = varXML.attributes["default"]
@@ -310,9 +311,23 @@ class DataLoader
     return loadAttributeArray(xml, Array["ns", "namespace"], pComponent.language, ".")
   end
 
-  def self.loadAttribute(xml, atrNames, language)
+  def self.loadAttribute(xml, atrNames, language, default = nil)
     if !atrNames.kind_of?(Array)
       atrNames = Array[atrNames]
+    end
+
+    # Try load from parent first
+    if (xml.parent != nil)
+      for atrName in atrNames
+        atr = xml.parent.attributes[atrName + "-" + language]
+        if atr != nil
+          return atr
+        end
+        atr = xml.parent.attributes[atrName]
+        if atr != nil
+          return atr
+        end
+      end
     end
 
     for atrName in atrNames
@@ -326,7 +341,7 @@ class DataLoader
       end
     end
 
-    return nil
+    return default
   end
 
   def self.loadAttributeArray(xml, atrNames, language, separator)

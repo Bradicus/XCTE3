@@ -164,12 +164,16 @@ module XCTECpp
 
       # Generate class variables
       for group in cls.model.groups
-        process_header_var_group(cls, cfg, bld, group)
+        process_header_var_group(cls, cfg, bld, group, "public")
       end
 
-      if (cls.functions.length > 0)
-        bld.add
+      bld.separate
+
+      for group in cls.model.groups
+        process_header_var_group(cls, cfg, bld, group, "private")
       end
+
+      bld.separate
 
       # Generate function declarations
       for funItem in cls.functions
@@ -215,6 +219,12 @@ module XCTECpp
         end
       end
 
+      for group in cls.model.groups
+        process_header_var_group_getter_setters(cls, cfg, bld, group)
+      end
+
+      bld.separate
+
       bld.unindent
 
       bld.add("//+XCTE Custom Code Area")
@@ -235,16 +245,40 @@ module XCTECpp
     end
 
     # process variable group
-    def process_header_var_group(cls, cfg, bld, vGroup)
+    def process_header_var_group(cls, cfg, bld, vGroup, vis)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.visibility != @activeVisibility
-            @activeVisibility = var.visibility
-            bld.unindent
-            bld.add(var.visibility + ":")
-            bld.indent
+        if var.visibility == vis
+          if var.elementId == CodeElem::ELEM_VARIABLE
+            if var.visibility != @activeVisibility
+              @activeVisibility = var.visibility
+              bld.unindent
+              bld.add(var.visibility + ":")
+              bld.indent
+            end
+            bld.add(Utils.instance.getVarDec(var))
+          elsif var.elementId == CodeElem::ELEM_COMMENT
+            bld.sameLine(Utils.instance.getComment(var))
+          elsif var.elementId == CodeElem::ELEM_FORMAT
+            bld.add(var.formatText)
           end
-          bld.add(Utils.instance.getVarDec(var))
+        end
+      end
+
+      for group in vGroup.groups
+        process_header_var_group(cls, cfg, bld, group, vis)
+      end
+    end
+
+    def process_header_var_group_getter_setters(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if "public" != @activeVisibility
+          @activeVisibility = "public"
+          bld.unindent
+          bld.add("public:")
+          bld.indent
+        end
+
+        if var.elementId == CodeElem::ELEM_VARIABLE
           if (var.genGet)
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_get")
             if templ != nil
@@ -257,14 +291,11 @@ module XCTECpp
               templ.get_declaration(var, cfg, bld)
             end
           end
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
         end
       end
+
       for group in vGroup.groups
-        process_header_var_group(cls, cfg, bld, group)
+        process_header_var_group_getter_setters(cls, cfg, bld, group)
       end
     end
 

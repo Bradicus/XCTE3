@@ -7,6 +7,11 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
+    def get_dependencies(cls, cfg, bld)
+      fPath = Utils.instance.getStyledFileName(var.utype)
+      cls.addInclude("shared/interfaces/" + fPath + ".ts")
+    end
+
     # Returns the code for the content for this function
     def get_definition(cls, cfg, bld)
       className = Utils.instance.getStyledClassName(cls.getUName())

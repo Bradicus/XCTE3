@@ -34,9 +34,14 @@ module XCTETypescript
       return srcFiles
     end
 
-    def get_dependencies(cls, codeFun, codeBuilder)
+    def get_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "Component, OnInit")
       cls.addInclude("@angular/forms", "FormControl, FormGroup")
+
+      # Generate class variables
+      for group in cls.model.groups
+        process_var_dependencies(cls, cfg, bld, group)
+      end
     end
 
     # Returns the code for the content for this class
@@ -96,6 +101,19 @@ module XCTETypescript
       bld.add(clsVar + " = ")
 
       Utils.instance.getFormgroup(cls, bld, vGroup)
+    end
+
+    def process_var_dependencies(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId != CodeElem::ELEM_VARIABLE
+          fPath = Utils.instance.getStyledFileName(var.utype + " edit")
+          cls.addInclude(fPath + "/" + fPath + ".component.ts")
+        end
+      end
+
+      for grp in vGroup.groups
+        process_var_dependencies(cls, cfg, bld, grp)
+      end
     end
 
     def process_function(cls, cfg, bld, fun)

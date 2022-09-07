@@ -39,6 +39,8 @@ module XCTETypescript
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+
+      get_dependencies(cls, cfg, bld)
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
 
