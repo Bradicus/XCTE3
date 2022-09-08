@@ -78,7 +78,7 @@ class DataLoader
 
     curVar.vtype = varXML.attributes["type"]
     curVar.utype = varXML.attributes["utype"]
-    curVar.visibility = loadAttribute(varXML, "visibility", pComponent.language, curVar.visibility)
+    curVar.visibility = loadInheritableAttribute(varXML, "visibility", pComponent.language, curVar.visibility)
     curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
     if (varXML.attributes.get_attribute("collection") != nil)
       curVar.listType = varXML.attributes["collection"]
@@ -101,8 +101,8 @@ class DataLoader
     curVar.name = varXML.attributes["name"]
     curVar.displayName = varXML.attributes["display"]
 
-    curVar.genGet = loadAttribute(varXML, "genGet", pComponent.language, curVar.genGet) == "true"
-    curVar.genSet = loadAttribute(varXML, "genSet", pComponent.language, curVar.genSet) == "true"
+    curVar.genGet = loadInheritableAttribute(varXML, "genGet", pComponent.language, curVar.genGet) == "true"
+    curVar.genSet = loadInheritableAttribute(varXML, "genSet", pComponent.language, curVar.genSet) == "true"
 
     curVar.comment = varXML.attributes["comm"]
     curVar.defaultValue = varXML.attributes["default"]
@@ -311,7 +311,28 @@ class DataLoader
     return loadAttributeArray(xml, Array["ns", "namespace"], pComponent.language, ".")
   end
 
+  # Load an attribute
   def self.loadAttribute(xml, atrNames, language, default = nil)
+    if !atrNames.kind_of?(Array)
+      atrNames = Array[atrNames]
+    end
+
+    for atrName in atrNames
+      atr = xml.attributes[atrName + "-" + language]
+      if atr != nil
+        return atr
+      end
+      atr = xml.attributes[atrName]
+      if atr != nil
+        return atr
+      end
+    end
+
+    return default
+  end
+
+  # Load an attribute
+  def self.loadInheritableAttribute(xml, atrNames, language, default = nil)
     if !atrNames.kind_of?(Array)
       atrNames = Array[atrNames]
     end
