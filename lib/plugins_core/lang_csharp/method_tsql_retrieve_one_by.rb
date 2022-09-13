@@ -26,7 +26,7 @@ module XCTECSharp
       codeBuilder.add(get_function_signature(cls, genFun, cfg, codeBuilder) + ";")
     end
 
-    def get_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, codeBuilder)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end

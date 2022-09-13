@@ -29,7 +29,7 @@ module XCTECpp
       return eqString
     end
 
-    def get_dependencies(cls, funItem, codeBuilder)
+    def process_dependencies(cls, funItem, codeBuilder)
     end
 
     # Returns definition string for this class's equality assignment operator

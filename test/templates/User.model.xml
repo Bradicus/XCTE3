@@ -19,6 +19,7 @@
 		<function name="method_angular_service_create" />
 		<function name="method_angular_service_update" />
 	</gen_class>
+  <gen_class type="empty_file" name="user edit" namespace="" path="user-edit" ></gen_class>
 
 	<gen_class type="ef_configuration" namespace="XCTE.Base.DB" path="XCTE.Base/DB" >
 		<use-csharp name="System.Collections.Generic" />

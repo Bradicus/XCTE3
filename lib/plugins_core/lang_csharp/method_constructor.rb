@@ -36,7 +36,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
 
   # No deps
-  def get_dependencies(cls, genFun, cfg, codeBuilder)
+  def process_dependencies(cls, genFun, cfg, codeBuilder)
   end
 
   def get_body(cls, genFun, cfg, codeBuilder)

@@ -37,7 +37,7 @@ module XCTECSharp
                       " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
-    def get_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, codeBuilder)
       cls.addUse("System.Collections.Generic", "List")
       cls.addUse("System.Web.Http", "ApiController")
     end

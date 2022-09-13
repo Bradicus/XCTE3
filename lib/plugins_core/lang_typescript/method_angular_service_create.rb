@@ -7,9 +7,11 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def get_dependencies(cls, cfg, bld)
-      fPath = Utils.instance.getStyledFileName(var.utype)
-      cls.addInclude("shared/interfaces/" + fPath + ".ts")
+    def process_dependencies(cls, cfg, bld)
+      fPath = Utils.instance.getStyledFileName(cls.model.name)
+      cName = Utils.instance.getStyledClassName(cls.model.name)
+      # Eventaully switch to finding standard class and using path from there
+      cls.addInclude("shared/interfaces", cName)
     end
 
     # Returns the code for the content for this function
@@ -18,7 +20,7 @@ module XCTETypescript
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
 
       bld.startFunction("create(item: " + className + "): any")
-      bld.add("return httpClient.post<" + className + ">(`${this.apiURL}/" + urlName + "`, item);")
+      bld.add("return this.httpClient.post<" + className + ">(`${this.apiUrl}/" + urlName + "`, item);")
       bld.endFunction()
     end
   end

@@ -37,7 +37,7 @@ module XCTECpp
       codeBuilder.endFunction
     end
 
-    def get_dependencies(cls, codeFun, codeBuilder)
+    def process_dependencies(cls, codeFun, codeBuilder)
       cls.addInclude("", "json.hpp")
       Utils.instance.getStandardClassInfo(cls)
 

@@ -94,7 +94,7 @@ module XCTECpp
           if funItem.isTemplate
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
-              templ.get_dependencies(cls, funItem, hFile)
+              templ.process_dependencies(cls, funItem, hFile)
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end

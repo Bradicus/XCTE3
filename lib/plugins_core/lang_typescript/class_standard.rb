@@ -40,7 +40,8 @@ module XCTETypescript
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      get_dependencies(cls, cfg, bld)
+      process_dependencies(cls, cfg, bld)
+      render_dependencies(cls, cfg, bld)
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
 

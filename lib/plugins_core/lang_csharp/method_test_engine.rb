@@ -33,7 +33,7 @@ module XCTECSharp
       codeBuilder.endFunction
     end
 
-    def get_dependencies(cls, cfg, codeBuilder)
+    def process_dependencies(cls, cfg, codeBuilder)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
       cls.addUse("System.Configuration", "ConfigurationManager")

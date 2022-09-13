@@ -2,18 +2,26 @@
 <model name="role" >
 
 	<description>
-	</description>			
-				
+	</description>
+
 	<gen_class type="standard" type-typescript="interface"
-		ns-csharp="XCTE.Base.Model" path-csharp="XCTE.Base/Model" 
+		ns-csharp="XCTE.Base.Model" path-csharp="XCTE.Base/Model"
 		path-typescript="shared/interfaces" >
 	</gen_class>
-		
-	<var_group genGet="true" genSet="true">	
+  <gen_class type="empty_file" name="role edit" namespace="" path="role-edit" ></gen_class>
+
+	<var_group genGet="true" genSet="true">
 		<var name="user role"		type="String" maxlen="50" />
-	</var_group>	
-				
+	</var_group>
+
 	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
 		<function name="method_web_api_read_one" />
+	</gen_class>
+
+	<gen_class type="class_angular_service" path="shared/services" >
+		<function name="method_angular_service_detail" />
+		<function name="method_angular_service_listing" />
+		<function name="method_angular_service_create" />
+		<function name="method_angular_service_update" />
 	</gen_class>
 </model>

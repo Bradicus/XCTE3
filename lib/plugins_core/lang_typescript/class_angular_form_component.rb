@@ -26,7 +26,9 @@ module XCTETypescript
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " edit" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
-      get_dependencies(cls, cfg, bld)
+      process_dependencies(cls, cfg, bld)
+      render_dependencies(cls, cfg, bld)
+
       genFileContent(cls, cfg, bld)
 
       srcFiles << bld
@@ -34,9 +36,11 @@ module XCTETypescript
       return srcFiles
     end
 
-    def get_dependencies(cls, cfg, bld)
-      cls.addInclude("@angular/core", "Component, OnInit")
-      cls.addInclude("@angular/forms", "FormControl, FormGroup")
+    def process_dependencies(cls, cfg, bld)
+      cls.addInclude("@angular/core", "Component, OnInit, Input")
+      cls.addInclude("@angular/forms", "FormControl, FormGroup, FormBuilder")
+      cls.addInclude("../shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+      cls.addInclude("../shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
 
       # Generate class variables
       for group in cls.model.groups
@@ -46,26 +50,25 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      process_dependencies(cls, cfg, bld)
-
       bld.add
 
-      filePart = Utils.instance.getStyledFileName(cls.getUName())
+      selectorName = Utils.instance.getStyledFileName(cls.getUName())
+      filePart = Utils.instance.getStyledFileName(cls.getUName() + " edit")
 
-      clsVar = CodeNameStyling.getStyled(cls.getUName(), Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
 
       bld.add("@Component({")
       bld.indent
-      bld.add("selector: 'app-" + filePart + "',")
+      bld.add("selector: 'app-" + selectorName + "',")
       bld.add("templateUrl: './" + filePart + ".component.html',")
       bld.add("styleUrls: ['./" + filePart + ".component.css']")
       bld.unindent
-      bld.add(")}")
+      bld.add("})")
 
       bld.add
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
-      bld.add("@Input() item = {};")
+      bld.add("@Input() item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       bld.add
 
       # Generate class variables
@@ -78,13 +81,17 @@ module XCTETypescript
       bld.endBlock
 
       bld.add
-      bld.startBlock("onInit()")
-      bld.add("this." + clsVar + ".setValue(item);")
+      bld.startBlock("ngOnInit()")
+      bld.add("this." + clsVar + ".setValue(this.item);")
       bld.endBlock
 
       bld.add
       bld.startBlock("onSubmit()")
-      bld.add("this.service.submit(this." + clsVar + ".value);")
+      bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
+      bld.add("this.service.create(this." + clsVar + ".value);")
+      bld.midBlock("else")
+      bld.add("this.service.update(this." + clsVar + ".value);")
+      bld.endBlock
       bld.endBlock
 
       # Generate code for functions
@@ -97,7 +104,7 @@ module XCTETypescript
 
     # process variable group
     def process_var_group(cls, cfg, bld, vGroup)
-      clsVar = CodeNameStyling.getStyled(cls.getUName(), Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + " = ")
 
       Utils.instance.getFormgroup(cls, bld, vGroup)

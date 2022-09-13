@@ -151,7 +151,7 @@ module XCTETypescript
             if var.listType == nil
               bld.add(Utils.instance.getStyledVariableName(var) + ": [''],")
             else
-              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({}),")
+              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({});")
             end
           else
             otherClass = Classes.findVarClass(var)
@@ -166,7 +166,7 @@ module XCTETypescript
                 bld.sameLine("[''],")
               end
             else
-              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({}),")
+              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({});")
             end
           end
         end
@@ -176,7 +176,7 @@ module XCTETypescript
       end
 
       bld.unindent
-      bld.add("}),")
+      bld.add("});")
     end
 
     def getStyledUrlName(name)

@@ -35,7 +35,7 @@ module XCTECpp
       rend.endFunction
     end
 
-    def get_dependencies(cls, codeFun, rend)
+    def process_dependencies(cls, codeFun, rend)
       cls.addInclude("", "json.hpp")
       Utils.instance.getStandardClassInfo(cls)
 

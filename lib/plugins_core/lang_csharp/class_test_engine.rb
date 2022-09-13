@@ -44,7 +44,7 @@ module XCTECSharp
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, codeBuilder)
       templ = XCTEPlugin::findMethodPlugin("csharp", "method_test_engine")
-      templ.get_dependencies(cls, cfg, codeBuilder)
+      templ.process_dependencies(cls, cfg, codeBuilder)
 
       Utils.instance.genFunctionDependencies(cls, cfg, codeBuilder)
       Utils.instance.genUses(cls.uses, codeBuilder)

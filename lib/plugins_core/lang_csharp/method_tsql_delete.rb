@@ -45,7 +45,7 @@ module XCTECSharp
       end
     end
 
-    def get_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, codeBuilder)
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 

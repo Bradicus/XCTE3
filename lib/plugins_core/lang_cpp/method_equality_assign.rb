@@ -31,7 +31,7 @@ module XCTECpp
       hFile.sameLine("& src" + Utils.instance.getStyledClassName(cls.getUName()) + ");\n")
     end
 
-    def get_dependencies(cls, funItem, hFile)
+    def process_dependencies(cls, funItem, hFile)
     end
 
     # Returns definition string for this class's equality assignment operator

@@ -23,6 +23,16 @@ module XCTETypescript
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+
+      cls.addInclude("../environments/environment", "environment ")
+      cls.addInclude("@angular/core", "Injectable")
+      cls.addInclude("@angular/common/http", "HttpClient ")
+      cls.addInclude("rxjs", "Observable")
+      process_dependencies(cls, cfg, bld)
+      render_dependencies(cls, cfg, bld)
+
+      bld.separate
+
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
 
@@ -37,8 +47,6 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      process_dependencies(cls, cfg, bld)
-
       bld.add("@Injectable()")
       bld.startClass("export class " + getClassName(cls))
 
@@ -48,6 +56,7 @@ module XCTETypescript
 
       bld.separate
       bld.startFunction("constructor(private httpClient: HttpClient)")
+      bld.add("this.apiUrl = environment.apiUrl;")
       bld.endFunction
 
       # Generate code for functions
