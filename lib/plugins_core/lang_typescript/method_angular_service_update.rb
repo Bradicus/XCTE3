@@ -8,10 +8,6 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, cfg, bld)
-      fPath = Utils.instance.getStyledFileName(cls.model.name)
-      cName = Utils.instance.getStyledClassName(cls.model.name)
-      # Eventaully switch to finding standard class and using path from there
-      cls.addInclude("shared/interfaces", cName)
     end
 
     # Returns the code for the content for this function
@@ -19,7 +15,7 @@ module XCTETypescript
       className = Utils.instance.getStyledClassName(cls.getUName())
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
 
-      bld.startFunction("update(item: " + className + "): any")
+      bld.startFunction("update(item: any): any")
       bld.add("return this.httpClient.put<" + className + ">(`${this.apiUrl}/" + urlName + "/${item.id}`, item);")
       bld.endFunction()
     end

@@ -38,7 +38,7 @@ module XCTEHtml
       end
 
       formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
-      bld.startBlock('<form [formGroup]="' + formName + '"  (ngSubmit)="onSubmit()">')
+      bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
@@ -57,7 +57,7 @@ module XCTEHtml
             varName = Utils.instance.getStyledVariableName(var)
             bld.startBlock("<div>")
             bld.add('<label for="' + varName + '">' + var.getDisplayName() + "</label>")
-            bld.add('<input id="' + varName + '" [formControlName]="' + varName + '" [type]="' + Utils.instance.getInputType(var) + '">')
+            bld.add('<input id="' + varName + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
             bld.endBlock("</div>")
           else
             bld.add("<app-" + Utils.instance.getStyledFileName(var.utype) + ">" +

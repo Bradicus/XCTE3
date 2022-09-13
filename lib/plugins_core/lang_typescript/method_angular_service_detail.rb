@@ -8,10 +8,6 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, cfg, bld)
-      fPath = Utils.instance.getStyledFileName(cls.model.name)
-      cName = Utils.instance.getStyledClassName(cls.model.name)
-      # Eventaully switch to finding standard class and using path from there
-      cls.addInclude("shared/interfaces", cName)
     end
 
     # Returns the code for the content for this function

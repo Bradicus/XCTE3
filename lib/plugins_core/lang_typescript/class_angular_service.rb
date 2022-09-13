@@ -24,10 +24,16 @@ module XCTETypescript
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      cls.addInclude("../environments/environment", "environment ")
+      cls.addInclude("../../../environments/environment", "environment ")
       cls.addInclude("@angular/core", "Injectable")
       cls.addInclude("@angular/common/http", "HttpClient ")
       cls.addInclude("rxjs", "Observable")
+
+      fPath = Utils.instance.getStyledFileName(cls.model.name)
+      cName = Utils.instance.getStyledClassName(cls.model.name)
+      # Eventaully switch to finding standard class and using path from there
+      cls.addInclude("../interfaces/" + fPath, cName)
+
       process_dependencies(cls, cfg, bld)
       render_dependencies(cls, cfg, bld)
 
@@ -47,7 +53,9 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      bld.add("@Injectable()")
+      bld.startBlock("@Injectable(")
+      bld.add("providedIn: 'root',")
+      bld.endBlock(")")
       bld.startClass("export class " + getClassName(cls))
 
       bld.add("private apiUrl='';")
