@@ -1,0 +1,2589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdoc>
+<file-list>
+  <file name="code_elem.rb" id="code_elem.rb">
+    <file-info>
+      <path>code_elem.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class is the base class for all code elements
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_body.rb" id="code_elem_body.rb">
+    <file-info>
+      <path>code_elem_body.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information on the body file component of a project
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_class.rb" id="code_elem_class.rb">
+    <file-info>
+      <path>code_elem_class.rb</path>
+      <dtm-modified>Sat Dec 13 16:06:50 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the class code structure read in from an
+xml file
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_comment.rb"
+         />
+         <required-file name="code_elem_format.rb"
+         />
+         <required-file name="code_elem_function.rb"
+         />
+         <required-file name="code_elem_include.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="code_elem_variable.rb"
+         />
+         <required-file name="code_elem_var_group.rb"
+         />
+         <required-file name="rexml/document"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="code_elem_comment.rb" id="code_elem_comment.rb">
+    <file-info>
+      <path>code_elem_comment.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the comment code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_format.rb" id="code_elem_format.rb">
+    <file-info>
+      <path>code_elem_format.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the format code structure read in from an
+xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_function.rb" id="code_elem_function.rb">
+    <file-info>
+      <path>code_elem_function.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the function code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_header.rb" id="code_elem_header.rb">
+    <file-info>
+      <path>code_elem_header.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores data for the header
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="code_elem_include.rb" id="code_elem_include.rb">
+    <file-info>
+      <path>code_elem_include.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the include code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="code_elem_library.rb" id="code_elem_library.rb">
+    <file-info>
+      <path>code_elem_library.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information on the library component of a project
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_parent.rb" id="code_elem_parent.rb">
+    <file-info>
+      <path>code_elem_parent.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the parent code structure read in from an
+xml file
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="code_elem_project.rb" id="code_elem_project.rb">
+    <file-info>
+      <path>code_elem_project.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores data for the project level
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_class.rb"
+         />
+         <required-file name="code_elem_header.rb"
+         />
+         <required-file name="code_elem_body.rb"
+         />
+         <required-file name="code_elem_project_component_group.rb"
+         />
+         <required-file name="rexml/document"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="code_elem_project_component_group.rb" id="code_elem_project_component_group.rb">
+    <file-info>
+      <path>code_elem_project_component_group.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores data for the project components
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="code_elem_variable.rb" id="code_elem_variable.rb">
+    <file-info>
+      <path>code_elem_variable.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the variable code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="code_elem_var_group.rb" id="code_elem_var_group.rb">
+    <file-info>
+      <path>code_elem_var_group.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the variable group code structure read in
+from an xml file
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="lang_file.rb" id="lang_file.rb">
+    <file-info>
+      <path>lang_file.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information and contents for a file generated by XCTE
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="lang_profile.rb" id="lang_profile.rb">
+    <file-info>
+      <path>lang_profile.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information specific to each programming language
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="lang_profile_file_type.rb"
+         />
+         <required-file name="lang_profile_type_map.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="lang_profile_file_type.rb" id="lang_profile_file_type.rb">
+    <file-info>
+      <path>lang_profile_file_type.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information on a file type for a language
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="lang_profile_type_map.rb" id="lang_profile_type_map.rb">
+    <file-info>
+      <path>lang_profile_type_map.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores mappings from XCTE generic types to language specific
+types
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="main.rb" id="main.rb">
+    <file-info>
+      <path>main.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This file loads user settings generates code files off of template files in
+the templates folder and saves them in the generated folder
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="find.rb"
+         />
+         <required-file name="fileutils.rb"
+         />
+         <required-file name="code_elem_class.rb"
+         />
+         <required-file name="code_elem_project.rb"
+         />
+         <required-file name="plugins/lang_cpp/class_standard.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="user_settings.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="class_data_list.rb" id="plugins%2flang_cpp%2fclass_data_list.rb">
+    <file-info>
+      <path>plugins/lang_cpp/class_data_list.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;data list&quot; classes
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/utils.rb"
+         />
+         <required-file name="plugins/lang_cpp/method_empty.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_class.rb"
+         />
+         <required-file name="code_elem_var_group.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="class_standard.rb" id="plugins%2flang_cpp%2fclass_standard.rb">
+    <file-info>
+      <path>plugins/lang_cpp/class_standard.rb</path>
+      <dtm-modified>Sat Dec 13 16:04:04 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;standard&quot; classes, those
+being regualar classes for now, vs possible library specific class
+generators, such as a wxWidgets class generator or a Fox Toolkit class
+generator for example
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/utils.rb"
+         />
+         <required-file name="plugins/lang_cpp/method_empty.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_constructor.rb" id="plugins%2flang_cpp%2fmethod_constructor.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_constructor.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a constructor for a class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_destructor.rb" id="plugins%2flang_cpp%2fmethod_destructor.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_destructor.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a destructor for a class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_empty.rb" id="plugins%2flang_cpp%2fmethod_empty.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_empty.rb</path>
+      <dtm-modified>Sat Dec 13 16:03:42 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates an empty method with the specified function name and
+parameters
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem_class.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_equality_assign.rb" id="plugins%2flang_cpp%2fmethod_equality_assign.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_equality_assign.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates an equality assignment operator for making a copy of a
+class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_log_it.rb" id="plugins%2flang_cpp%2fmethod_log_it.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_log_it.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a method for writing all information in this class to a
+stream
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_read_rak.rb" id="plugins%2flang_cpp%2fmethod_read_rak.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_read_rak.rb</path>
+      <dtm-modified>Sat Dec 13 16:08:05 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a mothod for reading class data from a RakNet bit
+stream
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_read_u_g_p.rb" id="plugins%2flang_cpp%2fmethod_read_u_g_p.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_read_u_g_p.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a read meathod for a class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_write_rak.rb" id="plugins%2flang_cpp%2fmethod_write_rak.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_write_rak.rb</path>
+      <dtm-modified>Sat Dec 13 16:08:41 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a mothod for writing class data to a RakNet bit stream
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_write_u_g_p.rb" id="plugins%2flang_cpp%2fmethod_write_u_g_p.rb">
+    <file-info>
+      <path>plugins/lang_cpp/method_write_u_g_p.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a write meathod for a class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="project_makefile.rb" id="plugins%2flang_cpp%2fproject_makefile.rb">
+    <file-info>
+      <path>plugins/lang_cpp/project_makefile.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates a project makefile
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_cpp/utils.rb"
+         />
+         <required-file name="plugins/lang_cpp/x_c_t_e_cpp.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_project.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="utils.rb" id="plugins%2flang_cpp%2futils.rb">
+    <file-info>
+      <path>plugins/lang_cpp/utils.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class contains the language profile for C++ and utility fuctions used
+by various plugins
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="lang_profile.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="x_c_t_e_cpp.rb" id="plugins%2flang_cpp%2fx_c_t_e_cpp.rb">
+    <file-info>
+      <path>plugins/lang_cpp/x_c_t_e_cpp.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+Declaration of the XTECpp module
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="class_standard.rb" id="plugins%2flang_java%2fclass_standard.rb">
+    <file-info>
+      <path>plugins/lang_java/class_standard.rb</path>
+      <dtm-modified>Sun Dec 07 22:25:24 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;standard&quot; classes, those
+being regualar classes for now, vs possible library specific class
+generators, such as a wxWidgets class generator or a Fox Toolkit class
+generator for example
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_java/utils.rb"
+         />
+         <required-file name="plugins/lang_java/x_c_t_e_java.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="code_elem_class.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_constructor.rb" id="plugins%2flang_java%2fmethod_constructor.rb">
+    <file-info>
+      <path>plugins/lang_java/method_constructor.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a constructor for a class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_java/x_c_t_e_java.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_empty.rb" id="plugins%2flang_java%2fmethod_empty.rb">
+    <file-info>
+      <path>plugins/lang_java/method_empty.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates an empty method with the specified function name and
+parameters
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="code_elem_class.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_java/x_c_t_e_java.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_log_it.rb" id="plugins%2flang_java%2fmethod_log_it.rb">
+    <file-info>
+      <path>plugins/lang_java/method_log_it.rb</path>
+      <dtm-modified>Tue Dec 09 14:29:53 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a method for writing all information in this class to a
+stream
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_java/x_c_t_e_java.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="utils.rb" id="plugins%2flang_java%2futils.rb">
+    <file-info>
+      <path>plugins/lang_java/utils.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class contains utility functions for a language
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="lang_profile.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="x_c_t_e_java.rb" id="plugins%2flang_java%2fx_c_t_e_java.rb">
+    <file-info>
+      <path>plugins/lang_java/x_c_t_e_java.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+Declaration of the XTEJava module
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="class_data_list.rb" id="plugins%2flang_php%2fclass_data_list.rb">
+    <file-info>
+      <path>plugins/lang_php/class_data_list.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;data list&quot; classes
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_php/utils.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+         <required-file name="plugins/lang_php/method_data_list_display_edit.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="class_data_list_validate.rb" id="plugins%2flang_php%2fclass_data_list_validate.rb">
+    <file-info>
+      <path>plugins/lang_php/class_data_list_validate.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for a data list validator class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_php/utils.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+         <required-file name="plugins/lang_php/method_data_list_display_edit.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="class_data_set_validate.rb" id="plugins%2flang_php%2fclass_data_set_validate.rb">
+    <file-info>
+      <path>plugins/lang_php/class_data_set_validate.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for a data set(basically any class)
+validator class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_php/utils.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+         <required-file name="plugins/lang_php/method_data_list_display_edit.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="class_standard.rb" id="plugins%2flang_php%2fclass_standard.rb">
+    <file-info>
+      <path>plugins/lang_php/class_standard.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;standard&quot; classes, those
+being regualar classes for now, vs possible library specific class
+generators, such as a wxWidgets class generator or a Fox Toolkit class
+generator for example
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_php/utils.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+         <required-file name="code_elem.rb"
+         />
+         <required-file name="code_elem_parent.rb"
+         />
+         <required-file name="lang_file.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_constructor.rb" id="plugins%2flang_php%2fmethod_constructor.rb">
+    <file-info>
+      <path>plugins/lang_php/method_constructor.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a constructor for a class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_data_list_display.rb" id="plugins%2flang_php%2fmethod_data_list_display.rb">
+    <file-info>
+      <path>plugins/lang_php/method_data_list_display.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;data list diplay&quot; classes
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="method_data_list_display_edit.rb" id="plugins%2flang_php%2fmethod_data_list_display_edit.rb">
+    <file-info>
+      <path>plugins/lang_php/method_data_list_display_edit.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;data list display edit&quot;
+classes for displaying an editor for list item data
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="method_data_list_gen_insert.rb" id="plugins%2flang_php%2fmethod_data_list_gen_insert.rb">
+    <file-info>
+      <path>plugins/lang_php/method_data_list_gen_insert.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates source files for &quot;data list gen insert&quot;
+classes. This code creates a mysql inster statement for class data
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="method_data_list_load_cell.rb" id="plugins%2flang_php%2fmethod_data_list_load_cell.rb">
+    <file-info>
+      <path>plugins/lang_php/method_data_list_load_cell.rb</path>
+      <dtm-modified>Tue Nov 18 19:41:10 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+To change this template, choose Tools | Templates and open the template in
+the editor.
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_data_list_validate.rb" id="plugins%2flang_php%2fmethod_data_list_validate.rb">
+    <file-info>
+      <path>plugins/lang_php/method_data_list_validate.rb</path>
+      <dtm-modified>Tue Nov 25 17:05:44 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class generates a validate function for this class&#8216;s data
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="method_get_mysql_create_string.rb" id="plugins%2flang_php%2fmethod_get_mysql_create_string.rb">
+    <file-info>
+      <path>plugins/lang_php/method_get_mysql_create_string.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a class that returns a mysql string for creating a
+database table based on this class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+         <required-file name="plugins/lang_sql/statement_create.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="method_log_it.rb" id="plugins%2flang_php%2fmethod_log_it.rb">
+    <file-info>
+      <path>plugins/lang_php/method_log_it.rb</path>
+      <dtm-modified>Tue Dec 09 14:38:40 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin creates a method for writing all information in this class to a
+stream
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="plugins/lang_php/x_c_t_e_php.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="utils.rb" id="plugins%2flang_php%2futils.rb">
+    <file-info>
+      <path>plugins/lang_php/utils.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class contains utility functions for a language
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="lang_profile.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="x_c_t_e_php.rb" id="plugins%2flang_php%2fx_c_t_e_php.rb">
+    <file-info>
+      <path>plugins/lang_php/x_c_t_e_php.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class contains the mudule XTEPhp
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="statement_create.rb" id="plugins%2flang_sql%2fstatement_create.rb">
+    <file-info>
+      <path>plugins/lang_sql/statement_create.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This plugin generates a create statement for a database based on this class
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="x_c_t_e_plugin.rb"
+         />
+         <required-file name="plugins/lang_sql/x_c_t_e_sql.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="utils.rb" id="plugins%2flang_sql%2futils.rb">
+    <file-info>
+      <path>plugins/lang_sql/utils.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class contains utility functions for a language
+</p>
+
+    </description>
+    <contents>
+      <required-file-list>
+         <required-file name="lang_profile.rb"
+         />
+      </required-file-list>
+     </contents>
+
+  </file>
+  <file name="x_c_t_e_sql.rb" id="plugins%2flang_sql%2fx_c_t_e_sql.rb">
+    <file-info>
+      <path>plugins/lang_sql/x_c_t_e_sql.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:17 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="user_settings.rb" id="user_settings.rb">
+    <file-info>
+      <path>user_settings.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores user settings loaded from an XML file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+  <file name="x_c_t_e_plugin.rb" id="x_c_t_e_plugin.rb">
+    <file-info>
+      <path>x_c_t_e_plugin.rb</path>
+      <dtm-modified>Wed Dec 03 11:51:18 -0700 2008</dtm-modified>
+    </file-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class is the base class for all plugins. It hold the static list of
+registered plugins
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </file>
+</file-list>
+<class-module-list>
+  <Class name="CodeElemFunction" id="CodeElemFunction">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_function.rb">code_elem_function.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the function code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPlugin" id="XCTEPlugin">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#x_c_t_e_plugin.rb">x_c_t_e_plugin.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class is the base class for all plugins. It hold the static list of
+registered plugins
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeElemInclude" id="CodeElemInclude">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_include.rb">code_elem_include.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeElemVariable" id="CodeElemVariable">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_variable.rb">code_elem_variable.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the variable code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeElemParent" id="CodeElemParent">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_parent.rb">code_elem_parent.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="UserSettings" id="UserSettings">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#user_settings.rb">user_settings.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores user settings loaded from an XML file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="LangProfileTypeMap" id="LangProfileTypeMap">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#lang_profile_type_map.rb">lang_profile_type_map.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores mappings from XCTE generic types to language specific
+types
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeElemComment" id="CodeElemComment">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_comment.rb">code_elem_comment.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the comment code structure read in from
+an xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeElemFormat" id="CodeElemFormat">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_format.rb">code_elem_format.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information for the format code structure read in from an
+xml file
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="LangProfile" id="LangProfile">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#lang_profile.rb">lang_profile.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="LangProfileFileType" id="LangProfileFileType">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#lang_profile_file_type.rb">lang_profile_file_type.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information on a file type for a language
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="LangFile" id="LangFile">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#lang_file.rb">lang_file.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information and contents for a file generated by XCTE
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeElem" id="CodeElem">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem.rb">code_elem.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class is the base class for all code elements
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Class>
+  <Module name="XCTEPhp" id="XCTEPhp">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fclass_data_list.rb">plugins/lang_php/class_data_list.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fclass_data_list_validate.rb">plugins/lang_php/class_data_list_validate.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fclass_data_set_validate.rb">plugins/lang_php/class_data_set_validate.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_display.rb">plugins/lang_php/method_data_list_display.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_display_edit.rb">plugins/lang_php/method_data_list_display_edit.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_gen_insert.rb">plugins/lang_php/method_data_list_gen_insert.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_load_cell.rb">plugins/lang_php/method_data_list_load_cell.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_validate.rb">plugins/lang_php/method_data_list_validate.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fmethod_get_mysql_create_string.rb">plugins/lang_php/method_get_mysql_create_string.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2futils.rb">plugins/lang_php/utils.rb</a></infile>
+        <infile><a href="#plugins%2flang_php%2fx_c_t_e_php.rb">plugins/lang_php/x_c_t_e_php.rb</a></infile>
+      </infiles>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class contains the mudule XTEPhp
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Module>
+  <Class name="XCTEPhp::ClassDataSetValidate" id="XCTEPhp::ClassDataSetValidate">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fclass_data_set_validate.rb">plugins/lang_php/class_data_set_validate.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodGetMysqlCreateString" id="XCTEPhp::MethodGetMysqlCreateString">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_get_mysql_create_string.rb">plugins/lang_php/method_get_mysql_create_string.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodDataListGenInsert" id="XCTEPhp::MethodDataListGenInsert">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_gen_insert.rb">plugins/lang_php/method_data_list_gen_insert.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::ClassDataListValidate" id="XCTEPhp::ClassDataListValidate">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fclass_data_list_validate.rb">plugins/lang_php/class_data_list_validate.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::ClassDataList" id="XCTEPhp::ClassDataList">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fclass_data_list.rb">plugins/lang_php/class_data_list.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodLogIt" id="XCTEPhp::MethodLogIt">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_log_it.rb">plugins/lang_php/method_log_it.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodDataListDisplayEdit" id="XCTEPhp::MethodDataListDisplayEdit">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_display_edit.rb">plugins/lang_php/method_data_list_display_edit.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodDataListDisplay" id="XCTEPhp::MethodDataListDisplay">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_display.rb">plugins/lang_php/method_data_list_display.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodConstructor" id="XCTEPhp::MethodConstructor">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_constructor.rb">plugins/lang_php/method_constructor.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodDataListValidate" id="XCTEPhp::MethodDataListValidate">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_validate.rb">plugins/lang_php/method_data_list_validate.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::Utils" id="XCTEPhp::Utils">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2futils.rb">plugins/lang_php/utils.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::MethodDataListLoadCell" id="XCTEPhp::MethodDataListLoadCell">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fmethod_data_list_load_cell.rb">plugins/lang_php/method_data_list_load_cell.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEPhp::ClassStandard" id="XCTEPhp::ClassStandard">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_php%2fclass_standard.rb">plugins/lang_php/class_standard.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Module name="XCTESql" id="XCTESql">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_sql%2fstatement_create.rb">plugins/lang_sql/statement_create.rb</a></infile>
+        <infile><a href="#plugins%2flang_sql%2futils.rb">plugins/lang_sql/utils.rb</a></infile>
+        <infile><a href="#plugins%2flang_sql%2fx_c_t_e_sql.rb">plugins/lang_sql/x_c_t_e_sql.rb</a></infile>
+      </infiles>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Module>
+  <Class name="XCTESql::StatementCreate" id="XCTESql::StatementCreate">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_sql%2fstatement_create.rb">plugins/lang_sql/statement_create.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTESql::Utils" id="XCTESql::Utils">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_sql%2futils.rb">plugins/lang_sql/utils.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Module name="XCTECpp" id="XCTECpp">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fclass_data_list.rb">plugins/lang_cpp/class_data_list.rb</a></infile>
+        <infile><a href="#plugins%2flang_cpp%2futils.rb">plugins/lang_cpp/utils.rb</a></infile>
+        <infile><a href="#plugins%2flang_cpp%2fx_c_t_e_cpp.rb">plugins/lang_cpp/x_c_t_e_cpp.rb</a></infile>
+      </infiles>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+Declaration of the XTECpp module
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Module>
+  <Class name="XCTECpp::MethodWriteUGP" id="XCTECpp::MethodWriteUGP">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_write_u_g_p.rb">plugins/lang_cpp/method_write_u_g_p.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodReadUGP" id="XCTECpp::MethodReadUGP">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_read_u_g_p.rb">plugins/lang_cpp/method_read_u_g_p.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::ProjectMakefile" id="XCTECpp::ProjectMakefile">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fproject_makefile.rb">plugins/lang_cpp/project_makefile.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodEqualityAssign" id="XCTECpp::MethodEqualityAssign">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_equality_assign.rb">plugins/lang_cpp/method_equality_assign.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodDestructor" id="XCTECpp::MethodDestructor">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_destructor.rb">plugins/lang_cpp/method_destructor.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::ClassDataList" id="XCTECpp::ClassDataList">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fclass_data_list.rb">plugins/lang_cpp/class_data_list.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodEmpty" id="XCTECpp::MethodEmpty">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_empty.rb">plugins/lang_cpp/method_empty.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodLogIt" id="XCTECpp::MethodLogIt">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_log_it.rb">plugins/lang_cpp/method_log_it.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodConstructor" id="XCTECpp::MethodConstructor">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_constructor.rb">plugins/lang_cpp/method_constructor.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodWriteRak" id="XCTECpp::MethodWriteRak">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_write_rak.rb">plugins/lang_cpp/method_write_rak.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::MethodReadRak" id="XCTECpp::MethodReadRak">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fmethod_read_rak.rb">plugins/lang_cpp/method_read_rak.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::Utils" id="XCTECpp::Utils">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2futils.rb">plugins/lang_cpp/utils.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTECpp::ClassStandard" id="XCTECpp::ClassStandard">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_cpp%2fclass_standard.rb">plugins/lang_cpp/class_standard.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Module name="XCTEJava" id="XCTEJava">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_java%2futils.rb">plugins/lang_java/utils.rb</a></infile>
+        <infile><a href="#plugins%2flang_java%2fx_c_t_e_java.rb">plugins/lang_java/x_c_t_e_java.rb</a></infile>
+      </infiles>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+Declaration of the XTEJava module
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Module>
+  <Class name="XCTEJava::MethodEmpty" id="XCTEJava::MethodEmpty">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_java%2fmethod_empty.rb">plugins/lang_java/method_empty.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEJava::MethodLogIt" id="XCTEJava::MethodLogIt">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_java%2fmethod_log_it.rb">plugins/lang_java/method_log_it.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEJava::MethodConstructor" id="XCTEJava::MethodConstructor">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_java%2fmethod_constructor.rb">plugins/lang_java/method_constructor.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEJava::Utils" id="XCTEJava::Utils">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_java%2futils.rb">plugins/lang_java/utils.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="XCTEJava::ClassStandard" id="XCTEJava::ClassStandard">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#plugins%2flang_java%2fclass_standard.rb">plugins/lang_java/class_standard.rb</a></infile>
+      </infiles>
+     <superclass><a href="#XCTEPlugin">XCTEPlugin</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Module name="CodeStructure" id="CodeStructure">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_body.rb">code_elem_body.rb</a></infile>
+        <infile><a href="#code_elem_class.rb">code_elem_class.rb</a></infile>
+        <infile><a href="#code_elem_header.rb">code_elem_header.rb</a></infile>
+        <infile><a href="#code_elem_library.rb">code_elem_library.rb</a></infile>
+        <infile><a href="#code_elem_project.rb">code_elem_project.rb</a></infile>
+        <infile><a href="#code_elem_project_component_group.rb">code_elem_project_component_group.rb</a></infile>
+        <infile><a href="#code_elem_var_group.rb">code_elem_var_group.rb</a></infile>
+      </infiles>
+    </classmod-info>
+
+    <description>
+<p>
+@author Brad Ottoson
+</p>
+<p>
+Copyright XCTE Contributors This file is released under the zlib/libpng
+license, see license.txt in the root directory
+</p>
+<p>
+This class stores information on the library component of a project
+</p>
+
+    </description>
+    <contents>
+     </contents>
+
+  </Module>
+  <Class name="CodeStructure::CodeElemBody" id="CodeStructure::CodeElemBody">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_body.rb">code_elem_body.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeStructure::CodeElemVarGroup" id="CodeStructure::CodeElemVarGroup">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_var_group.rb">code_elem_var_group.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeStructure::CodeElemProjectComponentGroup" id="CodeStructure::CodeElemProjectComponentGroup">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_project_component_group.rb">code_elem_project_component_group.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeStructure::CodeElemLibrary" id="CodeStructure::CodeElemLibrary">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_library.rb">code_elem_library.rb</a></infile>
+      </infiles>
+     <superclass>Object</superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeStructure::ElemProject" id="CodeStructure::ElemProject">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_project.rb">code_elem_project.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeStructure::CodeElemClass" id="CodeStructure::CodeElemClass">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_class.rb">code_elem_class.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+  <Class name="CodeStructure::CodeElemHeader" id="CodeStructure::CodeElemHeader">
+    <classmod-info>
+      <infiles>      
+        <infile><a href="#code_elem_header.rb">code_elem_header.rb</a></infile>
+      </infiles>
+     <superclass><a href="#CodeElem">CodeElem</a></superclass>
+    </classmod-info>
+
+    <contents>
+     </contents>
+
+  </Class>
+</class-module-list>
+</rdoc>
+Files:   58
+Classes: 53
+Modules: 26
+Methods: 172
+Elapsed: 5.569s

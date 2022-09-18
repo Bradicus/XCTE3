@@ -20,6 +20,7 @@ require "code_elem_model.rb"
 require "code_elem_project.rb"
 require "x_c_t_e_plugin.rb"
 require "user_settings.rb"
+require "types.rb"
 
 require "run_settings"
 require "project_plans"
@@ -101,6 +102,9 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
     for plan in projectPlan.classes
       language = XCTEPlugin::getLanguages()[plan.language]
+
+      puts "generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language
+
       srcFiles = language[plan.ctype].genSourceFiles(plan, cfg)
 
       for srcFile in srcFiles
@@ -185,11 +189,14 @@ def insertCustomCode(customCode, srcRend)
   return finalLines
 end
 
+# Main
 codeRootDir = File.dirname(File.realpath(__FILE__))
 
 cfg = UserSettings.new
 cfg.load(codeRootDir + "/../default_settings.xml")
 RunSettings.setUserSettings(cfg)
+
+Types.instance.load(codeRootDir + "/../types_basic.xml")
 
 currentDir = Dir.pwd
 

@@ -1,3 +1,5 @@
+require "plugins_core/lang_typescript/class_base.rb"
+
 ##
 # Class:: ClassAngularListing
 #

@@ -3,7 +3,7 @@ module XCTETypescript
   class MethodOnInitForm < XCTEPlugin
     def initialize
       @name = "method_on_init_form"
-      @language = "ruby"
+      @language = "typescript"
       @category = XCTEPlugin::CAT_METHOD
     end
 

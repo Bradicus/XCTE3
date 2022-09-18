@@ -10,6 +10,16 @@ module XCTERuby
       end
     end
 
+    def renderGlobalComment(cfg, bld)
+      bld.add("##")
+
+      for line in cfg.codeLicense.split /[\r\n]+/
+        if line.strip.length > 0
+          bld.add("# " + line)
+        end
+      end
+    end
+
     def endNamespaces(cls, bld)
       for ns in cls.namespaceList
         bld.endBlock

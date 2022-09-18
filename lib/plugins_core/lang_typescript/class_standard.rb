@@ -1,6 +1,4 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
@@ -131,6 +129,7 @@ module XCTETypescript
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
           if templ != nil
+            bld.separate
             bld.add(templ.get_definition(cls, cfg))
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
@@ -138,6 +137,7 @@ module XCTETypescript
         else # Must be empty function
           templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
           if templ != nil
+            bld.separate
             bld.add(templ.get_definition(fun, cfg))
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript

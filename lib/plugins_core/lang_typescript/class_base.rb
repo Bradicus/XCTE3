@@ -23,8 +23,36 @@ module XCTETypescript
     end
 
     def render_dependencies(cls, cfg, bld)
+      cls.includes.sort_by! do |x|
+        [x.path, x.name]
+      end
+
       for inc in cls.includes
-        bld.add("import { " + inc.name + " } from '" + inc.path + "';")
+        path = inc.path
+
+        if !inc.path.start_with?("@") && inc.itype != "lib"
+          clsPaths = cls.path.split("/")
+          incPaths = inc.path.split("/")
+
+          path = ""
+
+          while (clsPaths.length > 0 && incPaths.length > 0 && clsPaths[0] == incPaths[0])
+            clsPaths.shift
+            incPaths.shift
+          end
+
+          if (incPaths.length < 2)
+            path = "./"
+          else
+            for cp in clsPaths
+              path += "../"
+            end
+          end
+
+          path += incPaths.join("/")
+        end
+
+        bld.add("import { " + inc.name + " } from '" + path + "';")
       end
     end
   end

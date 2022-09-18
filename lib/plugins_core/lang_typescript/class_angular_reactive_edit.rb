@@ -6,7 +6,7 @@ require "plugins_core/lang_typescript/class_base.rb"
 module XCTETypescript
   class ClassAngularComponent < ClassBase
     def initialize
-      @name = "class_angular_component"
+      @name = "class_angular_reactive_edit"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -39,9 +39,10 @@ module XCTETypescript
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormBuilder")
-      cls.addInclude("../shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
-      cls.addInclude("../shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
+      cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+      cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
 
+      super
       # Generate class variables
       for group in cls.model.groups
         process_var_dependencies(cls, cfg, bld, group)
@@ -74,6 +75,7 @@ module XCTETypescript
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
+        bld.sameLine(";")
       end
 
       bld.add
@@ -82,7 +84,7 @@ module XCTETypescript
 
       bld.add
       bld.startBlock("ngOnInit()")
-      bld.add("this." + clsVar + ".setValue(this.item);")
+      bld.add("this." + clsVar + ".patchValue(this.item);")
       bld.endBlock
 
       bld.add
@@ -112,9 +114,11 @@ module XCTETypescript
 
     def process_var_dependencies(cls, cfg, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId != CodeElem::ELEM_VARIABLE
-          fPath = Utils.instance.getStyledFileName(var.utype + " edit")
-          cls.addInclude(fPath + "/" + fPath + ".component.ts")
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if !Utils.instance.isPrimitive(var)
+            fPath = Utils.instance.getStyledFileName(var.getUType() + " edit")
+            cls.addInclude(fPath + "/" + fPath + ".component", Utils.instance.getStyledClassName(var.getUType() + " edit component"))
+          end
         end
       end
 
@@ -128,14 +132,16 @@ module XCTETypescript
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
           if templ != nil
-            bld.add(templ.get_definition(cls, cfg))
+            bld.separate
+            templ.get_definition(cls, cfg, bld)
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         else # Must be empty function
           templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
           if templ != nil
-            bld.add(templ.get_definition(fun, cfg))
+            bld.separate
+            templ.get_definition(fun, cfg)
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end

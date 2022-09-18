@@ -24,15 +24,15 @@ module XCTETypescript
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      cls.addInclude("../../../environments/environment", "environment ")
+      cls.addInclude("../../../environments/environment", "environment", "lib")
       cls.addInclude("@angular/core", "Injectable")
       cls.addInclude("@angular/common/http", "HttpClient ")
-      cls.addInclude("rxjs", "Observable")
+      cls.addInclude("rxjs", "Observable", "lib")
 
       fPath = Utils.instance.getStyledFileName(cls.model.name)
       cName = Utils.instance.getStyledClassName(cls.model.name)
       # Eventaully switch to finding standard class and using path from there
-      cls.addInclude("../interfaces/" + fPath, cName)
+      cls.addInclude("shared/interfaces/" + fPath, cName)
 
       process_dependencies(cls, cfg, bld)
       render_dependencies(cls, cfg, bld)

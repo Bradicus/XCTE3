@@ -50,21 +50,7 @@ module XCTERuby
     end
 
     def genFileComment(cls, cfg, bld)
-      bld.add("##")
-      bld.add("# Class:: " + cls.name)
-
-      if (cfg.codeAuthor != nil)
-        bld.add("# Author:: " + cfg.codeAuthor)
-      end
-
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        bld.add("# " + cfg.codeCompany)
-      end
-
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        bld.add("#")
-        bld.add("# License:: " + cfg.codeLicense)
-      end
+      renderGlobalComment(cfg, bld)
 
       bld.add("#")
 

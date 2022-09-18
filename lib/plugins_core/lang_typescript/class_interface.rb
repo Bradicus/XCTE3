@@ -1,8 +1,10 @@
+require "plugins_core/lang_typescript/class_base.rb"
+
 ##
 # Class:: ClassInterface
 #
 module XCTETypescript
-  class ClassInterface < XCTEPlugin
+  class ClassInterface < ClassBase
     def initialize
       @name = "interface"
       @language = "typescript"
@@ -23,6 +25,7 @@ module XCTETypescript
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+      render_dependencies(cls, cfg, bld)
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
 
@@ -36,10 +39,6 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
-      end
-
       bld.separate
       bld.startBlock("export interface " + getClassName(cls))
 

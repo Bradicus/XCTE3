@@ -9,6 +9,7 @@
 
 require "lang_profile.rb"
 require "utils_base"
+require "types"
 
 module XCTETypescript
   class Utils < UtilsBase
@@ -147,26 +148,27 @@ module XCTETypescript
 
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          if Utils.instance.isPrimitive(var)
+          if isPrimitive(var)
             if var.listType == nil
-              bld.add(Utils.instance.getStyledVariableName(var) + ": [''],")
+              bld.add(getStyledVariableName(var) + ": [''],")
             else
-              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({});")
+              bld.add(getStyledVariableName(var) + ": this.fb.array([]),")
             end
           else
             otherClass = Classes.findVarClass(var)
 
             if var.listType == nil
-              bld.add(Utils.instance.getStyledVariableName(var) + ": ")
+              bld.add(getStyledVariableName(var) + ": ")
               if otherClass != nil
                 for group in otherClass.model.groups
                   getFormgroup(otherClass, bld, group)
+                  bld.sameLine(",")
                 end
               else
                 bld.sameLine("[''],")
               end
             else
-              bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array({});")
+              bld.add(getStyledVariableName(var) + ": this.fb.array([]),")
             end
           end
         end
@@ -176,11 +178,77 @@ module XCTETypescript
       end
 
       bld.unindent
-      bld.add("});")
+      bld.add("})")
+    end
+
+    # process variable group
+    def genPopulate(cls, bld, vGroup, name = "")
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if isPrimitive(var)
+            if var.listType == nil
+              bld.add(name + getStyledVariableName(var) + " = " + getFakerAssignment(var) + ";")
+            else
+              bld.add(name + getStyledVariableName(var) + ".push_back(" + getFakerAssignment(var) + ");")
+            end
+          else
+            otherClass = Classes.findVarClass(var)
+
+            if var.listType == nil
+              bld.separate
+              bld.add(name + getStyledVariableName(var) + " = {} as " + getStyledClassName(var.getUType()) + ";")
+              if otherClass != nil
+                for group in otherClass.model.groups
+                  genPopulate(otherClass, bld, group, name + getStyledVariableName(var) + ".")
+                end
+              else
+              end
+            else
+              bld.separate
+              bld.add(name + getStyledVariableName(var) + "= [];")
+            end
+          end
+        end
+        # for group in vGroup.groups
+        #   process_var_group(cls, cfg, bld, group)
+        # end
+      end
     end
 
     def getStyledUrlName(name)
       return CodeNameStyling.getStyled(name, "DASH_LOWER")
+    end
+
+    def isPrimitive(var)
+      return @langProfile.isPrimitive(var)
+    end
+
+    def isNumericPrimitive(var)
+      return @langProfile.isPrimitive(var) && Types.instance.inCategory(var, "numeric")
+    end
+
+    def getFakerAssignment(var)
+      varType = var.getUType().downcase()
+
+      if isNumericPrimitive(var)
+        return "faker.random.numeric(8)"
+      elsif (varType.start_with?("datetime"))
+        return "faker.date.recent()"
+      elsif var.name.include? "first name"
+        return "faker.name.firstName()"
+      elsif var.name.include? "last name"
+        return "faker.name.lastName()"
+      elsif var.name.include? "city"
+        return "faker.address.city()"
+      elsif var.name.include? "country"
+        return "faker.address.country()"
+      elsif var.name.include? "county"
+        return "faker.address.county()"
+      elsif var.name.include? "email"
+        return 'faker.name.firstName() + "." + faker.name.lastName() + "@example.com"'
+      end
+
+      return "faker.random.alpha(11)"
     end
   end
 end

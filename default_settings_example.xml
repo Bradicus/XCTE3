@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GLOBAL_PROFILE>
-
-	<AUTHOR name="Set author name in default_settings.xml" company="" />
-	<DEFAULT_LICENSE text="" />
+	<DEFAULT_LICENSE>
+	</DEFAULT_LICENSE>
 	
 </GLOBAL_PROFILE>

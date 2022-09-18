@@ -60,8 +60,10 @@ module XCTEHtml
             bld.add('<input id="' + varName + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
             bld.endBlock("</div>")
           else
-            bld.add("<app-" + Utils.instance.getStyledFileName(var.utype) + ">" +
-                    "</app-" + Utils.instance.getStyledFileName(var.utype) + ">")
+            if (var.listType == nil)
+              bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " edit") + ">" +
+                      "</app-" + Utils.instance.getStyledFileName(var.getUType() + " edit") + ">")
+            end
           end
         elsif var.elementId == CodeElem::ELEM_COMMENT
           bld.sameLine(Utils.instance.getComment(var))
