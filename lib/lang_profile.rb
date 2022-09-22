@@ -103,7 +103,7 @@ class LangProfile
 
   def isPrimitive(var)
     for tMap in @typeMaps
-      if tMap.genericType.downcase == var.vtype.downcase
+      if tMap.genericType.downcase == var.getUType().downcase
         return true
       end
     end

@@ -14,6 +14,7 @@ require "code_elem_template_directory.rb"
 require "code_elem_build_type.rb"
 require "code_elem_build_option.rb"
 require "code_elem_project_component_group.rb"
+require "framework.rb"
 require "lang_generator_config.rb"
 
 require "rexml/document"
@@ -36,6 +37,7 @@ module CodeStructure
       @linkLibs = Array.new
       @buildTypes = Array.new
       @langProfilePaths = Array.new
+      @frameworks = Array.new
     end
 
     # Move into a data loader some day
@@ -150,6 +152,11 @@ module CodeStructure
       bNode.case = bNodeXML.attributes["case"]
     end
 
+    def loadFrameworkNode(fw, fwXML)
+      fw.name = fwXML.attributes["name"]
+      fw.version = fwXML.attributes["version"]
+    end
+
     def loadTemplateNode(tNode, tNodeXml)
       tNode.path = tNodeXml.attributes["path"]
       tNode.dest = tNodeXml.attributes["dest"]
@@ -179,7 +186,12 @@ module CodeStructure
       if (tNodeXml.attributes["base_namespace"] != nil)
         tNode.namespaceList = tNodeXml.attributes["base_namespace"].split(".")
       end
-      puts "template node loaded with path"
+
+      tNodeXml.elements.each("framework") { |fwNode|
+        fw = Framework.new
+        loadFrameworkNode(fw, fwNode)
+        tNode.frameworks << fw
+      }
     end
 
     def loadBuildTypeNode(btNode, btNodeXML)

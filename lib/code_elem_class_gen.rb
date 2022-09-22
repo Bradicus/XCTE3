@@ -18,7 +18,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :dontModifyCode,
-                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className
+                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className, :genCfg
     attr_reader :name
 
     def initialize(parentElem, model, isStatic)
@@ -41,6 +41,7 @@ module CodeStructure
       @path = nil
       @model = model
       @dontModifyCode = isStatic
+      @genCfg
 
       # Used by per lang instance of class
       @name = nil

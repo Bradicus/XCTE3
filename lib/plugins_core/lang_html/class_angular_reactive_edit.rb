@@ -55,9 +55,15 @@ module XCTEHtml
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
             varName = Utils.instance.getStyledVariableName(var)
+            labelCss = ""
+            inputCss = ""
+            if (cls.genCfg.usesFramework("bootstrap"))
+              labelCss = ' class="form-label"'
+              inputCss = ' class="form-control"'
+            end
             bld.startBlock("<div>")
-            bld.add('<label for="' + varName + '">' + var.getDisplayName() + "</label>")
-            bld.add('<input id="' + varName + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
+            bld.add("<label" + labelCss + ' for="' + varName + '" >' + var.getDisplayName() + "</label>")
+            bld.add("<input" + inputCss + ' id="' + varName + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
             bld.endBlock("</div>")
           else
             if (var.listType == nil)

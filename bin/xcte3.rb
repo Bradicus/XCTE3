@@ -82,6 +82,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
             lClass = cls.clone()
             lClass.filePath = newPath
             lClass.name = language[lClass.ctype].getClassName(lClass)
+            lClass.genCfg = pComponent
 
             if (lClass.language == nil)
               lClass.language = pComponent.language
@@ -110,6 +111,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
       for srcFile in srcFiles
         foundStart = false
         foundEnd = false
+        overwriteFile = false
         fName = plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
 
         if (File.file?(fName))
@@ -120,13 +122,25 @@ def processProjectComponentGroup(project, pcGroup, cfg)
           end
         end
 
-        # if (!File.file?(fName) || File.mtime(fName) < plan.model.lastModified)
-        sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
+        if (!File.file?(fName))
+          overwriteFile = true
+        else
+          existingFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "r")
+          fileData = existingFile.read
+          genContents = srcFile.getContents
 
-        puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
-        sFile << srcFile.getContents
-        sFile.close
-        # end
+          if (fileData != genContents)
+            overwriteFile = true
+          end
+
+          existingFile.close
+        end
+        if (overwriteFile)
+          puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
+          sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
+          sFile << srcFile.getContents
+          sFile.close
+        end
       end
     end
 

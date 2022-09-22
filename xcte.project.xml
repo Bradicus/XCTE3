@@ -1,5 +1,6 @@
 <project>
-  <generate tpl_path="internal/templates" dest="./internal/gen" language="ruby" />
+  <generate tpl_path="internal/templates" dest="./internal/gen" language="ruby">
+  </generate>
   
   <custom_lang_profiles path="lang_profiles" />
 </project>
