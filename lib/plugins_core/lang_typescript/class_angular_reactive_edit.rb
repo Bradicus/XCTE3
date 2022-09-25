@@ -38,7 +38,7 @@ module XCTETypescript
 
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
-      cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormBuilder")
+      cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
       cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
 
@@ -79,7 +79,7 @@ module XCTETypescript
       end
 
       bld.add
-      bld.startBlock("constructor(private fb: FormBuilder, private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
+      bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
       bld.endBlock
 
       bld.add

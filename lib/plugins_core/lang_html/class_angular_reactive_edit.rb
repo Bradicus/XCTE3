@@ -33,18 +33,30 @@ module XCTEHtml
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      if cls.model.hasAnArray
-        bld.add  # If we declaired array size variables add a seperator
+      nested = (cls.xmlElement.attributes["nested"] == "true")
+
+      if (!nested)
+        bld.add("<h2>" + cls.model.name.capitalize + " edit</h2>")
       end
 
       formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
-      bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
+
+      if (!nested)
+        bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
+      else
+        bld.startBlock("<div>")
+      end
+
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)
       end
 
-      bld.endBlock("</form>")
+      if (!nested)
+        bld.endBlock("</form>")
+      else
+        bld.endBlock("</div>")
+      end
 
       bld.add
     end
@@ -55,20 +67,31 @@ module XCTEHtml
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
             varName = Utils.instance.getStyledVariableName(var)
-            labelCss = ""
-            inputCss = ""
+            labelClasses = []
+            inputClasses = []
             if (cls.genCfg.usesFramework("bootstrap"))
-              labelCss = ' class="form-label"'
-              inputCss = ' class="form-control"'
+              labelClasses << "form-label"
+              inputClasses << "form-control"
+              if (var.name.downcase == "id")
+                labelClasses << "visually-hidden"
+                inputClasses << "visually-hidden"
+              end
             end
+
+            labelCss = getClassDec(labelClasses)
+            inputCss = getClassDec(inputClasses)
+
             bld.startBlock("<div>")
             bld.add("<label" + labelCss + ' for="' + varName + '" >' + var.getDisplayName() + "</label>")
             bld.add("<input" + inputCss + ' id="' + varName + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
             bld.endBlock("</div>")
           else
             if (var.listType == nil)
+              bld.add("<fieldset>")
+              bld.add("<legend>" + var.getDisplayName() + "</legend>")
               bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " edit") + ">" +
                       "</app-" + Utils.instance.getStyledFileName(var.getUType() + " edit") + ">")
+              bld.add("</fieldset>")
             end
           end
         elsif var.elementId == CodeElem::ELEM_COMMENT
@@ -79,6 +102,14 @@ module XCTEHtml
         for group in vGroup.groups
           process_var_group(cls, cfg, bld, group)
         end
+      end
+    end
+
+    def getClassDec(classList)
+      if classList.length > 0
+        return ' class="' + classList.join(" ") + '"'
+      else
+        return ""
       end
     end
   end

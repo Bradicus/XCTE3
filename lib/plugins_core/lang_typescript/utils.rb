@@ -143,16 +143,16 @@ module XCTETypescript
 
     # process variable group
     def getFormgroup(cls, bld, vGroup)
-      bld.sameLine("this.fb.group({")
+      bld.sameLine("new FormGroup({")
       bld.indent
 
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if isPrimitive(var)
             if var.listType == nil
-              bld.add(getStyledVariableName(var) + ": [''],")
+              bld.add(genPrimitiveFormControl(var) + ",")
             else
-              bld.add(getStyledVariableName(var) + ": this.fb.array([]),")
+              bld.add(getStyledVariableName(var) + ": new FormArray([])),")
             end
           else
             otherClass = Classes.findVarClass(var)
@@ -165,10 +165,10 @@ module XCTETypescript
                   bld.sameLine(",")
                 end
               else
-                bld.sameLine("[''],")
+                bld.sameLine("new FormControl(''),")
               end
             else
-              bld.add(getStyledVariableName(var) + ": this.fb.array([]),")
+              bld.add(getStyledVariableName(var) + ": new FormArray([]),")
             end
           end
         end
@@ -179,6 +179,14 @@ module XCTETypescript
 
       bld.unindent
       bld.add("})")
+    end
+
+    def genPrimitiveFormControl(var)
+      if (var.getUType().downcase().start_with?("date"))
+        return getStyledVariableName(var) + ": new FormControl<Date>(new Date())"
+      else
+        return getStyledVariableName(var) + ": new FormControl('')"
+      end
     end
 
     # process variable group
