@@ -79,15 +79,16 @@ module CodeStructure
 
     def addUse(use, forClass = nil)
       curUse = nil
+      usNs = CodeElemNamespace.new(use)
 
       for i in @uses
-        if i.namespace.same?(use)
+        if i.namespace.same?(usNs)
           curUse = i
         end
       end
 
       if curUse == nil
-        curUse = CodeElemUse.new(use)
+        curUse = CodeElemUse.new(usNs)
         @uses << curUse
       end
     end

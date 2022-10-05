@@ -67,8 +67,8 @@ module XCTECSharp
       Utils.instance.genUses(cls.uses, codeBuilder)
 
       # Process namespace items
-      if cls.namespaceList != nil
-        codeBuilder.startBlock("namespace " << cls.namespaceList.join("."))
+      if cls.namespace.hasItems?()
+        codeBuilder.startBlock("namespace " << cls.namespace.get("."))
       end
 
       classDec = cls.model.visibility + " interface " + Utils.instance.getStyledClassName(cls.name)
@@ -109,8 +109,8 @@ module XCTECSharp
       codeBuilder.endClass
 
       # Process namespace items
-      if cls.namespaceList != nil
-        codeBuilder.endBlock(" // namespace " + cls.namespaceList.join("."))
+      if cls.namespace.hasItems?()
+        codeBuilder.endBlock(" // namespace " + cls.namespace.get("."))
         codeBuilder.add
       end
     end

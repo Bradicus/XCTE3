@@ -19,8 +19,7 @@ class Classes
   def self.findVarClass(var)
     for c in @@list
       if c.model.name != nil
-        if ((var.vtype != nil && (c.model.name.tr(" ", "").downcase == var.vtype.tr(" ", "").downcase)) ||
-            (var.utype != nil && (c.model.name.tr(" ", "").downcase == var.utype.tr(" ", "").downcase)))
+        if (c.model.name.tr(" ", "").downcase == var.getUType().tr(" ", "").downcase)
           if (c.namespace.same?(var.namespace))
             return c
           end

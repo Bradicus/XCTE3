@@ -53,7 +53,7 @@ module XCTECSharp
       end
 
       Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
 
       classDec = cls.model.visibility + " class " + getClassName(cls) + "Controller"
 
@@ -96,7 +96,7 @@ module XCTECSharp
       end  # class  + cls.getUName()
       codeBuilder.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
     end
   end
 end

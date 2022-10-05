@@ -170,7 +170,7 @@ module CodeStructure
       tNode.languages = tNodeXml.attributes["languages"].split(" ")
 
       if (tNodeXml.attributes["base_namespace"] != nil)
-        tNode.namespaceList = tNodeXml.attributes["base_namespace"].split(".")
+        tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes["base_namespace"])
       end
       puts "template node loaded with path"
     end
@@ -185,7 +185,7 @@ module CodeStructure
       end
 
       if (tNodeXml.attributes["base_namespace"] != nil)
-        tNode.namespaceList = tNodeXml.attributes["base_namespace"].split(".")
+        tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes["base_namespace"])
       end
 
       tNodeXml.elements.each("framework") { |fwNode|

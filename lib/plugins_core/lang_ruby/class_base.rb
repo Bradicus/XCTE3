@@ -5,7 +5,7 @@ require "x_c_t_e_plugin.rb"
 module XCTERuby
   class ClassBase < XCTEPlugin
     def startNamespaces(cls, bld)
-      for ns in cls.namespaceList
+      for ns in cls.namespace.nsList
         bld.startBlock("module " + ns)
       end
     end
@@ -21,7 +21,7 @@ module XCTERuby
     end
 
     def endNamespaces(cls, bld)
-      for ns in cls.namespaceList
+      for ns in cls.namespace.nsList
         bld.endBlock
       end
     end

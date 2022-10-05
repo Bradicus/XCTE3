@@ -27,8 +27,8 @@ module XCTECSharp
 
       cls.setName(getClassName(cls))
 
-      if cls.interfacenamespace.hasItems?()
-        cls.addUse(cls.interfaceNamespace, "I" + cls.getUName() + "Engine")
+      if cls.interfaceNamespace.hasItems?()
+        cls.addUse(cls.interfaceNamespace.get("."), "I" + cls.getUName() + "Engine")
       end
 
       codeBuilder = SourceRendererCSharp.new
@@ -45,7 +45,7 @@ module XCTECSharp
     def genFileContent(cls, cfg, codeBuilder)
       Utils.instance.genFunctionDependencies(cls, cfg, codeBuilder)
       Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
 
       classDec = cls.model.visibility + " class " + cls.name
 
@@ -54,7 +54,7 @@ module XCTECSharp
       for baseClass in cls.baseClasses
         inheritsFrom << baseClass.name
       end
-      if cls.interfacenamespace.hasItems?()
+      if cls.interfaceNamespace.hasItems?()
         inheritsFrom << Utils.instance.getStyledClassName("i " + cls.getUName() + " engine")
       end
 
@@ -72,7 +72,7 @@ module XCTECSharp
 
       codeBuilder.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
     end
   end
 end

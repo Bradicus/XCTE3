@@ -84,8 +84,8 @@ module XCTERuby
       end
 
       # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
           bld.startBlock("module " << nsItem)
         end
       end
@@ -156,15 +156,15 @@ module XCTERuby
       bld.endBlock
 
       # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
           bld.endBlock
         end
       end
 
       bld.add
 
-      prefix = cls.namespaceList.join("::")
+      prefix = cls.namespace.get("::")
 
       if (prefix.size > 0)
         prefix += "::"

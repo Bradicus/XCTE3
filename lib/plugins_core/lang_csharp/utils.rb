@@ -161,7 +161,7 @@ module XCTECSharp
     # generate use list for file
     def genUses(useList, codeBuilder)
       for use in useList
-        codeBuilder.add("using " + use.namespace + ";")
+        codeBuilder.add("using " + use.namespace.get(".") + ";")
       end
 
       if !useList.empty?
@@ -277,16 +277,16 @@ module XCTECSharp
       end
     end
 
-    def genNamespaceStart(namespaceList, codeBuilder)
+    def genNamespaceStart(namespace, codeBuilder)
       # Process namespace items
-      if namespaceList != nil
-        codeBuilder.startBlock("namespace " << namespaceList.join("."))
+      if namespace.hasItems?()
+        codeBuilder.startBlock("namespace " << namespace.get("."))
       end
     end
 
-    def genNamespaceEnd(namespaceList, codeBuilder)
-      if namespaceList != nil
-        codeBuilder.endBlock(" // namespace " + namespaceList.join("."))
+    def genNamespaceEnd(namespace, codeBuilder)
+      if namespace.hasItems?()
+        codeBuilder.endBlock(" // namespace " + namespace.get("."))
         codeBuilder.add
       end
     end
@@ -297,8 +297,8 @@ module XCTECSharp
 
     def getClassTypeName(cls)
       nsPrefix = ""
-      if cls.namespaceList.length > 0
-        nsPrefix = cls.namespaceList.join(".") + "."
+      if cls.namespace.hasItems?()
+        nsPrefix = cls.namespace.get(".") + "."
       end
 
       baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
@@ -321,8 +321,8 @@ module XCTECSharp
     def getStandardClassInfo(cls)
       cls.standardClass = cls.model.findClassByType("standard")
 
-      if (cls.standardClass.namespaceList != nil)
-        ns = cls.standardClass.namespaceList.join(".") + "."
+      if (cls.standardClass.namespace.hasItems?())
+        ns = cls.standardClass.namespace.get(".") + "."
       else
         ns = ""
       end
@@ -330,7 +330,7 @@ module XCTECSharp
       cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.getUName())
 
       if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
-        cls.addInclude(cls.standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(cls.getUName()))
+        cls.addInclude(cls.standardClass.namespace.get("/"), Utils.instance.getStyledClassName(cls.getUName()))
       end
 
       return cls.standardClass

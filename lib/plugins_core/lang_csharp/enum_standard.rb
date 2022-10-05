@@ -92,7 +92,7 @@ module XCTECSharp
       end
 
       Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
 
       classDec = cls.model.visibility + " enum  " + getClassName(cls)
 
@@ -125,8 +125,8 @@ module XCTECSharp
       hFile.endBlock(";")
 
       # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
+      if cls.namespace.hasItems?()
+        cls.namespace.nsList.reverse_each do |nsItem|
           hFile.endBlock("  // namespace " << nsItem)
         end
         hFile.add

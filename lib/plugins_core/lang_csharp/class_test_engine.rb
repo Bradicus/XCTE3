@@ -49,7 +49,7 @@ module XCTECSharp
       Utils.instance.genFunctionDependencies(cls, cfg, codeBuilder)
       Utils.instance.genUses(cls.uses, codeBuilder)
 
-      Utils.instance.genNamespaceStart(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
 
       codeBuilder.add("[TestClass]")
       classDec = cls.model.visibility + " class " + Utils.instance.getStyledClassName(cls.name)
@@ -60,7 +60,7 @@ module XCTECSharp
 
       codeBuilder.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
     end
   end
 end
