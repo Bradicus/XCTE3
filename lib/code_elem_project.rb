@@ -23,7 +23,7 @@ module CodeStructure
   class ElemProject < CodeElem
     attr_accessor :classType, :includes, :parentsList,
       :variableSection, :functionSection, :componentGroup, :buildType,
-      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths
+      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths, :singleFile
 
     def initialize
       @elementId = CodeElem::ELEM_PROJECT
@@ -38,6 +38,7 @@ module CodeStructure
       @buildTypes = Array.new
       @langProfilePaths = Array.new
       @frameworks = Array.new
+      @singleFile
     end
 
     # Move into a data loader some day

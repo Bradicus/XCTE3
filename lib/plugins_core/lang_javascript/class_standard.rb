@@ -57,7 +57,7 @@ module XCTEJavascript
         headerString << "* " + cfg.codeCompany + "\n"
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         headerString << "*\n* " + cfg.codeLicense + "\n"
       end
 

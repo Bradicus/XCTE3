@@ -21,7 +21,9 @@ class Classes
       if c.model.name != nil
         if ((var.vtype != nil && (c.model.name.tr(" ", "").downcase == var.vtype.tr(" ", "").downcase)) ||
             (var.utype != nil && (c.model.name.tr(" ", "").downcase == var.utype.tr(" ", "").downcase)))
-          return c
+          if (c.namespace.same?(var.namespace))
+            return c
+          end
         end
       end
     end

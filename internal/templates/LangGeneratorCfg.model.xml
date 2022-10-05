@@ -12,7 +12,7 @@
 		<var name="language"		type="String" />
 		<var name="path"			type="String" />
 		<var name="dest"			type="String" />
-		<var name="namespaceList"	type="String" set="List" />
+		<var name="namespace"		type="CodeElemNamespace" />
 	</var_group>		
 	
 </model>

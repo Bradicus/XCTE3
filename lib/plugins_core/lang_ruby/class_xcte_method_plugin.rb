@@ -57,7 +57,7 @@ module XCTERuby
         bld.add("# " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         bld.add("#")
         bld.add("# License:: " + cfg.codeLicense)
       end

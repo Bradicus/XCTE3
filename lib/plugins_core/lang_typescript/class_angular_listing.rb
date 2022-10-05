@@ -19,6 +19,10 @@ module XCTETypescript
       return cls.getUName() + " listing"
     end
 
+    def getFileName(cls)
+      Utils.instance.getStyledFileName(cls.getUName() + " listing.component")
+    end
+
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 

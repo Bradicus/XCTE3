@@ -19,6 +19,10 @@ module XCTETypescript
       return cls.getUName() + " edit component"
     end
 
+    def getFileName(cls)
+      Utils.instance.getStyledFileName(cls.getUName() + " edit.component")
+    end
+
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
@@ -116,6 +120,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !Utils.instance.isPrimitive(var)
+            varCls = Classes.findVarClass(var)
             fPath = Utils.instance.getStyledFileName(var.getUType() + " edit")
             cls.addInclude(fPath + "/" + fPath + ".component", Utils.instance.getStyledClassName(var.getUType() + " edit component"))
           end

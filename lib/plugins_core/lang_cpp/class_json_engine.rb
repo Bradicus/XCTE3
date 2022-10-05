@@ -66,7 +66,7 @@ module XCTECpp
         bld.add("* " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         bld.add("*")
         bld.add("* " + cfg.codeLicense)
       end
@@ -111,8 +111,8 @@ module XCTECpp
       end
 
       # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
           bld.startBlock("namespace " << nsItem)
         end
         bld.add
@@ -129,8 +129,8 @@ module XCTECpp
         end
 
         if cls.baseClasses[par] != nil
-          if cls.baseClasses[par].namespaceList != nil && cls.baseClasses[par].namespaceList.size > 0
-            nameSp = cls.baseClasses[par].namespaceList.join("::") + "::"
+          if cls.baseClasses[par].namespace.hasItems?() && cls.baseClasses[par].namespace.nsList.size > 0
+            nameSp = cls.baseClasses[par].namespace.get("::") + "::"
           end
 
           classDec << cls.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(cls.baseClasses[par].name)
@@ -187,8 +187,8 @@ module XCTECpp
       bld.endClass
 
       # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
+      if cls.namespace.hasItems?()
+        cls.namespace.nsList.reverse_each do |nsItem|
           bld.endBlock("  // namespace " << nsItem)
         end
         bld.add
@@ -203,8 +203,8 @@ module XCTECpp
       cppGen.add
 
       # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
           cppGen.startBlock("namespace " << nsItem)
         end
       end
@@ -239,8 +239,8 @@ module XCTECpp
       end
 
       # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
+      if cls.namespace.hasItems?()
+        cls.namespace.nsList.reverse_each do |nsItem|
           cppGen.endBlock
           cppGen.sameLine(";   // namespace " << nsItem)
         end

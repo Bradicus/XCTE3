@@ -30,7 +30,7 @@ module CodeStructure
       @isPointer = false
       @isSharedPointer = false
       @init = nil
-      @namespace = nil
+      @namespace = CodeElemNamespace.new
       @passBy = "value"
       @genSet = false
       @genGet = false

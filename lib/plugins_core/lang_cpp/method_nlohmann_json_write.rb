@@ -78,7 +78,7 @@ module XCTECpp
 
           if (Utils.instance.isPrimitive(var) || isEnum)
             if var.listType == nil
-              if (var.vtype.downcase == "string")
+              if (var.getUType().downcase == "string")
                 rend.add("if (item." + curVarName + '.size() > 0) json["' + curVarName + '"] = item.' + curVarName + ";")
               else
                 rend.add('json["' + curVarName + '"] = item.' + curVarName + ";")

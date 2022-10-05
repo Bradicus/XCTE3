@@ -27,7 +27,7 @@ module XCTECSharp
 
       cls.setName(getClassName(cls))
 
-      if cls.interfaceNamespace != nil
+      if cls.interfacenamespace.hasItems?()
         cls.addUse(cls.interfaceNamespace, "I" + cls.getUName() + "Engine")
       end
 
@@ -54,7 +54,7 @@ module XCTECSharp
       for baseClass in cls.baseClasses
         inheritsFrom << baseClass.name
       end
-      if cls.interfaceNamespace != nil
+      if cls.interfacenamespace.hasItems?()
         inheritsFrom << Utils.instance.getStyledClassName("i " + cls.getUName() + " engine")
       end
 

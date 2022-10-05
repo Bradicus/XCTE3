@@ -134,8 +134,8 @@ module XCTECpp
     # Return the language type based on the generic type
     def getBaseTypeName(var)
       nsPrefix = ""
-      if var.namespace != nil
-        nsPrefix = var.namespace.gsub(".", "::") + "::"
+      if var.namespace.hasItems?()
+        nsPrefix = var.namespace.get("::") + "::"
       end
 
       baseTypeName = ""
@@ -160,8 +160,8 @@ module XCTECpp
 
     def getClassTypeName(cls)
       nsPrefix = ""
-      if cls.namespaceList.length > 0
-        nsPrefix = cls.namespaceList.join("::") + "::"
+      if cls.namespace.hasItems?()
+        nsPrefix = cls.namespace.get("::") + "::"
       end
 
       baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
@@ -226,8 +226,8 @@ module XCTECpp
     def getStandardClassInfo(cls)
       cls.standardClass = cls.model.findClassByType("standard")
 
-      if (cls.standardClass.namespaceList != nil)
-        ns = cls.standardClass.namespaceList.join("::") + "::"
+      if (cls.standardClass.namespace.hasItems?)
+        ns = cls.standardClass.namespace.get("::") + "::"
       else
         ns = ""
       end
@@ -235,7 +235,7 @@ module XCTECpp
       cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.getUName())
 
       if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
-        cls.addInclude(cls.standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(cls.getUName()))
+        cls.addInclude(cls.standardClass.namespace.get("/"), Utils.instance.getStyledClassName(cls.getUName()))
       end
 
       return cls.standardClass

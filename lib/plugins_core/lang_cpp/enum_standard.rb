@@ -62,7 +62,7 @@ module XCTECpp
         hFile.add("* " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         hFile.add("*")
         hFile.add("* " + cfg.codeLicense)
       end
@@ -82,23 +82,17 @@ module XCTECpp
 
     # Returns the code for the header for this class
     def genHeader(cls, cfg, hFile)
-      if (cls.namespaceList != nil)
-        hFile.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
-        hFile.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+      if cls.namespace.hasItems?()
+        hFile.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        hFile.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
         hFile.add
       else
-        hFile.add("#ifndef _" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
-        hFile.add("#define _" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        hFile.add("#ifndef __" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        hFile.add("#define __" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
         hFile.add
       end
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
-          hFile.startBlock("namespace " << nsItem)
-        end
-        hFile.add
-      end
+      startNamespace(cls, hFile)
 
       # Do automatic static array size declairations above class def
       varArray = Array.new
@@ -137,14 +131,9 @@ module XCTECpp
 
       hFile.endBlock(";")
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
-          hFile.endBlock("  // namespace " << nsItem)
-        end
-        hFile.add
-      end
+      endNamespace(cls, hFile)
 
+      hFile.separate
       hFile.add("#endif")
     end
   end

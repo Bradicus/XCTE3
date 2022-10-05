@@ -56,7 +56,7 @@ module XCTEPhp
         outCode.add("* " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         outCode.add("*\n* " + cfg.codeLicense)
       end
 

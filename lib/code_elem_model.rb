@@ -174,15 +174,6 @@ module CodeStructure
       return nil
     end
 
-    # Returns namespaces separated by .
-    def getNamespaceList(cfg, varArray)
-      if @namespaceList != nil
-        return @namespaceList.join(".")
-      else
-        return ""
-      end
-    end
-
     # Find class
     def findClass(classPlugName)
       for c in @classes

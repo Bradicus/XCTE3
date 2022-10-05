@@ -53,7 +53,7 @@ module XCTECpp
         if var.elementId == CodeElem::ELEM_VARIABLE
           if (!Utils.instance.isPrimitive(var) && !Utils.instance.getTypeName(var).end_with?("Type"))
             #cls.addInclude(var.namespace, Utils.instance.getTypeName(var) )
-            cls.addInclude(cls.namespaceList.join("/"), Utils.instance.getClassName(var) + "JsonEngine")
+            cls.addInclude(cls.namespace.get("/"), Utils.instance.getClassName(var) + "JsonEngine")
           end
         end
       end

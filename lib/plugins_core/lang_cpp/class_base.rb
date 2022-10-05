@@ -5,13 +5,13 @@ require "x_c_t_e_plugin.rb"
 module XCTECpp
   class ClassBase < XCTEPlugin
     def genIfndef(cls, bld)
-      if (cls.namespaceList != nil)
-        bld.add("#ifndef _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
-        bld.add("#define _" + cls.namespaceList.join("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+      if (cls.namespace.hasItems?())
+        bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+        bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
         bld.add
       else
-        bld.add("#ifndef _" + cls.name + "_H")
-        bld.add("#define _" + cls.name + "_H")
+        bld.add("#ifndef __" + cls.name + "_H")
+        bld.add("#define __" + cls.name + "_H")
         bld.add
       end
     end
@@ -38,7 +38,22 @@ module XCTECpp
 
     def genUsings(cls, cfg, bld)
       for us in cls.uses
-        bld.add("using namespace " + us.namespace.split(".").join("::") + ";")
+        bld.add("using namespace " + us.namespace.get("::") + ";")
+      end
+    end
+
+    def startNamespace(cls, bld)
+      # Process namespace items
+      for nsItem in cls.namespace.nsList
+        bld.startBlock("namespace " << nsItem)
+      end
+    end
+
+    def endNamespace(cls, bld, nsCloseChar = "")
+      # Process namespace items
+      cls.namespace.nsList.reverse_each do |nsItem|
+        bld.endBlock
+        bld.sameLine(nsCloseChar + "  // namespace " << nsItem)
       end
     end
 

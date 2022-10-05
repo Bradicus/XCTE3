@@ -26,7 +26,7 @@ module XCTECSharp
       srcFiles = Array.new
 
       cls.setName(Utils.instance.getStyledClassName(cls.getUName() + " engine test"))
-      if cls.interfaceNamespace != nil
+      if cls.interfacenamespace.hasItems?()
         cls.includes << CodeElemInclude.new(cls.interfaceNamespace, cls.getUName() + " interface")
       end
 

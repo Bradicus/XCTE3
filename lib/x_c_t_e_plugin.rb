@@ -100,16 +100,16 @@ class XCTEPlugin
     return nil
   end
 
-  # Attempts to find the desired class plugin for the desired language
-  #  def self.findClassPlugin(lang, classType)
-  #    for plug in @@languagePlugins
-  #      if plug.language == lang && plug.name == classType && plug.category == "class"
-  #        return plug
-  #      end
-  #    end
-  #
-  #    return nil
-  #  end
+  # Attempts to find the desired method plugin for the desired language
+  def self.findClassPlugin(lang, classType, ns = nil)
+    @@languagePlugins[lang].each do |plugKey, plug|
+      if plug.name == classType
+        return plug
+      end
+    end
+
+    return nil
+  end
 
   # Attempts to find the desired project plugin for the desired language
   def self.findProjectPlugin(lang, prjType)

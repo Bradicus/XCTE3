@@ -11,10 +11,11 @@
 require "code_elem.rb"
 require "code_elem_include.rb"
 require "code_elem_use.rb"
+require "code_elem_namespace.rb"
 
 module CodeStructure
   class CodeElemClassGen < CodeElem
-    attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
+    attr_accessor :functions, :namespace, :ctype, :interfaceNamespace, :interfacePath,
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :dontModifyCode,
@@ -34,7 +35,9 @@ module CodeStructure
       @functions = Array.new
       @baseClasses = Array.new
       @interfaces = Array.new
-      @namespaceList = Array.new
+      @namespace = CodeElemNamespace.new
+      @interfaceNamespace = CodeElemNamespace.new
+      @testNamespace = CodeElemNamespace.new
       @templateParams = Array.new
       @varPrefix = ""
       @preDefs = Array.new
@@ -78,7 +81,7 @@ module CodeStructure
       curUse = nil
 
       for i in @uses
-        if i.namespace == use
+        if i.namespace.same?(use)
           curUse = i
         end
       end

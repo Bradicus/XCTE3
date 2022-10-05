@@ -4,8 +4,8 @@
 	<description>
 	Code Element
 	</description>
-				
-	<gen_class type="standard" >
+
+	<gen_class type="standard" ns="code element" >
 	</gen_class>
 
 	<var_group genGet="true" genSet="true">
@@ -16,8 +16,7 @@
 		<var name="visibility"		type="String" />
 		<var name="parentElem"		type="code elem" ptr="true" />
 		<var name="xmlElement"		type="XmlNode" ptr="true" />
-		<var name="osInclude"		type="String" set="List" init="true" comm="What os's this node is limited to" />
-		<var name="langInclude"		type="String" set="List" init="true" comm="What languages this node generates code in" />
-	</var_group>		
-	
+		<var name="osInclude"			type="String" set="List" init="true" comm="What os's this node is limited to" />		
+	</var_group>
+
 </model>

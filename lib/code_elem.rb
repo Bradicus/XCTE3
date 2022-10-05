@@ -27,6 +27,7 @@ class CodeElem
   ELEM_PARENT = "parent"
   ELEM_VARIABLE = "variable"
   ELEM_VAR_GROUP = "variable_group"
+  ELEM_NAMESPACE = "namespace"
 
   ELEM_PROJECT = "project"
   ELEM_PROJECT_COMPONENT_GROUP = "project_cg"

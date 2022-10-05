@@ -68,7 +68,7 @@ module XCTECpp
         bld.add("* " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         bld.add("*")
         bld.add("* " + cfg.codeLicense)
       end
@@ -113,13 +113,7 @@ module XCTECpp
         bld.add
       end
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
-          bld.startBlock("namespace " << nsItem)
-        end
-        bld.add
-      end
+      startNamespace(cls, bld)
 
       # Do automatic static array size declairations above class def
       varArray = Array.new
@@ -233,13 +227,7 @@ module XCTECpp
 
       bld.endClass
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
-          bld.endBlock("  // namespace " << nsItem)
-        end
-        bld.add
-      end
+      endNamespace(cls, bld)
 
       bld.add("#endif")
     end
@@ -304,12 +292,7 @@ module XCTECpp
       cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
       cppGen.add
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
-          cppGen.startBlock("namespace " << nsItem)
-        end
-      end
+      startNamespace(cls, cppGen)
 
       # Initialize static variables
       varArray = Array.new
@@ -366,14 +349,7 @@ module XCTECpp
       cppGen.add
       cppGen.add("//-XCTE Custom Code Area")
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
-          cppGen.endBlock
-          cppGen.sameLine(";   // namespace " << nsItem)
-        end
-        #cppGen.add("\n"
-      end
+      endNamespace(cls, cppGen, ";")
     end
 
     def getVarsFor(varGroup, cfg, vArray)

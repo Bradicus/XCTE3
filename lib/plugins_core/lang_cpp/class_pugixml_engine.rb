@@ -64,7 +64,7 @@ module XCTECpp
         hFile.add("* " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         hFile.add("*")
         hFile.add("* " + cfg.codeLicense)
       end
@@ -109,8 +109,8 @@ module XCTECpp
       end
 
       # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
           hFile.startBlock("namespace " << nsItem)
         end
         hFile.add
@@ -144,8 +144,8 @@ module XCTECpp
         end
 
         if cls.baseClasses[par] != nil
-          if cls.baseClasses[par].namespaceList != nil && cls.baseClasses[par].namespaceList.size > 0
-            nameSp = cls.baseClasses[par].namespaceList.join("::") + "::"
+          if cls.baseClasses[par].namespace.hasItems?() && cls.baseClasses[par].namespace.nsList.size > 0
+            nameSp = cls.baseClasses[par].namespace.get("::") + "::"
           end
 
           classDec << cls.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(cls.baseClasses[par].name)
@@ -219,14 +219,9 @@ module XCTECpp
 
       hFile.endClass
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
-          hFile.endBlock("  // namespace " << nsItem)
-        end
-        hFile.add
-      end
+      endNamespace(cls, hFile)
 
+      hFile.separate
       hFile.add("#endif")
     end
 
@@ -235,12 +230,7 @@ module XCTECpp
       cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
       cppGen.add
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        for nsItem in cls.namespaceList
-          cppGen.startBlock("namespace " << nsItem)
-        end
-      end
+      startNamespace(cls, cppGen)
 
       # Initialize static variables
       varArray = Array.new
@@ -291,14 +281,7 @@ module XCTECpp
         end
       end
 
-      # Process namespace items
-      if cls.namespaceList != nil
-        cls.namespaceList.reverse_each do |nsItem|
-          cppGen.endBlock
-          cppGen.sameLine(";   // namespace " << nsItem)
-        end
-        #cppGen.add("\n"
-      end
+      endNamespace(cls, cppGen, ";")
     end
 
     def getVarsFor(varGroup, cfg, vArray)

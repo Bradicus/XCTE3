@@ -41,7 +41,7 @@ module XCTETypescript
             incPaths.shift
           end
 
-          if (incPaths.length < 2)
+          if (clsPaths.length == 0)
             path = "./"
           else
             for cp in clsPaths

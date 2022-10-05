@@ -56,7 +56,7 @@ module XCTECSharp
         hFile.add("* " + cfg.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
         hFile.add("*")
         hFile.add("* " + cfg.codeLicense)
       end

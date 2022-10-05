@@ -3,6 +3,7 @@ require "code_elem_function"
 require "code_elem_model"
 require "code_elem_class_gen"
 require "code_elem_variable"
+require "code_elem_namespace"
 require "classes"
 
 class DataLoader
@@ -41,9 +42,9 @@ class DataLoader
       Classes.list << cls
       model.classes << cls
 
-      if cls.interfaceNamespace != nil
+      if cls.interfaceNamespace.hasItems?()
         intf = CodeStructure::CodeElemClassGen.new(cls, model, true)
-        intf.namespaceList = cls.interfaceNamespace.split(".")
+        intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interfaceNamespace.get("."))
         intf.path = cls.interfacePath
         intf.functions = cls.functions
         intf.language = cls.language
@@ -54,9 +55,9 @@ class DataLoader
         model.classes << cls
       end
 
-      if cls.testNamespace != nil
+      if cls.testNamespace.hasItems?()
         intf = CodeStructure::CodeElemClassGen.new(cls, model, true)
-        intf.namespaceList = cls.testNamespace.split(".")
+        intf.namespace = CodeStructure::CodeElemNamespace.new(cls.testNamespace.get("."))
         intf.path = cls.testPath
         intf.language = cls.language
         intf.ctype = "test_engine"
@@ -93,7 +94,7 @@ class DataLoader
     curVar.isPointer = varXML.attributes.get_attribute("pointer") != nil || varXML.attributes.get_attribute("ptr") != nil
     curVar.isSharedPointer = varXML.attributes.get_attribute("sharedptr") != nil
     curVar.init = varXML.attributes["init"]
-    curVar.namespace = varXML.attributes["ns"]
+    curVar.namespace = loadNamespaces(varXML, pComponent)
     curVar.isVirtual = curVar.findAttributeExists("virtual")
     curVar.nullable = curVar.findAttributeExists("nullable")
     curVar.identity = varXML.attributes["identity"]
@@ -139,18 +140,18 @@ class DataLoader
   def self.loadClassNode(genC, genCXml, model, pComponent)
     genC.ctype = loadAttribute(genCXml, "type", pComponent.language)
     genC.className = genCXml.attributes["name"]
-    genC.namespaceList = loadNamespaces(genCXml, pComponent)
-    genC.interfaceNamespace = genCXml.attributes["interface_namespace"]
+    genC.namespace = loadNamespaces(genCXml, pComponent)
+    genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["interface_namespace"])
     genC.interfacePath = genCXml.attributes["interface_path"]
-    genC.testNamespace = genCXml.attributes["test_namespace"]
+    genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["test_namespace"])
     genC.testPath = loadAttribute(genCXml, "test_path", pComponent.language)
     genC.language = genCXml.attributes["language"]
     genC.path = loadAttribute(genCXml, "path", pComponent.language)
     genC.varPrefix = loadAttribute(genCXml, "var_prefix", pComponent.language)
 
     # Add base namespace to class namespace lists
-    if (pComponent.namespaceList.size() > 0)
-      genC.namespaceList = pComponent.namespaceList + genC.namespaceList
+    if (pComponent.namespace.nsList.size() > 0)
+      genC.namespace.nsList = pComponent.namespace.nsList + genC.namespace.nsList
     end
 
     #genC.name
@@ -158,7 +159,7 @@ class DataLoader
     genCXml.elements.each("base_class") { |bcXml|
       baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
       baseClass.name = bcXml.attributes["name"]
-      baseClass.namespaceList = loadNamespaces(bcXml, pComponent)
+      baseClass.namespace = loadNamespaces(bcXml, pComponent)
 
       bcXml.elements.each("tpl_param") { |tplXml|
         tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
@@ -176,7 +177,7 @@ class DataLoader
     genCXml.elements.each("interface") { |ifXml|
       intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
       intf.name = ifXml.attributes["name"]
-      intf.namespaceList = loadNamespaces(ifXml, pComponent)
+      intf.namespace = loadNamespaces(ifXml, pComponent)
       genC.interfaces << intf
     }
 
@@ -308,7 +309,7 @@ class DataLoader
 
   # Load a list of namespaces on a node
   def self.loadNamespaces(xml, pComponent)
-    return loadAttributeArray(xml, Array["ns", "namespace"], pComponent.language, ".")
+    return CodeStructure::CodeElemNamespace.new(loadAttribute(xml, Array["ns", "namespace"], pComponent.language, "."))
   end
 
   # Load an attribute

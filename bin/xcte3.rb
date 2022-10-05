@@ -76,7 +76,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
             if cls.path != nil
               newPath = pComponent.dest + "/" + cls.path
             else
-              newPath = pComponent.dest + "/" + cls.namespaceList.join("/")
+              newPath = pComponent.dest + "/" + cls.namespace.get("/")
             end
 
             lClass = cls.clone()
@@ -106,35 +106,40 @@ def processProjectComponentGroup(project, pcGroup, cfg)
 
       puts "generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language
 
-      srcFiles = language[plan.ctype].genSourceFiles(plan, cfg)
+      #project.singleFile = "map gen settings"
 
-      for srcFile in srcFiles
-        foundStart = false
-        foundEnd = false
-        overwriteFile = false
-        fName = plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
+      if (project.singleFile == nil || project.singleFile == plan.model.name)
+        srcFiles = language[plan.ctype].genSourceFiles(plan, cfg)
 
-        if (File.file?(fName))
-          plan.customCode = extractCustomCode(fName)
+        for srcFile in srcFiles
+          foundStart = false
+          foundEnd = false
+          overwriteFile = false
+          fName = plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
 
-          if (plan.customCode != nil && plan.customCode.strip.length > 0)
-            srcFile.lines = insertCustomCode(plan.customCode, srcFile)
+          if (File.file?(fName))
+            plan.customCode = extractCustomCode(fName)
+
+            if (plan.customCode != nil && plan.customCode.strip.length > 0)
+              srcFile.lines = insertCustomCode(plan.customCode, srcFile)
+            end
           end
-        end
 
-        if (!File.file?(fName))
-          overwriteFile = true
-        else
-          existingFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "r")
-          fileData = existingFile.read
-          genContents = srcFile.getContents
-
-          if (fileData != genContents)
+          if (!File.file?(fName))
             overwriteFile = true
-          end
+          else
+            existingFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "r")
+            fileData = existingFile.read
+            genContents = srcFile.getContents
 
-          existingFile.close
+            if (fileData != genContents)
+              overwriteFile = true
+            end
+
+            existingFile.close
+          end
         end
+
         if (overwriteFile)
           puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
           sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
@@ -204,13 +209,26 @@ def insertCustomCode(customCode, srcRend)
 end
 
 # Main
+options = ARGV
+prj = CodeStructure::ElemProject.new
+
+(0..options.length / 2 - 1).each do |i|
+  if (options[i] == "-f")
+    prj.singleFile = options[i + 1]
+  end
+end
+
 codeRootDir = File.dirname(File.realpath(__FILE__))
 
 cfg = UserSettings.new
 cfg.load(codeRootDir + "/../default_settings.xml")
 RunSettings.setUserSettings(cfg)
 
+# Load variable types
 Types.instance.load(codeRootDir + "/../types_basic.xml")
+
+# Load language profiles
+LangProfiles.instance.load(prj)
 
 currentDir = Dir.pwd
 
@@ -219,11 +237,7 @@ if (!FileTest.file?(currentDir + "/xcte.project.xml"))
   exit 0
 end
 
-prj = CodeStructure::ElemProject.new
 prj.loadProject(currentDir + "/xcte.project.xml")
-
-# Load language profiles
-LangProfiles.instance.load(prj)
 
 XCTEPlugin::loadPLugins
 
