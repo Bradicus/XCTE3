@@ -19,8 +19,8 @@
 		ns-csharp="XCTE.Base.Model" path-csharp="XCTE.Base/Model" ></gen_class>
 
 	<gen_class type="class_angular_module" path="address" ></gen_class>
-	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-edit" nested="true" ></gen_class>
-  <gen_class type="empty_file" name="address edit" namespace="" path="address/address-edit" ></gen_class>
+	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-view" nested="true" ></gen_class>
+  <gen_class type="empty_file" name="address view" namespace="" path="address/address-view" ></gen_class>
 
 	<gen_class type="class_angular_service" path="shared/services" >
 		<function name="method_angular_service_detail" />

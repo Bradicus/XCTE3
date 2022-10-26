@@ -16,18 +16,18 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " edit component"
+      return cls.getUName() + " view component"
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName() + " edit.component")
+      Utils.instance.getStyledFileName(cls.getUName() + " view.component")
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " edit" + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       process_dependencies(cls, cfg, bld)
@@ -47,6 +47,7 @@ module XCTETypescript
       cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
 
       super
+
       # Generate class variables
       for group in cls.model.groups
         process_var_dependencies(cls, cfg, bld, group)
@@ -57,8 +58,8 @@ module XCTETypescript
     def genFileContent(cls, cfg, bld)
       bld.add
 
-      selectorName = Utils.instance.getStyledFileName(cls.getUName() + " edit")
-      filePart = Utils.instance.getStyledFileName(cls.getUName() + " edit")
+      selectorName = Utils.instance.getStyledFileName(cls.getUName() + " view")
+      filePart = Utils.instance.getStyledFileName(cls.getUName() + " view")
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
 
@@ -86,7 +87,7 @@ module XCTETypescript
       bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
       bld.endBlock
 
-      bld.add
+      bld.separate
       bld.startBlock("ngOnInit()")
       bld.add("this." + clsVar + ".patchValue(this.item);")
       bld.endBlock
@@ -121,8 +122,9 @@ module XCTETypescript
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !Utils.instance.isPrimitive(var)
             varCls = Classes.findVarClass(var)
-            fPath = Utils.instance.getStyledFileName(var.getUType() + " edit")
-            cls.addInclude(fPath + "/" + fPath + ".component", Utils.instance.getStyledClassName(var.getUType() + " edit component"))
+            fPath = Utils.instance.getStyledFileName(var.getUType() + " view")
+            #cls.addInclude(varCls.path + "/" + fPath + "/" + fPath + ".component", Utils.instance.getStyledClassName(var.getUType() + " view component"))
+            cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
           end
         end
       end

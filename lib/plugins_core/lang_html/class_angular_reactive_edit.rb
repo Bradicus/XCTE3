@@ -21,7 +21,7 @@ module XCTEHtml
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " edit.component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view.component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
@@ -34,14 +34,10 @@ module XCTEHtml
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
       nested = (cls.xmlElement.attributes["nested"] == "true")
-
-      if (!nested)
-        bld.add("<h2>" + cls.model.name.capitalize + " edit</h2>")
-      end
-
       formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
 
       if (!nested)
+        bld.add("<h2>" + cls.model.name.capitalize + " view</h2>")
         bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
       else
         bld.startBlock("<div>")
@@ -87,11 +83,11 @@ module XCTEHtml
             bld.endBlock("</div>")
           else
             if (var.listType == nil)
-              bld.add("<fieldset>")
+              bld.startBlock("<fieldset>")
               bld.add("<legend>" + var.getDisplayName() + "</legend>")
-              bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " edit") + ">" +
-                      "</app-" + Utils.instance.getStyledFileName(var.getUType() + " edit") + ">")
-              bld.add("</fieldset>")
+              bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ">" +
+                      "</app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ">")
+              bld.endBlock("</fieldset>")
             end
           end
         elsif var.elementId == CodeElem::ELEM_COMMENT

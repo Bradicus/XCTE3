@@ -28,9 +28,6 @@ module XCTETypescript
       bld.lfName = getFileName(cls)
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      cls.addInclude("@angular/core", "NgModule")
-      cls.addInclude("@angular/forms", "ReactiveFormsModule")
-
       fPath = Utils.instance.getStyledFileName(cls.model.name)
       cName = Utils.instance.getStyledClassName(cls.model.name)
 
@@ -55,20 +52,46 @@ module XCTETypescript
       return srcFiles
     end
 
+    def process_dependencies(cls, cfg, bld)
+      cls.addInclude("@angular/core", "NgModule")
+      cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
+
+      super
+
+      # Generate class variables
+      for group in cls.model.groups
+        process_var_dependencies(cls, cfg, bld, group)
+      end
+    end
+
     # Returns the code for the content for this class
     def genFileComment(cls, cfg, bld)
     end
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      bld.startBlock("@NgModule(")
+      bld.add("const routes: Routes = [")
+      for otherCls in cls.model.classes
+        if otherCls.ctype.start_with? "class_angular_reactive_edit"
+          viewPath = Utils.instance.getStyledFileName(otherCls.model.name + " view")
+          editPath = Utils.instance.getStyledFileName(otherCls.model.name + " view")
+          #compName = getClassName(cls)
+          bld.iadd("{ path: '" + viewPath + "', component: FirstComponent },")
+          bld.iadd("{ path: '" + editPath + "', component: FirstComponent, data: {enableEdit: true} },")
+        end
+      end
+      bld.add("];")
 
+      bld.add("@NgModule({")
       bld.indent
       bld.add "declarations: ["
       for otherCls in cls.model.classes
         if otherCls.ctype == "class_angular_reactive_edit"
           plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-          bld.iadd(plug.getClassName(otherCls))
+          bld.iadd(plug.getClassName(otherCls) + ",")
+        elsif otherCls.ctype == "class_angular_listing"
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
+          bld.iadd(plug.getClassName(otherCls) + ",")
         end
       end
       bld.add "],"
@@ -79,15 +102,29 @@ module XCTETypescript
           bld.iadd("ReactiveFormsModule,")
         end
       end
+
+      for vGroup in cls.model.groups
+        process_var_group_imports(cls, cfg, bld, vGroup)
+      end
+
+      bld.add "],"
+
+      bld.add "exports:["
+      for otherCls in cls.model.classes
+        if otherCls.ctype == "class_angular_reactive_edit"
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
+          bld.iadd(plug.getClassName(otherCls) + ",")
+        elsif otherCls.ctype == "class_angular_listing"
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
+          bld.iadd(plug.getClassName(otherCls) + ",")
+        end
+      end
       bld.add "],"
 
       bld.add "providers: [],"
-
-      bld.add "bootstrap: ["
-      bld.add "],"
       bld.unindent
 
-      bld.endBlock(")")
+      bld.add("})")
       bld.startClass("export class " + getClassName(cls))
 
       # Generate code for functions
@@ -114,6 +151,21 @@ module XCTETypescript
       end
     end
 
+    # process variable group
+    def process_var_group_imports(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if !Utils.instance.isPrimitive(var)
+            varCls = Classes.findVarClass(var)
+            editClass = varCls.model.findClass("class_angular_reactive_edit")
+            if (editClass != nil)
+              bld.iadd(Utils.instance.getStyledClassName(editClass.model.name + " module") + ",")
+            end
+          end
+        end
+      end
+    end
+
     def process_function(cls, cfg, bld, fun)
       bld.separate
 
@@ -133,6 +185,22 @@ module XCTETypescript
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         end
+      end
+    end
+
+    def process_var_dependencies(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if !Utils.instance.isPrimitive(var)
+            varCls = Classes.findVarClass(var)
+            fPath = Utils.instance.getStyledFileName(var.getUType() + "")
+            cls.addInclude(varCls.path + "/" + fPath + ".module", Utils.instance.getStyledClassName(var.getUType() + " module"))
+          end
+        end
+      end
+
+      for grp in vGroup.groups
+        process_var_dependencies(cls, cfg, bld, grp)
       end
     end
   end

@@ -33,10 +33,6 @@ module XCTEHtml
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
-      end
-
       if !cls.includes.empty?
         bld.add
       end
@@ -45,7 +41,7 @@ module XCTEHtml
         bld.add  # If we declaired array size variables add a seperator
       end
 
-      bld.startBlock('<table id="' + CodeNameStyling.getStyled(getUnformattedClassName(cls) + "", Utils.instance.langProfile.variableNameStyle) + '">')
+      bld.startBlock('<table class="table" id="' + CodeNameStyling.getStyled(getUnformattedClassName(cls) + "", Utils.instance.langProfile.variableNameStyle) + '">')
 
       # Generate table header
       bld.startBlock("<thead>")
@@ -53,15 +49,18 @@ module XCTEHtml
       for group in cls.model.groups
         process_var_group_header(cls, cfg, bld, group)
       end
+
       bld.endBlock("</tr>")
       bld.endBlock("</thead>")
 
       # Generate table body
       bld.startBlock("<body>")
-      bld.startBlock('<tr *ngFor="let item of itemList">')
+      bld.startBlock('<tr *ngFor="let item of items | async">')
       for group in cls.model.groups
         process_var_group_body(cls, cfg, bld, group)
       end
+      bld.add('<td><a class="button" routerLink="/user-view">View</a></td>')
+      bld.add('<td><a class="button" routerLink="/user-view">Edit</a></td>')
       bld.endBlock("</tr>")
       bld.endBlock("</body>")
 

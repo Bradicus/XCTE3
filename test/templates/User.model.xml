@@ -14,10 +14,11 @@
 	<gen_class type="class_angular_module" path="user" ></gen_class>
 
   <gen_class type="class_angular_listing" path="user/user-listing" ></gen_class>
-	<gen_class type="class_angular_reactive_edit" path="user/user-edit" >
-	  <include name="Address" path="shared/interfaces/address" />
+	<gen_class type="class_angular_reactive_edit" path="user/user-view" >
 	 	<function name="method_random_populate" />
 	</gen_class>
+	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" ></gen_class>
+	<gen_class type="empty_file" name="user listing" namespace="" path="user/user-listing" ></gen_class>
 
 	<gen_class type="class_angular_service" path="shared/services" >
 		<function name="method_angular_service_detail" />
@@ -25,8 +26,6 @@
 		<function name="method_angular_service_create" />
 		<function name="method_angular_service_update" />
 	</gen_class>
-
-  <gen_class type="empty_file" name="user edit" namespace="" path="user/user-edit" ></gen_class>
 
 	<gen_class type="ef_configuration" namespace="XCTE.Base.DB" path="XCTE.Base/DB" >
 		<use-csharp name="System.Collections.Generic" />

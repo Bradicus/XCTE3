@@ -16,7 +16,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " listing"
+      return cls.getUName() + " listing component"
     end
 
     def getFileName(cls)
@@ -27,14 +27,32 @@ module XCTETypescript
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " listing" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, cfg, bld)
+      render_dependencies(cls, cfg, bld)
+
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
 
       srcFiles << bld
 
       return srcFiles
+    end
+
+    def process_dependencies(cls, cfg, bld)
+      cls.addInclude("@angular/core", "Component, OnInit")
+      cls.addInclude("@angular/router", "Router")
+      cls.addInclude("rxjs", "Observable", "lib")
+      cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+      cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
+
+      super
+      # Generate class variables
+      # for group in cls.model.groups
+      #   process_var_dependencies(cls, cfg, bld, group)
+      # end
     end
 
     # Returns the code for the comment for this class
@@ -47,9 +65,11 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      filePart = Utils.instance.getStyledFileName(cls.getUName() + " listing")
 
       clsVar = CodeNameStyling.getStyled(getUnformattedClassName(cls), Utils.instance.langProfile.variableNameStyle)
+      standardClassName = Utils.instance.getStyledClassName(cls.getUName())
+      routeName = Utils.instance.getStyledFileName(cls.getUName())
 
       bld.add("@Component({")
       bld.indent
@@ -57,16 +77,36 @@ module XCTETypescript
       bld.add("templateUrl: './" + filePart + ".component.html',")
       bld.add("styleUrls: ['./" + filePart + ".component.css']")
       bld.unindent
-      bld.add(")}")
+      bld.add("})")
 
       bld.separate
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
 
-      bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
+      bld.add("private items: Observable<" + standardClassName + "[]> = new Observable<" + standardClassName + "[]>;")
+
+      bld.separate
+
+      bld.startBlock("constructor(private service: " + standardClassName + "Service, private router: Router)")
       bld.endBlock
 
       bld.separate
+      bld.startBlock("ngOnInit()")
+      bld.add("this.items = " + "this.service.listing();")
+      bld.endBlock
+
+      bld.separate
+
+      bld.startBlock("onView()")
+      bld.add("this.router.navigate(['/" + routeName + "/" + routeName + "-view']);")
+      bld.endBlock
+
+      bld.separate
+
+      # bld.startBlock("onDelete(item: " + standardClassName + ")")
+      # bld.add("this.service.delete(item.id);")
+      # bld.endBlock
+
       # Generate code for functions
       for fun in cls.functions
         process_function(cls, cfg, bld, fun)
