@@ -54,6 +54,8 @@ module XCTETypescript
 
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "NgModule")
+      cls.addInclude("@angular/common", "CommonModule")
+      cls.addInclude("@angular/router", "Routes, RouterModule")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
 
       super
@@ -74,13 +76,23 @@ module XCTETypescript
       for otherCls in cls.model.classes
         if otherCls.ctype.start_with? "class_angular_reactive_edit"
           viewPath = Utils.instance.getStyledFileName(otherCls.model.name + " view")
-          editPath = Utils.instance.getStyledFileName(otherCls.model.name + " view")
+          editPath = Utils.instance.getStyledFileName(otherCls.model.name + " edit")
+
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
+          compName = plug.getClassName(otherCls)
           #compName = getClassName(cls)
-          bld.iadd("{ path: '" + viewPath + "', component: FirstComponent },")
-          bld.iadd("{ path: '" + editPath + "', component: FirstComponent, data: {enableEdit: true} },")
+          bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
+          bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
+        elsif otherCls.ctype == "class_angular_listing"
+          listPath = Utils.instance.getStyledFileName(otherCls.model.name + " listing")
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
+          compName = plug.getClassName(otherCls)
+          bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
         end
       end
       bld.add("];")
+
+      bld.separate
 
       bld.add("@NgModule({")
       bld.indent
@@ -102,6 +114,9 @@ module XCTETypescript
           bld.iadd("ReactiveFormsModule,")
         end
       end
+
+      bld.iadd("RouterModule.forRoot(routes),")
+      bld.iadd("CommonModule,")
 
       for vGroup in cls.model.groups
         process_var_group_imports(cls, cfg, bld, vGroup)

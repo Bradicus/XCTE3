@@ -59,8 +59,8 @@ module XCTEHtml
       for group in cls.model.groups
         process_var_group_body(cls, cfg, bld, group)
       end
-      bld.add('<td><a class="button" routerLink="/user-view">View</a></td>')
-      bld.add('<td><a class="button" routerLink="/user-view">Edit</a></td>')
+      bld.add('<td><a class="button" routerLink="/user-view/{{item.id}}">View</a></td>')
+      bld.add('<td><a class="button" routerLink="/user-edit/{{item.id}}">Edit</a></td>')
       bld.endBlock("</tr>")
       bld.endBlock("</body>")
 

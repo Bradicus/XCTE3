@@ -83,7 +83,7 @@ module XCTETypescript
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
 
-      bld.add("private items: Observable<" + standardClassName + "[]> = new Observable<" + standardClassName + "[]>;")
+      bld.add("public items: Observable<" + standardClassName + "[]> = new Observable<" + standardClassName + "[]>;")
 
       bld.separate
 
@@ -97,9 +97,9 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startBlock("onView()")
-      bld.add("this.router.navigate(['/" + routeName + "/" + routeName + "-view']);")
-      bld.endBlock
+      # bld.startBlock("onView()")
+      # bld.add("this.router.navigate(['/" + routeName + "/" + routeName + "-view']);")
+      # bld.endBlock
 
       bld.separate
 

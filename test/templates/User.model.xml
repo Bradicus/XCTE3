@@ -27,6 +27,10 @@
 		<function name="method_angular_service_update" />
 	</gen_class>
 
+	<gen_class type="class_angular_faker_service" path="shared/services" >
+		<function name="method_faker_get" />
+	</gen_class>
+
 	<gen_class type="ef_configuration" namespace="XCTE.Base.DB" path="XCTE.Base/DB" >
 		<use-csharp name="System.Collections.Generic" />
 		<function name="method_ef_configuration" />
