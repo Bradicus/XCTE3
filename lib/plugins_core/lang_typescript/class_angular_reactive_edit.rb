@@ -44,7 +44,11 @@ module XCTETypescript
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+
       cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
+      if cls.model.findClass("class_angular_faker_service") != nil
+        cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " faker service"), Utils.instance.getStyledClassName(cls.model.name + " faker service"))
+      end
 
       super
 
@@ -62,6 +66,8 @@ module XCTETypescript
       filePart = Utils.instance.getStyledFileName(cls.getUName() + " view")
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
+      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_service")
+      fakerUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_faker_service")
 
       bld.add("@Component({")
       bld.indent
@@ -84,7 +90,11 @@ module XCTETypescript
       end
 
       bld.add
-      bld.startBlock("constructor(private service: " + Utils.instance.getStyledClassName(cls.getUName()) + "Service)")
+
+      constructorParams = Array.new
+      Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
+      Utils.instance.addParamIfAvailable(constructorParams, fakerUserServiceVar)
+      bld.startBlock("constructor(" + constructorParams.join(", ") + ")")
       bld.endBlock
 
       bld.separate
@@ -95,9 +105,9 @@ module XCTETypescript
       bld.add
       bld.startBlock("onSubmit()")
       bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
-      bld.add("this.service.create(this." + clsVar + ".value);")
+      bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".create(this." + clsVar + ".value);")
       bld.midBlock("else")
-      bld.add("this.service.update(this." + clsVar + ".value);")
+      bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".update(this." + clsVar + ".value);")
       bld.endBlock
       bld.endBlock
 

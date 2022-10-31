@@ -3,6 +3,7 @@
 #
 
 require "plugins_core/lang_typescript/class_base.rb"
+require "plugins_core/lang_typescript/class_base.rb"
 
 module XCTETypescript
   class ClassAngularFakerService < ClassBase
@@ -50,6 +51,15 @@ module XCTETypescript
       return srcFiles
     end
 
+    def process_dependencies(cls, cfg, bld)
+      cls.addInclude("@faker-js/faker", "faker")
+
+      # Generate class variables
+      for group in cls.model.groups
+        process_var_dependencies(cls, cfg, bld, group)
+      end
+    end
+
     # Returns the code for the content for this class
     def genFileComment(cls, cfg, bld)
     end
@@ -66,8 +76,7 @@ module XCTETypescript
       # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
 
       bld.separate
-      bld.startFunction("constructor(private httpClient: HttpClient)")
-      bld.add("this.apiUrl = environment.apiUrl;")
+      bld.startFunction("constructor()")
       bld.endFunction
 
       # Generate code for functions
@@ -113,6 +122,21 @@ module XCTETypescript
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         end
+      end
+    end
+
+    def process_var_dependencies(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if !Utils.instance.isPrimitive(var)
+            varCls = Classes.findVarClass(var)
+            cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
+          end
+        end
+      end
+
+      for grp in vGroup.groups
+        process_var_dependencies(cls, cfg, bld, grp)
       end
     end
   end

@@ -13,13 +13,12 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def get_definition(cls, cfg, bld)
-      # process class variables
+      fakerServiceVar = Utils.instance.createVarFor(cls, "class_angular_faker_service")
 
       bld.startFunction("populate(): void")
 
-      for group in cls.model.groups
-        Utils.instance.genPopulate(cls, bld, group, "this.item.")
-      end
+      bld.add("this.item = this." + Utils.instance.getStyledVariableName(fakerServiceVar) + ".get()[0];")
+      bld.add("this.userForm.patchValue(this.item);")
 
       bld.endFunction()
     end

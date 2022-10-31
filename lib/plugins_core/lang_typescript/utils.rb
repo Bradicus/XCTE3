@@ -10,6 +10,7 @@
 require "lang_profile.rb"
 require "utils_base"
 require "types"
+require "code_elem_variable"
 
 module XCTETypescript
   class Utils < UtilsBase
@@ -21,17 +22,51 @@ module XCTETypescript
 
     # Get a parameter declaration for a method parameter
     def getParamDec(var)
-      pDec = String.new
+      vDec = String.new
+      typeName = String.new
 
-      pDec << getTypeName(var.vtype)
+      vDec << getStyledVariableName(var)
+      vDec << ": " + getTypeName(var)
 
-      pDec << " " << var.name
-
-      if var.arrayElemCount > 0
-        pDec << "[]"
+      if var.arrayElemCount.to_i > 0 && var.vtype != "String"
+        vDec << "[]"
       end
 
+      if var.comment != nil
+        vDec << "\t/** " << var.comment << " */"
+      end
+
+      return vDec
+    end
+
+    def addParamIfAvailable(params, var)
+      if (var != nil)
+        params.push("private " + getParamDec(var))
+      end
+    end
+
+    def getParamDecForClass(cls, plug)
+      pDec = String.new
+      pDec << CodeNameStyling.getStyled(plug.getUnformattedClassName(cls), @langProfile.variableNameStyle) << ": "
+
+      pDec << plug.getClassName(cls)
+
       return pDec
+    end
+
+    def createVarFor(cls, plugName)
+      plugClass = cls.model.findClass(plugName)
+      plug = XCTEPlugin::findClassPlugin("typescript", plugName)
+
+      if (plugClass == nil || plug == nil)
+        return nil
+      end
+
+      newVar = CodeStructure::CodeElemVariable.new(nil)
+      newVar.utype = plug.getUnformattedClassName(cls)
+      newVar.name = newVar.utype
+
+      return newVar
     end
 
     # Returns variable declaration for the specified variable
