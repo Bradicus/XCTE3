@@ -114,5 +114,33 @@ module CodeStructure
     def setName(newName)
       @name = newName
     end
+
+    def findVar(varName, varNs = nil)
+      for grp in @model.groups
+        varFound = findVarInGroup(grp, varName, varNs)
+        if (varFound != nil)
+          return varFound
+        end
+      end
+
+      return nil
+    end
+
+    def findVarInGroup(vgroup, varName, varNs)
+      for var in vgroup.vars
+        if var.name == varName && (varNs == nil || var.namespace.get(".") == varNs)
+          return var
+        end
+      end
+
+      for grp in vgroup.groups
+        varFound = findVarInGroup(grp, varName, varNs)
+        if (varFound != nil)
+          return varFound
+        end
+      end
+
+      return nil
+    end
   end
 end

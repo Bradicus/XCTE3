@@ -72,6 +72,8 @@ module XCTECSharp
       if identVar
         codeBuilder.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
                         "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
+      else
+        codeBuilder.add("WHERE" + '";')
       end
 
       codeBuilder.add

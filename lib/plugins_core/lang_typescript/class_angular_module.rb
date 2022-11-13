@@ -10,7 +10,7 @@ module XCTETypescript
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
+      return getStyledClassName(getUnformattedClassName(cls))
     end
 
     def getUnformattedClassName(cls)
@@ -18,7 +18,7 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName() + ".module")
+      getStyledFileName(cls.getUName() + ".module")
     end
 
     def genSourceFiles(cls, cfg)
@@ -28,8 +28,8 @@ module XCTETypescript
       bld.lfName = getFileName(cls)
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      fPath = Utils.instance.getStyledFileName(cls.model.name)
-      cName = Utils.instance.getStyledClassName(cls.model.name)
+      fPath = getStyledFileName(cls.model.name)
+      cName = getStyledClassName(cls.model.name)
 
       for otherCls in cls.model.classes
         if (otherCls.ctype.start_with?("class_angular_reactive_edit") ||
@@ -75,8 +75,8 @@ module XCTETypescript
       bld.add("const routes: Routes = [")
       for otherCls in cls.model.classes
         if otherCls.ctype.start_with? "class_angular_reactive_edit"
-          viewPath = Utils.instance.getStyledFileName(otherCls.model.name + " view")
-          editPath = Utils.instance.getStyledFileName(otherCls.model.name + " edit")
+          viewPath = getStyledFileName(otherCls.model.name + " view")
+          editPath = getStyledFileName(otherCls.model.name + " edit")
 
           plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
           compName = plug.getClassName(otherCls)
@@ -84,7 +84,7 @@ module XCTETypescript
           bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
           bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
         elsif otherCls.ctype == "class_angular_listing"
-          listPath = Utils.instance.getStyledFileName(otherCls.model.name + " listing")
+          listPath = getStyledFileName(otherCls.model.name + " listing")
           plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
           compName = plug.getClassName(otherCls)
           bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
@@ -154,9 +154,9 @@ module XCTETypescript
     def process_var_group(cls, cfg, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
+          bld.add(getVarDec(var))
         elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
+          bld.sameLine(getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
@@ -170,11 +170,11 @@ module XCTETypescript
     def process_var_group_imports(cls, cfg, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          if !Utils.instance.isPrimitive(var)
+          if !isPrimitive(var)
             varCls = Classes.findVarClass(var)
             editClass = varCls.model.findClass("class_angular_reactive_edit")
             if (editClass != nil)
-              bld.iadd(Utils.instance.getStyledClassName(editClass.model.name + " module") + ",")
+              bld.iadd(getStyledClassName(editClass.model.name + " module") + ",")
             end
           end
         end
@@ -206,10 +206,10 @@ module XCTETypescript
     def process_var_dependencies(cls, cfg, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          if !Utils.instance.isPrimitive(var)
+          if !isPrimitive(var)
             varCls = Classes.findVarClass(var)
-            fPath = Utils.instance.getStyledFileName(var.getUType() + "")
-            cls.addInclude(varCls.path + "/" + fPath + ".module", Utils.instance.getStyledClassName(var.getUType() + " module"))
+            fPath = getStyledFileName(var.getUType() + "")
+            cls.addInclude(varCls.path + "/" + fPath + ".module", getStyledClassName(var.getUType() + " module"))
           end
         end
       end

@@ -25,33 +25,36 @@ module XCTECSharp
       codeBuilder.add("/// Web API get single " + cls.getUName())
       codeBuilder.add("///")
 
-      codeBuilder.startFunction("public IQueryable<" + Utils.instance.getStyledClassName(cls.getUName()) + "> Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id)")
-
       get_body(cls, genFun, cfg, codeBuilder)
 
       codeBuilder.endFunction
     end
 
     def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("public IQueryable<" + Utils.instance.getStyledClassName(cls.getUName()) +
-                      "> Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
+      codeBuilder.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
+                      " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
     def process_dependencies(cls, genFun, cfg, codeBuilder)
       cls.addUse("System.Collections.Generic", "List")
       cls.addUse("System.Web.Http", "ApiController")
+      Utils.instance.addClassInclude(cls, "standard")
+      Utils.instance.addClassInclude(cls, "tsql_data_store")
     end
 
     def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
       varArray = Array.new
-      engineName = Utils.instance.getStyledClassName(cls.getUName()) + "Engine"
+      engineName = Utils.instance.getStyledClassName(cls.getUName() + " data store")
       cls.model.getAllVarsFor(varArray)
 
-      codeBuilder.add("using (SqlConnection conn = new SqlConnection())")
-      codeBuilder.startBlock("using (I" + engineName + " eng = new " + engineName + "())")
+      codeBuilder.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) + " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id)")
 
-      codeBuilder.add("var obj = eng.RetrieveOneById(id);")
+      codeBuilder.startBlock("using (SqlConnection conn = new SqlConnection())")
+      codeBuilder.add("I" + engineName + " eng = new " + engineName + "();")
+
+      codeBuilder.add("var obj = eng.RetrieveOneById(id, conn);")
+      codeBuilder.add("return obj;")
 
       codeBuilder.endBlock()
     end

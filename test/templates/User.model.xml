@@ -4,9 +4,9 @@
 	<description>
 	</description>
 
-	<gen_class type="standard" type-typescript="interface"
-		path-typescript="shared/interfaces"
-		path-csharp="XCTE.Base/Model" >
+	<gen_class type="standard"
+		type-typescript="interface" path-typescript="shared/interfaces"
+		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model" >
 		<include name="Address" path="shared/interfaces/address" />
 		<use-csharp name="System.Collections.Generic" />
 	</gen_class>
@@ -31,7 +31,7 @@
 		<function name="method_faker_get" />
 	</gen_class>
 
-	<gen_class type="ef_configuration" namespace="XCTE.Base.DB" path="XCTE.Base/DB" >
+	<gen_class type="ef_configuration" namespace="XCTE.Base.Data.Config" path="XCTE.Base/Data/Config" >
 		<use-csharp name="System.Collections.Generic" />
 		<function name="method_ef_configuration" />
 	</gen_class>
@@ -39,6 +39,25 @@
 	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
+
+		<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
+				   var_prefix = "a "
+				   interface_namespace="XCTE.Base.Data.Io"
+				   interface_path="XCTE.Base/Data/Io"
+				   test_namespace="Test"
+				   test_path="Test" >
+			<function name="method_tsql_create" interface="true" />
+			<function name="method_tsql_update" interface="true" />
+			<function name="method_tsql_retrieve_all" interface="true" />
+			<function name="method_tsql_retrieve_one_by" interface="true" >
+				<var_ref name="id" />
+			</function>
+			
+		<!--	<function name="method_tsql_delete" interface="true" />-->
+			<!--<function name="update" interface="true" />
+			<function name="delete" interface="true" />
+			<function name="deleteBy" interface="true" />-->
+		</gen_class>
 
 	<var_group genGet="true" genSet="true">
 		<var name="id"		type="String" pkey="true" />

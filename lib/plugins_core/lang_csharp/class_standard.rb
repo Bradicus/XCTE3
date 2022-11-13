@@ -59,17 +59,13 @@ module XCTECSharp
 
       for par in (0..cls.baseClasses.size)
         if par == 0 && cls.baseClasses[par] != nil
-          classDec << " < " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
+          classDec << " : " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         elsif cls.baseClasses[par] != nil
           classDec << ", " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         end
       end
 
       codeBuilder.startClass(classDec)
-
-      if cls.dontModifyCode
-        codeBuilder.add("#region DON'T MODYFY THIS CLASS, IT WILL BE OVERWRITTEN BY GENERATOR")
-      end
 
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
@@ -91,10 +87,6 @@ module XCTECSharp
 
       # Generate code for functions
       Utils.instance.genFunctions(cls, codeBuilder)
-
-      if cls.dontModifyCode
-        codeBuilder.add("#endregion")
-      end
 
       codeBuilder.endClass
 

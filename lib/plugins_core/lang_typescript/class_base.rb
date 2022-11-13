@@ -1,9 +1,9 @@
-require "plugins_core/lang_typescript/utils.rb"
+require "plugins_core/lang_typescript/plugin_base.rb"
 require "x_c_t_e_plugin.rb"
 
 # This class contains functions that may be usefull in any type of class
 module XCTETypescript
-  class ClassBase < XCTEPlugin
+  class ClassBase < PluginBase
     def process_dependencies(cls, cfg, bld)
       # Generate dependency code for functions
       for fun in cls.functions

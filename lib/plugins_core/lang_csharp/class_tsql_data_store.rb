@@ -11,15 +11,19 @@ require "lang_file.rb"
 require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
-  class ClassTsqlEngine < XCTEPlugin
+  class ClassTsqlDataStore < XCTEPlugin
     def initialize
-      @name = "tsql_engine"
+      @name = "tsql_data_store"
       @language = "csharp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName() + " engine")
+      return Utils.instance.getStyledClassName(cls.getUName() + " data store")
+    end
+
+    def getUnformattedClassName(cls)
+      return cls.getUName() + " data store"
     end
 
     def genSourceFiles(cls, cfg)
@@ -28,7 +32,8 @@ module XCTECSharp
       cls.setName(getClassName(cls))
 
       if cls.interfaceNamespace.hasItems?()
-        cls.addUse(cls.interfaceNamespace.get("."), "I" + cls.getUName() + "Engine")
+        cls.addUse(cls.interfaceNamespace.get("."), "I" + getUnformattedClassName(cls))
+        Utils.instance.addClassInclude(cls, "standard")
       end
 
       codeBuilder = SourceRendererCSharp.new
@@ -55,7 +60,7 @@ module XCTECSharp
         inheritsFrom << baseClass.name
       end
       if cls.interfaceNamespace.hasItems?()
-        inheritsFrom << Utils.instance.getStyledClassName("i " + cls.getUName() + " engine")
+        inheritsFrom << Utils.instance.getStyledClassName("i " + getUnformattedClassName(cls))
       end
 
       for par in (0..inheritsFrom.size)
@@ -77,4 +82,4 @@ module XCTECSharp
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECSharp::ClassTsqlEngine.new)
+XCTEPlugin::registerPlugin(XCTECSharp::ClassTsqlDataStore.new)

@@ -22,7 +22,7 @@ module XCTECSharp
     # Returns definition string for this class's constructor
     def get_definition(cls, genFun, cfg, codeBuilder)
       codeBuilder.add("///")
-      codeBuilder.add("/// Save all components of this ")
+      codeBuilder.add("/// Save all components of this object")
       codeBuilder.add("///")
 
       codeBuilder.startFunction("public void Save()")

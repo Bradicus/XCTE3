@@ -5,7 +5,7 @@
 	</description>
 
 	<var_group virtual="true" genGet="true" genSet="true">
-		<var name="id"		type="String" pkey="true" />
+		<var name="id"		type="Int32" pkey="true" />
 		<var name="street1"	type="String" maxlen="50" />
 		<var name="street2"	type="String" maxlen="50" />
 		<var name="city"	type="String" maxlen="50" />
@@ -16,7 +16,7 @@
 
 	<gen_class type="standard"
 		type-typescript="interface" path-typescript="shared/interfaces"
-		ns-csharp="XCTE.Base.Model" path-csharp="XCTE.Base/Model" ></gen_class>
+		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model" ></gen_class>
 
 	<gen_class type="class_angular_module" path="address" ></gen_class>
 	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-view" nested="true" ></gen_class>
@@ -36,10 +36,10 @@
 		<function name="method_web_api_read_one" />
 	</gen_class>
 
-	<gen_class type="tsql_engine" namespace="XCTE.Base.Engine" path="XCTE.Base/Engine"
+	<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
 			   var_prefix = "a "
-			   interface_namespace="XCTE.Base.Engine"
-			   interface_path="XCTE.Base/Engine"
+			   interface_namespace="XCTE.Base.Data.Io"
+			   interface_path="XCTE.Base/Data/Io"
 			   test_namespace="Test"
 			   test_path="Test" >
 		<function name="method_tsql_create" interface="true" />
@@ -52,7 +52,7 @@
 			<var_ref name="city" />
 			<var_ref name="zip code" />
 		</function>
-		<function name="method_tsql_delete" interface="true" />
+	<!--	<function name="method_tsql_delete" interface="true" />-->
 		<!--<function name="update" interface="true" />
 		<function name="delete" interface="true" />
 		<function name="deleteBy" interface="true" />-->

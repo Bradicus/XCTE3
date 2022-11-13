@@ -9,47 +9,50 @@
 
 require "x_c_t_e_plugin.rb"
 
-class XCTECSharp::MethodEFConfiguration < XCTEPlugin
-  def initialize
-    @name = "method_ef_configuration"
-    @language = "csharp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
+module XCTECSharp
+  class MethodEFConfiguration < XCTEPlugin
+    def initialize
+      @name = "method_ef_configuration"
+      @language = "csharp"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-  # Returns definition string for this class's constructor
-  def get_definition(cls, fun, cfg, codeBuilder)
-    codeBuilder.add("//")
-    codeBuilder.add("// Configuration ")
-    codeBuilder.add("//")
+    # Returns definition string for this class's constructor
+    def get_definition(cls, fun, cfg, codeBuilder)
+      codeBuilder.add("//")
+      codeBuilder.add("// Configuration ")
+      codeBuilder.add("//")
 
-    entityClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
-    configFunName = "Configure(EntityTypeBuilder<" + entityClassName + "> builder)"
+      entityClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
+      configFunName = "Configure(EntityTypeBuilder<" + entityClassName + "> builder)"
 
-    codeBuilder.startFunction("public void " + configFunName)
+      codeBuilder.startFunction("public void " + configFunName)
 
-    get_body(cls, fun, cfg, codeBuilder)
+      get_body(cls, fun, cfg, codeBuilder)
 
-    codeBuilder.endFunction
-  end
+      codeBuilder.endFunction
+    end
 
-  # No deps
-  def process_dependencies(cls, genFun, cfg, codeBuilder)
-  end
+    def get_body(cls, genFun, cfg, codeBuilder)
+      varArray = Array.new
+      cls.model.getAllVarsFor(varArray)
 
-  def get_body(cls, genFun, cfg, codeBuilder)
-    varArray = Array.new
-    cls.model.getAllVarsFor(varArray)
+      codeBuilder.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + '", "dbo");')
 
-    codeBuilder.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + '", "dbo");')
+      for var in varArray
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if var.genGet || var.genSet
+            codeBuilder.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledFunctionName(var.name) + ")")
+          else
+            codeBuilder.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledVariableName(var.name) + ")")
+          end
 
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        codeBuilder.add("builder.Property(e => e." + var.name + ")")
-        codeBuilder.indent
-        codeBuilder.add('.HasColumnName("' + XCTETSql::Utils.instance.getStyledVariableName(var) + '")')
-        codeBuilder.unindent
+          codeBuilder.indent
+          codeBuilder.add('.HasColumnName("' + XCTETSql::Utils.instance.getStyledVariableName(var) + '");')
+          codeBuilder.unindent
 
-        codeBuilder.add
+          codeBuilder.add
+        end
       end
     end
   end

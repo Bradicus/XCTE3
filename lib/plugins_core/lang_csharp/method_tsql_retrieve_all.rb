@@ -70,7 +70,7 @@ module XCTECSharp
 
       codeBuilder.add("var o = new " + tableName + "();")
 
-      Utils.instance.genAssignResults(varArray, cls, codeBuilder)
+      Utils.instance.genAssignResults(cls, codeBuilder)
 
       codeBuilder.endBlock
       codeBuilder.endBlock

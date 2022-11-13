@@ -52,7 +52,7 @@ class DataLoader
         intf.parentElem = cls
         intf.model = model
         Classes.list << intf
-        model.classes << cls
+        model.classes << intf
       end
 
       if cls.testNamespace.hasItems?()
@@ -183,7 +183,7 @@ class DataLoader
 
     genCXml.elements.each("function") { |funXml|
       newFun = CodeStructure::CodeElemFunction.new(genC)
-      loadTemplateFunctionNode(newFun, funXml)
+      loadTemplateFunctionNode(genC, newFun, funXml)
       genC.functions << newFun
     }
 
@@ -251,7 +251,7 @@ class DataLoader
   end
 
   # Loads a template function element from an XML template function node
-  def self.loadTemplateFunctionNode(fun, tmpFunXML)
+  def self.loadTemplateFunctionNode(genC, fun, tmpFunXML)
     fun.loadAttributes(tmpFunXML)
     fun.name = tmpFunXML.attributes["name"]
     #puts "Loading function: " + fun.name
@@ -260,7 +260,7 @@ class DataLoader
 
     varArray = Array.new
     tmpFunXML.elements.each("var_ref") { |refXml|
-      ref = varArray.find { |var| var.name == refXml.attributes["name"] }
+      ref = genC.findVar(refXml.attributes["name"])
       if ref
         fun.variableReferences << ref
       end

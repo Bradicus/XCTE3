@@ -48,8 +48,6 @@ module XCTECSharp
 
     def get_body(cls, genFun, cfg, codeBuilder)
       conDef = String.new
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
 
       styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
@@ -58,8 +56,6 @@ module XCTECSharp
       codeBuilder.add('string sql = @"SELECT TOP 1 ')
 
       codeBuilder.indent
-
-      XCTECSharp::Utils.instance.genVarList(varArray, codeBuilder, cls.varPrefix)
 
       codeBuilder.unindent
 
@@ -98,7 +94,7 @@ module XCTECSharp
 
       codeBuilder.startBlock("while(results.Read())")
 
-      Utils.instance.genAssignResults(varArray, cls, codeBuilder)
+      Utils.instance.genAssignResults(cls, codeBuilder)
 
       codeBuilder.endBlock
       codeBuilder.endBlock
@@ -110,6 +106,23 @@ module XCTECSharp
 
       codeBuilder.add
       codeBuilder.add("return o;")
+    end
+
+    # process variable group
+    def process_var_group_sql(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if Utils.instance.isPrimitive(var)
+            return
+            "[" +
+            XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) +
+            "] = @" + Utils.instance.getStyledVariableName(var.getParam())
+          end
+        end
+        for group in vGroup.groups
+          process_var_group_sql(cls, cfg, bld, group)
+        end
+      end
     end
   end
 end

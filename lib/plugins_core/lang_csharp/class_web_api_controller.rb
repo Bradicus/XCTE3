@@ -6,6 +6,8 @@
 require "plugins_core/lang_csharp/utils.rb"
 require "plugins_core/lang_csharp/source_renderer_csharp.rb"
 require "code_elem.rb"
+require "code_elem_use.rb"
+require "code_elem_namespace.rb"
 require "code_elem_parent.rb"
 require "lang_file.rb"
 require "x_c_t_e_plugin.rb"
@@ -52,12 +54,15 @@ module XCTECSharp
         end
       end
 
+      cls.uses.push(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
+      cls.uses.push(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
+
       Utils.instance.genUses(cls.uses, codeBuilder)
       Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
 
       classDec = cls.model.visibility + " class " + getClassName(cls) + "Controller"
 
-      classDec << " < ApiController"
+      classDec << " : ApiController"
 
       for par in (0..cls.baseClasses.size)
         if cls.baseClasses[par] != nil

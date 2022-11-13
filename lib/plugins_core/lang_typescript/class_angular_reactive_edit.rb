@@ -43,6 +43,8 @@ module XCTETypescript
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
+      cls.addInclude("@angular/router", "ActivatedRoute")
+
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
       cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
@@ -80,8 +82,9 @@ module XCTETypescript
       bld.add
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
-      bld.add("@Input() item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
-      bld.add
+      bld.add("enableEdit: boolean = false;")
+      bld.add("item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.separate
 
       # Generate class variables
       for group in cls.model.groups
@@ -89,16 +92,28 @@ module XCTETypescript
         bld.sameLine(";")
       end
 
-      bld.add
+      bld.separate
 
       constructorParams = Array.new
       Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
       Utils.instance.addParamIfAvailable(constructorParams, fakerUserServiceVar)
+      constructorParams.push("private route: ActivatedRoute")
+
       bld.startBlock("constructor(" + constructorParams.join(", ") + ")")
       bld.endBlock
 
       bld.separate
       bld.startBlock("ngOnInit()")
+      bld.add("this.route.paramMap.subscribe(params => {")
+      bld.iadd("let idVal = params.get('id');")
+      bld.iadd("this.item.id = idVal !== null ? idVal : '';")
+      bld.add("});")
+      bld.add("this.route.data.subscribe(data => {")
+      #bld.iadd("enableEdit = data.enableEdit;")
+      bld.iadd("console.log(data);")
+      bld.add("});")
+
+      bld.separate
       bld.add("this." + clsVar + ".patchValue(this.item);")
       bld.endBlock
 

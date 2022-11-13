@@ -27,7 +27,7 @@ module XCTETypescript
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " listing" + ".component")
+      bld.lfName = getFileName(cls)
       bld.lfExtension = Utils.instance.getExtension("body")
 
       process_dependencies(cls, cfg, bld)

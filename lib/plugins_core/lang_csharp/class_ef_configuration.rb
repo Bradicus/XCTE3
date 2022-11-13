@@ -19,15 +19,18 @@ module XCTECSharp
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName())
+      return Utils.instance.getStyledClassName(cls.getUName() + " configuration")
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
       codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName() + "Configuration")
+      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName() + " configuration")
       codeBuilder.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, cfg, codeBuilder)
+
       genFileContent(cls, cfg, codeBuilder)
 
       srcFiles << codeBuilder
@@ -35,22 +38,27 @@ module XCTECSharp
       return srcFiles
     end
 
+    def process_dependencies(cls, cfg, bld)
+      cls.addUse("Microsoft.EntityFrameworkCore")
+      cls.addUse("Microsoft.EntityFrameworkCore.Metadata.Builders")
+      Utils.instance.addClassInclude(cls, "standard")
+    end
+
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, codeBuilder)
-
       # Add in any dependencies required by functions
-      for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
-              templ.process_dependencies(cls, fun, cfg, codeBuilder)
-            else
-              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
-            end
-          end
-        end
-      end
+      # for fun in cls.functions
+      #   if fun.elementId == CodeElem::ELEM_FUNCTION
+      #     if fun.isTemplate
+      #       templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
+      #       if templ != nil
+      #         templ.process_dependencies(cls, fun, cfg, codeBuilder)
+      #       else
+      #         puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
+      #       end
+      #     end
+      #   end
+      # end
 
       Utils.instance.genUses(cls.uses, codeBuilder)
       Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
@@ -67,19 +75,11 @@ module XCTECSharp
 
       codeBuilder.startClass(classDec)
 
-      if cls.dontModifyCode
-        codeBuilder.add("#region DON'T MODYFY THIS CLASS, IT WILL BE OVERWRITTEN BY GENERATOR")
-      end
-
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
 
       # Generate code for functions
       Utils.instance.genFunctions(cls, codeBuilder)
-
-      if cls.dontModifyCode
-        codeBuilder.add("#endregion")
-      end
 
       codeBuilder.endClass
 

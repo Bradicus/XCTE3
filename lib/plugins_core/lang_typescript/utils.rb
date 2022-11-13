@@ -227,7 +227,7 @@ module XCTETypescript
     # process variable group
     def genPopulate(cls, bld, vGroup, name = "")
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.name != "id"
           if isPrimitive(var)
             if var.listType == nil
               bld.add(name + getStyledVariableName(var) + " = " + getFakerAssignment(var) + ";")

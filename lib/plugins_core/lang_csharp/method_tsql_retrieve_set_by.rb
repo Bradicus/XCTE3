@@ -99,7 +99,7 @@ module XCTECSharp
       codeBuilder.add("var o = new " + Utils.instance.getStyledClassName(cls.getUName()) + "();")
       codeBuilder.add
 
-      Utils.instance.genAssignResults(varArray, cls, codeBuilder)
+      Utils.instance.genAssignResults(cls, codeBuilder)
 
       codeBuilder.add
       codeBuilder.add("resultList.Add(o);")

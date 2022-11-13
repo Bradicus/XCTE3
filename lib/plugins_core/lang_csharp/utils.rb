@@ -93,6 +93,10 @@ module XCTECSharp
       return vDec
     end
 
+    def addClassInclude(cls, ctype)
+      cls.addUse(cls.model.findClassByType(ctype).namespace.get("."))
+    end
+
     # Returns a size constant for the specified variable
     def getSizeConst(var)
       return "ARRAYSZ_" << var.name.upcase
@@ -234,21 +238,31 @@ module XCTECSharp
       end
     end
 
-    def genAssignResults(varArray, cls, codeBuilder)
-      for var in varArray
+    def genAssignResults(cls, codeBuilder)
+      for grp in cls.model.groups
+        process_var_group_assign_results(cls, codeBuilder, grp)
+      end
+    end
+
+    # process variable group
+    def process_var_group_assign_results(cls, bld, vGroup)
+      for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && isPrimitive(var)
           resultVal = 'results["' +
                       XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) + '"]'
           objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
 
           if var.nullable
-            codeBuilder.add(objVar + " = " + resultVal + " == DBNull.Value ? null : Convert.To" +
-                            var.vtype + "(" + resultVal + ");")
+            bld.add(objVar + " = " + resultVal + " == DBNull.Value ? null : Convert.To" +
+                    var.vtype + "(" + resultVal + ");")
           else
-            codeBuilder.add(objVar + " = Convert.To" +
-                            var.vtype + "(" + resultVal + ");")
+            bld.add(objVar + " = Convert.To" +
+                    var.vtype + "(" + resultVal + ");")
           end
         end
+      end
+      for group in vGroup.groups
+        process_var_group_sql(cls, cfg, bld, group)
       end
     end
 
