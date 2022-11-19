@@ -18,24 +18,24 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(cls, codeFun, rend)
+    def get_declaration(cls, codeFun, bld)
       Utils.instance.getStandardClassInfo(cls)
 
-      rend.add("static void write(nlohmann::json& json, const " +
-               cls.standardClassType + "& item);")
+      bld.add("static void write(nlohmann::json& json, const " +
+              cls.standardClassType + "& item);")
     end
 
     # Returns declairation string for this class's constructor
     def get_declaration_inline(cls)
       Utils.instance.getStandardClassInfo(cls)
 
-      rend.startFuction("static void write(nlohmann::json& json, const " +
-                        cls.standardClassType + "& item)")
+      bld.startFuction("static void write(nlohmann::json& json, const " +
+                       cls.standardClassType + "& item)")
       codeStr << get_body(cls)
-      rend.endFunction
+      bld.endFunction
     end
 
-    def process_dependencies(cls, codeFun, rend)
+    def process_dependencies(cls, codeFun, bld)
       cls.addInclude("", "json.hpp")
       Utils.instance.getStandardClassInfo(cls)
 
@@ -44,33 +44,32 @@ module XCTECpp
       end
     end
 
-    def get_definition(cls, codeFun, rend)
-      rend.add("/**")
-      rend.add("* Writes this classes primitives to a json element")
-      rend.add("*/")
+    def get_definition(cls, codeFun, bld)
+      bld.add("/**")
+      bld.add("* Writes this classes primitives to a json element")
+      bld.add("*/")
 
       classDef = String.new
       classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " <<
         Utils.instance.getStyledClassName(cls.name) << " :: " << "write(nlohmann::json& json, const " +
                                                                  cls.standardClassType + "& item)"
-      rend.startClass(classDef)
+      bld.startClass(classDef)
 
-      get_body(cls, codeFun, rend)
+      get_body(cls, codeFun, bld)
 
-      rend.endFunction
+      bld.endFunction
     end
 
-    def get_body(cls, codeFun, rend)
+    def get_body(cls, codeFun, bld)
       conDef = String.new
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
 
       for bc in cls.standardClass.baseClasses
-        rend.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::write(json, item);")
+        bld.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::write(json, item);")
       end
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        if !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
           curVarClass = Classes.findVarClass(var)
@@ -79,40 +78,40 @@ module XCTECpp
           if (Utils.instance.isPrimitive(var) || isEnum)
             if var.listType == nil
               if (var.getUType().downcase == "string")
-                rend.add("if (item." + curVarName + '.size() > 0) json["' + curVarName + '"] = item.' + curVarName + ";")
+                bld.add("if (item." + curVarName + '.size() > 0) json["' + curVarName + '"] = item.' + curVarName + ";")
               else
-                rend.add('json["' + curVarName + '"] = item.' + curVarName + ";")
+                bld.add('json["' + curVarName + '"] = item.' + curVarName + ";")
               end
             else
-              rend.add('json["' + curVarName + '"] = nlohmann::json::array();')
-              rend.startBlock("for (auto const& val: item." + curVarName + ")")
-              rend.add('json["' + curVarName + '"].push_back(val);')
-              rend.endBlock
+              bld.add('json["' + curVarName + '"] = nlohmann::json::array();')
+              bld.startBlock("for (auto const& val: item." + curVarName + ")")
+              bld.add('json["' + curVarName + '"].push_back(val);')
+              bld.endBlock
             end
           elsif (isEnum)
-            rend.add('json["' + curVarName + '"] = (int)item.' + curVarName + ";")
+            bld.add('json["' + curVarName + '"] = (int)item.' + curVarName + ";")
           else
             if var.listType == nil
-              rend.add(
+              bld.add(
                 Utils.instance.getClassName(var) + 'JsonEngine::write(json["' + curVarName + '"]' + ", item." + curVarName + ");"
               )
             else
-              rend.add("nlohmann::json " + curVarName + "Node;")
-              rend.add()
-              rend.startBlock("for (auto const& val: item." + curVarName + ")")
-              rend.add("nlohmann::json newNode;")
+              bld.add("nlohmann::json " + curVarName + "Node;")
+              bld.add()
+              bld.startBlock("for (auto const& val: item." + curVarName + ")")
+              bld.add("nlohmann::json newNode;")
               if (var.isSharedPointer)
-                rend.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, *val);")
+                bld.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, *val);")
               else
-                rend.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, val);")
+                bld.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, val);")
               end
-              rend.add(curVarName + "Node.push_back(newNode);")
-              rend.endBlock
-              rend.add('json["' + curVarName + '"] = ' + curVarName + "Node;")
+              bld.add(curVarName + "Node.push_back(newNode);")
+              bld.endBlock
+              bld.add('json["' + curVarName + '"] = ' + curVarName + "Node;")
             end
           end
         end
-      end
+      })
     end
   end
 end

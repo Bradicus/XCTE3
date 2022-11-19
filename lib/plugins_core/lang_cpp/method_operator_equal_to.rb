@@ -20,54 +20,50 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's equality assignment operator
-    def get_declaration(cls, funItem, codeBuilder)
+    def get_declaration(cls, funItem, bld)
       eqString = String.new
 
-      codeBuilder.add("bool operator==" << "(const " << cls.name)
-      codeBuilder.sameLine(eqString << " src" << cls.name << ") const;")
+      bld.add("bool operator==" << "(const " << cls.name)
+      bld.sameLine(eqString << " src" << cls.name << ") const;")
 
       return eqString
     end
 
-    def process_dependencies(cls, funItem, codeBuilder)
+    def process_dependencies(cls, funItem, bld)
     end
 
     # Returns definition string for this class's equality assignment operator
-    def get_definition(cls, funItem, codeBuilder)
+    def get_definition(cls, funItem, bld)
       longArrayFound = false
       seperator = ""
 
-      codeBuilder.add("/**")
-      codeBuilder.add("* Sets this object equal to incoming object")
-      codeBuilder.add("*/")
-      codeBuilder.startClass("bool " + cls.name + " :: operator==" + "(const " + cls.name + " src" + cls.name + ") const")
+      bld.add("/**")
+      bld.add("* Sets this object equal to incoming object")
+      bld.add("*/")
+      bld.startClass("bool " + cls.name + " :: operator==" + "(const " + cls.name + " src" + cls.name + ") const")
 
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
+      bld.add("return(")
+      bld.indent
 
-      codeBuilder.add("return(")
-      codeBuilder.indent
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        if !var.isStatic # Ignore static variables
+          if (Utils.instance.isPrimitive(var))
+            if var.arrayElemCount.to_i == 0 # Array of primitives
+              bld.add(seperator << Utils.instance.getStyledVariableName(var) << " == ")
+              bld.sameLine("src" << cls.name << ".")
+              bld.sameLine(Utils.instance.getStyledVariableName(var))
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if !var.isStatic # Ignore static variables
-            if (Utils.instance.isPrimitive(var))
-              if var.arrayElemCount.to_i == 0 # Array of primitives
-                codeBuilder.add(seperator << Utils.instance.getStyledVariableName(var) << " == ")
-                codeBuilder.sameLine("src" << cls.name << ".")
-                codeBuilder.sameLine(Utils.instance.getStyledVariableName(var))
-
-                seperator = "&& "
-              end
+              seperator = "&& "
             end
           end
         end
-      end
+      })
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add(");")
-      codeBuilder.endBlock
+      bld.add(");")
+      bld.endBlock
     end
   end
 end

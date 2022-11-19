@@ -61,23 +61,23 @@ module XCTECpp
     end
 
     # Returns definition string for an empty method
-    def get_definition(cls, fun, codeBuilder)
+    def get_definition(cls, fun, bld)
 
       # Skeleton of comment block
-      codeBuilder.add("/**")
-      codeBuilder.add("* ")
-      codeBuilder.add("* ")
+      bld.add("/**")
+      bld.add("* ")
+      bld.add("* ")
 
       for param in fun.parameters.vars
-        codeBuilder.add("* @param " + Utils.instance.getStyledVariableName(param))
+        bld.add("* @param " + Utils.instance.getStyledVariableName(param))
       end
 
       if fun.returnValue.vtype != "void"
-        codeBuilder.add("*")
-        codeBuilder.add("* @return ")
+        bld.add("*")
+        bld.add("* @return ")
       end
 
-      codeBuilder.add("*/ ")
+      bld.add("*/ ")
 
       funDec = String.new
 
@@ -104,13 +104,13 @@ module XCTECpp
         funDec << " const"
       end
 
-      codeBuilder.startFunction(funDec)
+      bld.startFunction(funDec)
 
       if fun.returnValue.vtype != "void"
-        codeBuilder.add("return();")
+        bld.add("return();")
       end
 
-      codeBuilder.endFunction()
+      bld.endFunction()
     end
   end
 end

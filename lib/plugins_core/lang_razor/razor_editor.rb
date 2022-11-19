@@ -27,47 +27,47 @@ module XCTERazor
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      codeBuilder = SourceRendererRazor.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName())
-      codeBuilder.lfExtension = "cshtml"
-      genFileContent(cls, cfg, codeBuilder)
+      bld = SourceRendererRazor.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
+      bld.lfExtension = "cshtml"
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@Model " + XCTECSharp::Utils.instance.getClassTypeName(cls))
-      codeBuilder.add
-      codeBuilder.add("<form>")
-      codeBuilder.indent
+      bld.add("@Model " + XCTECSharp::Utils.instance.getClassTypeName(cls))
+      bld.add
+      bld.add("<form>")
+      bld.indent
 
-      processVarGroup(cls, cfg, codeBuilder, cls.model.groups)
+      processVarGroup(cls, cfg, bld, cls.model.groups)
 
-      codeBuilder.unindent
-      codeBuilder.add("</form>")
+      bld.unindent
+      bld.add("</form>")
     end
 
-    def processVarGroup(cls, cfg, codeBuilder, varGroup)
+    def processVarGroup(cls, cfg, bld, varGroup)
       for grp in varGroup
         for var in grp.vars
           if var.elementId == CodeElem::ELEM_VARIABLE
             if var.vtype == "String"
-              codeBuilder.add('<input type="text" name="' +
-                              XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
-                              XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
+              bld.add('<input type="text" name="' +
+                      XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
+                      XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
             elsif (var.vtype != nil && var.vtype.start_with?("Int")) || (var.utype != nil && var.utype.start_with?("int"))
-              codeBuilder.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
+              bld.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
             end
           end
         end
 
-        processVarGroup(cls, cfg, codeBuilder, grp.groups)
+        processVarGroup(cls, cfg, bld, grp.groups)
       end
     end
   end

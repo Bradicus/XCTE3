@@ -27,13 +27,6 @@ module XCTECSharp
 
       pDec << self.getTypeName(var)
 
-      if var.passBy.upcase == "REFERENCE"
-        pDec << ""
-      end
-      if var.isPointer
-        pDec << ""
-      end
-
       pDec << " " << self.getStyledVariableName(var)
 
       return pDec
@@ -163,24 +156,24 @@ module XCTECSharp
     end
 
     # generate use list for file
-    def genUses(useList, codeBuilder)
+    def genUses(useList, bld)
       for use in useList
-        codeBuilder.add("using " + use.namespace.get(".") + ";")
+        bld.add("using " + use.namespace.get(".") + ";")
       end
 
       if !useList.empty?
-        codeBuilder.add
+        bld.add
       end
     end
 
-    def genFunctionDependencies(cls, cfg, codeBuilder)
+    def genFunctionDependencies(cls, cfg, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, codeBuilder)
+              templ.process_dependencies(cls, fun, cfg, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -189,58 +182,52 @@ module XCTECSharp
       end
     end
 
-    def addNonIdentityParams(cls, codeBuilder)
+    def addNonIdentityParams(cls, bld)
       varArray = Array.new
       cls.model.getNonIdentityVars(varArray)
 
-      addParameters(varArray, cls, codeBuilder)
+      addParameters(varArray, cls, bld)
     end
 
-    def addParameters(varArray, cls, codeBuilder)
+    def addParameters(varArray, cls, bld)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.add('cmd.Parameters.AddWithValue("@' +
-                          Utils.instance.getStyledVariableName(var) +
-                          '", o.' + Utils.instance.getStyledVariableName(var) + ");")
+          bld.add('cmd.Parameters.AddWithValue("@' +
+                  Utils.instance.getStyledVariableName(var) +
+                  '", o.' + Utils.instance.getStyledVariableName(var) + ");")
         else
           if var.elementId == CodeElem::ELEM_FORMAT
-            codeBuilder.add(var.formatText)
+            bld.add(var.formatText)
           end
         end
       end
     end
 
     # Generate a list of @'d parameters
-    def genParamList(varArray, codeBuilder, varPrefix = "")
+    def genParamList(cls, bld, varPrefix = "")
       separator = ""
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.sameLine(separator)
-          codeBuilder.add("@" + getStyledVariableName(var, varPrefix))
-          separator = ","
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
+      # Process variables
+      eachVar(cls, bld, true, lambda { |var|
+        bld.sameLine(separator)
+        bld.add("@" + getStyledVariableName(var, varPrefix))
+        separator = ","
+      })
     end
 
     # Generate a list of variables
-    def genVarList(varArray, codeBuilder, varPrefix = "")
+    def genVarList(cls, bld, varPrefix = "")
       separator = ""
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.sameLine(separator)
-          codeBuilder.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, varPrefix) + "]")
-          separator = ","
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
-        end
-      end
+      # Process variables
+      eachVar(cls, bld, true, lambda { |var|
+        bld.sameLine(separator)
+        bld.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, varPrefix) + "]")
+        separator = ","
+      })
     end
 
-    def genAssignResults(cls, codeBuilder)
+    def genAssignResults(cls, bld)
       for grp in cls.model.groups
-        process_var_group_assign_results(cls, codeBuilder, grp)
+        process_var_group_assign_results(cls, bld, grp)
       end
     end
 
@@ -266,42 +253,42 @@ module XCTECSharp
       end
     end
 
-    def genFunctions(cls, codeBuilder)
+    def genFunctions(cls, bld)
       # Generate code for functions
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(cls, fun, nil, codeBuilder)
+              templ.get_definition(cls, fun, nil, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           else # Must be empty function
             templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
             if templ != nil
-              templ.get_definition(cls, fun, nil, codeBuilder)
+              templ.get_definition(cls, fun, nil, bld)
             else
               #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
           end
 
-          codeBuilder.add
+          bld.add
         end
       end
     end
 
-    def genNamespaceStart(namespace, codeBuilder)
+    def genNamespaceStart(namespace, bld)
       # Process namespace items
       if namespace.hasItems?()
-        codeBuilder.startBlock("namespace " << namespace.get("."))
+        bld.startBlock("namespace " << namespace.get("."))
       end
     end
 
-    def genNamespaceEnd(namespace, codeBuilder)
+    def genNamespaceEnd(namespace, bld)
       if namespace.hasItems?()
-        codeBuilder.endBlock(" // namespace " + namespace.get("."))
-        codeBuilder.add
+        bld.endBlock(" // namespace " + namespace.get("."))
+        bld.add
       end
     end
 
@@ -348,6 +335,34 @@ module XCTECSharp
       end
 
       return cls.standardClass
+    end
+
+    # Run a function on each variable in a class
+    def eachVar(cls, bld, separateGroups, varFun)
+      for vGroup in cls.model.groups
+        eachVarGrp(vGroup, bld, separateGroups, varFun)
+      end
+    end
+
+    # Run a function on each variable in a variable group and subgroups
+    def eachVarGrp(vGroup, bld, separateGroups, varFun)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          varFun.call(var)
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          bld.sameLine(getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          bld.add(var.formatText)
+        end
+      end
+
+      if (separateGroups)
+        bld.separate
+      end
+
+      for grp in vGroup.groups
+        eachVarGrp(grp, bld, varFun)
+      end
     end
   end
 end

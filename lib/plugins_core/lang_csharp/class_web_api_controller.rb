@@ -27,18 +27,18 @@ module XCTECSharp
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName() + "Controller")
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(cls, cfg, codeBuilder)
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "Controller")
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
 
       # Add in any dependencies required by functions
       for fun in cls.functions
@@ -46,7 +46,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, codeBuilder)
+              templ.process_dependencies(cls, fun, cfg, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -57,8 +57,8 @@ module XCTECSharp
       cls.uses.push(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
       cls.uses.push(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
 
-      Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
+      Utils.instance.genUses(cls.uses, bld)
+      Utils.instance.genNamespaceStart(cls.namespace, bld)
 
       classDec = cls.model.visibility + " class " + getClassName(cls) + "Controller"
 
@@ -70,13 +70,10 @@ module XCTECSharp
         end
       end
 
-      codeBuilder.startClass(classDec)
-
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
+      bld.startClass(classDec)
 
       if (cls.functions.length > 0)
-        codeBuilder.add
+        bld.add
       end
 
       # Generate code for functions
@@ -85,23 +82,23 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(cls, fun, cfg, codeBuilder)
+              templ.get_definition(cls, fun, cfg, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           else # Must be empty function
             templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
             if templ != nil
-              templ.get_definition(cls, cfg, codeBuilder)
+              templ.get_definition(cls, cfg, bld)
             else
               #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
           end
         end
       end  # class  + cls.getUName()
-      codeBuilder.endClass
+      bld.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

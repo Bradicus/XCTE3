@@ -20,43 +20,50 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Web API get single " + cls.getUName())
-      codeBuilder.add("///")
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("///")
+      bld.add("/// Web API get single " + cls.getUName())
+      bld.add("///")
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-                      " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
+              " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System.Collections.Generic", "List")
       cls.addUse("System.Web.Http", "ApiController")
       Utils.instance.addClassInclude(cls, "standard")
       Utils.instance.addClassInclude(cls, "tsql_data_store")
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
-      varArray = Array.new
       engineName = Utils.instance.getStyledClassName(cls.getUName() + " data store")
-      cls.model.getAllVarsFor(varArray)
 
-      codeBuilder.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) + " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id)")
+      pkeys = Array.new
+      cls.model.getPrimaryKeyVars(pkeys)
+      params = Array.new
+      for pkey in pkeys
+        params << Utils.instance.getParamDec(pkey)
+      end
 
-      codeBuilder.startBlock("using (SqlConnection conn = new SqlConnection())")
-      codeBuilder.add("I" + engineName + " eng = new " + engineName + "();")
+      bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) +
+                        " Get" + Utils.instance.getStyledClassName(cls.getUName()) +
+                        "(" + params.join(", ") + ")")
 
-      codeBuilder.add("var obj = eng.RetrieveOneById(id, conn);")
-      codeBuilder.add("return obj;")
+      bld.startBlock("using (SqlConnection conn = new SqlConnection())")
+      bld.add("I" + engineName + " eng = new " + engineName + "();")
 
-      codeBuilder.endBlock()
+      bld.add("var obj = eng.RetrieveOneById(id, conn);")
+      bld.add("return obj;")
+
+      bld.endBlock()
     end
   end
 end

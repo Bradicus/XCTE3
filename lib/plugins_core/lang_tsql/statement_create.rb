@@ -28,23 +28,23 @@ module XCTETSql
 
       cls.setName(getClassName(cls))
 
-      codeBuilder = SourceRenderer.new
-      codeBuilder.lfName = cls.getUName()
-      codeBuilder.lfExtension = "sql"
-      genFileContent(cls, cfg, codeBuilder)
+      bld = SourceRenderer.new
+      bld.lfName = cls.getUName()
+      bld.lfExtension = "sql"
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("CREATE TABLE [" + cls.name + "] (")
-      codeBuilder.indent
+      bld.add("CREATE TABLE [" + cls.name + "] (")
+      bld.indent
 
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
@@ -52,14 +52,14 @@ module XCTETSql
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !first
-            codeBuilder.sameLine(", ")
+            bld.sameLine(", ")
           end
           first = false
 
-          codeBuilder.add(XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix))
+          bld.add(XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix))
 
           if var.defaultValue != nil
-            codeBuilder.sameLine(" default '" << var.defaultValue << "'")
+            bld.sameLine(" default '" << var.defaultValue << "'")
           end
         end
       end
@@ -74,12 +74,12 @@ module XCTETSql
       end
 
       if primKeys.length > 0
-        codeBuilder.sameLine(",")
-        codeBuilder.add("PRIMARY KEY (" + primKeys.join(", ") + ")")
+        bld.sameLine(",")
+        bld.add("PRIMARY KEY (" + primKeys.join(", ") + ")")
       end
 
-      codeBuilder.unindent
-      codeBuilder.add(") ")
+      bld.unindent
+      bld.add(") ")
     end
   end
 end

@@ -20,81 +20,78 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Update the record for this model")
-      codeBuilder.add("///")
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("///")
+      bld.add("/// Update the record for this model")
+      bld.add("///")
 
-      codeBuilder.startClass("public void Update(" +
-                             Utils.instance.getStyledClassName(cls.getUName()) +
-                             " o, SqlConnection conn, SqlTransaction trans)")
+      bld.startClass("public void Update(" +
+                     Utils.instance.getStyledClassName(cls.getUName()) +
+                     " o, SqlConnection conn, SqlTransaction trans)")
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endClass
+      bld.endClass
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Update(" +
-                      Utils.instance.getStyledClassName(cls.getUName()) +
-                      " o, SqlConnection conn, SqlTransaction trans);")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add("void Update(" +
+              Utils.instance.getStyledClassName(cls.getUName()) +
+              " o, SqlConnection conn, SqlTransaction trans);")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
 
-      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + " SET ")
+      bld.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + " SET ")
 
-      codeBuilder.indent
+      bld.indent
 
       separater = ""
       varArray = Array.new
       cls.model.getNonIdentityVars(varArray)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.sameLine(separater)
-          codeBuilder.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) +
-                          "] = @" + Utils.instance.getStyledVariableName(var))
+          bld.sameLine(separater)
+          bld.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) +
+                  "] = @" + Utils.instance.getStyledVariableName(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
+          bld.add(var.formatText)
         end
         separater = ","
       end
 
-      codeBuilder.unindent
+      bld.unindent
 
       identVar = cls.model.getIdentityVar()
 
       if identVar
-        codeBuilder.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
-                        "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
+        bld.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
+                "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
       else
-        codeBuilder.add("WHERE" + '";')
+        bld.add("WHERE" + '";')
       end
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.add("cmd.Transaction = trans;")
 
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
+      Utils.instance.addParameters(varArray, cls, bld)
 
-      Utils.instance.addParameters(varArray, cls, codeBuilder)
-
-      codeBuilder.add
-      codeBuilder.add("cmd.ExecuteScalar();")
-      codeBuilder.endBlock
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error updating ' + cls.getUName() + " with " +
-                      varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
-      codeBuilder.endBlock(";")
+      bld.add
+      bld.add("cmd.ExecuteScalar();")
+      bld.endBlock
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error updating ' + cls.getUName() + " with " +
+              varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
+      bld.endBlock(";")
     end
   end
 end

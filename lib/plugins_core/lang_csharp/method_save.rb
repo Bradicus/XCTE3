@@ -20,39 +20,39 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Save all components of this object")
-      codeBuilder.add("///")
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("///")
+      bld.add("/// Save all components of this object")
+      bld.add("///")
 
-      codeBuilder.startFunction("public void Save()")
+      bld.startFunction("public void Save()")
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Save();")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add("void Save();")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System", "Exception")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
 
-      codeBuilder.add("_conn.Open();")
+      bld.add("_conn.Open();")
 
       for var in varArray
         if (Utils.instance.isPrimitive(var) == false)
           varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, "tsql_engine", "method_tsql_create")
           if varCreateFun != nil
-            codeBuilder.add("_" + Utils.instance.getStyledVariableName(var, "") + ".Create(o);")
+            bld.add("_" + Utils.instance.getStyledVariableName(var, "") + ".Create(o);")
           end
         end
       end

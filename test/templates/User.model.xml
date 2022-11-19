@@ -12,10 +12,12 @@
 	</gen_class>
 
 	<gen_class type="class_angular_module" path="user" ></gen_class>
+	<gen_class type="class_angular_module_routing" path="user" ></gen_class>
 
   <gen_class type="class_angular_listing" path="user/user-listing" ></gen_class>
 	<gen_class type="class_angular_reactive_edit" path="user/user-view" >
-	 	<function name="method_random_populate" />
+		<function name="method_populate_reactive_form" />
+	 	<function name="method_populate_random" />
 	</gen_class>
 	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" ></gen_class>
 	<gen_class type="empty_file" name="user listing" namespace="" path="user/user-listing" ></gen_class>
@@ -52,7 +54,7 @@
 			<function name="method_tsql_retrieve_one_by" interface="true" >
 				<var_ref name="id" />
 			</function>
-			
+
 		<!--	<function name="method_tsql_delete" interface="true" />-->
 			<!--<function name="update" interface="true" />
 			<function name="delete" interface="true" />

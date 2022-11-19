@@ -8,10 +8,9 @@
 # This plugin creates an equality assignment operator for making
 # a copy of a class
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
 class XCTECpp::MethodDefine < XCTEPlugin
-
   def initialize
     @name = "method_define"
     @language = "cpp"
@@ -19,29 +18,29 @@ class XCTECpp::MethodDefine < XCTEPlugin
   end
 
   # Returns declairation string for this class's define function
-  def get_declaration(codeClass, cfg, codeBuilder)
+  def get_declaration(codeClass, cfg, bld)
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     eqString = String.new
     seperator = ""
-    codeBuilder.add("void define(")
+    bld.add("void define(")
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !var.isStatic   # Ignore static variables
+        if !var.isStatic # Ignore static variables
           if XCTECpp::Utils::isPrimitive(var)
-            if var.arrayElemCount.to_i == 0	# Ignore arrays
-              codeBuilder.sameLine(seperator + XCTECpp::Utils::getTypeName(var.vtype) + " ")
-              codeBuilder.sameLine("new" << XCTECpp::Utils::getCapitalizedFirst(var.name))
-              codeBuilder.sameLine(seperator = ", ")
+            if var.arrayElemCount.to_i == 0 # Ignore arrays
+              bld.sameLine(seperator + XCTECpp::Utils::getTypeName(var.vtype) + " ")
+              bld.sameLine("new" << XCTECpp::Utils::getCapitalizedFirst(var.name))
+              bld.sameLine(seperator = ", ")
             end
           end
         end
       end
     end
 
-    codeBuilder.sameLine(");")
+    bld.sameLine(");")
 
     return eqString
   end
@@ -49,19 +48,19 @@ class XCTECpp::MethodDefine < XCTEPlugin
   # Returns declairation string for this class's define function
   def get_declaration_inline(codeClass, cfg)
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     eqString = String.new
     seperator = ""
-    codeBuilder.add("void define(")
+    bld.add("void define(")
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !var.isStatic   # Ignore static variables
+        if !var.isStatic # Ignore static variables
           if XCTECpp::Utils::isPrimitive(var)
-            if var.arrayElemCount.to_i == 0	# Ignore arrays
-              codeBuilder.sameLine(seperator << XCTECpp::Utils::getTypeName(var.vtype) << " ")
-              codeBuilder.sameLine("new" << XCTECpp::Utils::getCapitalizedFirst(var.name))
+            if var.arrayElemCount.to_i == 0 # Ignore arrays
+              bld.sameLine(seperator << XCTECpp::Utils::getTypeName(var.vtype) << " ")
+              bld.sameLine("new" << XCTECpp::Utils::getCapitalizedFirst(var.name))
               seperator = ", "
             end
           end
@@ -69,28 +68,28 @@ class XCTECpp::MethodDefine < XCTEPlugin
       end
     end
 
-    codeBuilder.sameLine(")")
-    codeBuilder.startBlock
-    get_body(codeClass, cfg, codeBuilder)
+    bld.sameLine(")")
+    bld.startBlock
+    get_body(codeClass, cfg, bld)
   end
 
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, cfg, codeBuilder)
+  def get_definition(codeClass, cfg, bld)
     seperator = ""
-    longArrayFound = false;
+    longArrayFound = false
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
-    codeBuilder.add("/**\n* Defines the variables in an object\n*/")
-    codeBuilder.add("void " << codeClass.name << " :: define(")
+    bld.add("/**\n* Defines the variables in an object\n*/")
+    bld.add("void " << codeClass.name << " :: define(")
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !var.isStatic   # Ignore static variables
+        if !var.isStatic # Ignore static variables
           if XCTECpp::Utils::isPrimitive(var)
-            if var.arrayElemCount.to_i == 0	# Ignore arrays
-              codeBuilder.sameLine(seperator << XCTECpp::Utils::getTypeName(var.vtype) << " ")
-              codeBuilder.sameLine("new" << XCTECpp::Utils::getCapitalizedFirst(var.name))
+            if var.arrayElemCount.to_i == 0 # Ignore arrays
+              bld.sameLine(seperator << XCTECpp::Utils::getTypeName(var.vtype) << " ")
+              bld.sameLine("new" << XCTECpp::Utils::getCapitalizedFirst(var.name))
               seperator = ", "
             end
           end
@@ -98,40 +97,39 @@ class XCTECpp::MethodDefine < XCTEPlugin
       end
     end
 
-    codeBuilder.sameLine(")")
-    codeBuilder.startBlock()
+    bld.sameLine(")")
+    bld.startBlock()
 
-#    if codeClass.hasAnArray
-#      eqString << "    unsigned int i;\n\n";
-#    end
+    #    if codeClass.hasAnArray
+    #      eqString << "    unsigned int i;\n\n";
+    #    end
 
     eqString << get_body(codeClass, cfg, "    ")
 
-    codeBuilder.endBlock
-    codeBuilder.add
+    bld.endBlock
+    bld.add
   end
 
   ## Get body of function
-  def get_body(codeClass, cfg, codeBuilder)
-
+  def get_body(codeClass, cfg, bld)
     eqString = String.new
     seperator = ""
-    longArrayFound = false;
+    longArrayFound = false
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !var.isStatic   # Ignore static variables
+        if !var.isStatic # Ignore static variables
           if Utils.instance.isPrimitive(var)
-              eqString << indent << var.name << " = "
-              eqString << "new" << Utils.instance.getStyledVariableName(var) << ";\n"
-            end
+            eqString << indent << var.name << " = "
+            eqString << "new" << Utils.instance.getStyledVariableName(var) << ";\n"
           end
         end
+      end
     end
 
     return(eqString)

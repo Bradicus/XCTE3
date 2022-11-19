@@ -11,27 +11,27 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("/// <summary>")
-      codeBuilder.add("/// Reads one result using the specified filter parameters")
-      codeBuilder.add("/// </summary>")
-      codeBuilder.startFunction("public " + get_function_signature(cls, genFun, cfg, codeBuilder))
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("/// <summary>")
+      bld.add("/// Reads one result using the specified filter parameters")
+      bld.add("/// </summary>")
+      bld.startFunction("public " + get_function_signature(cls, genFun, cfg, bld))
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add(get_function_signature(cls, genFun, cfg, codeBuilder) + ";")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add(get_function_signature(cls, genFun, cfg, bld) + ";")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_function_signature(cls, genFun, cfg, codeBuilder)
+    def get_function_signature(cls, genFun, cfg, bld)
       standardClassName = Utils.instance.getStyledClassName(cls.getUName())
 
       paramDec = Array.new
@@ -46,23 +46,23 @@ module XCTECSharp
                "(" + paramDec.join(", ") + ", SqlConnection conn, SqlTransaction trans = null)"
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
 
       styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
+      bld.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
 
-      codeBuilder.add('string sql = @"SELECT TOP 1 ')
+      bld.add('string sql = @"SELECT TOP 1 ')
 
-      codeBuilder.indent
+      bld.indent
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add("FROM " + cls.getUName())
-      codeBuilder.add("WHERE ")
+      bld.add("FROM " + cls.getUName())
+      bld.add("WHERE ")
 
-      codeBuilder.indent
+      bld.indent
 
       whereItems = Array.new
       genFun.variableReferences.each() { |param|
@@ -72,40 +72,40 @@ module XCTECSharp
 
         whereItems << whereCondition
       }
-      codeBuilder.add(whereItems.join(" AND "))
-      codeBuilder.sameLine('";')
+      bld.add(whereItems.join(" AND "))
+      bld.sameLine('";')
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
-      codeBuilder.add
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.add("cmd.Transaction = trans;")
+      bld.add
 
       genFun.variableReferences.each() { |param|
-        codeBuilder.add("cmd.Parameters.AddWithValue(" +
-                        '"@' + XCTETSql::Utils.instance.getStyledVariableName(param) +
-                        '", ' + XCTECSharp::Utils.instance.getStyledVariableName(param.getParam()) + ");")
+        bld.add("cmd.Parameters.AddWithValue(" +
+                '"@' + XCTETSql::Utils.instance.getStyledVariableName(param) +
+                '", ' + XCTECSharp::Utils.instance.getStyledVariableName(param.getParam()) + ");")
       }
 
-      codeBuilder.add("SqlDataReader results = cmd.ExecuteReader();")
+      bld.add("SqlDataReader results = cmd.ExecuteReader();")
 
-      codeBuilder.startBlock("while(results.Read())")
+      bld.startBlock("while(results.Read())")
 
-      Utils.instance.genAssignResults(cls, codeBuilder)
+      Utils.instance.genAssignResults(cls, bld)
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving one item from ' + cls.getUName() + '", e);')
-      codeBuilder.endBlock(";")
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error retrieving one item from ' + cls.getUName() + '", e);')
+      bld.endBlock(";")
 
-      codeBuilder.add
-      codeBuilder.add("return o;")
+      bld.add
+      bld.add("return o;")
     end
 
     # process variable group

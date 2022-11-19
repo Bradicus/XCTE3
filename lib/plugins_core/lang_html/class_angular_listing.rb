@@ -34,7 +34,7 @@ module XCTEHtml
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
       if (cls.model.findClass("class_angular_reactive_edit"))
-        bld.add('<button class="btn" routerLink="/user-edit">New ' + cls.getUName() + "</button>")
+        bld.add('<button class="btn" routerLink="/user/edit">New ' + cls.getUName() + "</button>")
       end
 
       bld.startBlock('<table class="table" id="' + CodeNameStyling.getStyled(getUnformattedClassName(cls) + "", Utils.instance.langProfile.variableNameStyle) + '">')
@@ -55,8 +55,8 @@ module XCTEHtml
       for group in cls.model.groups
         process_var_group_body(cls, cfg, bld, group)
       end
-      bld.add('<td><a class="button" routerLink="/user-view/{{item.id}}">View</a></td>')
-      bld.add('<td><a class="button" routerLink="/user-edit/{{item.id}}">Edit</a></td>')
+      bld.add('<td><a class="button" routerLink="/user/view/{{item.id}}">View</a></td>')
+      bld.add('<td><a class="button" routerLink="/user/edit/{{item.id}}">Edit</a></td>')
       bld.endBlock("</tr>")
       bld.endBlock("</body>")
 

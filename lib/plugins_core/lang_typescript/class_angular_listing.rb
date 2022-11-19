@@ -31,7 +31,6 @@ module XCTETypescript
       bld.lfExtension = Utils.instance.getExtension("body")
 
       process_dependencies(cls, cfg, bld)
-      render_dependencies(cls, cfg, bld)
 
       genFileComment(cls, cfg, bld)
       genFileContent(cls, cfg, bld)
@@ -43,7 +42,7 @@ module XCTETypescript
 
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "Component, OnInit")
-      cls.addInclude("@angular/router", "Router")
+      cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
       cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
@@ -61,7 +60,7 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      process_dependencies(cls, cfg, bld)
+      render_dependencies(cls, cfg, bld)
 
       bld.add
 
@@ -87,7 +86,7 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startBlock("constructor(private service: " + standardClassName + "Service, private router: Router)")
+      bld.startBlock("constructor(private service: " + standardClassName + "Service, private route: ActivatedRoute)")
       bld.endBlock
 
       bld.separate

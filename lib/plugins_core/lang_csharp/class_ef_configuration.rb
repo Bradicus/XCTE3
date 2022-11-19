@@ -25,15 +25,15 @@ module XCTECSharp
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(cls.getUName() + " configuration")
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " configuration")
+      bld.lfExtension = Utils.instance.getExtension("body")
 
-      process_dependencies(cls, cfg, codeBuilder)
+      process_dependencies(cls, cfg, bld)
 
-      genFileContent(cls, cfg, codeBuilder)
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
@@ -45,14 +45,14 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
       # Add in any dependencies required by functions
       # for fun in cls.functions
       #   if fun.elementId == CodeElem::ELEM_FUNCTION
       #     if fun.isTemplate
       #       templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
       #       if templ != nil
-      #         templ.process_dependencies(cls, fun, cfg, codeBuilder)
+      #         templ.process_dependencies(cls, fun, cfg, bld)
       #       else
       #         puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
       #       end
@@ -60,8 +60,8 @@ module XCTECSharp
       #   end
       # end
 
-      Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
+      Utils.instance.genUses(cls.uses, bld)
+      Utils.instance.genNamespaceStart(cls.namespace, bld)
 
       classDec = cls.model.visibility + " class " + getClassName(cls) + " : IEntityTypeConfiguration<" + Utils.instance.getStyledClassName(cls.getUName()) + ">"
 
@@ -73,17 +73,14 @@ module XCTECSharp
         end
       end
 
-      codeBuilder.startClass(classDec)
-
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
+      bld.startClass(classDec)
 
       # Generate code for functions
-      Utils.instance.genFunctions(cls, codeBuilder)
+      Utils.instance.genFunctions(cls, bld)
 
-      codeBuilder.endClass
+      bld.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

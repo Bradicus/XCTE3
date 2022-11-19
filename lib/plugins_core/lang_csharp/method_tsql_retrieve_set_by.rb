@@ -11,27 +11,27 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("/// <summary>")
-      codeBuilder.add("/// Reads set of results using the specified filter parameters")
-      codeBuilder.add("/// </summary>")
-      codeBuilder.startFunction("public " + get_function_signature(cls, genFun, cfg, codeBuilder))
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("/// <summary>")
+      bld.add("/// Reads set of results using the specified filter parameters")
+      bld.add("/// </summary>")
+      bld.startFunction("public " + get_function_signature(cls, genFun, cfg, bld))
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add(get_function_signature(cls, genFun, cfg, codeBuilder) + ";")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add(get_function_signature(cls, genFun, cfg, bld) + ";")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_function_signature(cls, genFun, cfg, codeBuilder)
+    def get_function_signature(cls, genFun, cfg, bld)
       standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
       paramDec = Array.new
@@ -47,26 +47,24 @@ module XCTECSharp
                "(SqlConnection conn, " + paramDec.join(", ") + ")"
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
 
       styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
-      codeBuilder.add("List<" + styledClassName + "> resultList = new List<" + styledClassName + ">();")
+      bld.add("List<" + styledClassName + "> resultList = new List<" + styledClassName + ">();")
 
-      codeBuilder.add('string sql = @"SELECT ')
+      bld.add('string sql = @"SELECT ')
 
-      codeBuilder.indent
+      bld.indent
 
-      XCTECSharp::Utils.instance.genVarList(varArray, codeBuilder, cls.varPrefix)
+      XCTECSharp::Utils.instance.genVarList(cls, bld, cls.varPrefix)
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add("FROM " + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()))
-      codeBuilder.add("WHERE ")
+      bld.add("FROM " + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()))
+      bld.add("WHERE ")
 
-      codeBuilder.indent
+      bld.indent
 
       whereItems = Array.new
       genFun.variableReferences.each() { |param|
@@ -76,44 +74,44 @@ module XCTECSharp
 
         whereItems << whereCondition
       }
-      codeBuilder.add(whereItems.join(" AND "))
-      codeBuilder.sameLine('";')
+      bld.add(whereItems.join(" AND "))
+      bld.sameLine('";')
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
 
       genFun.variableReferences.each() { |param|
-        codeBuilder.add("cmd.Parameters.AddWithValue(" +
-                        '"@' + XCTETSql::Utils.instance.getStyledVariableName(param) +
-                        '", ' + XCTECSharp::Utils.instance.getStyledVariableName(param.getParam()) + ");")
+        bld.add("cmd.Parameters.AddWithValue(" +
+                '"@' + XCTETSql::Utils.instance.getStyledVariableName(param) +
+                '", ' + XCTECSharp::Utils.instance.getStyledVariableName(param.getParam()) + ");")
       }
 
-      codeBuilder.add("SqlDataReader results = cmd.ExecuteReader();")
+      bld.add("SqlDataReader results = cmd.ExecuteReader();")
 
-      codeBuilder.startBlock("while(results.Read())")
+      bld.startBlock("while(results.Read())")
 
-      codeBuilder.add("var o = new " + Utils.instance.getStyledClassName(cls.getUName()) + "();")
-      codeBuilder.add
+      bld.add("var o = new " + Utils.instance.getStyledClassName(cls.getUName()) + "();")
+      bld.add
 
-      Utils.instance.genAssignResults(cls, codeBuilder)
+      Utils.instance.genAssignResults(cls, bld)
 
-      codeBuilder.add
-      codeBuilder.add("resultList.Add(o);")
+      bld.add
+      bld.add("resultList.Add(o);")
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving all items from ' + cls.getUName() + '", e);')
-      codeBuilder.endBlock(";")
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error retrieving all items from ' + cls.getUName() + '", e);')
+      bld.endBlock(";")
 
-      codeBuilder.add
-      codeBuilder.add("return resultList;")
+      bld.add
+      bld.add("return resultList;")
     end
   end
 end

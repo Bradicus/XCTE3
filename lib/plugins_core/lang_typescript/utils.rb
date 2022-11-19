@@ -220,7 +220,10 @@ module XCTETypescript
       if (var.getUType().downcase().start_with?("date"))
         return getStyledVariableName(var) + ": new FormControl<Date>(new Date())"
       else
-        return getStyledVariableName(var) + ": new FormControl('')"
+        if Types.instance.inCategory(var, "text")
+          return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">('')"
+        end
+        return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(0)"
       end
     end
 
@@ -267,7 +270,9 @@ module XCTETypescript
     end
 
     def isNumericPrimitive(var)
-      return @langProfile.isPrimitive(var) && Types.instance.inCategory(var, "numeric")
+      isPrim = @langProfile.isPrimitive(var)
+      isNum = Types.instance.inCategory(var, "number")
+      return isPrim && isNum
     end
 
     def getFakerAssignment(var)
@@ -292,6 +297,24 @@ module XCTETypescript
       end
 
       return "faker.random.alpha(11)"
+    end
+
+    # Run a function on each variable in a class
+    def eachVar(cls, varFun)
+      for vGroup in cls.model.groups
+        eachVarGrp(vGroup, varFun)
+      end
+    end
+
+    # Run a function on each variable in a variable group and subgroups
+    def eachVarGrp(vGroup, varFun)
+      for var in vGroup.vars
+        varFun.call(var)
+      end
+
+      for grp in vGroup.groups
+        eachVarGrp(grp, varFun)
+      end
     end
   end
 end

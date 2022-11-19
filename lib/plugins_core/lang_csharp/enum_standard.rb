@@ -83,7 +83,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, codeBuilder)
+              templ.process_dependencies(cls, fun, cfg, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -91,8 +91,8 @@ module XCTECSharp
         end
       end
 
-      Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
+      Utils.instance.genUses(cls.uses, bld)
+      Utils.instance.genNamespaceStart(cls.namespace, bld)
 
       classDec = cls.model.visibility + " enum  " + getClassName(cls)
 

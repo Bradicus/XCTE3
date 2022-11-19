@@ -19,63 +19,60 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(cls, funItem, codeBuilder)
-      codeBuilder.add(Utils.instance.getStyledClassName(cls.getUName()) + "();")
+    def get_declaration(cls, funItem, bld)
+      bld.add(Utils.instance.getStyledClassName(cls.getUName()) + "();")
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration_inline(cls, funItem, codeBuilder)
-      codeBuilder.startFuction(Utils.instance.getStyledClassName(cls.getUName()) + "()")
+    def get_declaration_inline(cls, funItem, bld)
+      bld.startFuction(Utils.instance.getStyledClassName(cls.getUName()) + "()")
       codeStr << get_body(cls, funItem, hFile)
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def process_dependencies(cls, funItem, codeBuilder)
+    def process_dependencies(cls, funItem, bld)
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, funItem, codeBuilder)
-      codeBuilder.add("/**")
-      codeBuilder.add("* Constructor")
-      codeBuilder.add("*/")
+    def get_definition(cls, funItem, bld)
+      bld.add("/**")
+      bld.add("* Constructor")
+      bld.add("*/")
 
       classDef = String.new
       classDef << Utils.instance.getStyledClassName(cls.getUName()) << " :: " << Utils.instance.getStyledClassName(cls.getUName()) << "()"
-      codeBuilder.startClass(classDef)
+      bld.startClass(classDef)
 
-      get_body(cls, funItem, codeBuilder)
+      get_body(cls, funItem, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_body(cls, funItem, codeBuilder)
+    def get_body(cls, funItem, bld)
       conDef = String.new
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.defaultValue != nil
-            codeBuilder.add(Utils.instance.getStyledVariableName(var) << " = ")
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        if var.defaultValue != nil
+          bld.add(Utils.instance.getStyledVariableName(var) << " = ")
 
-            if var.vtype == "String"
-              codeBuilder.sameLine("\"" << var.defaultValue << "\";")
-            else
-              codeBuilder.sameLine(var.defaultValue << ";")
-            end
-
-            if var.comment != nil
-              codeBuilder.sameLine("\t// " << var.comment)
-            end
-
-            codeBuilder.add
+          if var.vtype == "String"
+            bld.sameLine("\"" << var.defaultValue << "\";")
+          else
+            bld.sameLine(var.defaultValue << ";")
           end
 
-          if var.init != nil
-            codeBuilder.add(var.init)
+          if var.comment != nil
+            bld.sameLine("\t// " << var.comment)
           end
+
+          bld.add
         end
-      end
+
+        if var.init != nil
+          bld.add(var.init)
+        end
+      })
     end
   end
 end

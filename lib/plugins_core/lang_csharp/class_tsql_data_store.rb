@@ -36,21 +36,21 @@ module XCTECSharp
         Utils.instance.addClassInclude(cls, "standard")
       end
 
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = cls.name
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(cls, cfg, codeBuilder)
+      bld = SourceRendererCSharp.new
+      bld.lfName = cls.name
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, codeBuilder)
-      Utils.instance.genFunctionDependencies(cls, cfg, codeBuilder)
-      Utils.instance.genUses(cls.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
+    def genFileContent(cls, cfg, bld)
+      Utils.instance.genFunctionDependencies(cls, cfg, bld)
+      Utils.instance.genUses(cls.uses, bld)
+      Utils.instance.genNamespaceStart(cls.namespace, bld)
 
       classDec = cls.model.visibility + " class " + cls.name
 
@@ -71,13 +71,13 @@ module XCTECSharp
         end
       end
 
-      codeBuilder.startClass(classDec)
+      bld.startClass(classDec)
 
-      Utils.instance.genFunctions(cls, codeBuilder)
+      Utils.instance.genFunctions(cls, bld)
 
-      codeBuilder.endClass
+      bld.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

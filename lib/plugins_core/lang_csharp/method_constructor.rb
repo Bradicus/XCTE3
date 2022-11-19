@@ -17,29 +17,29 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
 
   # Returns definition string for this class's constructor
-  def get_definition(cls, fun, cfg, codeBuilder)
-    codeBuilder.add("///")
-    codeBuilder.add("/// Constructor")
-    codeBuilder.add("///")
+  def get_definition(cls, fun, cfg, bld)
+    bld.add("///")
+    bld.add("/// Constructor")
+    bld.add("///")
 
     standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
-    codeBuilder.startClass(standardClassName + "()")
+    bld.startClass(standardClassName + "()")
 
-    get_body(cls, fun, cfg, codeBuilder)
+    get_body(cls, fun, cfg, bld)
 
-    codeBuilder.endClass
+    bld.endClass
   end
 
-  def get_declairation(cls, genFun, cfg, codeBuilder)
-    codeBuilder.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
+  def get_declairation(cls, genFun, cfg, bld)
+    bld.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
   end
 
   # No deps
-  def process_dependencies(cls, genFun, cfg, codeBuilder)
+  def process_dependencies(cls, genFun, cfg, bld)
   end
 
-  def get_body(cls, genFun, cfg, codeBuilder)
+  def get_body(cls, genFun, cfg, bld)
     conDef = String.new
     varArray = Array.new
     cls.model.getAllVarsFor(varArray)
@@ -47,19 +47,19 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         if var.defaultValue != nil
-          codeBuilder.add(var.name << " = ")
+          bld.add(var.name << " = ")
 
           if var.vtype == "String"
-            codeBuilder.sameLine('"' << var.defaultValue << '";')
+            bld.sameLine('"' << var.defaultValue << '";')
           else
-            codeBuilder.sameLine(var.defaultValue << ";")
+            bld.sameLine(var.defaultValue << ";")
           end
 
           if var.comment != nil
-            codeBuilder.sameLine("\t// " << var.comment)
+            bld.sameLine("\t// " << var.comment)
           end
 
-          codeBuilder.add
+          bld.add
         end
       end
     end

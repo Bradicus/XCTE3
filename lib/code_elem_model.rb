@@ -126,29 +126,39 @@ module CodeStructure
       # puts vArray.size
     end
 
-    # Returns all variables in this class that match the cfg
-    def getAllVarsFor(varArray)
+    def getFilteredVars(filterFun)
+      varArray = Array.new
+
       for vGroup in @groups
-        CodeElemModel.getVarsFor(vGroup, varArray)
+        getFilteredGroup(vGroup, varArray, filterFun)
       end
+
+      return varArray
     end
 
-    def getScreenVars(varArray, screenFunction)
+    # # Returns all variables in this class that match the cfg
+    # def getAllVarsFor(varArray)
+    #   for vGroup in @groups
+    #     CodeElemModel.getVarsFor(vGroup, varArray)
+    #   end
+    # end
+
+    def getScreenVars(varArray, filterFun)
       for vGroup in @groups
-        getScreenGroup(vGroup, varArray, screenFunction)
+        getFilteredGroup(vGroup, varArray, filterFun)
       end
     end
 
     # Screen variables based on pass functoin
-    def getScreenGroup(vGroup, varArray, screenFunction)
+    def getFilteredGroup(vGroup, varArray, filterFun)
       for var in vGroup.vars
-        if screenFunction.call(var)
+        if filterFun.call(var)
           varArray << var
         end
       end
 
       for grp in vGroup.groups
-        getScreenGroup(grp, varArray, screenFunction)
+        getFilteredGroup(grp, varArray, filterFun)
       end
     end
 

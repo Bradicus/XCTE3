@@ -39,18 +39,18 @@ module XCTECSharp
 
       cls.addUse("System.Data.SqlClient", "SqlConnection")
 
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledClassName(cls.name)
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(cls, cfg, codeBuilder)
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledClassName(cls.name)
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
 
       # Add in any dependencies required by functions
       for fun in cls.functions
@@ -58,7 +58,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, codeBuilder)
+              templ.process_dependencies(cls, fun, cfg, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -66,11 +66,11 @@ module XCTECSharp
         end
       end
 
-      Utils.instance.genUses(cls.uses, codeBuilder)
+      Utils.instance.genUses(cls.uses, bld)
 
       # Process namespace items
       if cls.namespace.hasItems?()
-        codeBuilder.startBlock("namespace " << cls.namespace.get("."))
+        bld.startBlock("namespace " << cls.namespace.get("."))
       end
 
       classDec = cls.model.visibility + " interface " + Utils.instance.getStyledClassName(cls.name)
@@ -83,10 +83,7 @@ module XCTECSharp
         end
       end
 
-      codeBuilder.startClass(classDec)
-
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
+      bld.startClass(classDec)
 
       # Generate code for functions
       for fun in cls.functions
@@ -94,7 +91,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_declairation(cls, fun, cfg, codeBuilder)
+              templ.get_declairation(cls, fun, cfg, bld)
             else
               #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
@@ -108,12 +105,12 @@ module XCTECSharp
           end
         end
       end  # class  + cls.getUName()
-      codeBuilder.endClass
+      bld.endClass
 
       # Process namespace items
       if cls.namespace.hasItems?()
-        codeBuilder.endBlock(" // namespace " + cls.namespace.get("."))
-        codeBuilder.add
+        bld.endBlock(" // namespace " + cls.namespace.get("."))
+        bld.add
       end
     end
   end

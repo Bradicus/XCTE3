@@ -19,19 +19,19 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's set method
-    def get_declaration(varSec, cfg, codeBuilder)
+    def get_declaration(varSec, cfg, bld)
       if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == true
         funName = Utils.instance.getStyledFunctionName("set " + varSec.name)
         varName = Utils.instance.getStyledVariableName(varSec)
         inVarName = CodeNameStyling.getStyled("new " + varSec.name, Utils.instance.langProfile.variableNameStyle)
-        codeBuilder.add("void " + funName)
-        codeBuilder.sameLine("(" + Utils.instance.getTypeName(varSec) + " " + inVarName)
-        codeBuilder.sameLine(")\t{ " + varName + " = " + inVarName + "; };")
+        bld.add("void " + funName)
+        bld.sameLine("(" + Utils.instance.getTypeName(varSec) + " " + inVarName)
+        bld.sameLine(")\t{ " + varName + " = " + inVarName + "; };")
       end
     end
 
     # Returns definition string for this class's set method
-    def get_definition(codeClass, cfg, codeBuilder)
+    def get_definition(codeClass, cfg, bld)
     end
   end
 end

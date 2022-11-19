@@ -18,70 +18,68 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("/// <summary>")
-      codeBuilder.add("/// Reads data set from sql database")
-      codeBuilder.add("/// </summary>")
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("/// <summary>")
+      bld.add("/// Reads data set from sql database")
+      bld.add("/// </summary>")
 
       standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.startClass("public IEnumerable<" + standardClassName +
-                             "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)")
+      bld.startClass("public IEnumerable<" + standardClassName +
+                     "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)")
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endClass
+      bld.endClass
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("IEnumerable<" +
-                      Utils.instance.getStyledClassName(cls.getUName()) +
-                      "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add("IEnumerable<" +
+              Utils.instance.getStyledClassName(cls.getUName()) +
+              "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
 
       tableName = Utils.instance.getStyledClassName(cls.getUName())
-      codeBuilder.add("List<" + tableName + "> resultList = new List<" + tableName + ">();")
-      codeBuilder.add('string sql = @"SELECT ')
+      bld.add("List<" + tableName + "> resultList = new List<" + tableName + ">();")
+      bld.add('string sql = @"SELECT ')
 
-      codeBuilder.indent
+      bld.indent
 
-      Utils.instance.genVarList(varArray, codeBuilder, cls.varPrefix)
+      Utils.instance.genVarList(cls, bld, cls.varPrefix)
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add("FROM " + tableName + '";')
-      codeBuilder.add
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
-      codeBuilder.add
-      codeBuilder.add("SqlDataReader results = cmd.ExecuteReader();")
-      codeBuilder.startBlock("while(results.Read())")
+      bld.add("FROM " + tableName + '";')
+      bld.add
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.add("cmd.Transaction = trans;")
+      bld.add
+      bld.add("SqlDataReader results = cmd.ExecuteReader();")
+      bld.startBlock("while(results.Read())")
 
-      codeBuilder.add("var o = new " + tableName + "();")
+      bld.add("var o = new " + tableName + "();")
 
-      Utils.instance.genAssignResults(cls, codeBuilder)
+      Utils.instance.genAssignResults(cls, bld)
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving all items from ' + tableName + '", e);')
-      codeBuilder.endBlock(";")
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error retrieving all items from ' + tableName + '", e);')
+      bld.endBlock(";")
 
-      codeBuilder.add
-      codeBuilder.add("return resultList;")
+      bld.add
+      bld.add("return resultList;")
     end
   end
 end

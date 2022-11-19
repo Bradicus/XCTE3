@@ -19,17 +19,17 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's get method
-    def get_declaration(varSec, cfg, codeBuilder)
+    def get_declaration(varSec, cfg, bld)
       if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == true
         funName = Utils.instance.getStyledFunctionName("get " + varSec.name)
         varName = Utils.instance.getStyledVariableName(varSec)
-        codeBuilder.add("const " + Utils.instance.getTypeName(varSec) + "& " + funName)
-        codeBuilder.sameLine("() const\t{ return(" + varName + "); };")
+        bld.add("const " + Utils.instance.getTypeName(varSec) + "& " + funName)
+        bld.sameLine("() const\t{ return(" + varName + "); };")
       end
     end
 
     # This method has no body
-    def get_definition(codeClass, cfg, codeBuilder)
+    def get_definition(codeClass, cfg, bld)
     end
   end
 end

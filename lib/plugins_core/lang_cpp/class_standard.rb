@@ -288,35 +288,30 @@ module XCTECpp
     end
 
     # Returns the code for the body for this class
-    def genBody(cls, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
-      cppGen.add
+    def genBody(cls, cfg, bld)
+      bld.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
+      bld.add
 
-      startNamespace(cls, cppGen)
+      startNamespace(cls, bld)
 
-      # Initialize static variables
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        if var.isStatic
+          bld.add(Utils.instance.getTypeName(var) << " ")
+          bld.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
+          bld.sameLine(Utils.instance.getStyledVariableName(var))
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.isStatic
-            cppGen.add(Utils.instance.getTypeName(var) << " ")
-            cppGen.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
-            cppGen.sameLine(Utils.instance.getStyledVariableName(var))
-
-            if var.arrayElemCount.to_i > 0 # This is an array
-              cppGen.sameLine("[" + Utils.instance.getSizeConst(var) << "]")
-            elsif var.defaultValue != nil
-              cppGen.sameLine(" = " + var.defaultValue)
-            end
-
-            cppGen.sameLine(";")
+          if var.arrayElemCount.to_i > 0 # This is an array
+            bld.sameLine("[" + Utils.instance.getSizeConst(var) << "]")
+          elsif var.defaultValue != nil
+            bld.sameLine(" = " + var.defaultValue)
           end
-        end
-      end
 
-      cppGen.add
+          bld.sameLine(";")
+        end
+      })
+
+      bld.add
 
       # Generate code for functions
       for fun in cls.functions
@@ -327,7 +322,7 @@ module XCTECpp
             puts "processing template for function " + fun.name
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(cls, fun, cppGen)
+                templ.get_definition(cls, fun, bld)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
@@ -336,7 +331,7 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(cls, fun, cppGen)
+                templ.get_definition(cls, fun, bld)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
@@ -345,11 +340,11 @@ module XCTECpp
         end
       end
 
-      cppGen.add("//+XCTE Custom Code Area")
-      cppGen.add
-      cppGen.add("//-XCTE Custom Code Area")
+      bld.add("//+XCTE Custom Code Area")
+      bld.add
+      bld.add("//-XCTE Custom Code Area")
 
-      endNamespace(cls, cppGen, ";")
+      endNamespace(cls, bld, ";")
     end
 
     def getVarsFor(varGroup, cfg, vArray)

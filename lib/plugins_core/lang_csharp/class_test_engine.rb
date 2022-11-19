@@ -30,37 +30,37 @@ module XCTECSharp
         cls.includes << CodeElemInclude.new(cls.interfaceNamespace, cls.getUName() + " interface")
       end
 
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledClassName(cls.name)
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledClassName(cls.name)
+      bld.lfExtension = Utils.instance.getExtension("body")
 
-      genFileContent(cls, cfg, codeBuilder)
+      genFileContent(cls, cfg, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, codeBuilder)
+    def genFileContent(cls, cfg, bld)
       templ = XCTEPlugin::findMethodPlugin("csharp", "method_test_engine")
-      templ.process_dependencies(cls, cfg, codeBuilder)
+      templ.process_dependencies(cls, cfg, bld)
 
-      Utils.instance.genFunctionDependencies(cls, cfg, codeBuilder)
-      Utils.instance.genUses(cls.uses, codeBuilder)
+      Utils.instance.genFunctionDependencies(cls, cfg, bld)
+      Utils.instance.genUses(cls.uses, bld)
 
-      Utils.instance.genNamespaceStart(cls.namespace, codeBuilder)
+      Utils.instance.genNamespaceStart(cls.namespace, bld)
 
-      codeBuilder.add("[TestClass]")
+      bld.add("[TestClass]")
       classDec = cls.model.visibility + " class " + Utils.instance.getStyledClassName(cls.name)
 
-      codeBuilder.startClass(classDec)
+      bld.startClass(classDec)
 
-      templ.get_definition(cls, cfg, codeBuilder)
+      templ.get_definition(cls, cfg, bld)
 
-      codeBuilder.endClass
+      bld.endClass
 
-      Utils.instance.genNamespaceEnd(cls.namespace, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

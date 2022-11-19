@@ -19,8 +19,15 @@
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model" ></gen_class>
 
 	<gen_class type="class_angular_module" path="address" ></gen_class>
-	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-view" nested="true" ></gen_class>
+	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-view" nested="true" >
+		<function name="method_populate_reactive_form" />
+	 	<function name="method_populate_random" />
+	</gen_class>
   <gen_class type="empty_file" name="address view" namespace="" path="address/address-view" ></gen_class>
+
+	<gen_class type="class_angular_faker_service" path="shared/services" >
+		<function name="method_faker_get" />
+	</gen_class>
 
 	<gen_class type="class_angular_service" path="shared/services" >
 		<function name="method_angular_service_detail" />

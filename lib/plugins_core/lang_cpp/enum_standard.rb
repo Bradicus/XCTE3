@@ -39,60 +39,60 @@ module XCTECpp
 
       cls.setName(getUnformattedClassName(cls))
 
-      hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
-      hFile.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, hFile)
-      genHeader(cls, cfg, hFile)
+      bld = SourceRendererCpp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
+      bld.lfExtension = Utils.instance.getExtension("header")
+      genHeaderComment(cls, cfg, bld)
+      genHeader(cls, cfg, bld)
 
-      srcFiles << hFile
+      srcFiles << bld
 
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, hFile)
-      hFile.add("/**")
-      hFile.add("* @enum " + cls.getUName())
+    def genHeaderComment(cls, cfg, bld)
+      bld.add("/**")
+      bld.add("* @enum " + cls.getUName())
 
       if (cfg.codeAuthor != nil)
-        hFile.add("* @author " + cfg.codeAuthor)
+        bld.add("* @author " + cfg.codeAuthor)
       end
 
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        hFile.add("* " + cfg.codeCompany)
+        bld.add("* " + cfg.codeCompany)
       end
 
       if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
 
-      hFile.add("* ")
+      bld.add("* ")
 
       if (cls.model.description != nil)
         cls.model.description.each_line { |descLine|
           if descLine.strip.size > 0
-            hFile.add("* " << descLine.strip)
+            bld.add("* " << descLine.strip)
           end
         }
       end
 
-      hFile.add("*/")
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, cfg, hFile)
+    def genHeader(cls, cfg, bld)
       if cls.namespace.hasItems?()
-        hFile.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
-        hFile.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
-        hFile.add
+        bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        bld.add
       else
-        hFile.add("#ifndef __" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
-        hFile.add("#define __" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
-        hFile.add
+        bld.add("#ifndef __" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        bld.add("#define __" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
+        bld.add
       end
 
-      startNamespace(cls, hFile)
+      startNamespace(cls, bld)
 
       # Do automatic static array size declairations above class def
       varArray = Array.new
@@ -103,38 +103,35 @@ module XCTECpp
 
       classDec = "enum class " + Utils.instance.getStyledClassName(cls.getUName())
 
-      hFile.startBlock(classDec)
+      bld.startBlock(classDec)
+      enums = Array.new
 
-      # Generate class variables
-      varArray = Array.new
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        enumDec = Utils.instance.getStyledEnumName(var.name)
+        if (var.defaultValue != nil)
+          enumDec += " = " + var.defaultValue
+        end
+        enums.push(enumDec)
+      })
 
-      for vGrp in cls.model.groups
-        cls.model.getAllVarsFor(varArray)
-      end
-
-      for i in 0..(varArray.length - 1)
-        var = varArray[i]
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          hFile.add(Utils.instance.getStyledEnumName(var.name))
-          if (var.defaultValue != nil)
-            hFile.sameLine(" = " + var.defaultValue)
-          end
-          if i != varArray.length - 1
-            hFile.sameLine(",")
-          end
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          hFile.add(var.formatText)
+      first = true
+      for enum in enums
+        if first
+          bld.add(enum)
+          first = false
+        else
+          bld.sameLine(",")
+          bld.add(enum)
         end
       end
 
-      hFile.endBlock(";")
+      bld.endBlock(";")
 
-      endNamespace(cls, hFile)
+      endNamespace(cls, bld)
 
-      hFile.separate
-      hFile.add("#endif")
+      bld.separate
+      bld.add("#endif")
     end
   end
 end

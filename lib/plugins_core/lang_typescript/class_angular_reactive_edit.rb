@@ -106,7 +106,12 @@ module XCTETypescript
       bld.startBlock("ngOnInit()")
       bld.add("this.route.paramMap.subscribe(params => {")
       bld.iadd("let idVal = params.get('id');")
-      bld.iadd("this.item.id = idVal !== null ? idVal : '';")
+      idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
+      if (Utils.instance.isNumericPrimitive(idVar[0]))
+        bld.iadd("this.item.id = idVal !== null ? parseInt(idVal) : 0;")
+      else
+        bld.iadd("this.item.id = idVal !== null ? idVal : '';")
+      end
       bld.add("});")
       bld.add("this.route.data.subscribe(data => {")
       #bld.iadd("enableEdit = data.enableEdit;")
@@ -114,12 +119,16 @@ module XCTETypescript
       bld.add("});")
 
       bld.separate
-      bld.add("this." + clsVar + ".patchValue(this.item);")
+      bld.add("this.populate(this.item);")
       bld.endBlock
 
       bld.add
       bld.startBlock("onSubmit()")
-      bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
+      if (idVar[0].getUType().downcase() == "string")
+        bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
+      else
+        bld.startBlock("if (this." + clsVar + ".controls['id'].value === null || this." + clsVar + ".controls['id'].value > 0)")
+      end
       bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".create(this." + clsVar + ".value);")
       bld.midBlock("else")
       bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".update(this." + clsVar + ".value);")

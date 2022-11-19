@@ -2,9 +2,9 @@
 # Class:: ClassAngularModule
 #
 module XCTETypescript
-  class ClassAngularModule < ClassBase
+  class ClassAngularModuleRouting < ClassBase
     def initialize
-      @name = "class_angular_module"
+      @name = "class_angular_module_routing"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -14,11 +14,11 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " module"
+      return cls.getUName() + " routing module"
     end
 
     def getFileName(cls)
-      getStyledFileName(cls.getUName() + ".module")
+      getStyledFileName(cls.getUName() + ".routing.module")
     end
 
     def genSourceFiles(cls, cfg)
@@ -47,13 +47,7 @@ module XCTETypescript
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "NgModule")
       cls.addInclude("@angular/common", "CommonModule")
-      cls.addInclude("@angular/router", "Routes, RouterModule")
-      cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
-
-      if cls.model.findClass("class_angular_module_routing") != nil
-        cls.addInclude(getStyledFileName(cls.getUName()) + "/" + getStyledFileName(cls.getUName() + ".routing.module"),
-                       getStyledClassName(cls.getUName() + " routing module"))
-      end
+      cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
 
       for otherCls in cls.model.classes
         if (otherCls.ctype.start_with?("class_angular_reactive_edit") ||
@@ -64,11 +58,6 @@ module XCTETypescript
       end
 
       super
-
-      # Generate class variables
-      for group in cls.model.groups
-        process_var_dependencies(cls, cfg, bld, group)
-      end
     end
 
     # Returns the code for the content for this class
@@ -77,79 +66,32 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
-      # bld.add("const routes: Routes = [")
-      # for otherCls in cls.model.classes
-      #   if otherCls.ctype.start_with? "class_angular_reactive_edit"
-      #     viewPath = getStyledFileName(otherCls.model.name + "/view")
-      #     editPath = getStyledFileName(otherCls.model.name + "/edit")
-
-      #     plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-      #     compName = plug.getClassName(otherCls)
-      #     #compName = getClassName(cls)
-      #     bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
-      #     bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
-      #   elsif otherCls.ctype == "class_angular_listing"
-      #     listPath = getStyledFileName(otherCls.model.name + "/listing")
-      #     plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
-      #     compName = plug.getClassName(otherCls)
-      #     bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
-      #   end
-      # end
-      # bld.add("];")
-
-      #bld.separate
-
-      bld.add("@NgModule({")
-      bld.indent
-      bld.add "declarations: ["
-      for otherCls in cls.model.classes
-        if otherCls.ctype == "class_angular_reactive_edit"
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-          bld.iadd(plug.getClassName(otherCls) + ",")
-        elsif otherCls.ctype == "class_angular_listing"
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
-          bld.iadd(plug.getClassName(otherCls) + ",")
-        end
-      end
-      bld.add "],"
-
-      bld.add "imports: ["
-      bld.iadd "RouterModule,"
+      bld.add("const routes: Routes = [")
       for otherCls in cls.model.classes
         if otherCls.ctype.start_with? "class_angular_reactive_edit"
-          bld.iadd("ReactiveFormsModule,")
-        end
-      end
+          viewPath = getStyledFileName("view")
+          editPath = getStyledFileName("edit")
 
-      for otherCls in cls.model.classes
-        if otherCls.ctype == "class_angular_module_routing"
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_module_routing")
-          bld.iadd(plug.getClassName(otherCls) + ",")
-        end
-      end
-
-      bld.iadd("CommonModule,")
-
-      for vGroup in cls.model.groups
-        process_var_group_imports(cls, cfg, bld, vGroup)
-      end
-
-      bld.add "],"
-
-      bld.add "exports:["
-      for otherCls in cls.model.classes
-        if otherCls.ctype == "class_angular_reactive_edit"
           plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-          bld.iadd(plug.getClassName(otherCls) + ",")
+          compName = plug.getClassName(otherCls)
+          #compName = getClassName(cls)
+          bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
+          bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
         elsif otherCls.ctype == "class_angular_listing"
+          listPath = getStyledFileName("listing")
           plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
-          bld.iadd(plug.getClassName(otherCls) + ",")
+          compName = plug.getClassName(otherCls)
+          bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
         end
       end
-      bld.add "],"
+      bld.add("];")
 
-      bld.add "providers: [],"
-      bld.unindent
+      bld.separate
+
+      bld.add("@NgModule({")
+
+      bld.iadd("imports: [RouterModule.forChild(routes)],")
+      bld.iadd("exports: [RouterModule]")
 
       bld.add("})")
       bld.startClass("export class " + getClassName(cls))
@@ -160,6 +102,22 @@ module XCTETypescript
       end
 
       bld.endClass
+    end
+
+    # process variable group
+    def process_var_group(cls, cfg, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          bld.add(getVarDec(var))
+        elsif var.elementId == CodeElem::ELEM_COMMENT
+          bld.sameLine(getComment(var))
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          bld.add(var.formatText)
+        end
+        for group in vGroup.groups
+          process_var_group(cls, cfg, bld, group)
+        end
+      end
     end
 
     # process variable group
@@ -217,4 +175,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularModule.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularModuleRouting.new)

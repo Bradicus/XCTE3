@@ -28,8 +28,9 @@ class Types
   end
 
   def inCategory(var, category)
-    for btype in Types.instance.basic
-      if (var.getUType() == btype.name)
+    varType = var.getUType().downcase()
+    for btype in @basic
+      if (varType == btype.name)
         return btype.category == category
       end
     end

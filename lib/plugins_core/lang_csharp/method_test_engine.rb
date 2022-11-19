@@ -21,19 +21,19 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Constructor")
-      codeBuilder.add("///")
+    def get_definition(cls, cfg, bld)
+      bld.add("///")
+      bld.add("/// Constructor")
+      bld.add("///")
 
-      codeBuilder.add("[TestMethod]")
-      codeBuilder.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.getUName() + " engine") + "()")
-      get_body(cls, cfg, codeBuilder)
+      bld.add("[TestMethod]")
+      bld.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.getUName() + " engine") + "()")
+      get_body(cls, cfg, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def process_dependencies(cls, cfg, codeBuilder)
+    def process_dependencies(cls, cfg, bld)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
       cls.addUse("System.Configuration", "ConfigurationManager")
@@ -44,20 +44,20 @@ module XCTECSharp
       cls.addUse("XCTE.Data", Utils.instance.getStyledClassName(cls.getUName() + " engine"))
     end
 
-    def get_body(cls, cfg, codeBuilder)
+    def get_body(cls, cfg, bld)
       stdClassName = Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.add(Utils.instance.getStyledClassName("i " + cls.getUName() + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.getUName() + " engine") + "();")
-      codeBuilder.add(stdClassName + " obj = new " + stdClassName + "();")
-      codeBuilder.add
-      codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
+      bld.add(Utils.instance.getStyledClassName("i " + cls.getUName() + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.getUName() + " engine") + "();")
+      bld.add(stdClassName + " obj = new " + stdClassName + "();")
+      bld.add
+      bld.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using (var tScope = new TransactionScope())")
-      codeBuilder.startBlock("using (SqlConnection conn = new SqlConnection(connString))")
-      codeBuilder.add("conn.Open();")
+      bld.startBlock("try")
+      bld.startBlock("using (var tScope = new TransactionScope())")
+      bld.startBlock("using (SqlConnection conn = new SqlConnection(connString))")
+      bld.add("conn.Open();")
 
       varArray = Array.new
       cls.model.getNonIdentityVars(varArray)
@@ -66,31 +66,31 @@ module XCTECSharp
       # for var in varArray
       #   if var.elementId == CodeElem::ELEM_VARIABLE
       #       if var.vtype == 'String'
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "TS";')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "TS";')
       #       elsif var.vtype.start_with?('Int')
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
       #       elsif var.vtype.start_with?('Decimal')
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
       #       elsif var.vtype.start_with?('Float')
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
       #       end
       #     end
       # end
 
-      codeBuilder.add
-      codeBuilder.add("intf.Create(obj, conn);")
+      bld.add
+      bld.add("intf.Create(obj, conn);")
 
-      codeBuilder.endBlock
+      bld.endBlock
 
-      codeBuilder.add
-      codeBuilder.add("tScope.Complete();")
+      bld.add
+      bld.add("tScope.Complete();")
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
-      codeBuilder.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
+      bld.endBlock
 
       # Generate code for functions
       for fun in cls.functions
@@ -98,12 +98,12 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(cls, fun, cfg, codeBuilder)
+              templ.get_definition(cls, fun, cfg, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
 
-            codeBuilder.add
+            bld.add
           end
         end
       end  # class  + cls.getUName()

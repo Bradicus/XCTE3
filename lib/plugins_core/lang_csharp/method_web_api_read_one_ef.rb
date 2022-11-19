@@ -20,36 +20,36 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Web API get single " + cls.getUName())
-      codeBuilder.add("///")
+    def get_definition(cls, genFun, cfg, bld)
+      bld.add("///")
+      bld.add("/// Web API get single " + cls.getUName())
+      bld.add("///")
 
-      codeBuilder.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) + " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id)")
+      bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) + " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id)")
 
-      get_body(cls, genFun, cfg, codeBuilder)
+      get_body(cls, genFun, cfg, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, codeBuilder)
-      codeBuilder.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-                      " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
+    def get_declairation(cls, genFun, cfg, bld)
+      bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
+              " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
-    def process_dependencies(cls, genFun, cfg, codeBuilder)
+    def process_dependencies(cls, genFun, cfg, bld)
       cls.addUse("System.Collections.Generic", "List")
       cls.addUse("System.Web.Http", "ApiController")
     end
 
-    def get_body(cls, genFun, cfg, codeBuilder)
+    def get_body(cls, genFun, cfg, bld)
       conDef = String.new
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)
 
-      codeBuilder.add(cls.xmlElement)
+      bld.add(cls.xmlElement)
 
-      codeBuilder.endBlock()
+      bld.endBlock()
     end
   end
 end

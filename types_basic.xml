@@ -4,19 +4,19 @@
 	<type name="uchar"/>
 	<type name="unc16" category="text" />
 		
-	<type name="int8" category="numeric" />
-	<type name="int16" category="numeric" />
-	<type name="int32" category="numeric" />
-	<type name="int64" category="numeric" />
+	<type name="int8" category="number" />
+	<type name="int16" category="number" />
+	<type name="int32" category="number" />
+	<type name="int64" category="number" />
 		
-	<type name="uint8" category="numeric" />
-	<type name="uint16" category="numeric" />
-	<type name="uint32" category="numeric" />
-	<type name="uint64" category="numeric" />
+	<type name="uint8" category="number" />
+	<type name="uint16" category="number" />
+	<type name="uint32" category="number" />
+	<type name="uint64" category="number" />
 		
-	<type name="float32" category="numeric" />
-	<type name="float64" category="numeric" />
-    <type name="decimal" category="numeric" />
+	<type name="float32" category="number" />
+	<type name="float64" category="number" />
+    <type name="decimal" category="number" />
 
 	<type name="string" category="text" />
 	<type name="stringunc16" category="text" />
