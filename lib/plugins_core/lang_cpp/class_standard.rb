@@ -115,18 +115,12 @@ module XCTECpp
 
       startNamespace(cls, bld)
 
-      # Do automatic static array size declairations above class def
-      varArray = Array.new
-
-      for vGrp in cls.model.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        if var.arrayElemCount > 0
           bld.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
         end
-      end
+      })
 
       if cls.model.hasAnArray
         bld.add

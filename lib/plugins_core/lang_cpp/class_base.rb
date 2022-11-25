@@ -58,20 +58,15 @@ module XCTECpp
     end
 
     def addAutoIncludes(cls, cfg)
-      varArray = Array.new
-
-      for vGrp in cls.model.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
+      # Process variables
+      Utils.instance.eachVar(cls, nil, false, lambda { |var|
         if (var.respond_to? :vtype)
           varTypeMap = Utils.instance.getType(var.vtype)
           if (varTypeMap != nil && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?)
             cls.addInclude(varTypeMap.autoInclude.path, varTypeMap.autoInclude.name, varTypeMap.autoInclude.itype)
           end
         end
-      end
+      })
     end
   end
 end

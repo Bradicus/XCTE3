@@ -260,12 +260,11 @@ module XCTECpp
         end
       end
 
-      if (separateGroups && bld != nil)
-        bld.separate
-      end
-
       for grp in vGroup.groups
         eachVarGrp(grp, bld, separateGroups, varFun)
+        if (separateGroups && bld != nil)
+          bld.separate
+        end
       end
     end
   end

@@ -47,7 +47,7 @@ module XCTETypescript
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "NgModule")
       cls.addInclude("@angular/common", "CommonModule")
-      cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
+      cls.addInclude("@angular/router", "RouterModule, Routes")
 
       for otherCls in cls.model.classes
         if (otherCls.ctype.start_with?("class_angular_reactive_edit") ||
@@ -67,6 +67,12 @@ module XCTETypescript
     # Returns the code for the content for this class
     def genFileContent(cls, cfg, bld)
       bld.add("const routes: Routes = [")
+      bld.indent
+      bld.add("{")
+      bld.indent
+      bld.add("path: '" + getStyledFileName(cls.getUName()) + "', ")
+      bld.add("children: [ ")
+
       for otherCls in cls.model.classes
         if otherCls.ctype.start_with? "class_angular_reactive_edit"
           viewPath = getStyledFileName("view")
@@ -84,6 +90,10 @@ module XCTETypescript
           bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
         end
       end
+      bld.add("]")
+      bld.unindent
+      bld.add("}")
+      bld.unindent
       bld.add("];")
 
       bld.separate

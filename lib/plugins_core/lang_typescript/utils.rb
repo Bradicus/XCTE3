@@ -316,5 +316,28 @@ module XCTETypescript
         eachVarGrp(grp, varFun)
       end
     end
+
+    def addClassnamesFor(clsList, cls, language, classType)
+      for otherCls in cls.model.classes
+        if otherCls.ctype == classType
+          plug = XCTEPlugin::findClassPlugin(language, classType)
+          clsList.push(plug.getClassName(otherCls))
+        end
+      end
+    end
+
+    def renderClassList(clsList, bld)
+      firstLine = true
+      uniqueList = clsList.uniq()
+
+      for c in uniqueList
+        if !firstLine
+          bld.sameLine(",")
+        end
+
+        bld.iadd(c)
+        firstLine = false
+      end
+    end
   end
 end
