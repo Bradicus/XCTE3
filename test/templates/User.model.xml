@@ -16,7 +16,6 @@
 
   <gen_class type="class_angular_listing" path="user/user-listing" ></gen_class>
 	<gen_class type="class_angular_reactive_edit" path="user/user-view" >
-		<function name="method_populate_reactive_form" />
 	 	<function name="method_populate_random" />
 	</gen_class>
 	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" ></gen_class>
@@ -31,6 +30,10 @@
 
 	<gen_class type="class_angular_faker_service" path="shared/services" >
 		<function name="method_faker_get" />
+	</gen_class>
+
+	<gen_class type="class_angular_reactive_populate_service" path="shared/services" >
+		<function name="method_populate_reactive_form" />
 	</gen_class>
 
 	<gen_class type="ef_configuration" namespace="XCTE.Base.Data.Config" path="XCTE.Base/Data/Config" >

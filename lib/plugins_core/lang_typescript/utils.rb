@@ -299,24 +299,6 @@ module XCTETypescript
       return "faker.random.alpha(11)"
     end
 
-    # Run a function on each variable in a class
-    def eachVar(cls, varFun)
-      for vGroup in cls.model.groups
-        eachVarGrp(vGroup, varFun)
-      end
-    end
-
-    # Run a function on each variable in a variable group and subgroups
-    def eachVarGrp(vGroup, varFun)
-      for var in vGroup.vars
-        varFun.call(var)
-      end
-
-      for grp in vGroup.groups
-        eachVarGrp(grp, varFun)
-      end
-    end
-
     def addClassnamesFor(clsList, cls, language, classType)
       for otherCls in cls.model.classes
         if otherCls.ctype == classType

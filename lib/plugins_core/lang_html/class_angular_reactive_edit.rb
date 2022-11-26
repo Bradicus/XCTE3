@@ -43,6 +43,8 @@ module XCTEHtml
         bld.startBlock("<div>")
       end
 
+      bld.add('<button (click)="populateRandom()">Populate</button>')
+
       # Generate class variables
       for group in cls.model.groups
         process_var_group(cls, cfg, bld, group)

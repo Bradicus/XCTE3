@@ -116,11 +116,11 @@ module XCTECpp
       startNamespace(cls, bld)
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if var.arrayElemCount > 0
           bld.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
         end
-      })
+      }))
 
       if cls.model.hasAnArray
         bld.add
@@ -289,7 +289,7 @@ module XCTECpp
       startNamespace(cls, bld)
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if var.isStatic
           bld.add(Utils.instance.getTypeName(var) << " ")
           bld.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
@@ -303,7 +303,7 @@ module XCTECpp
 
           bld.sameLine(";")
         end
-      })
+      }))
 
       bld.add
 

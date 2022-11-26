@@ -52,7 +52,7 @@ module XCTECpp
       conDef = String.new
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if var.defaultValue != nil
           bld.add(Utils.instance.getStyledVariableName(var) << " = ")
 
@@ -72,7 +72,7 @@ module XCTECpp
         if var.init != nil
           bld.add(var.init)
         end
-      })
+      }))
     end
   end
 end

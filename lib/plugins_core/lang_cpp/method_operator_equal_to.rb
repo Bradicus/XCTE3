@@ -46,7 +46,7 @@ module XCTECpp
       bld.indent
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if !var.isStatic # Ignore static variables
           if (Utils.instance.isPrimitive(var))
             if var.arrayElemCount.to_i == 0 # Array of primitives
@@ -58,7 +58,7 @@ module XCTECpp
             end
           end
         end
-      })
+      }))
 
       bld.unindent
 

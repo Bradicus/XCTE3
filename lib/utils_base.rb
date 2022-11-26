@@ -64,4 +64,44 @@ class UtilsBase
   def getExtension(eType)
     return @langProfile.getExtension(eType)
   end
+
+  # Run a function on each variable in a class
+  def eachVar(params)
+    for vGroup in params.cls.model.groups
+      eachVarGrp(vGroup, params.bld, params.separateGroups, params.varCb)
+    end
+  end
+
+  # Run a function on each variable in a variable group and subgroups
+  def eachVarGrp(vGroup, bld, separateGroups, varFun)
+    for var in vGroup.vars
+      if var.elementId == CodeElem::ELEM_VARIABLE
+        varFun.call(var)
+      elsif bld != nil && var.elementId == CodeElem::ELEM_COMMENT
+        bld.sameLine(getComment(var))
+      elsif bld != nil && var.elementId == CodeElem::ELEM_FORMAT
+        bld.add(var.formatText)
+      end
+    end
+
+    for grp in vGroup.groups
+      eachVarGrp(grp, bld, separateGroups, varFun)
+      if (separateGroups && bld != nil)
+        bld.separate
+      end
+    end
+  end
+
+  # Run a function on each function in a class
+  def eachFun(params)
+    for clsFun in params.cls.functions
+      if clsFun.elementId == CodeElem::ELEM_FUNCTION
+        params.bld.separate
+
+        if clsFun.isTemplate
+          params.funCb.call(clsFun)
+        end
+      end
+    end
+  end
 end

@@ -68,7 +68,7 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
@@ -111,7 +111,7 @@ module XCTECpp
             end
           end
         end
-      })
+      }))
     end
   end
 end
