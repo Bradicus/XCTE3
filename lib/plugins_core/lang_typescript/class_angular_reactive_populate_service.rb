@@ -23,6 +23,10 @@ module XCTETypescript
       return cls.getUName() + " form populate service"
     end
 
+    def getFilePath(cls)
+      return cls.path + "/" + Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+    end
+
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
@@ -51,6 +55,7 @@ module XCTETypescript
     def process_dependencies(cls, cfg, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
+      cls.addInclude("@angular/core", "Injectable")
 
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
@@ -59,6 +64,20 @@ module XCTETypescript
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
         end
       }))
+
+      # Get dependencies for functions
+      for funItem in cls.functions
+        if funItem.elementId == CodeElem::ELEM_FUNCTION
+          if funItem.isTemplate
+            templ = XCTEPlugin::findMethodPlugin("typescript", funItem.name)
+            if templ != nil
+              templ.process_dependencies(cls, funItem, bld)
+            else
+              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
+            end
+          end
+        end
+      end
     end
 
     # Returns the code for the content for this class
@@ -72,32 +91,24 @@ module XCTETypescript
       bld.endBlock(")")
       bld.startClass("export class " + getClassName(cls))
 
-      bld.add("private apiUrl='';")
-      # bld.add("private dataExpires: Number = 600; // Seconds")
-      # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
+      constructorParams = Array.new
 
-      bld.separate
-      bld.startFunction("constructor()")
-      bld.endFunction
-
-      # Generate code for functions
-      Utils.instance.eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
-          if templ != nil
-            templ.get_definition(cls, cfg, bld)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
-        else # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
-          if templ != nil
-            templ.get_definition(fun, cfg)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
+          varCls = Classes.findVarClass(var)
+          if varCls != nil
+            vService = Utils.instance.createVarFor(varCls, "class_angular_reactive_populate_service")
+            Utils.instance.addParamIfAvailable(constructorParams, vService)
           end
         end
       }))
+
+      bld.separate
+      bld.startBlock("constructor(" + constructorParams.uniq.join(", ") + ")")
+      bld.endFunction
+
+      # Generate code for functions
+      Utils.instance.render_functions(cls, cfg, bld)
 
       bld.endClass
     end

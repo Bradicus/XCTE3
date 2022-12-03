@@ -74,5 +74,9 @@ module CodeStructure
 
       return name.capitalize
     end
+
+    def hasMultipleItems()
+      return listType != nil || arrayElemCount > 0
+    end
   end
 end

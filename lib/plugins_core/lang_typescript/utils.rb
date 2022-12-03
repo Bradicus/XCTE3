@@ -55,7 +55,7 @@ module XCTETypescript
     end
 
     def createVarFor(cls, plugName)
-      plugClass = cls.model.findClass(plugName)
+      plugClass = cls.model.findClassPlugin(plugName)
       plug = XCTEPlugin::findClassPlugin("typescript", plugName)
 
       if (plugClass == nil || plug == nil)
@@ -230,9 +230,16 @@ module XCTETypescript
     # process variable group
     def genPopulate(cls, bld, vGroup, name = "")
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.name != "id"
+        if var.elementId == CodeElem::ELEM_VARIABLE
           if isPrimitive(var)
-            if var.listType == nil
+            if var.name == "id"
+              bld.add("if (" + name + getStyledVariableName(var) + " == undefined)")
+              if (isNumericPrimitive(var))
+                bld.iadd(name + getStyledVariableName(var) + " = 0;")
+              else
+                bld.iadd(name + getStyledVariableName(var) + " = '';")
+              end
+            elsif var.listType == nil
               bld.add(name + getStyledVariableName(var) + " = " + getFakerAssignment(var) + ";")
             else
               bld.add(name + getStyledVariableName(var) + ".push_back(" + getFakerAssignment(var) + ");")

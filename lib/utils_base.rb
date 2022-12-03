@@ -104,4 +104,25 @@ class UtilsBase
       end
     end
   end
+
+  # Render functions
+  def render_functions(cls, cfg, bld)
+    eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+      if fun.isTemplate
+        templ = XCTEPlugin::findMethodPlugin(@langProfile.name, fun.name)
+        if templ != nil
+          templ.get_definition(cls, cfg, bld)
+        else
+          #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
+        end
+      else # Must be empty function
+        templ = XCTEPlugin::findMethodPlugin(@langProfile.name, "method_empty")
+        if templ != nil
+          templ.get_definition(fun, cfg)
+        else
+          #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
+        end
+      end
+    }))
+  end
 end

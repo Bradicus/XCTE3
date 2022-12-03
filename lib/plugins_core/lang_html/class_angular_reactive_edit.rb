@@ -40,7 +40,7 @@ module XCTEHtml
         bld.add("<h2>" + cls.model.name.capitalize + " view</h2>")
         bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
       else
-        bld.startBlock("<div>")
+        bld.startBlock('<div [formGroup]="' + formName + '">')
       end
 
       bld.add('<button (click)="populateRandom()">Populate</button>')
@@ -85,9 +85,10 @@ module XCTEHtml
             bld.endBlock("</div>")
           else
             if (var.listType == nil)
+              vName = Utils.instance.getStyledVariableName(var)
               bld.startBlock("<fieldset>")
               bld.add("<legend>" + var.getDisplayName() + "</legend>")
-              bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ">" +
+              bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ' [item]="item.' + vName + '">' +
                       "</app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ">")
               bld.endBlock("</fieldset>")
             end

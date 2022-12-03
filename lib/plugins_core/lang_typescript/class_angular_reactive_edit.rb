@@ -23,6 +23,10 @@ module XCTETypescript
       Utils.instance.getStyledFileName(cls.getUName() + " view.component")
     end
 
+    def getFilePath(cls)
+      return cls.namespace.get("/")
+    end
+
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
@@ -48,8 +52,12 @@ module XCTETypescript
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
       cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
-      if cls.model.findClass("class_angular_faker_service") != nil
+      if cls.model.findClassPlugin("class_angular_datagen_service") != nil
         cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " faker service"), Utils.instance.getStyledClassName(cls.model.name + " faker service"))
+      end
+
+      if cls.model.findClassPlugin("class_angular_reactive_populate_service") != nil
+        cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " form populate service"), Utils.instance.getStyledClassName(cls.model.name + " form populate service"))
       end
 
       super
@@ -69,7 +77,8 @@ module XCTETypescript
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       userServiceVar = Utils.instance.createVarFor(cls, "class_angular_service")
-      fakerUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_faker_service")
+      fakerUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_datagen_service")
+      userPopulateServiceVar = Utils.instance.createVarFor(cls, "class_angular_reactive_populate_service")
 
       bld.add("@Component({")
       bld.indent
@@ -83,7 +92,7 @@ module XCTETypescript
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
       bld.add("enableEdit: boolean = false;")
-      bld.add("item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("@Input() item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       bld.separate
 
       # Generate class variables
@@ -97,6 +106,7 @@ module XCTETypescript
       constructorParams = Array.new
       Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
       Utils.instance.addParamIfAvailable(constructorParams, fakerUserServiceVar)
+      Utils.instance.addParamIfAvailable(constructorParams, userPopulateServiceVar)
       constructorParams.push("private route: ActivatedRoute")
 
       bld.startBlock("constructor(" + constructorParams.join(", ") + ")")
@@ -119,7 +129,7 @@ module XCTETypescript
       bld.add("});")
 
       bld.separate
-      bld.add("this.populate(this.item);")
+      bld.add("this.populate();")
       bld.endBlock
 
       bld.add

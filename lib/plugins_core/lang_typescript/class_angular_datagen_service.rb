@@ -3,12 +3,11 @@
 #
 
 require "plugins_core/lang_typescript/class_base.rb"
-require "plugins_core/lang_typescript/class_base.rb"
 
 module XCTETypescript
   class ClassAngularFakerService < ClassBase
     def initialize
-      @name = "class_angular_faker_service"
+      @name = "class_angular_datagen_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -27,11 +26,6 @@ module XCTETypescript
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
-
-      cls.addInclude("../../../environments/environment", "environment", "lib")
-      cls.addInclude("@angular/core", "Injectable")
-      cls.addInclude("@angular/common/http", "HttpClient ")
-      cls.addInclude("rxjs", "Observable", "lib")
 
       fPath = Utils.instance.getStyledFileName(cls.model.name)
       cName = Utils.instance.getStyledClassName(cls.model.name)
@@ -52,6 +46,10 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, cfg, bld)
+      cls.addInclude("../../../environments/environment", "environment", "lib")
+      cls.addInclude("@angular/core", "Injectable")
+      cls.addInclude("@angular/common/http", "HttpClient ")
+      cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("@faker-js/faker", "faker")
 
       # Generate class variables
@@ -85,22 +83,6 @@ module XCTETypescript
       end
 
       bld.endClass
-    end
-
-    # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-        for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
-        end
-      end
     end
 
     def process_function(cls, cfg, bld, fun)

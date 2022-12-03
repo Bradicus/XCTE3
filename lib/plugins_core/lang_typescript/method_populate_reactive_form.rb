@@ -10,31 +10,17 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, cfg, bld)
-      cls.addInclude("@faker-js/faker", "faker")
     end
 
     # Returns the code for the content for this function
     def get_definition(cls, cfg, bld)
+      itemVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
+      populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_reactive_populate_service")
 
-      bld.startFunction("populate(formGroup: FormGroup, src: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")
-
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
-        if (Utils.instance.isPrimitive(var))
-          vName = Utils.instance.getStyledVariableName(var)
-          bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
-        else
-          varCls = Classes.findVarClass(var)
-          if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "method_populate_reactive_form")
-
-            if vService != nil
-              bld.add("formGroup." + Utils.instance.getStyledVariableName(var) +
-                      " = this." + Utils.instance.getStyledVariableName(vService) + ".populate();")
-            end
-          end
-        end
-      }))
+      bld.startFunction("populate(): void")
+      bld.add("this." + Utils.instance.getStyledVariableName(populateServiceVar) +
+              ".populate(this." + clsVar + " as FormGroup, this.item);")
 
       bld.endFunction()
     end

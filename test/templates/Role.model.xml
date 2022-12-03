@@ -15,8 +15,10 @@
 	</gen_class>
 
 	<gen_class type="class_angular_module" path="role" ></gen_class>
-	<gen_class type="class_angular_reactive_edit" path="role/role-view" >		
-	 	<function name="method_populate_random" /></gen_class>
+	<gen_class type="class_angular_reactive_edit" path="role/role-view" >
+	 	<function name="method_service_datagen_random" />
+		<function name="method_populate_reactive_form" />
+	</gen_class>
   <gen_class type="empty_file" name="role view" path="role/role-view" ></gen_class>
 
 	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
@@ -30,12 +32,12 @@
 		<function name="method_angular_service_update" />
 	</gen_class>
 
-	<gen_class type="class_angular_faker_service" path="shared/services" >
+	<gen_class type="class_angular_datagen_service" path="shared/services" >
 		<function name="method_faker_get" />
 	</gen_class>
 
 	<gen_class type="class_angular_reactive_populate_service" path="shared/services" >
-		<function name="method_populate_reactive_form" />
+		<function name="method_populate_reactive_form_service" />
 	</gen_class>
 
 			<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
