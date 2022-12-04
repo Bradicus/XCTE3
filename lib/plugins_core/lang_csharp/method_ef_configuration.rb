@@ -18,7 +18,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, fun, cfg, bld)
+    def get_definition(cls, bld, fun)
       bld.add("//")
       bld.add("// Configuration ")
       bld.add("//")
@@ -28,12 +28,12 @@ module XCTECSharp
 
       bld.startFunction("public void " + configFunName)
 
-      get_body(cls, fun, cfg, bld)
+      get_body(cls, bld, fun)
 
       bld.endFunction
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       bld.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + '", "dbo");')
 
       # Process variables

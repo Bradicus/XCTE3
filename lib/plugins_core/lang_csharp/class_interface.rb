@@ -27,7 +27,7 @@ module XCTECSharp
       end
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
@@ -42,7 +42,7 @@ module XCTECSharp
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.getStyledClassName(cls.name)
       bld.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -50,7 +50,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
 
       # Add in any dependencies required by functions
       for fun in cls.functions
@@ -58,7 +58,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, bld)
+              templ.process_dependencies(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -85,26 +85,6 @@ module XCTECSharp
 
       bld.startClass(classDec)
 
-      # Generate code for functions
-      for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
-              templ.get_declairation(cls, fun, cfg, bld)
-            else
-              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
-            if templ != nil
-              templ.get_declairation(fun, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          end
-        end
-      end  # class  + cls.getUName()
       bld.endClass
 
       # Process namespace items

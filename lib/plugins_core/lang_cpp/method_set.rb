@@ -19,7 +19,7 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's set method
-    def get_declaration(varSec, cfg, bld)
+    def get_declaration(varSec, bld)
       if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == true
         funName = Utils.instance.getStyledFunctionName("set " + varSec.name)
         varName = Utils.instance.getStyledVariableName(varSec)
@@ -31,7 +31,7 @@ module XCTECpp
     end
 
     # Returns definition string for this class's set method
-    def get_definition(codeClass, cfg, bld)
+    def get_definition(codeClass, bld)
     end
   end
 end

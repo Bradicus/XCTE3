@@ -23,7 +23,7 @@ module XCTECpp
     end
 
     # Returns declairation string for this empty method
-    def get_declaration(cls, fun, hFile)
+    def get_declaration(cls, bld, fun)
       eDecl = String.new
 
       if fun.isVirtual
@@ -57,11 +57,11 @@ module XCTECpp
 
       eDecl << ";"
 
-      hFile.add(eDecl)
+      bld.add(eDecl)
     end
 
     # Returns definition string for an empty method
-    def get_definition(cls, fun, bld)
+    def get_definition(cls, bld, fun)
 
       # Skeleton of comment block
       bld.add("/**")

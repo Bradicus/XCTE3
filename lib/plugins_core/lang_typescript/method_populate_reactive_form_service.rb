@@ -1,4 +1,4 @@
-require "utils_each_var_params.rb"
+require "params/utils_each_var_params.rb"
 
 #
 module XCTETypescript
@@ -9,7 +9,7 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld, funItem)
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_populate_service")
@@ -26,7 +26,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, cfg, bld)
+    def get_definition(cls, bld, fun)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
 
       bld.startFunction("populate(formGroup: FormGroup, src: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")

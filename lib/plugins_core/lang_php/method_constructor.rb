@@ -19,7 +19,7 @@ class XCTEPhp::MethodConstructor < XCTEPlugin
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg, outCode)
+  def get_definition(codeClass, outCode)
     conDef = String.new
     outCode.indent
                 

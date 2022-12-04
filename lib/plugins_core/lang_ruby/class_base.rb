@@ -4,13 +4,13 @@ require "x_c_t_e_plugin.rb"
 # This class contains functions that may be usefull in any type of class
 module XCTERuby
   class ClassBase < XCTEPlugin
-    def startNamespaces(cls, bld)
+    def render_namespace_starts(cls, bld)
       for ns in cls.namespace.nsList
         bld.startBlock("module " + ns)
       end
     end
 
-    def renderGlobalComment(cfg, bld)
+    def renderGlobalComment(bld)
       bld.add("##")
 
       for line in cfg.codeLicense.split /[\r\n]+/
@@ -20,7 +20,7 @@ module XCTERuby
       end
     end
 
-    def endNamespaces(cls, bld)
+    def render_namespace_ends(cls, bld)
       for ns in cls.namespace.nsList
         bld.endBlock
       end

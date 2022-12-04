@@ -2,7 +2,7 @@
 # Class:: ClassAngularNavBar
 #
 module XCTEHtml
-  class ClassAngularNavBar < XCTEPlugin
+  class ClassAngularNavBar < ClassBase
     def initialize
       @name = "class_angular_navbar"
       @language = "html"
@@ -17,14 +17,14 @@ module XCTEHtml
       return cls.getUName() + " navbar"
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
-      #genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      #genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -32,7 +32,7 @@ module XCTEHtml
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       bld.startBlock('<nav class="navbar">')
       bld.startBlock('<div class="container-fluid">')
 
@@ -44,7 +44,7 @@ module XCTEHtml
       bld.add('<a class="nav-link active" aria-current="page" href="#">Home</a>')
       bld.endBlock("</li>")
       for group in cls.model.groups
-        process_var_group_menu(cls, cfg, bld, group)
+        process_var_group_menu(cls, bld, group)
       end
       bld.endBlock("</ul>")
       bld.endBlock("</div>")
@@ -56,7 +56,7 @@ module XCTEHtml
     end
 
     # process variable group
-    def process_var_group_menu(cls, cfg, bld, vGroup)
+    def process_var_group_menu(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           varName = Utils.instance.getStyledVariableName(var)
@@ -66,7 +66,7 @@ module XCTEHtml
           bld.endBlock("</li>")
         end
         for group in vGroup.groups
-          process_var_group_body(cls, cfg, bld, group)
+          process_var_group_body(cls, bld, group)
         end
       end
     end

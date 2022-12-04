@@ -19,7 +19,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, bld)
+    def get_definition(cls, bld, fun)
       bld.add("///")
       bld.add("/// Delete the record for the model with this id")
       bld.add("///")
@@ -31,12 +31,12 @@ module XCTECSharp
                        ", SqlConnection conn, SqlTransaction trans = null)")
       end
 
-      get_body(cls, genFun, cfg, bld)
+      get_body(cls, bld, fun)
 
       bld.endClass
     end
 
-    def get_declairation(cls, genFun, cfg, bld)
+    def get_declairation(cls, bld, fun)
       identVar = cls.model.getIdentityVar()
 
       if (identVar)
@@ -45,11 +45,11 @@ module XCTECSharp
       end
     end
 
-    def process_dependencies(cls, genFun, cfg, bld)
+    def process_dependencies(cls, bld, fun)
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       conDef = String.new
       varArray = Array.new
 

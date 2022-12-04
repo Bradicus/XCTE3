@@ -4,6 +4,7 @@
 #
 
 require "plugins_core/lang_csharp/utils.rb"
+require "plugins_core/lang_csharp/class_base.rb"
 require "plugins_core/lang_csharp/source_renderer_csharp.rb"
 require "code_elem.rb"
 require "code_elem_parent.rb"
@@ -11,7 +12,7 @@ require "lang_file.rb"
 require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
-  class ClassTsqlDataStore < XCTEPlugin
+  class ClassTsqlDataStore < ClassBase
     def initialize
       @name = "tsql_data_store"
       @language = "csharp"
@@ -26,7 +27,7 @@ module XCTECSharp
       return cls.getUName() + " data store"
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       cls.setName(getClassName(cls))
@@ -39,7 +40,7 @@ module XCTECSharp
       bld = SourceRendererCSharp.new
       bld.lfName = cls.name
       bld.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -47,8 +48,8 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
-      Utils.instance.genFunctionDependencies(cls, cfg, bld)
+    def genFileContent(cls, bld)
+      Utils.instance.genFunctionDependencies(cls, bld)
       Utils.instance.genUses(cls.uses, bld)
       Utils.instance.genNamespaceStart(cls.namespace, bld)
 
@@ -73,7 +74,7 @@ module XCTECSharp
 
       bld.startClass(classDec)
 
-      Utils.instance.genFunctions(cls, bld)
+      render_functions(cls, bld)
 
       bld.endClass
 

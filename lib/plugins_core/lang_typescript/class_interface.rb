@@ -19,39 +19,39 @@ module XCTETypescript
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
-      render_dependencies(cls, cfg, bld)
-      genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      render_dependencies(cls, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def genFileComment(cls, cfg, bld)
+    def genFileComment(cls, bld)
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       bld.separate
       bld.startBlock("export interface " + getClassName(cls))
 
       # Generate class variables
       for group in cls.model.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group(cls, bld, group)
       end
 
       bld.endBlock
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           bld.add(Utils.instance.getVarDec(var))
@@ -61,7 +61,7 @@ module XCTETypescript
           bld.add(var.formatText)
         end
         for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
+          process_var_group(cls, bld, group)
         end
       end
     end

@@ -21,19 +21,19 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, cfg, bld)
+    def get_definition(cls, bld)
       bld.add("///")
       bld.add("/// Constructor")
       bld.add("///")
 
       bld.add("[TestMethod]")
       bld.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.getUName() + " engine") + "()")
-      get_body(cls, cfg, bld)
+      get_body(cls, bld)
 
       bld.endFunction
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
       cls.addUse("System.Configuration", "ConfigurationManager")
@@ -44,7 +44,7 @@ module XCTECSharp
       cls.addUse("XCTE.Data", Utils.instance.getStyledClassName(cls.getUName() + " engine"))
     end
 
-    def get_body(cls, cfg, bld)
+    def get_body(cls, bld)
       stdClassName = Utils.instance.getStyledClassName(cls.getUName())
 
       bld.add(Utils.instance.getStyledClassName("i " + cls.getUName() + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.getUName() + " engine") + "();")
@@ -98,7 +98,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(cls, fun, cfg, bld)
+              templ.get_definition(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end

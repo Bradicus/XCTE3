@@ -25,21 +25,21 @@ module XCTEPython
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       rend = SourceRendererPython.new
       rend.lfName = Utils.instance.getStyledFileName(cls.getUName())
       rend.lfExtension = Utils.instance.getExtension("body")
-      genPythonFileComment(cls, cfg, rend)
-      genPythonFileContent(cls, cfg, rend)
+      genPythonFileComment(cls, rend)
+      genPythonFileContent(cls, rend)
 
       srcFiles << rend
 
       return srcFiles
     end
 
-    def genPythonFileComment(cls, cfg, rend)
+    def genPythonFileComment(cls, rend)
       rend.add("##")
       rend.add("# Class:: " + Utils.instance.getStyledFileName(cls.getUName()))
 
@@ -67,7 +67,7 @@ module XCTEPython
     end
 
     # Returns the code for the header for this class
-    def genPythonFileContent(cls, cfg, rend)
+    def genPythonFileContent(cls, rend)
       headerString = String.new
 
       rend.add

@@ -18,7 +18,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, bld)
+    def get_definition(cls, bld, fun)
       bld.add("/// <summary>")
       bld.add("/// Reads data set from sql database")
       bld.add("/// </summary>")
@@ -28,23 +28,23 @@ module XCTECSharp
       bld.startClass("public IEnumerable<" + standardClassName +
                      "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)")
 
-      get_body(cls, genFun, cfg, bld)
+      get_body(cls, bld, fun)
 
       bld.endClass
     end
 
-    def get_declairation(cls, genFun, cfg, bld)
+    def get_declairation(cls, bld, fun)
       bld.add("IEnumerable<" +
               Utils.instance.getStyledClassName(cls.getUName()) +
               "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);")
     end
 
-    def process_dependencies(cls, genFun, cfg, bld)
+    def process_dependencies(cls, bld, fun)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       conDef = String.new
 
       tableName = Utils.instance.getStyledClassName(cls.getUName())

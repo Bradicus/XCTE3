@@ -1,8 +1,10 @@
+require "plugins_core/lang_html/class_base"
+
 ##
 # Class:: ClassAngularListing
 #
 module XCTEHtml
-  class ClassAngularListing < XCTEPlugin
+  class ClassAngularListing < ClassBase
     def initialize
       @name = "class_angular_listing"
       @language = "html"
@@ -17,14 +19,14 @@ module XCTEHtml
       return cls.getUName() + " listing"
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
-      #genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      #genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -32,7 +34,7 @@ module XCTEHtml
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       if (cls.model.findClassPlugin("class_angular_reactive_edit"))
         bld.add('<button class="btn" routerLink="/user/edit">New ' + cls.getUName() + "</button>")
       end
@@ -43,7 +45,7 @@ module XCTEHtml
       bld.startBlock("<thead>")
       bld.startBlock("<tr>")
       for group in cls.model.groups
-        process_var_group_header(cls, cfg, bld, group)
+        process_var_group_header(cls, bld, group)
       end
 
       bld.endBlock("</tr>")
@@ -53,7 +55,7 @@ module XCTEHtml
       bld.startBlock("<body>")
       bld.startBlock('<tr *ngFor="let item of items | async">')
       for group in cls.model.groups
-        process_var_group_body(cls, cfg, bld, group)
+        process_var_group_body(cls, bld, group)
       end
       bld.add('<td><a class="button" routerLink="/user/view/{{item.id}}">View</a></td>')
       bld.add('<td><a class="button" routerLink="/user/edit/{{item.id}}">Edit</a></td>')
@@ -66,7 +68,7 @@ module XCTEHtml
     end
 
     # process variable group
-    def process_var_group_header(cls, cfg, bld, vGroup)
+    def process_var_group_header(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
@@ -76,13 +78,13 @@ module XCTEHtml
           end
         end
         for group in vGroup.groups
-          process_var_group_header(cls, cfg, bld, group)
+          process_var_group_header(cls, bld, group)
         end
       end
     end
 
     # process variable group
-    def process_var_group_body(cls, cfg, bld, vGroup)
+    def process_var_group_body(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
@@ -92,7 +94,7 @@ module XCTEHtml
           end
         end
         for group in vGroup.groups
-          process_var_group_body(cls, cfg, bld, group)
+          process_var_group_body(cls, bld, group)
         end
       end
     end

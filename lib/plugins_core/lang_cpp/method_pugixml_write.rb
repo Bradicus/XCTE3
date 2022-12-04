@@ -19,25 +19,25 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(cls, codeFun, bld)
+    def get_declaration(cls, bld, codeFun)
       bld.add("void write(pugi::xml_node node, " +
               Utils.instance.getStyledClassName(cls.name) + "& item);")
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration_inline(cls, codeFun, bld)
+    def get_declaration_inline(cls, bld, codeFun)
       bld.startFuction("void write(pugi::xml_node node, " +
                        Utils.instance.getStyledClassName(cls.name) + "& item);")
-      codeStr << get_body(cls, codeFun, bld)
+      codeStr << get_body(cls, bld, codeFun)
       bld.endFunction
     end
 
-    def process_dependencies(cls, codeFun, bld)
+    def process_dependencies(cls, bld, codeFun)
       cls.addInclude("", "pugixml.hpp")
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, codeFun, bld)
+    def get_definition(cls, bld, codeFun)
       bld.add("/**")
       bld.add("* Write this class' data to an xml element")
       bld.add("*/")
@@ -48,12 +48,12 @@ module XCTECpp
                                                                  Utils.instance.getStyledClassName(cls.name) + "& item)"
       bld.startClass(classDef)
 
-      get_body(cls, codeFun, bld)
+      get_body(cls, bld, codeFun)
 
       bld.endFunction
     end
 
-    def get_body(cls, codeFun, bld)
+    def get_body(cls, bld, codeFun)
       conDef = String.new
 
       # Process variables

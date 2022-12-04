@@ -38,49 +38,49 @@ module XCTECpp
       return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
     end
 
-    def genSourceFiles(codeClass, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       # Use the standard class once we've added the necessary components
       stdClass = XCTEPlugin.findClassPlugin("cpp", "standard")
 
-      listInfo = XCTECpp::Utils::getDataListInfo(codeClass.xmlElement)
+      listInfo = XCTECpp::Utils::getDataListInfo(cls.xmlElement)
 
       #      puts "Var name is: " << listInfo['varClassName']
       #      puts "Template type is: " << listInfo['cppTemplateType']
 
-      codeClass.includesList.push(CodeElemInclude.new(codeClass.coreClass, ""))
+      cls.includesList.push(CodeElemInclude.new(cls.coreClass, ""))
 
       if (listInfo["cppTemplateType"] != nil)
-        codeClass.includesList.push(CodeElemInclude.new(listInfo["cppTemplateType"], ""))
+        cls.includesList.push(CodeElemInclude.new(listInfo["cppTemplateType"], ""))
       end
 
       #      newGroup = CodeStructure::CodeElemVarGroup.new
       #      newVar = CodeElemVariable.new
-      #      newVar.name = codeClass.coreClass[0,1].downcase! + codeClass.coreClass[1,1000] + "List"
-      #      newVar.vtype = codeClass.coreClass;
+      #      newVar.name = cls.coreClass[0,1].downcase! + cls.coreClass[1,1000] + "List"
+      #      newVar.vtype = cls.coreClass;
       #      newVar.templateType = listInfo['cppTemplateType'];
       #      newGroup.vars.push(newVar);
 
-      containerClass = CodeElemParent.new(codeClass.coreClass + "Container", "public")
+      containerClass = CodeElemParent.new(cls.coreClass + "Container", "public")
       #containerClass.name =
       #containerClass.visibility = "public"
 
-      codeClass.parentsList << containerClass
+      cls.parentsList << containerClass
 
-      #      codeClass.groups << newGroup
+      #      cls.groups << newGroup
 
       listHFile = LangFile.new
-      listHFile.lfName = codeClass.name
+      listHFile.lfName = cls.name
       listHFile.lfExtension = XCTECpp::Utils::getExtension("header")
-      listHFile.lfContents = stdClass.genHeaderComment(codeClass, cfg)
-      listHFile.lfContents << stdClass.genHeader(codeClass, cfg)
+      listHFile.lfContents = stdClass.genHeaderComment(cls, cfg)
+      listHFile.lfContents << stdClass.genHeader(cls, cfg)
 
       listCppFile = LangFile.new
-      listCppFile.lfName = codeClass.name
+      listCppFile.lfName = cls.name
       listCppFile.lfExtension = XCTECpp::Utils::getExtension("body")
-      listCppFile.lfContents = stdClass.genHeaderComment(codeClass, cfg)
-      listCppFile.lfContents << stdClass.genBody(codeClass, cfg)
+      listCppFile.lfContents = stdClass.genHeaderComment(cls, cfg)
+      listCppFile.lfContents << stdClass.genBody(cls, cfg)
 
       #      srcFiles << hFile
       #      srcFiles << cppFile

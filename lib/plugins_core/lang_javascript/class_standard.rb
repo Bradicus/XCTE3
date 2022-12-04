@@ -35,15 +35,15 @@ module XCTEJavascript
       bld = SourceRendererJavascript.new
       bld.lfName = codeClass.name
       bld.lfExtension = Utils.instance.getExtension("body")
-      bld.lfContents = genFileComment(codeClass, cfg, bld)
-      bld.lfContents << genFileContent(codeClass, cfg, bld)
+      bld.lfContents = genFileComment(codeClass, bld)
+      bld.lfContents << genFileContent(codeClass, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def genFileComment(codeClass, cfg, bld)
+    def genFileComment(codeClass, bld)
       headerString = String.new
 
       headerString << "/**\n"
@@ -77,7 +77,7 @@ module XCTEJavascript
     end
 
     # Returns the code for the header for this class
-    def genFileContent(codeClass, cfg, bld)
+    def genFileContent(codeClass, bld)
       headerString = String.new
 
       headerString << "\n"

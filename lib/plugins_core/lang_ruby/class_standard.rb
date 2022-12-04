@@ -35,22 +35,22 @@ module XCTERuby
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererRuby.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
-      genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def genFileComment(cls, cfg, bld)
-      renderGlobalComment(cfg, bld)
+    def genFileComment(cls, bld)
+      renderGlobalComment(bld)
 
       bld.add("#")
 
@@ -64,7 +64,7 @@ module XCTERuby
     end
 
     # Returns the code for the header for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       bld.separate
 
       for inc in cls.includes
@@ -73,13 +73,13 @@ module XCTERuby
 
       bld.separate
 
-      startNamespaces(cls, bld)
+      render_namespace_starts(cls, bld)
       bld.startClass("class " << getClassName(cls))
 
       accessors = Accessors.new
       # Do automatic static array size declairations at top of class
       for group in cls.model.groups
-        process_var_accessors(accessors, cls, cfg, bld, group)
+        process_var_accessors(accessors, cls, bld, group)
       end
 
       add_accessors("attr_accessor", accessors.both, bld)
@@ -90,28 +90,28 @@ module XCTERuby
 
       # Do automatic static array size declairations at top of class
       for group in cls.model.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group(cls, bld, group)
       end
 
       bld.separate
       # Generate code for functions
       for fun in cls.functions
-        process_function(cls, cfg, bld, fun)
+        process_function(cls, bld, fun)
       end
 
       bld.endClass
-      endNamespaces(cls, bld)
+      render_namespace_ends(cls, bld)
     end
 
     # process variable group
-    def process_var_accessors(accessors, cls, cfg, bld, vGroup)
+    def process_var_accessors(accessors, cls, bld, vGroup)
       for var in vGroup.vars
         if var.genGet || var.genSet
           accessors.add(Accessor.new(var, var.genGet, var.genSet))
         end
 
         for group in vGroup.groups
-          process_var_accessors(accessors, cls, cfg, bld, group)
+          process_var_accessors(accessors, cls, bld, group)
         end
       end
     end
@@ -134,7 +134,7 @@ module XCTERuby
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           bld.add(Utils.instance.getVarDec(var))
@@ -144,12 +144,12 @@ module XCTERuby
           bld.add(var.formatText)
         end
         for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
+          process_var_group(cls, bld, group)
         end
       end
     end
 
-    def process_function(cls, cfg, bld, fun)
+    def process_function(cls, bld, fun)
       if fun.elementId == CodeElem::ELEM_FUNCTION
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("ruby", fun.name)

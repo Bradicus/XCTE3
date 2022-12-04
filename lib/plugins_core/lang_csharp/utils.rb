@@ -166,14 +166,14 @@ module XCTECSharp
       end
     end
 
-    def genFunctionDependencies(cls, cfg, bld)
+    def genFunctionDependencies(cls, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, bld)
+              templ.process_dependencies(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -249,7 +249,7 @@ module XCTECSharp
         end
       end
       for group in vGroup.groups
-        process_var_group_sql(cls, cfg, bld, group)
+        process_var_group_sql(cls, bld, group)
       end
     end
 

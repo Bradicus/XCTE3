@@ -20,7 +20,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, bld)
+    def get_definition(cls, bld, fun)
       bld.add("///")
       bld.add("/// Update the record for this model")
       bld.add("///")
@@ -29,22 +29,22 @@ module XCTECSharp
                      Utils.instance.getStyledClassName(cls.getUName()) +
                      " o, SqlConnection conn, SqlTransaction trans)")
 
-      get_body(cls, genFun, cfg, bld)
+      get_body(cls, bld, fun)
 
       bld.endClass
     end
 
-    def get_declairation(cls, genFun, cfg, bld)
+    def get_declairation(cls, bld, fun)
       bld.add("void Update(" +
               Utils.instance.getStyledClassName(cls.getUName()) +
               " o, SqlConnection conn, SqlTransaction trans);")
     end
 
-    def process_dependencies(cls, genFun, cfg, bld)
+    def process_dependencies(cls, bld, fun)
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       conDef = String.new
 
       bld.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + " SET ")

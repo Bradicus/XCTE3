@@ -7,12 +7,12 @@
 #
 # This class generates a project makefile
 
-require 'plugins_core/lang_cpp/utils.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
-require 'code_elem.rb'
-require 'code_elem_project.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
+require "code_elem.rb"
+require "code_elem_project.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 class XCTECpp::ProjectMakefile < XCTEPlugin
   def initialize
@@ -21,7 +21,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     @category = XCTEPlugin::CAT_PROJECT
   end
 
-  def genSourceFiles(prj, cfg)
+  def genSourceFiles(prj)
     srcFiles = Array.new
 
     mFile = LangFile.new
@@ -41,7 +41,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     if (prj.buildType == CodeElem::ELEM_LIBRARY)
       mFile.lfContents << "lib" << prj.name << ".a: $(OBJS)\n"
       mFile.lfContents << "\t" << "ar cr $(LIBPATH)lib" << prj.name << ".a $(OBJS)\n\n"
-    else  # Must be an application
+    else # Must be an application
       mFile.lfContents << prj.name << ": $(OBJS)\n"
       mFile.lfContents << "\t" << "g++ -o bin/" << prj.name << " $(FLAGS) $(INCLUDES) $(OBJS) $(LIBPATH) $(LIBS)\n\n"
     end
@@ -51,7 +51,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     mFile.lfContents << "clean: \n"
     mFile.lfContents << "\t rm *.o\n"
 
-    srcFiles << mFile;
+    srcFiles << mFile
 
     return(srcFiles)
   end
@@ -86,14 +86,14 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     end
 
     return(libPaths)
-  end  
-  
+  end
+
   def genLinkLibs(prj)
     libPaths = String.new
 
     if (prj.linkLibs.length > 0)
       libPaths << "LIBS = "
-     # libPaths << "\t-l" << prj.name << "\n"
+      # libPaths << "\t-l" << prj.name << "\n"
 
       for lib in prj.linkLibs
         libPaths << " -l" << lib
@@ -113,9 +113,9 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     incPaths = String.new
     incPaths << "INCLUDES = "
 
-      for incDir in prj.includeDirs
-        incPaths << " -I" << incDir
-      end
+    for incDir in prj.includeDirs
+      incPaths << " -I" << incDir
+    end
 
     incPaths << "\n\n"
 
@@ -127,7 +127,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
 
     for bType in prj.buildTypes
       if bType.buildType == "default"
-        flags = "FLAGS = " << bType.getBuildOpts("gcc");
+        flags = "FLAGS = " << bType.getBuildOpts("gcc")
       end
     end
 
@@ -139,7 +139,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
   def genBuildList(group)
     blString = String.new
 
- #   puts "[ProjectMakefile::genBuildList] processing group\n"
+    #   puts "[ProjectMakefile::genBuildList] processing group\n"
 
     for comp in group.components
       if (group.path != nil && group.path.length > 0)
@@ -156,7 +156,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
         blString << "\tg++ $(FLAGS) $(INCLUDES) -c " << filePath << comp.getCppFileName() << "\n\n"
       end
 
-   #   puts "[ProjectMakefile::genBuildList] processing component " << comp.name << "\n"
+      #   puts "[ProjectMakefile::genBuildList] processing component " << comp.name << "\n"
     end
 
     for grp in group.subGroups
@@ -164,9 +164,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     end
 
     return(blString)
-    
   end
-
 end
 
 XCTEPlugin::registerPlugin(XCTECpp::ProjectMakefile.new)

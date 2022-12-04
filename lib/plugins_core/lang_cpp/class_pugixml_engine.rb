@@ -31,20 +31,20 @@ module XCTECpp
       return cls.getUName() + " pugi xml engine"
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       hFile = SourceRendererCpp.new
       hFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "PugiXmlEngine")
       hFile.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, hFile)
-      genHeader(cls, cfg, hFile)
+      genHeaderComment(cls, hFile)
+      genHeader(cls, hFile)
 
       cppFile = SourceRendererCpp.new
       cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "PugiXmlEngine")
       cppFile.lfExtension = Utils.instance.getExtension("body")
-      genHeaderComment(cls, cfg, cppFile)
-      genBody(cls, cfg, cppFile)
+      genHeaderComment(cls, cppFile)
+      genBody(cls, cppFile)
 
       srcFiles << hFile
       srcFiles << cppFile
@@ -52,7 +52,7 @@ module XCTECpp
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, hFile)
+    def genHeaderComment(cls, hFile)
       hFile.add("/**")
       hFile.add("* @class " + getClassName(cls))
 
@@ -83,8 +83,8 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, cfg, hFile)
-      genIfndef(cls, hFile)
+    def genHeader(cls, hFile)
+      render_ifndef(cls, hFile)
 
       # get list of includes needed by functions
 
@@ -102,7 +102,7 @@ module XCTECpp
         end
       end
 
-      process_dependencies(cls, cfg, bld)
+      process_dependencies(cls, bld)
 
       if cls.includes.length > 0
         hFile.add
@@ -161,7 +161,7 @@ module XCTECpp
       varArray = Array.new
 
       for vGrp in cls.model.groups
-        getVarsFor(vGrp, cfg, varArray)
+        getVarsFor(vGrp, varArray)
       end
 
       for var in varArray
@@ -219,18 +219,18 @@ module XCTECpp
 
       hFile.endClass
 
-      endNamespace(cls, hFile)
+      render_namespace_end(cls, hFile)
 
       hFile.separate
       hFile.add("#endif")
     end
 
     # Returns the code for the body for this class
-    def genBody(cls, cfg, cppGen)
+    def genBody(cls, cppGen)
       cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
       cppGen.add
 
-      startNamespace(cls, cppGen)
+      render_namespace_start(cls, cppGen)
 
       # Initialize static variables
       varArray = Array.new
@@ -281,16 +281,16 @@ module XCTECpp
         end
       end
 
-      endNamespace(cls, cppGen, ";")
+      render_namespace_end(cls, cppGen)
     end
 
-    def getVarsFor(varGroup, cfg, vArray)
+    def getVarsFor(varGroup, vArray)
       for var in varGroup.vars
         vArray << var
       end
 
       for grp in varGroup.groups
-        getVarsFor(grp, cfg, vArray)
+        getVarsFor(grp, vArray)
       end
     end
   end

@@ -20,7 +20,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, bld)
+    def get_definition(cls, bld, funCb)
       bld.add("///")
       bld.add("/// Create new record for this model")
       bld.add("/// If you are not using ambient transactions, trans must be defined!")
@@ -30,23 +30,23 @@ module XCTECSharp
                         XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) +
                         " o, SqlConnection conn, SqlTransaction trans = null)")
 
-      get_body(cls, genFun, cfg, bld)
+      get_body(cls, bld, funCb)
 
       bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, bld)
+    def get_declairation(cls, bld, fun)
       bld.add("void Create(" +
               XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) +
               " o, SqlConnection conn, SqlTransaction trans = null);")
     end
 
-    def process_dependencies(cls, genFun, cfg, bld)
+    def process_dependencies(cls, bld, fun)
       cls.addUse("System", "Exception")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       conDef = String.new
       varArray = Array.new
       cls.model.getNonIdentityVars(varArray)

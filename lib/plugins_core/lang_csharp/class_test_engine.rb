@@ -22,7 +22,7 @@ module XCTECSharp
       return Utils.instance.getStyledClassName(cls.getUName() + " engine")
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       cls.setName(Utils.instance.getStyledClassName(cls.getUName() + " engine test"))
@@ -34,7 +34,7 @@ module XCTECSharp
       bld.lfName = Utils.instance.getStyledClassName(cls.name)
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -42,11 +42,11 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       templ = XCTEPlugin::findMethodPlugin("csharp", "method_test_engine")
-      templ.process_dependencies(cls, cfg, bld)
+      templ.process_dependencies(cls, bld)
 
-      Utils.instance.genFunctionDependencies(cls, cfg, bld)
+      Utils.instance.genFunctionDependencies(cls, bld)
       Utils.instance.genUses(cls.uses, bld)
 
       Utils.instance.genNamespaceStart(cls.namespace, bld)
@@ -56,7 +56,7 @@ module XCTECSharp
 
       bld.startClass(classDec)
 
-      templ.get_definition(cls, cfg, bld)
+      templ.get_definition(cls, bld)
 
       bld.endClass
 

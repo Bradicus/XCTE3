@@ -32,8 +32,8 @@ module XCTEPhp
       phpFile.lfExtension = XCTEPhp::Utils::getExtension("body")
 
       phpFile.add("<?php")
-      phpFile.lfContents << genPhpFileComment(codeClass, cfg, outCode)
-      phpFile.lfContents << genPhpSetValidateFileContent(codeClass, cfg, outCode)
+      phpFile.lfContents << genPhpFileComment(codeClass, outCode)
+      phpFile.lfContents << genPhpSetValidateFileContent(codeClass, outCode)
       phpFile.add("?>")
 
       srcFiles << phpFile
@@ -41,7 +41,7 @@ module XCTEPhp
       return srcFiles
     end
 
-    def genPhpFileComment(codeClass, cfg, outCode)
+    def genPhpFileComment(codeClass, outCode)
       headerString = String.new
 
       outCode.add("/**")

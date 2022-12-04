@@ -8,15 +8,15 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, cfg, bld)
+    def get_definition(cls, bld)
       # process class variables
       for group in cls.model.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group(cls, bld, group)
       end
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !var.isStatic # Ignore static variables
@@ -45,7 +45,7 @@ module XCTETypescript
         end
       end
       for group in vGroup.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group(cls, bld, group)
       end
     end
   end

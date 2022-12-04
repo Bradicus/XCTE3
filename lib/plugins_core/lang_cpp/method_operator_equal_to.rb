@@ -20,7 +20,7 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's equality assignment operator
-    def get_declaration(cls, funItem, bld)
+    def get_declaration(cls, bld, funItem)
       eqString = String.new
 
       bld.add("bool operator==" << "(const " << cls.name)
@@ -29,11 +29,11 @@ module XCTECpp
       return eqString
     end
 
-    def process_dependencies(cls, funItem, bld)
+    def process_dependencies(cls, bld, funItem)
     end
 
     # Returns definition string for this class's equality assignment operator
-    def get_definition(cls, funItem, bld)
+    def get_definition(cls, bld, funItem)
       longArrayFound = false
       seperator = ""
 

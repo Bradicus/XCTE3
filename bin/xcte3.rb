@@ -36,7 +36,7 @@ def isModelFile(filePath)
            (filePath.include?(".model.xml") || filePath.include?(".class.xml"))
 end
 
-def processProjectComponentGroup(project, pcGroup, cfg)
+def processProjectComponentGroup(project, pcGroup)
   currentDir = Dir.pwd
 
   # preload an extra set of data models, so they can be referenced if needed
@@ -109,7 +109,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
       #project.singleFile = "map gen settings"
 
       if (project.singleFile == nil || project.singleFile == plan.model.name)
-        srcFiles = language[plan.ctype].genSourceFiles(plan, cfg)
+        srcFiles = language[plan.ctype].genSourceFiles(plan)
 
         for srcFile in srcFiles
           foundStart = false
@@ -150,7 +150,7 @@ def processProjectComponentGroup(project, pcGroup, cfg)
     end
 
     for pSubgroup in pcGroup.subGroups
-      processProjectComponentGroup(project, pSubgroup, cfg)
+      processProjectComponentGroup(project, pSubgroup)
     end
   end
 end
@@ -220,9 +220,8 @@ end
 
 codeRootDir = File.dirname(File.realpath(__FILE__))
 
-cfg = UserSettings.new
-cfg.load(codeRootDir + "/../default_settings.xml")
-RunSettings.setUserSettings(cfg)
+UserSettings.instance.load(codeRootDir + "/../default_settings.xml")
+#RunSettings.setUserSettings(cfg)
 
 # Load variable types
 Types.instance.load(codeRootDir + "/../types_basic.xml")
@@ -241,6 +240,6 @@ prj.loadProject(currentDir + "/xcte.project.xml")
 
 XCTEPlugin::loadPLugins
 
-processProjectComponentGroup(prj, prj.componentGroup, cfg)
+processProjectComponentGroup(prj, prj.componentGroup)
 
 #XCTEPlugin::listPlugins

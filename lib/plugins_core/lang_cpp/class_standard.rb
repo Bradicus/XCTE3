@@ -35,20 +35,20 @@ module XCTECpp
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
       bld.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, bld)
-      genHeader(cls, cfg, bld)
+      genHeaderComment(cls, bld)
+      genHeader(cls, bld)
 
       cppFile = SourceRendererCpp.new
       cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
       cppFile.lfExtension = Utils.instance.getExtension("body")
-      genHeaderComment(cls, cfg, cppFile)
-      genBody(cls, cfg, cppFile)
+      genHeaderComment(cls, cppFile)
+      genBody(cls, cppFile)
 
       srcFiles << bld
       srcFiles << cppFile
@@ -56,15 +56,17 @@ module XCTECpp
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, bld)
+    def genHeaderComment(cls, bld)
+      cfg = UserSettings.instance
+
       bld.add("/**")
       bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName()))
 
-      if (cfg.codeAuthor != nil)
+      if (UserSettings.instance.codeAuthor != nil)
         bld.add("* @author " + cfg.codeAuthor)
       end
 
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
+      if UserSettings.instance.codeCompany != nil && cfg.codeCompany.size > 0
         bld.add("* " + cfg.codeCompany)
       end
 
@@ -87,33 +89,21 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, cfg, bld)
+    def genHeader(cls, bld)
       @activeVisibility = ""
-      genIfndef(cls, bld)
+      render_ifndef(cls, bld)
 
       # get list of includes needed by functions
 
       # Generate function dependencies
-      for funItem in cls.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              templ.process_dependencies(cls, funItem, bld)
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          end
-        end
-      end
-
-      process_dependencies(cls, cfg, bld)
+      render_fun_dependencies(cls, bld)
+      render_dependencies(cls, bld)
 
       if cls.includes.length > 0
         bld.add
       end
 
-      startNamespace(cls, bld)
+      render_namespace_start(cls, bld)
 
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
@@ -123,7 +113,7 @@ module XCTECpp
       }))
 
       if cls.model.hasAnArray
-        bld.add
+        bld.separate
       end
 
       for pd in cls.preDefs
@@ -152,13 +142,13 @@ module XCTECpp
 
       # Generate class variables
       for group in cls.model.groups
-        process_header_var_group(cls, cfg, bld, group, "public")
+        process_header_var_group(cls, bld, group, "public")
       end
 
       bld.separate
 
       for group in cls.model.groups
-        process_header_var_group(cls, cfg, bld, group, "private")
+        process_header_var_group(cls, bld, group, "private")
       end
 
       bld.separate
@@ -177,9 +167,9 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(cls, funItem, bld)
+                templ.get_declaration_inline(cls, bld, funItem)
               else
-                templ.get_declaration(cls, funItem, bld)
+                templ.get_declaration(cls, bld, funItem)
               end
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -188,9 +178,9 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(cls, funItem, bld)
+                templ.get_declaration_inline(cls, bld, funItem)
               else
-                templ.get_declaration(cls, funItem, bld)
+                templ.get_declaration(cls, bld, funItem)
               end
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -208,7 +198,7 @@ module XCTECpp
       end
 
       for group in cls.model.groups
-        process_header_var_group_getter_setters(cls, cfg, bld, group)
+        process_header_var_group_getter_setters(cls, bld, group)
       end
 
       bld.separate
@@ -221,13 +211,13 @@ module XCTECpp
 
       bld.endClass
 
-      endNamespace(cls, bld)
+      render_namespace_end(cls, bld)
 
       bld.add("#endif")
     end
 
     # process variable group
-    def process_header_var_group(cls, cfg, bld, vGroup, vis)
+    def process_header_var_group(cls, bld, vGroup, vis)
       for var in vGroup.vars
         if var.visibility == vis
           if var.elementId == CodeElem::ELEM_VARIABLE
@@ -247,11 +237,11 @@ module XCTECpp
       end
 
       for group in vGroup.groups
-        process_header_var_group(cls, cfg, bld, group, vis)
+        process_header_var_group(cls, bld, group, vis)
       end
     end
 
-    def process_header_var_group_getter_setters(cls, cfg, bld, vGroup)
+    def process_header_var_group_getter_setters(cls, bld, vGroup)
       for var in vGroup.vars
         if "public" != @activeVisibility
           @activeVisibility = "public"
@@ -264,29 +254,29 @@ module XCTECpp
           if (var.genGet)
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_get")
             if templ != nil
-              templ.get_declaration(var, cfg, bld)
+              templ.get_declaration(var, bld)
             end
           end
           if (var.genSet)
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_set")
             if templ != nil
-              templ.get_declaration(var, cfg, bld)
+              templ.get_declaration(var, bld)
             end
           end
         end
       end
 
       for group in vGroup.groups
-        process_header_var_group_getter_setters(cls, cfg, bld, group)
+        process_header_var_group_getter_setters(cls, bld, group)
       end
     end
 
     # Returns the code for the body for this class
-    def genBody(cls, cfg, bld)
+    def genBody(cls, bld)
       bld.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
       bld.add
 
-      startNamespace(cls, bld)
+      render_namespace_start(cls, bld)
 
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
@@ -316,7 +306,7 @@ module XCTECpp
             puts "processing template for function " + fun.name
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(cls, fun, bld)
+                templ.get_definition(cls, bld, fun)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
@@ -325,7 +315,7 @@ module XCTECpp
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(cls, fun, bld)
+                templ.get_definition(cls, bld, fun)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
@@ -338,16 +328,16 @@ module XCTECpp
       bld.add
       bld.add("//-XCTE Custom Code Area")
 
-      endNamespace(cls, bld, ";")
+      render_namespace_end(cls, bld)
     end
 
-    def getVarsFor(varGroup, cfg, vArray)
+    def getVarsFor(varGroup, vArray)
       for var in varGroup.vars
         vArray << var
       end
 
       for grp in varGroup.groups
-        getVarsFor(grp, cfg, vArray)
+        getVarsFor(grp, vArray)
       end
     end
   end

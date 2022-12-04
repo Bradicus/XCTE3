@@ -34,7 +34,7 @@ module XCTECpp
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       cls.setName(getUnformattedClassName(cls))
@@ -42,15 +42,17 @@ module XCTECpp
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
       bld.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, bld)
-      genHeader(cls, cfg, bld)
+      genHeaderComment(cls, bld)
+      genHeader(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, bld)
+    def genHeaderComment(cls, bld)
+      cfg = UserSettings.instance
+
       bld.add("/**")
       bld.add("* @enum " + cls.getUName())
 
@@ -81,7 +83,7 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, cfg, bld)
+    def genHeader(cls, bld)
       if cls.namespace.hasItems?()
         bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
         bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.getUName()) + "_H")
@@ -92,7 +94,7 @@ module XCTECpp
         bld.add
       end
 
-      startNamespace(cls, bld)
+      render_namespace_start(cls, bld)
 
       # Do automatic static array size declairations above class def
       varArray = Array.new
@@ -128,7 +130,7 @@ module XCTECpp
 
       bld.endBlock(";")
 
-      endNamespace(cls, bld)
+      render_namespace_end(cls, bld)
 
       bld.separate
       bld.add("#endif")

@@ -27,24 +27,24 @@ module XCTETypescript
       return cls.namespace.get("/")
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view" + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
-      #genFileComment(cls, cfg, bld)
-      process_dependencies(cls, cfg, bld)
-      render_dependencies(cls, cfg, bld)
+      #genFileComment(cls, bld)
+      process_dependencies(cls, bld)
+      render_dependencies(cls, bld)
 
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("@angular/router", "ActivatedRoute")
@@ -64,12 +64,12 @@ module XCTETypescript
 
       # Generate class variables
       for group in cls.model.groups
-        process_var_dependencies(cls, cfg, bld, group)
+        process_var_dependencies(cls, bld, group)
       end
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       bld.add
 
       selectorName = Utils.instance.getStyledFileName(cls.getUName() + " view")
@@ -97,7 +97,7 @@ module XCTETypescript
 
       # Generate class variables
       for group in cls.model.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group(cls, bld, group)
         bld.sameLine(";")
       end
 
@@ -147,21 +147,21 @@ module XCTETypescript
 
       # Generate code for functions
       for fun in cls.functions
-        process_function(cls, cfg, bld, fun)
+        process_function(cls, bld, fun)
       end
 
       bld.endBlock
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + " = ")
 
       Utils.instance.getFormgroup(cls, bld, vGroup)
     end
 
-    def process_var_dependencies(cls, cfg, bld, vGroup)
+    def process_var_dependencies(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !Utils.instance.isPrimitive(var)
@@ -174,17 +174,17 @@ module XCTETypescript
       end
 
       for grp in vGroup.groups
-        process_var_dependencies(cls, cfg, bld, grp)
+        process_var_dependencies(cls, bld, grp)
       end
     end
 
-    def process_function(cls, cfg, bld, fun)
+    def process_function(cls, bld, fun)
       if fun.elementId == CodeElem::ELEM_FUNCTION
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
           if templ != nil
             bld.separate
-            templ.get_definition(cls, cfg, bld)
+            templ.get_definition(cls, bld)
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end

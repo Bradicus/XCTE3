@@ -19,15 +19,15 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's logIt method
-    def get_declaration(cls, funItem, bld)
+    def get_declaration(cls, bld, funItem)
       bld.add("        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const;")
     end
 
-    def process_dependencies(cls, funItem, bld)
+    def process_dependencies(cls, bld, funItem)
     end
 
     # Returns definition string for this class's logIt method
-    def get_definition(cls, funItem, bld)
+    def get_definition(cls, bld, funItem)
       bld.add("/**\n* Logs this class's info to a stream")
       bld.add("* ")
       bld.add("* @param outStr The stream theis class is being logged to")

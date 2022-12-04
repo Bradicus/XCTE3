@@ -23,15 +23,11 @@ module XCTECpp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
-    end
-
     def getUnformattedClassName(cls)
       return cls.getUName() + " json engine"
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       cls.setName(getUnformattedClassName(cls))
@@ -39,22 +35,24 @@ module XCTECpp
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
       bld.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, bld)
-      genHeader(cls, cfg, bld)
+      genHeaderComment(cls, bld)
+      genHeader(cls, bld)
 
-      cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
-      cppFile.lfExtension = Utils.instance.getExtension("body")
-      genHeaderComment(cls, cfg, cppFile)
-      genBody(cls, cfg, cppFile)
+      bld = SourceRendererCpp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genHeaderComment(cls, bld)
+      genBody(cls, bld)
 
       srcFiles << bld
-      srcFiles << cppFile
+      srcFiles << bld
 
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, bld)
+    def genHeaderComment(cls, bld)
+      cfg = UserSettings.instance
+
       bld.add("/**")
       bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine"))
 
@@ -85,26 +83,13 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, cfg, bld)
-      genIfndef(cls, bld)
+    def genHeader(cls, bld)
+      render_ifndef(cls, bld)
 
       # get list of includes needed by functions
 
-      # Get dependencies for functions
-      for funItem in cls.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              templ.process_dependencies(cls, funItem, bld)
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          end
-        end
-      end
-
-      process_dependencies(cls, cfg, bld)
+      render_fun_dependencies(cls, bld)
+      render_dependencies(cls, bld)
 
       if cls.includes.length > 0
         bld.add
@@ -142,45 +127,7 @@ module XCTECpp
       bld.add("public:")
       bld.indent
 
-      # Generate class variables
-      varArray = Array.new
-
-      # Generate function declarations
-      for funItem in cls.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              if (funItem.isInline)
-                templ.get_declaration_inline(cls, funItem, bld)
-              else
-                templ.get_declaration(cls, funItem, bld)
-              end
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          else # Must be an empty function
-            templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
-            if templ != nil
-              if (funItem.isInline)
-                templ.get_declaration_inline(cls, funItem, bld)
-              else
-                templ.get_declaration(cls, funItem, bld)
-              end
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          end
-        elsif funItem.elementId == CodeElem::ELEM_COMMENT
-          bld.add(Utils.instance.getComment(funItem))
-        elsif funItem.elementId == CodeElem::ELEM_FORMAT
-          if (funItem.formatText == "\n")
-            bld.add
-          else
-            bld.sameLine(funItem.formatText)
-          end
-        end
-      end
+      render_function_declairations(cls, bld)
 
       bld.unindent
 
@@ -198,63 +145,22 @@ module XCTECpp
     end
 
     # Returns the code for the body for this class
-    def genBody(cls, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine") << '.h"')
-      cppGen.add
+    def genBody(cls, bld)
+      bld.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine") << '.h"')
+      bld.add
 
-      # Process namespace items
-      if cls.namespace.hasItems?()
-        for nsItem in cls.namespace.nsList
-          cppGen.startBlock("namespace " << nsItem)
-        end
-      end
-
-      cppGen.add
-
-      # Generate code for functions
-      for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
-
-            puts "processing template for function " + fun.name
-            if templ != nil
-              if (!fun.isInline)
-                templ.get_definition(cls, fun, cppGen)
-              end
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
-            if templ != nil
-              if (!fun.isInline)
-                templ.get_definition(cls, fun, cppGen)
-              end
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          end
-        end
-      end
-
-      # Process namespace items
-      if cls.namespace.hasItems?()
-        cls.namespace.nsList.reverse_each do |nsItem|
-          cppGen.endBlock
-          cppGen.sameLine(";   // namespace " << nsItem)
-        end
-        #cppGen.add("\n"
-      end
+      render_namespace_start(cls, bld)
+      render_functions(cls, bld)
+      render_namespace_end(cls, bld)
     end
 
-    def getVarsFor(varGroup, cfg, vArray)
+    def getVarsFor(varGroup, vArray)
       for var in varGroup.vars
         vArray << var
       end
 
       for grp in varGroup.groups
-        getVarsFor(grp, cfg, vArray)
+        getVarsFor(grp, vArray)
       end
     end
   end

@@ -1,10 +1,10 @@
 require "plugins_core/lang_cpp/utils.rb"
-require "x_c_t_e_plugin.rb"
+require "x_c_t_e_class_base.rb"
 
 # This class contains functions that may be usefull in any type of class
 module XCTECpp
-  class ClassBase < XCTEPlugin
-    def genIfndef(cls, bld)
+  class ClassBase < XCTEClassBase
+    def render_ifndef(cls, bld)
       if (cls.namespace.hasItems?())
         bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
         bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
@@ -16,8 +16,12 @@ module XCTECpp
       end
     end
 
-    def process_dependencies(cls, cfg, bld)
-      addAutoIncludes(cls, cfg)
+    def get_default_utils
+      return Utils.instance
+    end
+
+    def render_dependencies(cls, bld)
+      addAutoIncludes(cls)
 
       for inc in cls.includes
         if (inc.path.length > 0)
@@ -36,28 +40,77 @@ module XCTECpp
       end
     end
 
-    def genUsings(cls, cfg, bld)
+    def render_fun_dependencies(cls, bld)
+      # Get dependencies for functions
+      for fun in cls.functions
+        if fun.elementId == CodeElem::ELEM_FUNCTION
+          if fun.isTemplate
+            templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
+            if templ != nil
+              templ.process_dependencies(cls, bld, fun)
+            else
+              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
+            end
+          end
+        end
+      end
+    end
+
+    def render_function_declairations(cls, bld)
+      Utils.instance.eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
+          if templ != nil
+            if (fun.isInline)
+              templ.get_declaration_inline(cls, bld, fun)
+            else
+              templ.get_declaration(cls, bld, fun)
+            end
+          else
+            # puts 'ERROR no plugin 4 function: ' << fun.name << '   language: cpp'
+          end
+        else # Must be an empty function
+          templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
+          if templ != nil
+            if (fun.isInline)
+              templ.get_declaration_inline(cls, bld, fun)
+            else
+              templ.get_declaration(cls, bld, fun)
+            end
+          else
+            # puts 'ERROR no plugin 4 function: ' << fun.name << '   language: cpp'
+          end
+        end
+      }))
+    end
+
+    def render_ifndef(cls, bld)
       for us in cls.uses
         bld.add("using namespace " + us.namespace.get("::") + ";")
       end
     end
 
-    def startNamespace(cls, bld)
+    def render_namespace_start(cls, bld)
       # Process namespace items
-      for nsItem in cls.namespace.nsList
-        bld.startBlock("namespace " << nsItem)
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
+          bld.startBlock("namespace " << nsItem)
+        end
       end
     end
 
-    def endNamespace(cls, bld, nsCloseChar = "")
+    def render_namespace_end(cls, bld, nsCloseChar = "")
       # Process namespace items
-      cls.namespace.nsList.reverse_each do |nsItem|
-        bld.endBlock
-        bld.sameLine(nsCloseChar + "  // namespace " << nsItem)
+      if cls.namespace.hasItems?()
+        cls.namespace.nsList.reverse_each do |nsItem|
+          bld.endBlock
+          bld.sameLine(nsCloseChar + "  // namespace " << nsItem)
+        end
+        #bld.add("\n"
       end
     end
 
-    def addAutoIncludes(cls, cfg)
+    def addAutoIncludes(cls)
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, false, lambda { |var|
         if (var.respond_to? :vtype)

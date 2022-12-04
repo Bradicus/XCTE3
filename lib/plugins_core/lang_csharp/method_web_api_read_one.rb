@@ -20,29 +20,29 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, bld)
+    def get_definition(cls, bld, fun)
       bld.add("///")
       bld.add("/// Web API get single " + cls.getUName())
       bld.add("///")
 
-      get_body(cls, genFun, cfg, bld)
+      get_body(cls, bld, fun)
 
       bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, bld)
+    def get_declairation(cls, bld, fun)
       bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
               " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
-    def process_dependencies(cls, genFun, cfg, bld)
+    def process_dependencies(cls, bld, fun)
       cls.addUse("System.Collections.Generic", "List")
       cls.addUse("System.Web.Http", "ApiController")
       Utils.instance.addClassInclude(cls, "standard")
       Utils.instance.addClassInclude(cls, "tsql_data_store")
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       conDef = String.new
       engineName = Utils.instance.getStyledClassName(cls.getUName() + " data store")
 

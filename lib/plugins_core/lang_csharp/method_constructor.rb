@@ -17,7 +17,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
 
   # Returns definition string for this class's constructor
-  def get_definition(cls, fun, cfg, bld)
+  def get_definition(cls, bld, fun)
     bld.add("///")
     bld.add("/// Constructor")
     bld.add("///")
@@ -26,20 +26,20 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
 
     bld.startClass(standardClassName + "()")
 
-    get_body(cls, fun, cfg, bld)
+    get_body(cls, bld, fun)
 
     bld.endClass
   end
 
-  def get_declairation(cls, genFun, cfg, bld)
+  def get_declairation(cls, bld, fun)
     bld.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
   end
 
   # No deps
-  def process_dependencies(cls, genFun, cfg, bld)
+  def process_dependencies(cls, bld, fun)
   end
 
-  def get_body(cls, genFun, cfg, bld)
+  def get_body(cls, bld, fun)
     conDef = String.new
     varArray = Array.new
     cls.model.getAllVarsFor(varArray)

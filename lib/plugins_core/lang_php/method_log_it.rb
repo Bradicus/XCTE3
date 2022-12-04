@@ -19,7 +19,7 @@ class XCTEPhp::MethodLogIt < XCTEPlugin
   end  
 
   # Returns definition string for this class's logIt method
-  def get_definition(codeClass, cfg, outCode)
+  def get_definition(codeClass, outCode)
     outCode.indent
         
     outCode.add("/**")

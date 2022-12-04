@@ -23,24 +23,24 @@ module XCTETypescript
       Utils.instance.getStyledFileName(cls.getUName() + " listing.component")
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
       bld.lfName = getFileName(cls)
       bld.lfExtension = Utils.instance.getExtension("body")
 
-      process_dependencies(cls, cfg, bld)
+      process_dependencies(cls, bld)
 
-      genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "Component, OnInit")
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
@@ -50,17 +50,17 @@ module XCTETypescript
       super
       # Generate class variables
       # for group in cls.model.groups
-      #   process_var_dependencies(cls, cfg, bld, group)
+      #   process_var_dependencies(cls, bld, group)
       # end
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, cfg, bld)
+    def genFileComment(cls, bld)
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
-      render_dependencies(cls, cfg, bld)
+    def genFileContent(cls, bld)
+      render_dependencies(cls, bld)
 
       bld.add
 
@@ -108,14 +108,14 @@ module XCTETypescript
 
       # Generate code for functions
       for fun in cls.functions
-        process_function(cls, cfg, bld, fun)
+        process_function(cls, bld, fun)
       end
 
       bld.endClass
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           bld.add(Utils.instance.getVarDec(var))
@@ -125,12 +125,12 @@ module XCTETypescript
           bld.add(var.formatText)
         end
         for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
+          process_var_group(cls, bld, group)
         end
       end
     end
 
-    def process_function(cls, cfg, bld, fun)
+    def process_function(cls, bld, fun)
       bld.separate
 
       if fun.elementId == CodeElem::ELEM_FUNCTION

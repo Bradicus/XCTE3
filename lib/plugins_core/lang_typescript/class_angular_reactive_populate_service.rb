@@ -1,5 +1,5 @@
-require "utils_each_var_params.rb"
-require "utils_each_fun_params.rb"
+require "params/utils_each_var_params.rb"
+require "params/utils_each_fun_params.rb"
 
 ##
 # Class:: ClassAngularReactivePopulateService
@@ -27,7 +27,7 @@ module XCTETypescript
       return cls.path + "/" + Utils.instance.getStyledFileName(getUnformattedClassName(cls))
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
@@ -39,20 +39,20 @@ module XCTETypescript
       # Eventaully switch to finding standard class and using path from there
       cls.addInclude("shared/interfaces/" + fPath, cName)
 
-      process_dependencies(cls, cfg, bld)
-      render_dependencies(cls, cfg, bld)
+      process_dependencies(cls, bld)
+      render_dependencies(cls, bld)
 
       bld.separate
 
-      genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("@angular/core", "Injectable")
@@ -71,7 +71,7 @@ module XCTETypescript
           if funItem.isTemplate
             templ = XCTEPlugin::findMethodPlugin("typescript", funItem.name)
             if templ != nil
-              templ.process_dependencies(cls, funItem, bld)
+              templ.process_dependencies(cls, bld, funItem)
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
@@ -81,11 +81,11 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this class
-    def genFileComment(cls, cfg, bld)
+    def genFileComment(cls, bld)
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       bld.startBlock("@Injectable(")
       bld.add("providedIn: 'root',")
       bld.endBlock(")")
@@ -108,7 +108,7 @@ module XCTETypescript
       bld.endFunction
 
       # Generate code for functions
-      Utils.instance.render_functions(cls, cfg, bld)
+      render_functions(cls, bld)
 
       bld.endClass
     end

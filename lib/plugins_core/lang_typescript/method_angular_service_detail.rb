@@ -7,11 +7,11 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, cfg, bld)
+    def get_definition(cls, bld)
       className = Utils.instance.getStyledClassName(cls.getUName())
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
 

@@ -4,6 +4,7 @@
 #
 
 require "plugins_core/lang_csharp/utils.rb"
+require "plugins_core/lang_csharp/class_base.rb"
 require "plugins_core/lang_csharp/source_renderer_csharp.rb"
 require "code_elem.rb"
 require "code_elem_use.rb"
@@ -13,7 +14,7 @@ require "lang_file.rb"
 require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
-  class ClassWebApiController < XCTEPlugin
+  class ClassWebApiController < ClassBase
     def initialize
       @name = "web_api_controller"
       @language = "csharp"
@@ -24,13 +25,13 @@ module XCTECSharp
       return Utils.instance.getStyledClassName(cls.getUName())
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "Controller")
       bld.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -38,7 +39,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
 
       # Add in any dependencies required by functions
       for fun in cls.functions
@@ -46,7 +47,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, bld)
+              templ.process_dependencies(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -82,14 +83,14 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(cls, fun, cfg, bld)
+              templ.get_definition(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           else # Must be empty function
             templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
             if templ != nil
-              templ.get_definition(cls, cfg, bld)
+              templ.get_definition(cls, bld)
             else
               #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end

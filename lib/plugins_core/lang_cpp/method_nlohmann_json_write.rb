@@ -18,7 +18,7 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(cls, codeFun, bld)
+    def get_declaration(cls, bld, codeFun)
       Utils.instance.getStandardClassInfo(cls)
 
       bld.add("static void write(nlohmann::json& json, const " +
@@ -35,7 +35,7 @@ module XCTECpp
       bld.endFunction
     end
 
-    def process_dependencies(cls, codeFun, bld)
+    def process_dependencies(cls, bld, codeFun)
       cls.addInclude("", "json.hpp")
       Utils.instance.getStandardClassInfo(cls)
 
@@ -44,7 +44,7 @@ module XCTECpp
       end
     end
 
-    def get_definition(cls, codeFun, bld)
+    def get_definition(cls, bld, codeFun)
       bld.add("/**")
       bld.add("* Writes this classes primitives to a json element")
       bld.add("*/")
@@ -55,12 +55,12 @@ module XCTECpp
                                                                  cls.standardClassType + "& item)"
       bld.startClass(classDef)
 
-      get_body(cls, codeFun, bld)
+      get_body(cls, bld, codeFun)
 
       bld.endFunction
     end
 
-    def get_body(cls, codeFun, bld)
+    def get_body(cls, bld, codeFun)
       conDef = String.new
 
       for bc in cls.standardClass.baseClasses

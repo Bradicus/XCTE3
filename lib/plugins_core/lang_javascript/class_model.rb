@@ -80,7 +80,7 @@ class XCTEJavascript::ClassModel < XCTEPlugin
     end
 
     # https://docs.angularjs.org/tutorial/step_11
-    # headerString << "angular.module('" << codeClass.getNamespaceList(cfg, '.') << "'), []).controller(" << codeClass.name << ", "
+    # headerString << "angular.module('" << codeClass.getNamespaceList('.') << "'), []).controller(" << codeClass.name << ", "
     headerString << "function getControl($scope) {\n"
 
     # Do automatic static array size declairations at top of class

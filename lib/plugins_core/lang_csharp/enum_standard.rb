@@ -28,7 +28,7 @@ module XCTECSharp
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       cls.setName(getUnformattedClassName(cls))
@@ -36,15 +36,15 @@ module XCTECSharp
       hFile = SourceRendererCpp.new
       hFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
       hFile.lfExtension = Utils.instance.getExtension("header")
-      genHeaderComment(cls, cfg, hFile)
-      getBody(cls, cfg, hFile)
+      genHeaderComment(cls, hFile)
+      getBody(cls, hFile)
 
       srcFiles << hFile
 
       return srcFiles
     end
 
-    def genHeaderComment(cls, cfg, hFile)
+    def genHeaderComment(cls, hFile)
       hFile.add("/**")
       hFile.add("* @enum " + cls.getUName())
 
@@ -75,7 +75,7 @@ module XCTECSharp
     end
 
     # Returns the code for the header for this class
-    def getBody(cls, cfg, hFile)
+    def getBody(cls, hFile)
 
       # Add in any dependencies required by functions
       for fun in cls.functions
@@ -83,7 +83,7 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.process_dependencies(cls, fun, cfg, bld)
+              templ.process_dependencies(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end

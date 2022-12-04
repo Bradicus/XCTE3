@@ -20,28 +20,28 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, genFun, cfg, bld)
+    def get_definition(cls, bld, fun)
       bld.add("///")
       bld.add("/// Save all components of this object")
       bld.add("///")
 
       bld.startFunction("public void Save()")
 
-      get_body(cls, genFun, cfg, bld)
+      get_body(cls, bld, fun)
 
       bld.endFunction
     end
 
-    def get_declairation(cls, genFun, cfg, bld)
+    def get_declairation(cls, bld, fun)
       bld.add("void Save();")
     end
 
-    def process_dependencies(cls, genFun, cfg, bld)
+    def process_dependencies(cls, bld, fun)
       cls.addUse("System", "Exception")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(cls, genFun, cfg, bld)
+    def get_body(cls, bld, fun)
       conDef = String.new
       varArray = Array.new
       cls.model.getAllVarsFor(varArray)

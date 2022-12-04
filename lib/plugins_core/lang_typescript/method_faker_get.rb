@@ -7,12 +7,12 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
       cls.addInclude("@faker-js/faker", "faker")
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, cfg, bld)
+    def get_definition(cls, bld)
       # process class variables
 
       className = Utils.instance.getStyledClassName(cls.model.name)

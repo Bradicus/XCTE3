@@ -17,7 +17,7 @@ module XCTEPhp
       @author = "Brad Ottoson"
     end
 
-    def get_definition(codeClass, cfg, outCode)
+    def get_definition(codeClass, outCode)
       
       outCode.indent
 

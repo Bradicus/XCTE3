@@ -13,7 +13,7 @@ class XCTEPlugin
   # @@pluginRegistry = Hash.new
   @@languagePlugins = Hash.new
 
-  CAT_METHOD = "method" # Right now there is only one plugin category, methods
+  CAT_METHOD = "method"
   CAT_CLASS = "class"
   CAT_PROJECT = "project"
 

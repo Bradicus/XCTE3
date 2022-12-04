@@ -31,8 +31,8 @@ class XCTEPhp::ClassStandard < XCTEPlugin
     phpFile.lfExtension = XCTEPhp::Utils::getExtension("body")
 
     phpFile.add("<?php")
-    genPhpFileComment(codeClass, cfg, phpFile)
-    genPhpFileContent(codeClass, cfg, phpFile)
+    genPhpFileComment(codeClass, phpFile)
+    genPhpFileContent(codeClass, phpFile)
     phpFile.add("?>")
 
     srcFiles << phpFile
@@ -40,7 +40,7 @@ class XCTEPhp::ClassStandard < XCTEPlugin
     return srcFiles
   end
 
-  def genPhpFileComment(codeClass, cfg, outCode)
+  def genPhpFileComment(codeClass, outCode)
     outCode.add("/**")
     outCode.add("* @class " + codeClass.name)
 
@@ -70,7 +70,7 @@ class XCTEPhp::ClassStandard < XCTEPlugin
   end
 
   # Returns the code for the header for this class
-  def genPhpFileContent(codeClass, cfg, outCode)
+  def genPhpFileContent(codeClass, outCode)
     headerString = String.new
 
     outCode.add
@@ -98,7 +98,7 @@ class XCTEPhp::ClassStandard < XCTEPlugin
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("php", fun.name)
           if templ != nil
-            templ.get_definition(codeClass, cfg, outCode)
+            templ.get_definition(codeClass, outCode)
           else
             #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
           end

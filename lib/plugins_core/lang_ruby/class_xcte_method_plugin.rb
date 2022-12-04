@@ -34,21 +34,21 @@ module XCTERuby
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererRuby.new
       bld.lfName = lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
-      genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def genFileComment(cls, cfg, bld)
+    def genFileComment(cls, bld)
       if cfg.codeAuthor != nil
         bld.add("# Author:: " + cfg.codeAuthor)
       end
@@ -74,7 +74,7 @@ module XCTERuby
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       for inc in cls.includes
         bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
       end
@@ -103,19 +103,19 @@ module XCTERuby
       bld.add
 
       bld.add("# Returns the code for the content for this function")
-      bld.startFunction("def get_definition(cls, cfg, bld)")
+      bld.startFunction("def get_definition(cls, bld)")
 
       bld.add("# process class variables")
 
       bld.startBlock("for group in cls.model.groups")
-      bld.add("process_var_group(cls, cfg, bld, group)")
+      bld.add("process_var_group(cls, bld, group)")
       bld.endBlock
       bld.endFunction
 
       bld.add
 
       bld.add("# process variable group")
-      bld.startFunction("def process_var_group(cls, cfg, bld, vGroup)")
+      bld.startFunction("def process_var_group(cls, bld, vGroup)")
       bld.startBlock("for var in vGroup.vars")
 
       bld.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
@@ -150,7 +150,7 @@ module XCTERuby
 
       bld.endBlock
       bld.startBlock("for group in vGroup")
-      bld.add("process_var_group(cls, cfg, bld, group)")
+      bld.add("process_var_group(cls, bld, group)")
       bld.endBlock
       bld.endFunction
       bld.endBlock

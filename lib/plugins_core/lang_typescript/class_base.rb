@@ -1,28 +1,45 @@
-require "plugins_core/lang_typescript/plugin_base.rb"
-require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_typescript/plugin_base"
+require "x_c_t_e_plugin"
+require "x_c_t_e_class_base"
 
 # This class contains functions that may be usefull in any type of class
 module XCTETypescript
-  class ClassBase < PluginBase
-    def process_dependencies(cls, cfg, bld)
+  class ClassBase < XCTEClassBase
+    def get_default_utils
+      return Utils.instance
+    end
+
+    def getStyledFileName(uName)
+      return Utils.instance.getStyledFileName(uName)
+    end
+
+    def getStyledClassName(uName)
+      return Utils.instance.getStyledClassName(uName)
+    end
+
+    def isPrimitive(var)
+      return Utils.instance.isPrimitive(var)
+    end
+
+    def process_dependencies(cls, bld)
       # Generate dependency code for functions
       for fun in cls.functions
-        process_fuction_dependencies(cls, cfg, bld, fun)
+        process_fuction_dependencies(cls, bld, fun)
       end
     end
 
-    def process_fuction_dependencies(cls, cfg, bld, fun)
+    def process_fuction_dependencies(cls, bld, fun)
       if fun.elementId == CodeElem::ELEM_FUNCTION
         templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
         if templ != nil
-          templ.process_dependencies(cls, cfg, bld)
+          templ.process_dependencies(cls, bld)
         else
           #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end
       end
     end
 
-    def render_dependencies(cls, cfg, bld)
+    def render_dependencies(cls, bld)
       cls.includes.sort_by! do |x|
         [x.path, x.name]
       end

@@ -1,3 +1,5 @@
+require "plugins_core/lang_typescript/class_base"
+
 ##
 # Class:: ClassAngularModule
 #
@@ -9,10 +11,6 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return getStyledClassName(getUnformattedClassName(cls))
-    end
-
     def getUnformattedClassName(cls)
       return cls.getUName() + " routing module"
     end
@@ -21,7 +19,7 @@ module XCTETypescript
       getStyledFileName(cls.getUName() + ".routing.module")
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
@@ -31,20 +29,20 @@ module XCTETypescript
       fPath = getStyledFileName(cls.model.name)
       cName = getStyledClassName(cls.model.name)
 
-      process_dependencies(cls, cfg, bld)
-      render_dependencies(cls, cfg, bld)
+      process_dependencies(cls, bld)
+      render_dependencies(cls, bld)
 
       bld.separate
 
-      genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "NgModule")
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/router", "RouterModule, Routes")
@@ -61,11 +59,11 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this class
-    def genFileComment(cls, cfg, bld)
+    def genFileComment(cls, bld)
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       bld.add("const routes: Routes = [")
       bld.indent
       bld.add("{")
@@ -108,14 +106,14 @@ module XCTETypescript
 
       # Generate code for functions
       for fun in cls.functions
-        process_function(cls, cfg, bld, fun)
+        process_function(cls, bld, fun)
       end
 
       bld.endClass
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           bld.add(getVarDec(var))
@@ -125,13 +123,13 @@ module XCTETypescript
           bld.add(var.formatText)
         end
         for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
+          process_var_group(cls, bld, group)
         end
       end
     end
 
     # process variable group
-    def process_var_group_imports(cls, cfg, bld, vGroup)
+    def process_var_group_imports(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
@@ -145,14 +143,14 @@ module XCTETypescript
       end
     end
 
-    def process_function(cls, cfg, bld, fun)
+    def process_function(cls, bld, fun)
       bld.separate
 
       if fun.elementId == CodeElem::ELEM_FUNCTION
         if fun.isTemplate
           templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
           if templ != nil
-            templ.get_definition(cls, cfg, bld)
+            templ.get_definition(cls, bld)
           else
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
@@ -167,7 +165,7 @@ module XCTETypescript
       end
     end
 
-    def process_var_dependencies(cls, cfg, bld, vGroup)
+    def process_var_dependencies(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
@@ -179,7 +177,7 @@ module XCTETypescript
       end
 
       for grp in vGroup.groups
-        process_var_dependencies(cls, cfg, bld, grp)
+        process_var_dependencies(cls, bld, grp)
       end
     end
   end

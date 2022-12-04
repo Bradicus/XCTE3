@@ -24,13 +24,13 @@ module XCTERazor
       return Utils.instance.getStyledClassName(cls.getUName())
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererRazor.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
       bld.lfExtension = "cshtml"
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -38,7 +38,7 @@ module XCTERazor
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       sqlCDef = Array.new
       first = true
 
@@ -47,13 +47,13 @@ module XCTERazor
       bld.add("<form>")
       bld.indent
 
-      processVarGroup(cls, cfg, bld, cls.model.groups)
+      processVarGroup(cls, bld, cls.model.groups)
 
       bld.unindent
       bld.add("</form>")
     end
 
-    def processVarGroup(cls, cfg, bld, varGroup)
+    def processVarGroup(cls, bld, varGroup)
       for grp in varGroup
         for var in grp.vars
           if var.elementId == CodeElem::ELEM_VARIABLE
@@ -67,7 +67,7 @@ module XCTERazor
           end
         end
 
-        processVarGroup(cls, cfg, bld, grp.groups)
+        processVarGroup(cls, bld, grp.groups)
       end
     end
   end

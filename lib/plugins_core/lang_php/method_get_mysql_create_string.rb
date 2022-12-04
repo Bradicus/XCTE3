@@ -24,7 +24,7 @@ module XCTEPhp
     
     # Returns definition string for this class's mysql create 
     # statement generator
-    def get_definition(codeClass, cfg, outCode)
+    def get_definition(codeClass, outCode)
       outCode.indent
 
       outCode.add("/**")

@@ -208,7 +208,7 @@ module XCTETypescript
           end
         end
         # for group in vGroup.groups
-        #   process_var_group(cls, cfg, bld, group)
+        #   process_var_group(cls, bld, group)
         # end
       end
 
@@ -263,7 +263,7 @@ module XCTETypescript
           end
         end
         # for group in vGroup.groups
-        #   process_var_group(cls, cfg, bld, group)
+        #   process_var_group(cls, bld, group)
         # end
       end
     end

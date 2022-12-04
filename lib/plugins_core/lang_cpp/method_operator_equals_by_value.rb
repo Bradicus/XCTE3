@@ -18,7 +18,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
   end
 
   # Returns declairation string for this class's equality assignment operator
-  def get_declaration(codeClass, cfg, bld)
+  def get_declaration(codeClass, bld)
     eqString = String.new
 
     bld.add("const " << Utils.instance.getStyledClassName(codeClass.name) << "& operator=" << "(const " << Utils.instance.getStyledClassName(codeClass.name))
@@ -29,7 +29,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
   end
 
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, cfg, bld)
+  def get_definition(codeClass, bld)
     eqString = String.new
     longArrayFound = false
 

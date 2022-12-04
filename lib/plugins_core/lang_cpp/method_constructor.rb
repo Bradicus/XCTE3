@@ -19,22 +19,22 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(cls, funItem, bld)
+    def get_declaration(cls, bld, funItem)
       bld.add(Utils.instance.getStyledClassName(cls.getUName()) + "();")
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration_inline(cls, funItem, bld)
+    def get_declaration_inline(cls, bld, funItem)
       bld.startFuction(Utils.instance.getStyledClassName(cls.getUName()) + "()")
       codeStr << get_body(cls, funItem, hFile)
       bld.endFunction
     end
 
-    def process_dependencies(cls, funItem, bld)
+    def process_dependencies(cls, bld, funItem)
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, funItem, bld)
+    def get_definition(cls, bld, funItem)
       bld.add("/**")
       bld.add("* Constructor")
       bld.add("*/")
@@ -43,12 +43,12 @@ module XCTECpp
       classDef << Utils.instance.getStyledClassName(cls.getUName()) << " :: " << Utils.instance.getStyledClassName(cls.getUName()) << "()"
       bld.startClass(classDef)
 
-      get_body(cls, funItem, bld)
+      get_body(cls, bld, funItem)
 
       bld.endFunction
     end
 
-    def get_body(cls, funItem, bld)
+    def get_body(cls, bld, funItem)
       conDef = String.new
 
       # Process variables

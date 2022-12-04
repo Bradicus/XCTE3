@@ -1,14 +1,14 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
-#
-# This class stores user settings loaded from an XML file
 
+require "singleton"
+
+# This class stores user settings loaded from an XML file
 class UserSettings
   attr_accessor :codeAuthor, :codeCompany, :codeLicense
+  include Singleton
 
   def initialize
     @codeAuthor

@@ -7,12 +7,12 @@
 #
 # This class generates a cmake lists files(CMakeLists.txt)
 
-require 'plugins_core/lang_cpp/utils.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
-require 'code_elem.rb'
-require 'code_elem_project.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
+require "code_elem.rb"
+require "code_elem_project.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 class XCTECpp::ProjectCMakeLists < XCTEPlugin
   def initialize
@@ -21,7 +21,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     @category = XCTEPlugin::CAT_PROJECT
   end
 
-  def genSourceFiles(prj, cfg)
+  def genSourceFiles(prj)
     srcFiles = Array.new
 
     mFile = LangFile.new
@@ -44,7 +44,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     mFile.lfContents << genLinkLibs(prj)
     mFile.lfContents << genFlags(prj)
     mFile.lfContents << "\n"
-    
+
     if (prj.buildType == CodeElem::ELEM_LIBRARY)
       mFile.lfContents << "SET(LIBRARY_OUTPUT_PATH ../linuxlib)\n"
       mFile.lfContents << "ADD_LIBRARY(" << prj.name << " STATIC ${SRC_BODY_FILES})\n"
@@ -52,8 +52,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
       mFile.lfContents << "ADD_EXECUTABLE(" << prj.name << " ${SRC_BODY_FILES})\n"
     end
 
-
-    srcFiles << mFile;
+    srcFiles << mFile
 
     return(srcFiles)
   end
@@ -126,9 +125,9 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     incPaths = String.new
     incPaths << "INCLUDE_DIRECTORIES(\n"
 
-      for incDir in prj.includeDirs
-        incPaths << "\t" << incDir << "\n"
-      end
+    for incDir in prj.includeDirs
+      incPaths << "\t" << incDir << "\n"
+    end
 
     incPaths << ")\n\n"
 
@@ -140,7 +139,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
 
     if (prj.linkLibs.length > 0)
       libPaths << "SET(CUSTOM_LINK_ENTRIES\n"
-     # libPaths << "\t-l" << prj.name << "\n"
+      # libPaths << "\t-l" << prj.name << "\n"
 
       for lib in prj.linkLibs
         libPaths << "\t-l" << lib << "\n"
@@ -158,21 +157,21 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     for bType in prj.buildTypes
       if bType.buildType == "debug"
         flags << "SET(CMAKE_CXX_FLAGS_DEBUG \""
-        flags << bType.getBuildOpts("gcc");
+        flags << bType.getBuildOpts("gcc")
         if prj.linkLibs.length > 0
           flags << "$(CUSTOM_LINK_ENTRIES)"
         end
         flags << "\")\n"
       elsif bType.buildType == "release"
         flags << "SET(CMAKE_CXX_FLAGS_RELEASE \""
-        flags << bType.getBuildOpts("gcc");
+        flags << bType.getBuildOpts("gcc")
         if prj.linkLibs.length > 0
           flags << "$(CUSTOM_LINK_ENTRIES)"
         end
         flags << "\")\n"
       else
         flags << "SET(CMAKE_CXX_FLAGS \""
-        flags << bType.getBuildOpts("gcc");
+        flags << bType.getBuildOpts("gcc")
         if prj.linkLibs.length > 0
           flags << "$(CUSTOM_LINK_ENTRIES)"
         end
@@ -181,9 +180,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     end
 
     return(flags)
-
   end
-
 end
 
 XCTEPlugin::registerPlugin(XCTECpp::ProjectCMakeLists.new)

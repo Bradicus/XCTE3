@@ -1,26 +1,20 @@
 ##
 
-# 
+#
 # Copyright XCTE Contributors
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This class stores user settings loaded from an XML file
- 
-require 'user_settings.rb'
+
+require "user_settings.rb"
 
 class RunSettings
-    attr_accessor :userSettings, :models, :codeLicense
-    
-    @@userSettings = nil
-    @@models = nil
+  attr_accessor :models
 
-    def self.setUserSettings(settings)
-      @@userSettings = settings
-    end
-    
-    def self.setModels(models)
-      @@models = models
-    end
+  @@models = nil
+
+  def self.setModels(models)
+    @@models = models
+  end
 end
-  

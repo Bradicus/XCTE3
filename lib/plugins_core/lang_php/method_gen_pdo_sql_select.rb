@@ -19,7 +19,7 @@ class XCTEPhp::MethodGenPDOSQLSelect < XCTEPlugin
   end
   
   # Returns definition string for this class' constructor
-  def get_definition(codeClass, cfg, outCode)
+  def get_definition(codeClass, outCode)
     
     outCode.indent
                 

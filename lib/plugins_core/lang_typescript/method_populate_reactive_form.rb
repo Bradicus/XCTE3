@@ -1,4 +1,4 @@
-require "utils_each_var_params.rb"
+require "params/utils_each_var_params.rb"
 
 #
 module XCTETypescript
@@ -9,11 +9,11 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, cfg, bld)
+    def process_dependencies(cls, bld)
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, cfg, bld)
+    def get_definition(cls, bld)
       itemVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_reactive_populate_service")

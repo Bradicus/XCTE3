@@ -18,7 +18,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
   end
 
   # Returns declairation string for this class's define function
-  def get_declaration(codeClass, cfg, bld)
+  def get_declaration(codeClass, bld)
     varArray = Array.new
     codeClass.getAllVarsFor(varArray)
 
@@ -70,11 +70,11 @@ class XCTECpp::MethodDefine < XCTEPlugin
 
     bld.sameLine(")")
     bld.startBlock
-    get_body(codeClass, cfg, bld)
+    get_body(codeClass, bld)
   end
 
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, cfg, bld)
+  def get_definition(codeClass, bld)
     seperator = ""
     longArrayFound = false
     varArray = Array.new
@@ -104,14 +104,14 @@ class XCTECpp::MethodDefine < XCTEPlugin
     #      eqString << "    unsigned int i;\n\n";
     #    end
 
-    eqString << get_body(codeClass, cfg, "    ")
+    eqString << get_body(codeClass, "    ")
 
     bld.endBlock
     bld.add
   end
 
   ## Get body of function
-  def get_body(codeClass, cfg, bld)
+  def get_body(codeClass, bld)
     eqString = String.new
     seperator = ""
     longArrayFound = false

@@ -19,7 +19,7 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's equality assignment operator
-    def get_declaration(cls, funItem, bld)
+    def get_declaration(cls, bld, funItem)
       eqString = String.new
 
       bld.add(Utils.instance.getStyledClassName(cls.getUName()))
@@ -31,11 +31,11 @@ module XCTECpp
       bld.sameLine("& src" + Utils.instance.getStyledClassName(cls.getUName()) + ");\n")
     end
 
-    def process_dependencies(cls, funItem, bld)
+    def process_dependencies(cls, bld, funItem)
     end
 
     # Returns definition string for this class's equality assignment operator
-    def get_definition(cls, funItem, bld)
+    def get_definition(cls, bld, funItem)
       eqString = String.new
       longArrayFound = false
 

@@ -2,7 +2,7 @@
 # Class:: ClassAngularReactiveEdit
 #
 module XCTEHtml
-  class ClassAngularReactiveEdit < XCTEPlugin
+  class ClassAngularReactiveEdit < ClassBase
     def initialize
       @name = "class_angular_reactive_edit"
       @language = "html"
@@ -17,14 +17,14 @@ module XCTEHtml
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
       bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view.component")
       bld.lfExtension = Utils.instance.getExtension("body")
-      #genFileComment(cls, cfg, bld)
-      genFileContent(cls, cfg, bld)
+      #genFileComment(cls, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -32,7 +32,7 @@ module XCTEHtml
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       nested = (cls.xmlElement.attributes["nested"] == "true")
       formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
 
@@ -47,7 +47,7 @@ module XCTEHtml
 
       # Generate class variables
       for group in cls.model.groups
-        process_var_group(cls, cfg, bld, group)
+        process_var_group(cls, bld, group)
       end
 
       if (!nested)
@@ -60,7 +60,7 @@ module XCTEHtml
     end
 
     # process variable group
-    def process_var_group(cls, cfg, bld, vGroup)
+    def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
@@ -99,7 +99,7 @@ module XCTEHtml
           bld.add(var.formatText)
         end
         for group in vGroup.groups
-          process_var_group(cls, cfg, bld, group)
+          process_var_group(cls, bld, group)
         end
       end
     end

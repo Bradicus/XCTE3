@@ -23,7 +23,7 @@ module XCTETSql
       return XCTETSql::Utils.instance.getStyledClassName(cls.getUName())
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       cls.setName(getClassName(cls))
@@ -31,7 +31,7 @@ module XCTETSql
       bld = SourceRenderer.new
       bld.lfName = cls.getUName()
       bld.lfExtension = "sql"
-      genFileContent(cls, cfg, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
@@ -39,7 +39,7 @@ module XCTETSql
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(cls, cfg, bld)
+    def genFileContent(cls, bld)
       sqlCDef = Array.new
       first = true
 
