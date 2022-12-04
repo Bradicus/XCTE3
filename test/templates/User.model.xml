@@ -17,12 +17,12 @@
   <gen_class type="class_angular_listing" path="user/user-listing" ></gen_class>
 	<gen_class type="class_angular_reactive_edit" path="user/user-view" >
 	 	<function name="method_service_datagen_random" />
-		<function name="method_populate_reactive_form" />
+		<function name="method_angular_reactive_call_datamap" />
 	</gen_class>
 	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" ></gen_class>
 	<gen_class type="empty_file" name="user listing" namespace="" path="user/user-listing" ></gen_class>
 
-	<gen_class type="class_angular_service" path="shared/services" >
+	<gen_class type="class_angular_datastore_service" path="shared/services" >
 		<function name="method_angular_service_detail" />
 		<function name="method_angular_service_listing" />
 		<function name="method_angular_service_create" />
@@ -33,8 +33,8 @@
 		<function name="method_faker_get" />
 	</gen_class>
 
-	<gen_class type="class_angular_reactive_populate_service" path="shared/services" >
-		<function name="method_populate_reactive_form_service" />
+	<gen_class type="class_angular_datamap_service" path="shared/services" >
+		<function name="method_datamap_model_to_reactive_form" />
 	</gen_class>
 
 	<gen_class type="ef_configuration" namespace="XCTE.Base.Data.Config" path="XCTE.Base/Data/Config" >

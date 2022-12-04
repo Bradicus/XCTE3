@@ -21,7 +21,7 @@
 	<gen_class type="class_angular_module" path="address" ></gen_class>
 	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-view" nested="true" >
 	 	<function name="method_service_datagen_random" />
-		<function name="method_populate_reactive_form" />
+		<function name="method_angular_reactive_call_datamap" />
 	</gen_class>
   <gen_class type="empty_file" name="address view" namespace="" path="address/address-view" ></gen_class>
 
@@ -29,15 +29,15 @@
 		<function name="method_faker_get" />
 	</gen_class>
 
-	<gen_class type="class_angular_service" path="shared/services" >
+	<gen_class type="class_angular_datastore_service" path="shared/services" >
 		<function name="method_angular_service_detail" />
 		<function name="method_angular_service_listing" />
 		<function name="method_angular_service_create" />
 		<function name="method_angular_service_update" />
 	</gen_class>
 
-	<gen_class type="class_angular_reactive_populate_service" path="shared/services" >
-		<function name="method_populate_reactive_form_service" />
+	<gen_class type="class_angular_datamap_service" path="shared/services" >
+		<function name="method_datamap_model_to_reactive_form" />
 	</gen_class>
 
 	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" ></gen_class>

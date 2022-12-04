@@ -4,7 +4,7 @@ require "params/utils_each_var_params.rb"
 module XCTETypescript
   class MethodPopulateForm < XCTEPlugin
     def initialize
-      @name = "method_populate_reactive_form"
+      @name = "method_angular_reactive_call_datamap"
       @language = "typescript"
       @category = XCTEPlugin::CAT_METHOD
     end
@@ -16,7 +16,7 @@ module XCTETypescript
     def get_definition(cls, bld)
       itemVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_reactive_populate_service")
+      populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_datamap_service")
 
       bld.startFunction("populate(): void")
       bld.add("this." + Utils.instance.getStyledVariableName(populateServiceVar) +

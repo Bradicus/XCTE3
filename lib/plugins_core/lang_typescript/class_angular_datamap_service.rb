@@ -8,9 +8,9 @@ require "plugins_core/lang_typescript/class_base.rb"
 require "plugins_core/lang_typescript/class_base.rb"
 
 module XCTETypescript
-  class ClassAngularReactivePopulateService < ClassBase
+  class ClassAngularDatamapService < ClassBase
     def initialize
-      @name = "class_angular_reactive_populate_service"
+      @name = "class_angular_datamap_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -97,7 +97,7 @@ module XCTETypescript
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           varCls = Classes.findVarClass(var)
           if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "class_angular_reactive_populate_service")
+            vService = Utils.instance.createVarFor(varCls, "class_angular_datamap_service")
             Utils.instance.addParamIfAvailable(constructorParams, vService)
           end
         end
@@ -115,4 +115,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularReactivePopulateService.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularDatamapService.new)

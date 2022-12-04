@@ -2,9 +2,9 @@
 # Class:: ClassAngularService
 #
 module XCTETypescript
-  class ClassAngularService < ClassBase
+  class ClassAngularDatastoreService < ClassBase
     def initialize
-      @name = "class_angular_service"
+      @name = "class_angular_datastore_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -115,4 +115,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularService.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularDatastoreService.new)

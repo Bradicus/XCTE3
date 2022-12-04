@@ -4,7 +4,7 @@ require "params/utils_each_var_params.rb"
 module XCTETypescript
   class MethodPopulateFormService < XCTEPlugin
     def initialize
-      @name = "method_populate_reactive_form_service"
+      @name = "method_datamap_model_to_reactive_form"
       @language = "typescript"
       @category = XCTEPlugin::CAT_METHOD
     end
@@ -12,11 +12,11 @@ module XCTETypescript
     def process_dependencies(cls, bld, funItem)
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_populate_service")
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_datamap_service")
           varCls = Classes.findVarClass(var)
           if varCls != nil
-            varModelCls = varCls.model.findClassByType("class_angular_reactive_populate_service")
-            #vService = Utils.instance.createVarFor(varCls, "class_angular_reactive_populate_service")
+            varModelCls = varCls.model.findClassByType("class_angular_datamap_service")
+            #vService = Utils.instance.createVarFor(varCls, "class_angular_datamap_service")
             incPath = plug.getFilePath(varModelCls)
             incCls = plug.getClassName(varCls)
             cls.addInclude(incPath, incCls)
@@ -39,7 +39,7 @@ module XCTETypescript
         elsif (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           varCls = Classes.findVarClass(var)
           if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "class_angular_reactive_populate_service")
+            vService = Utils.instance.createVarFor(varCls, "class_angular_datamap_service")
 
             if vService != nil
               fgName = "formGroup.get('" + Utils.instance.getStyledVariableName(var) + "') as FormGroup"

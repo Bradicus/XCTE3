@@ -56,7 +56,7 @@ module XCTETypescript
         cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " faker service"), Utils.instance.getStyledClassName(cls.model.name + " faker service"))
       end
 
-      if cls.model.findClassPlugin("class_angular_reactive_populate_service") != nil
+      if cls.model.findClassPlugin("class_angular_datamap_service") != nil
         cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " form populate service"), Utils.instance.getStyledClassName(cls.model.name + " form populate service"))
       end
 
@@ -76,9 +76,9 @@ module XCTETypescript
       filePart = Utils.instance.getStyledFileName(cls.getUName() + " view")
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_service")
+      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_datastore_service")
       fakerUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_datagen_service")
-      userPopulateServiceVar = Utils.instance.createVarFor(cls, "class_angular_reactive_populate_service")
+      userPopulateServiceVar = Utils.instance.createVarFor(cls, "class_angular_datamap_service")
 
       bld.add("@Component({")
       bld.indent
