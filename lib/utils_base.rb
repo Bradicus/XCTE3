@@ -121,4 +121,21 @@ class UtilsBase
       end
     end
   end
+
+  # Add an include if there's a class model defined for it
+  def tryAddIncludeFor(cls, plugName)
+    clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
+    clsGen = cls.model.findClassModel(plugName)
+
+    if clsPlug != nil
+      cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(cls))
+    end
+  end
+
+  def render_param_list(pList)
+    oneLiner = pList.join(", ")
+    if pList.length > 100
+      return pList.join(", ")
+    end
+  end
 end

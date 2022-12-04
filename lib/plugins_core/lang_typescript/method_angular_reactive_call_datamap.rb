@@ -16,7 +16,7 @@ module XCTETypescript
     def get_definition(cls, bld)
       itemVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_datamap_service")
+      populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_map_service")
 
       bld.startFunction("populate(): void")
       bld.add("this." + Utils.instance.getStyledVariableName(populateServiceVar) +

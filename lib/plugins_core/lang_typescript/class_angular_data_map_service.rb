@@ -10,7 +10,7 @@ require "plugins_core/lang_typescript/class_base.rb"
 module XCTETypescript
   class ClassAngularDatamapService < ClassBase
     def initialize
-      @name = "class_angular_datamap_service"
+      @name = "class_angular_data_map_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -20,7 +20,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " form populate service"
+      return cls.getUName() + " data map service"
     end
 
     def getFilePath(cls)
@@ -97,7 +97,7 @@ module XCTETypescript
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           varCls = Classes.findVarClass(var)
           if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "class_angular_datamap_service")
+            vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
             Utils.instance.addParamIfAvailable(constructorParams, vService)
           end
         end

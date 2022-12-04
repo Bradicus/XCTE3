@@ -51,14 +51,9 @@ module XCTETypescript
 
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
-      cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
-      if cls.model.findClassPlugin("class_angular_datagen_service") != nil
-        cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " faker service"), Utils.instance.getStyledClassName(cls.model.name + " faker service"))
-      end
-
-      if cls.model.findClassPlugin("class_angular_datamap_service") != nil
-        cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " form populate service"), Utils.instance.getStyledClassName(cls.model.name + " form populate service"))
-      end
+      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_store_service")
+      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_gen_service")
+      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_map_service")
 
       super
 
@@ -76,9 +71,9 @@ module XCTETypescript
       filePart = Utils.instance.getStyledFileName(cls.getUName() + " view")
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_datastore_service")
-      fakerUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_datagen_service")
-      userPopulateServiceVar = Utils.instance.createVarFor(cls, "class_angular_datamap_service")
+      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
+      dataGenUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_gen_service")
+      userPopulateServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_map_service")
 
       bld.add("@Component({")
       bld.indent
@@ -105,27 +100,37 @@ module XCTETypescript
 
       constructorParams = Array.new
       Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
-      Utils.instance.addParamIfAvailable(constructorParams, fakerUserServiceVar)
+      Utils.instance.addParamIfAvailable(constructorParams, dataGenUserServiceVar)
       Utils.instance.addParamIfAvailable(constructorParams, userPopulateServiceVar)
       constructorParams.push("private route: ActivatedRoute")
 
-      bld.startBlock("constructor(" + constructorParams.join(", ") + ")")
+      bld.startFunctionParamed("constructor", constructorParams)
       bld.endBlock
 
       bld.separate
       bld.startBlock("ngOnInit()")
       bld.add("this.route.paramMap.subscribe(params => {")
-      bld.iadd("let idVal = params.get('id');")
+      bld.indent
+      bld.add("let idVal = params.get('id');")
+      bld.add("if (!this.item) {")
+
+      bld.add("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.iadd("this." + Utils.instance.getStyledVariableName(dataGenUserServiceVar) + ".initData(this.item);")
+      bld.add("}")
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
       if (Utils.instance.isNumericPrimitive(idVar[0]))
-        bld.iadd("this.item.id = idVal !== null ? parseInt(idVal) : 0;")
+        bld.add("this.item.id = idVal !== null ? parseInt(idVal) : 0;")
       else
-        bld.iadd("this.item.id = idVal !== null ? idVal : '';")
+        bld.add("this.item.id = idVal !== null ? idVal : '';")
       end
+      bld.unindent
       bld.add("});")
       bld.add("this.route.data.subscribe(data => {")
-      #bld.iadd("enableEdit = data.enableEdit;")
-      bld.iadd("console.log(data);")
+      bld.indent
+      bld.startBlock("if (data['enableEdit'])")
+      bld.add("this.enableEdit = data['enableEdit'];")
+      bld.endBlock
+      bld.unindent
       bld.add("});")
 
       bld.separate

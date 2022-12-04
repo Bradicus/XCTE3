@@ -4,7 +4,7 @@
 module XCTETypescript
   class ClassAngularDatastoreService < ClassBase
     def initialize
-      @name = "class_angular_datastore_service"
+      @name = "class_angular_data_store_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -14,7 +14,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " service"
+      return cls.getUName() + " data store service"
     end
 
     def genSourceFiles(cls)

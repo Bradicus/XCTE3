@@ -35,7 +35,7 @@ module XCTEHtml
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      if (cls.model.findClassPlugin("class_angular_reactive_edit"))
+      if (cls.model.findClassModel("class_angular_reactive_edit"))
         bld.add('<button class="btn" routerLink="/user/edit">New ' + cls.getUName() + "</button>")
       end
 

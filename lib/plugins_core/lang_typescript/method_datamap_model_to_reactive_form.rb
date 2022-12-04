@@ -12,11 +12,11 @@ module XCTETypescript
     def process_dependencies(cls, bld, funItem)
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_datamap_service")
+          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_data_map_service")
           varCls = Classes.findVarClass(var)
           if varCls != nil
-            varModelCls = varCls.model.findClassByType("class_angular_datamap_service")
-            #vService = Utils.instance.createVarFor(varCls, "class_angular_datamap_service")
+            varModelCls = varCls.model.findClassByType("class_angular_data_map_service")
+            #vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
             incPath = plug.getFilePath(varModelCls)
             incCls = plug.getClassName(varCls)
             cls.addInclude(incPath, incCls)
@@ -39,7 +39,7 @@ module XCTETypescript
         elsif (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           varCls = Classes.findVarClass(var)
           if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "class_angular_datamap_service")
+            vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
 
             if vService != nil
               fgName = "formGroup.get('" + Utils.instance.getStyledVariableName(var) + "') as FormGroup"

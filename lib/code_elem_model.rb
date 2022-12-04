@@ -185,7 +185,7 @@ module CodeStructure
     end
 
     # Find class
-    def findClassPlugin(classPlugName)
+    def findClassModel(classPlugName)
       for c in @classes
         if (c.ctype == classPlugName)
           return c

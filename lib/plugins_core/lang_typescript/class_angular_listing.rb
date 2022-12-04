@@ -45,7 +45,8 @@ module XCTETypescript
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
-      cls.addInclude("shared/services/" + Utils.instance.getStyledFileName(cls.model.name + " service"), Utils.instance.getStyledClassName(cls.model.name + " service"))
+
+      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_store_service")
 
       super
       # Generate class variables
@@ -86,12 +87,19 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startBlock("constructor(private service: " + standardClassName + "Service, private route: ActivatedRoute)")
+      constructorParams = Array.new
+      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
+      Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
+      constructorParams.push("private route: ActivatedRoute")
+      bld.startFunctionParamed("constructor", constructorParams)
+
       bld.endBlock
 
       bld.separate
       bld.startBlock("ngOnInit()")
-      bld.add("this.items = " + "this.service.listing();")
+
+      bld.add("this.items = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing();")
+
       bld.endBlock
 
       bld.separate

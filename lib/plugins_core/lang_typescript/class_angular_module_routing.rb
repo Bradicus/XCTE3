@@ -134,7 +134,7 @@ module XCTETypescript
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
             varCls = Classes.findVarClass(var)
-            editClass = varCls.model.findClassPlugin("class_angular_reactive_edit")
+            editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               bld.iadd(getStyledClassName(editClass.model.name + " module") + ",")
             end

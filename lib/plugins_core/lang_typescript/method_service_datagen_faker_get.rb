@@ -2,7 +2,7 @@
 module XCTETypescript
   class MethodFakerGet < XCTEPlugin
     def initialize
-      @name = "method_faker_get"
+      @name = "method_service_datagen_faker_get"
       @language = "typescript"
       @category = XCTEPlugin::CAT_METHOD
     end

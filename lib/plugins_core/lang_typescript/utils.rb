@@ -55,7 +55,7 @@ module XCTETypescript
     end
 
     def createVarFor(cls, plugName)
-      plugClass = cls.model.findClassPlugin(plugName)
+      plugClass = cls.model.findClassModel(plugName)
       plug = XCTEPlugin::findClassPlugin("typescript", plugName)
 
       if (plugClass == nil || plug == nil)
@@ -270,10 +270,6 @@ module XCTETypescript
 
     def getStyledUrlName(name)
       return CodeNameStyling.getStyled(name, "DASH_LOWER")
-    end
-
-    def isPrimitive(var)
-      return @langProfile.isPrimitive(var)
     end
 
     def isNumericPrimitive(var)

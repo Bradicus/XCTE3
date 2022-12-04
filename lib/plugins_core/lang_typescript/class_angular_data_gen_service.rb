@@ -7,7 +7,7 @@ require "plugins_core/lang_typescript/class_base.rb"
 module XCTETypescript
   class ClassAngularFakerService < ClassBase
     def initialize
-      @name = "class_angular_datagen_service"
+      @name = "class_angular_data_gen_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -17,7 +17,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " faker service"
+      return cls.getUName() + " data gen service"
     end
 
     def genSourceFiles(cls)

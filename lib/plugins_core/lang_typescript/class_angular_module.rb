@@ -48,7 +48,7 @@ module XCTETypescript
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("@angular/router", "RouterModule, Routes")
 
-      if cls.model.findClassPlugin("class_angular_module_routing") != nil
+      if cls.model.findClassModel("class_angular_module_routing") != nil
         cls.addInclude(getStyledFileName(cls.getUName()) + "/" + getStyledFileName(cls.getUName() + ".routing.module"),
                        getStyledClassName(cls.getUName() + " routing module"))
       end
@@ -156,7 +156,7 @@ module XCTETypescript
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
             varCls = Classes.findVarClass(var)
-            editClass = varCls.model.findClassPlugin("class_angular_reactive_edit")
+            editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               importList.push(getStyledClassName(editClass.model.name + " module"))
             end
