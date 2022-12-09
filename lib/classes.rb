@@ -5,10 +5,14 @@ class Classes
     return @@list
   end
 
+  def self.reset
+    @@list = Array.new
+  end
+
   def self.findClass(classType, classPlugName)
     for c in @@list
       puts c.ctype + " " + c.model.name
-      if (c.ctype == classType && c.model.name == classPlugName)
+      if (c.ctype == classType && nameMatches(c.model.name, classPlugName))
         return c
       end
     end
@@ -16,10 +20,11 @@ class Classes
     return nil
   end
 
-  def self.findVarClass(var)
+  def self.findVarClass(var, plugName)
     for c in @@list
       if c.model.name != nil
-        if (c.model.name.tr(" ", "").downcase == var.getUType().tr(" ", "").downcase)
+        if (nameMatches(c.model.name, var.getUType()) &&
+            nameMatches(c.ctype, plugName))
           if (c.namespace.same?(var.namespace))
             return c
           end
@@ -28,6 +33,10 @@ class Classes
     end
 
     return nil
+  end
+
+  def self.nameMatches(n1, n2)
+    return n1.tr(" ", "").downcase == n2.tr(" ", "").downcase
   end
 
   def self.findClassFunction(classPlugName, funPlugName)

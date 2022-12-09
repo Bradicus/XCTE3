@@ -1,23 +1,27 @@
 ##
-# Class:: ClassAngularFakerService
+# Class:: ClassAngularDataGenService
 #
 
 require "plugins_core/lang_typescript/class_base.rb"
 
 module XCTETypescript
-  class ClassAngularFakerService < ClassBase
+  class ClassAngularDataGenService < ClassBase
     def initialize
       @name = "class_angular_data_gen_service"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
-    end
-
     def getUnformattedClassName(cls)
       return cls.getUName() + " data gen service"
+    end
+
+    def getFileName(cls)
+      Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+    end
+
+    def getFilePath(cls)
+      return "shared/services"
     end
 
     def genSourceFiles(cls)
@@ -53,9 +57,18 @@ module XCTETypescript
       cls.addInclude("@faker-js/faker", "faker")
 
       # Generate class variables
-      for group in cls.model.groups
-        process_var_dependencies(cls, bld, group)
-      end
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if !Utils.instance.isPrimitive(var)
+          varCls = Classes.findVarClass(var, "interface")
+          cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
+        end
+      }))
+
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
+          Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_data_gen_service")
+        end
+      }))
     end
 
     # Returns the code for the content for this class
@@ -73,8 +86,20 @@ module XCTETypescript
       # bld.add("private dataExpires: Number = 600; // Seconds")
       # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
 
+      constructorParams = Array.new
+
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
+          varCls = Classes.findVarClass(var, "class_angular_data_gen_service")
+          if varCls != nil
+            vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
+            Utils.instance.addParamIfAvailable(constructorParams, vService)
+          end
+        end
+      }))
+
       bld.separate
-      bld.startFunction("constructor()")
+      bld.startBlock("constructor(" + constructorParams.uniq.join(", ") + ")")
       bld.endFunction
 
       # Generate code for functions
@@ -106,22 +131,7 @@ module XCTETypescript
         end
       end
     end
-
-    def process_var_dependencies(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if !Utils.instance.isPrimitive(var)
-            varCls = Classes.findVarClass(var)
-            cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
-          end
-        end
-      end
-
-      for grp in vGroup.groups
-        process_var_dependencies(cls, bld, grp)
-      end
-    end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularFakerService.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularDataGenService.new)

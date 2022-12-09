@@ -44,6 +44,7 @@ def processProjectComponentGroup(project, pcGroup)
     #puts "Processing component: " + pComponent.tplPath
     projectPlan = ProjectPlan.new
     ProjectPlans.instance.plans[pComponent.language] = projectPlan
+    Classes.reset()
 
     puts "Processing component path: " + pComponent.tplPath
     Find.find(currentDir + "/" + pComponent.tplPath) do |path|

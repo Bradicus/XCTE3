@@ -39,11 +39,10 @@ module XCTEHtml
       if (!nested)
         bld.add("<h2>" + cls.model.name.capitalize + " view</h2>")
         bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
+        bld.add('<button (click)="populateRandom()">Populate</button>')
       else
         bld.startBlock('<div [formGroup]="' + formName + '">')
       end
-
-      bld.add('<button (click)="populateRandom()">Populate</button>')
 
       # Generate class variables
       for group in cls.model.groups

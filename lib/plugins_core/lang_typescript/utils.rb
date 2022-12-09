@@ -190,7 +190,7 @@ module XCTETypescript
               bld.add(getStyledVariableName(var) + ": new FormArray([])),")
             end
           else
-            otherClass = Classes.findVarClass(var)
+            otherClass = Classes.findVarClass(var, "interface")
 
             if var.listType == nil
               bld.add(getStyledVariableName(var) + ": ")
@@ -245,11 +245,11 @@ module XCTETypescript
               bld.add(name + getStyledVariableName(var) + ".push_back(" + getFakerAssignment(var) + ");")
             end
           else
-            otherClass = Classes.findVarClass(var)
+            otherClass = Classes.findVarClass(var, "interface")
 
             if var.listType == nil
               bld.separate
-              bld.add(name + getStyledVariableName(var) + " = {} as " + getStyledClassName(var.getUType()) + ";")
+
               if otherClass != nil
                 for group in otherClass.model.groups
                   genPopulate(otherClass, bld, group, name + getStyledVariableName(var) + ".")
@@ -257,8 +257,8 @@ module XCTETypescript
               else
               end
             else
-              bld.separate
-              bld.add(name + getStyledVariableName(var) + "= [];")
+              # bld.separate
+              # bld.add(name + getStyledVariableName(var) + "= [];")
             end
           end
         end

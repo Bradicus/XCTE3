@@ -132,10 +132,30 @@ class UtilsBase
     end
   end
 
+  # Add an include if there's a class model defined for it
+  def tryAddIncludeForVar(cls, var, plugName)
+    clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
+    clsGen = Classes.findClass(plugName, var.getUType())
+
+    if clsPlug != nil
+      cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
+    end
+  end
+
   def render_param_list(pList)
     oneLiner = pList.join(", ")
     if pList.length > 100
       return pList.join(", ")
     end
+  end
+
+  def hasAnArray(cls)
+    eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+      if var.arrayElemCount > 0
+        return true
+      end
+    }))
+
+    return false
   end
 end

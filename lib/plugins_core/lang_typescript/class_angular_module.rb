@@ -64,9 +64,11 @@ module XCTETypescript
       super
 
       # Generate class variables
-      for group in cls.model.groups
-        process_var_dependencies(cls, bld, group)
-      end
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+        if !isPrimitive(var)
+          Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_module")
+        end
+      }))
     end
 
     # Returns the code for the content for this class
@@ -155,7 +157,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = Classes.findVarClass(var)
+            varCls = Classes.findVarClass(var, "class_angular_reactive_edit")
             editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               importList.push(getStyledClassName(editClass.model.name + " module"))
@@ -184,22 +186,6 @@ module XCTETypescript
             #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         end
-      end
-    end
-
-    def process_var_dependencies(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if !isPrimitive(var)
-            varCls = Classes.findVarClass(var)
-            fPath = getStyledFileName(var.getUType() + "")
-            cls.addInclude(varCls.path + "/" + fPath + ".module", getStyledClassName(var.getUType() + " module"))
-          end
-        end
-      end
-
-      for grp in vGroup.groups
-        process_var_dependencies(cls, bld, grp)
       end
     end
   end

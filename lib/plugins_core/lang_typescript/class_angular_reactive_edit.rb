@@ -1,18 +1,14 @@
 require "plugins_core/lang_typescript/class_base.rb"
 
 ##
-# Class:: ClassAngularComponent
+# Class:: ClassAngularReactiveEdit
 #
 module XCTETypescript
-  class ClassAngularComponent < ClassBase
+  class ClassAngularReactiveEdit < ClassBase
     def initialize
       @name = "class_angular_reactive_edit"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
-    end
-
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
     end
 
     def getUnformattedClassName(cls)
@@ -20,7 +16,7 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName() + " view.component")
+      Utils.instance.getStyledFileName(cls.getUName() + "-view.component")
     end
 
     def getFilePath(cls)
@@ -114,7 +110,7 @@ module XCTETypescript
       bld.add("let idVal = params.get('id');")
       bld.add("if (!this.item) {")
 
-      bld.add("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.iadd("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       bld.iadd("this." + Utils.instance.getStyledVariableName(dataGenUserServiceVar) + ".initData(this.item);")
       bld.add("}")
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
@@ -170,8 +166,8 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !Utils.instance.isPrimitive(var)
-            varCls = Classes.findVarClass(var)
-            fPath = Utils.instance.getStyledFileName(var.getUType() + " view")
+            #varCls = Classes.findVarClass(var)
+            #fPath = Utils.instance.getStyledFileName(var.getUType() + " view", )
             #cls.addInclude(varCls.path + "/" + fPath + "/" + fPath + ".component", Utils.instance.getStyledClassName(var.getUType() + " view component"))
             cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
           end
@@ -207,4 +203,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularComponent.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularReactiveEdit.new)

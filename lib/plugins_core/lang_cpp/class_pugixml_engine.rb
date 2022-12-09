@@ -117,20 +117,15 @@ module XCTECpp
       end
 
       # Do automatic static array size declairations above class def
-      varArray = Array.new
 
-      for vGrp in cls.model.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if var.arrayElemCount > 0
           hFile.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
         end
-      end
+      }))
 
-      if cls.model.hasAnArray
-        hFile.add
+      if Utils.instance.hasAnArray(cls)
+        hFile.separate
       end
 
       classDec = "class " + cls.name
@@ -158,21 +153,12 @@ module XCTECpp
       hFile.indent
 
       # Generate class variables
-      varArray = Array.new
 
-      for vGrp in cls.model.groups
-        getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if var.arrayElemCount > 0
           hFile.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          hFile.add(var.formatText)
         end
-      end
+      }))
 
       if (cls.functions.length > 0)
         hFile.add
@@ -282,16 +268,6 @@ module XCTECpp
       end
 
       render_namespace_end(cls, cppGen)
-    end
-
-    def getVarsFor(varGroup, vArray)
-      for var in varGroup.vars
-        vArray << var
-      end
-
-      for grp in varGroup.groups
-        getVarsFor(grp, vArray)
-      end
     end
   end
 end

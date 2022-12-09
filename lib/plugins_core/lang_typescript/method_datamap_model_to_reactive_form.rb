@@ -12,15 +12,7 @@ module XCTETypescript
     def process_dependencies(cls, bld, funItem)
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_data_map_service")
-          varCls = Classes.findVarClass(var)
-          if varCls != nil
-            varModelCls = varCls.model.findClassByType("class_angular_data_map_service")
-            #vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
-            incPath = plug.getFilePath(varModelCls)
-            incCls = plug.getClassName(varCls)
-            cls.addInclude(incPath, incCls)
-          end
+          Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_data_map_service")
         end
       }))
     end
@@ -37,7 +29,7 @@ module XCTETypescript
           vName = Utils.instance.getStyledVariableName(var)
           bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
         elsif (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          varCls = Classes.findVarClass(var)
+          varCls = Classes.findVarClass(var, "class_angular_data_map_service")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
 

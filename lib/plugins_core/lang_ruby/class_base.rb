@@ -13,7 +13,7 @@ module XCTERuby
     def renderGlobalComment(bld)
       bld.add("##")
 
-      for line in cfg.codeLicense.split /[\r\n]+/
+      for line in UserSettings.instance.codeLicense.split /[\r\n]+/
         if line.strip.length > 0
           bld.add("# " + line)
         end

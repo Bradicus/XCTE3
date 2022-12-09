@@ -49,17 +49,17 @@ module XCTERuby
     end
 
     def genFileComment(cls, bld)
-      if cfg.codeAuthor != nil
-        bld.add("# Author:: " + cfg.codeAuthor)
+      if UserSettings.instance.codeAuthor != nil
+        bld.add("# Author:: " + UserSettings.instance.codeAuthor)
       end
 
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        bld.add("# " + cfg.codeCompany)
+      if UserSettings.instance.codeCompany != nil && UserSettings.instance.codeCompany.size > 0
+        bld.add("# " + UserSettings.instance.codeCompany)
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
+      if UserSettings.instance.codeLicense != nil && UserSettings.instance.codeLicense.strip.size > 0
         bld.add("#")
-        bld.add("# License:: " + cfg.codeLicense)
+        bld.add("# License:: " + UserSettings.instance.codeLicense)
       end
 
       bld.add("#")
@@ -96,8 +96,8 @@ module XCTERuby
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName()) + '"')
       bld.add('@language = "' + cls.xmlElement.attributes["lang"] + '"')
       bld.add("@category = XCTEPlugin::CAT_METHOD")
-      if cfg.codeAuthor
-        bld.add('@author = "' + cfg.codeAuthor + '"')
+      if UserSettings.instance.codeAuthor
+        bld.add('@author = "' + UserSettings.instance.codeAuthor + '"')
       end
       bld.endFunction
       bld.add

@@ -12,7 +12,8 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def getDependencyPath(cls)
-    fileName = get_default_utils().getStyledFileName(getUnformattedClassName(cls))
+    #getFileName
+    fileName = getFileName(cls)
 
     if cls.path != nil
       depPath = cls.path + "/" + fileName
@@ -21,6 +22,10 @@ class XCTEClassBase < XCTEPlugin
     end
 
     return depPath
+  end
+
+  def getFileName(cls)
+    return get_default_utils().getStyledFileName(getUnformattedClassName(cls))
   end
 
   def render_functions(cls, bld)

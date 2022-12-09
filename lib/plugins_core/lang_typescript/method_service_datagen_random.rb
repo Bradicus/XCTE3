@@ -13,12 +13,12 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def get_definition(cls, bld)
-      fakerServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_gen_service")
+      dataGenUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_gen_service")
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
 
       bld.startFunction("populateRandom(): void")
 
-      bld.add("this.item = this." + Utils.instance.getStyledVariableName(fakerServiceVar) + ".get()[0];")
+      bld.add("this." + Utils.instance.getStyledVariableName(dataGenUserServiceVar) + ".populateRandom(this.item);")
       bld.add("this.populate();")
 
       bld.endFunction()

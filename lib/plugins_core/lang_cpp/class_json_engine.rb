@@ -153,16 +153,6 @@ module XCTECpp
       render_functions(cls, bld)
       render_namespace_end(cls, bld)
     end
-
-    def getVarsFor(varGroup, vArray)
-      for var in varGroup.vars
-        vArray << var
-      end
-
-      for grp in varGroup.groups
-        getVarsFor(grp, vArray)
-      end
-    end
   end
 end
 

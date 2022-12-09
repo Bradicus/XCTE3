@@ -26,6 +26,21 @@ module XCTETypescript
           bld.add("item." + Utils.instance.getStyledVariableName(var) + " = new Date();")
         elsif (Utils.instance.isPrimitive(var))
           bld.add("item." + Utils.instance.getStyledVariableName(var) + " = '';")
+        elsif (!var.hasMultipleItems())
+          bld.add("item." + Utils.instance.getStyledVariableName(var) +
+                  " = {} as " + Utils.instance.getStyledClassName(var.getUType()) + ";")
+          varCls = Classes.findVarClass(var, "interface")
+          if varCls != nil
+            vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
+
+            if vService != nil
+              srcName = "item." + Utils.instance.getStyledVariableName(var)
+              bld.add("this." + Utils.instance.getStyledVariableName(vService) +
+                      ".initData(" + srcName + ");")
+            end
+          end
+        else
+          bld.add("item." + Utils.instance.getStyledVariableName(var) + " = [];")
         end
       }))
 

@@ -50,23 +50,6 @@ module CodeStructure
       return nil
     end
 
-    # Returns whether or not this class has an array variable
-    def hasAnArray
-      varArray = Array.new
-
-      for vGrp in groups
-        CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount.to_i > 0
-          return true
-        end
-      end
-
-      return false
-    end
-
     # Returns whether or not this class has an variable of this type
     def hasVariableType(vt)
       variableSection = Array.new
@@ -113,19 +96,6 @@ module CodeStructure
       end
     end
 
-    # Returns all variables in this class that match the cfg
-    def self.getVarsFor(vGroup, vArray)
-      for var in vGroup.vars
-        vArray << var
-      end
-
-      for grp in vGroup.groups
-        getVarsFor(grp, vArray)
-      end
-
-      # puts vArray.size
-    end
-
     def getFilteredVars(filterFun)
       varArray = Array.new
 
@@ -135,13 +105,6 @@ module CodeStructure
 
       return varArray
     end
-
-    # # Returns all variables in this class that match the cfg
-    # def getAllVarsFor(varArray)
-    #   for vGroup in @groups
-    #     CodeElemModel.getVarsFor(vGroup, varArray)
-    #   end
-    # end
 
     def getScreenVars(varArray, filterFun)
       for vGroup in @groups

@@ -97,11 +97,6 @@ module XCTECpp
       render_namespace_start(cls, bld)
 
       # Do automatic static array size declairations above class def
-      varArray = Array.new
-
-      for vGrp in cls.model.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
-      end
 
       classDec = "enum class " + Utils.instance.getStyledClassName(cls.getUName())
 

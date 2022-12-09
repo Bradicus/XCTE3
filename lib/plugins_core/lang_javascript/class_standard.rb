@@ -98,12 +98,6 @@ module XCTEJavascript
       headerString << "function ($scope) {\n"
 
       # Do automatic static array size declairations above class def
-      varArray = Array.new
-
-      for vGrp in cls.model.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
       if codeClass.hasAnArray
         headerString << "\n"  # If we declaired array size variables add a seperator
       end
@@ -111,15 +105,11 @@ module XCTEJavascript
       # Generate class variables
       headerString << "    // -- Variables --\n"
 
-      for var in varArray
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if var.elementId == CodeElem::ELEM_VARIABLE
           headerString << "    " << Utils.instance.getVarDec(var) << "\n"
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          headerString << "    " << Utils.instance.getComment(var)
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          headerString << var.formatText
         end
-      end
+      }))
 
       headerString << "\n"
 
