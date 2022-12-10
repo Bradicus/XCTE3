@@ -30,6 +30,7 @@ class DataLoader
       #puts "loading var group"
       newVGroup = CodeStructure::CodeElemVarGroup.new
       newVGroup.loadAttributes(vargXML)
+
       loadVarGroupNode(newVGroup, vargXML, pComponent)
       model.groups << newVGroup
     }

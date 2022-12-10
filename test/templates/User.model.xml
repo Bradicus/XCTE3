@@ -5,7 +5,7 @@
 	</description>
 
 	<gen_class type="standard"
-		type-typescript="interface" path-typescript="shared/interfaces"
+		type-typescript="ts_interface" path-typescript="shared/interfaces"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model" >
 		<include name="Address" path="shared/interfaces/address" />
 		<use-csharp name="System.Collections.Generic" />
@@ -68,14 +68,18 @@
 
 	<var_group genGet="true" genSet="true">
 		<var name="id"		type="String" pkey="true" />
-		<var name="first name"		type="String" maxlen="255" />
-		<var name="last name"		type="String" maxlen="255" />
-		<var name="username"	type="String" maxlen="255" />
-		<var name="email"	type="String" maxlen="255" />
-		<var name="created date" type="DateTime" />
-		<var name="last login date" type="DateTime" />
-		<var name="mailing address" 	type="Address" />
-		<var name="physical address" 	type="Address" />
-		<var name="roles"		type="Role" set="List" />
+			<var_group>
+				<var name="first name"		type="String" maxlen="255" />
+				<var name="last name"		type="String" maxlen="255" />
+				<var name="username"	type="String" maxlen="255" />
+				<var name="email"	type="String" maxlen="255" />
+			</var_group>
+			<var_group>
+			<var name="created date" type="DateTime" />
+			<var name="last login date" type="DateTime" />
+			<var name="mailing address" 	type="Address" />
+			<var name="physical address" 	type="Address" />
+			<var name="roles"		type="Role" set="List" />
+		</var_group>
 	</var_group>
 </model>

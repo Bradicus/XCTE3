@@ -90,11 +90,6 @@ def processProjectComponentGroup(project, pcGroup)
             end
 
             if (cls.language == nil || cls.language == pComponent.language)
-              if !File.directory?(newPath)
-                FileUtils.mkdir_p(newPath)
-                #   puts "Creating folder: " + newPath
-              end
-
               projectPlan.classes << lClass
             end
           end
@@ -105,7 +100,8 @@ def processProjectComponentGroup(project, pcGroup)
     for plan in projectPlan.classes
       language = XCTEPlugin::getLanguages()[plan.language]
 
-      puts "generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language
+      puts "generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language +
+             "  namespace: " + plan.namespace.get(".")
 
       #project.singleFile = "map gen settings"
 
@@ -143,6 +139,10 @@ def processProjectComponentGroup(project, pcGroup)
 
         if (overwriteFile)
           puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
+          if !File.directory?(plan.filePath)
+            FileUtils.mkdir_p(plan.filePath)
+            #   puts "Creating folder: " + newPath
+          end
           sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
           sFile << srcFile.getContents
           sFile.close

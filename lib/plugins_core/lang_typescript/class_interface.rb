@@ -6,7 +6,7 @@ require "plugins_core/lang_typescript/class_base.rb"
 module XCTETypescript
   class ClassInterface < ClassBase
     def initialize
-      @name = "interface"
+      @name = "ts_interface"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -42,28 +42,11 @@ module XCTETypescript
       bld.separate
       bld.startBlock("export interface " + getClassName(cls))
 
-      # Generate class variables
-      for group in cls.model.groups
-        process_var_group(cls, bld, group)
-      end
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+        bld.add(Utils.instance.getVarDec(var))
+      }))
 
       bld.endBlock
-    end
-
-    # process variable group
-    def process_var_group(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-        for group in vGroup.groups
-          process_var_group(cls, bld, group)
-        end
-      end
     end
   end
 end

@@ -60,7 +60,7 @@ module XCTETypescript
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
         if !Utils.instance.isPrimitive(var)
-          Utils.instance.tryAddIncludeForVar(cls, var, "interface")
+          Utils.instance.tryAddIncludeForVar(cls, var, "ts_interface")
 
           if !var.hasMultipleItems()
             Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_data_map_service")

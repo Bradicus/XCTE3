@@ -108,7 +108,7 @@ module XCTETypescript
       bld.add("this.route.paramMap.subscribe(params => {")
       bld.indent
       bld.add("let idVal = params.get('id');")
-      bld.add("if (!this.item) {")
+      bld.add("if (!this.item?.id) {")
 
       bld.iadd("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       bld.iadd("this." + Utils.instance.getStyledVariableName(dataGenUserServiceVar) + ".initData(this.item);")

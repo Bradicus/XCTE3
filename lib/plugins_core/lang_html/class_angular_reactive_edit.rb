@@ -44,10 +44,25 @@ module XCTEHtml
         bld.startBlock('<div [formGroup]="' + formName + '">')
       end
 
-      # Generate class variables
-      for group in cls.model.groups
-        process_var_group(cls, bld, group)
-      end
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if Utils.instance.isPrimitive(var)
+          render_field(cls, bld, var, nil)
+        else
+          if (!var.hasMultipleItems())
+            vName = Utils.instance.getStyledVariableName(var)
+            bld.startBlock('<fieldset formGroupName="' + vName + '">')
+            bld.add("<legend>" + var.getDisplayName() + "</legend>")
+
+            varCls = Classes.findVarClass(var, "standard")
+
+            Utils.instance.eachVar(UtilsEachVarParams.new(varCls, bld, true, lambda { |innerVar|
+              render_field(cls, bld, innerVar, vName)
+            }))
+
+            bld.endBlock("</fieldset>")
+          end
+        end
+      }))
 
       if (!nested)
         bld.endBlock("</form>")
@@ -58,49 +73,32 @@ module XCTEHtml
       bld.add
     end
 
-    # process variable group
-    def process_var_group(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if Utils.instance.isPrimitive(var)
-            varName = Utils.instance.getStyledVariableName(var)
-            labelClasses = []
-            inputClasses = []
-            if (cls.genCfg.usesFramework("bootstrap"))
-              labelClasses << "form-label"
-              inputClasses << "form-control"
-              if (var.name.downcase == "id")
-                labelClasses << "visually-hidden"
-                inputClasses << "visually-hidden"
-              end
-            end
-
-            labelCss = getClassDec(labelClasses)
-            inputCss = getClassDec(inputClasses)
-
-            bld.startBlock("<div>")
-            bld.add("<label" + labelCss + ' for="' + varName + '" >' + var.getDisplayName() + "</label>")
-            bld.add("<input" + inputCss + ' id="' + varName + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
-            bld.endBlock("</div>")
-          else
-            if (var.listType == nil)
-              vName = Utils.instance.getStyledVariableName(var)
-              bld.startBlock("<fieldset>")
-              bld.add("<legend>" + var.getDisplayName() + "</legend>")
-              bld.add("<app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ' [item]="item.' + vName + '">' +
-                      "</app-" + Utils.instance.getStyledFileName(var.getUType() + " view") + ">")
-              bld.endBlock("</fieldset>")
-            end
-          end
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-        for group in vGroup.groups
-          process_var_group(cls, bld, group)
+    def render_field(cls, bld, var, varPrefix)
+      varName = Utils.instance.getStyledVariableName(var)
+      labelClasses = []
+      inputClasses = []
+      if (cls.genCfg.usesFramework("bootstrap"))
+        labelClasses << "form-label"
+        inputClasses << "form-control"
+        if (var.name.downcase == "id")
+          labelClasses << "visually-hidden"
+          inputClasses << "visually-hidden"
         end
       end
+
+      labelCss = getClassDec(labelClasses)
+      inputCss = getClassDec(inputClasses)
+
+      if (varPrefix != nil)
+        varId = varPrefix + "-" + varName
+      else
+        varId = varName
+      end
+
+      bld.startBlock("<div>")
+      bld.add("<label" + labelCss + ' for="' + varId + '" >' + var.getDisplayName() + "</label>")
+      bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
+      bld.endBlock("</div>")
     end
 
     def getClassDec(classList)

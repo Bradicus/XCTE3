@@ -29,7 +29,7 @@ module XCTETypescript
         elsif (!var.hasMultipleItems())
           bld.add("item." + Utils.instance.getStyledVariableName(var) +
                   " = {} as " + Utils.instance.getStyledClassName(var.getUType()) + ";")
-          varCls = Classes.findVarClass(var, "interface")
+          varCls = Classes.findVarClass(var, "ts_interface")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
 

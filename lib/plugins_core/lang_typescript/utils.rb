@@ -181,36 +181,31 @@ module XCTETypescript
       bld.sameLine("new FormGroup({")
       bld.indent
 
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if isPrimitive(var)
-            if var.listType == nil
-              bld.add(genPrimitiveFormControl(var) + ",")
-            else
-              bld.add(getStyledVariableName(var) + ": new FormArray([])),")
-            end
+      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+        if isPrimitive(var)
+          if var.listType == nil
+            bld.add(genPrimitiveFormControl(var) + ",")
           else
-            otherClass = Classes.findVarClass(var, "interface")
+            bld.add(getStyledVariableName(var) + ": new FormArray([])),")
+          end
+        else
+          otherClass = Classes.findVarClass(var, "ts_interface")
 
-            if var.listType == nil
-              bld.add(getStyledVariableName(var) + ": ")
-              if otherClass != nil
-                for group in otherClass.model.groups
-                  getFormgroup(otherClass, bld, group)
-                  bld.sameLine(",")
-                end
-              else
-                bld.sameLine("new FormControl(''),")
+          if var.listType == nil
+            bld.add(getStyledVariableName(var) + ": ")
+            if otherClass != nil
+              for group in otherClass.model.groups
+                getFormgroup(otherClass, bld, group)
+                bld.sameLine(",")
               end
             else
-              bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+              bld.sameLine("new FormControl(''),")
             end
+          else
+            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         end
-        # for group in vGroup.groups
-        #   process_var_group(cls, bld, group)
-        # end
-      end
+      }))
 
       bld.unindent
       bld.add("})")
@@ -227,47 +222,6 @@ module XCTETypescript
       end
     end
 
-    # process variable group
-    def genPopulate(cls, bld, vGroup, name = "")
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if isPrimitive(var)
-            if var.name == "id"
-              bld.add("if (" + name + getStyledVariableName(var) + " == undefined)")
-              if (isNumericPrimitive(var))
-                bld.iadd(name + getStyledVariableName(var) + " = 0;")
-              else
-                bld.iadd(name + getStyledVariableName(var) + " = '';")
-              end
-            elsif var.listType == nil
-              bld.add(name + getStyledVariableName(var) + " = " + getFakerAssignment(var) + ";")
-            else
-              bld.add(name + getStyledVariableName(var) + ".push_back(" + getFakerAssignment(var) + ");")
-            end
-          else
-            otherClass = Classes.findVarClass(var, "interface")
-
-            if var.listType == nil
-              bld.separate
-
-              if otherClass != nil
-                for group in otherClass.model.groups
-                  genPopulate(otherClass, bld, group, name + getStyledVariableName(var) + ".")
-                end
-              else
-              end
-            else
-              # bld.separate
-              # bld.add(name + getStyledVariableName(var) + "= [];")
-            end
-          end
-        end
-        # for group in vGroup.groups
-        #   process_var_group(cls, bld, group)
-        # end
-      end
-    end
-
     def getStyledUrlName(name)
       return CodeNameStyling.getStyled(name, "DASH_LOWER")
     end
@@ -276,30 +230,6 @@ module XCTETypescript
       isPrim = @langProfile.isPrimitive(var)
       isNum = Types.instance.inCategory(var, "number")
       return isPrim && isNum
-    end
-
-    def getFakerAssignment(var)
-      varType = var.getUType().downcase()
-
-      if isNumericPrimitive(var)
-        return "faker.random.numeric(8)"
-      elsif (varType.start_with?("datetime"))
-        return "faker.date.recent()"
-      elsif var.name.include? "first name"
-        return "faker.name.firstName()"
-      elsif var.name.include? "last name"
-        return "faker.name.lastName()"
-      elsif var.name.include? "city"
-        return "faker.address.city()"
-      elsif var.name.include? "country"
-        return "faker.address.country()"
-      elsif var.name.include? "county"
-        return "faker.address.county()"
-      elsif var.name.include? "email"
-        return 'faker.name.firstName() + "." + faker.name.lastName() + "@example.com"'
-      end
-
-      return "faker.random.alpha(11)"
     end
 
     def addClassnamesFor(clsList, cls, language, classType)

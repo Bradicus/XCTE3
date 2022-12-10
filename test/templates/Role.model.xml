@@ -9,7 +9,7 @@
 		<var name="user role"		type="String" maxlen="50" />
 	</var_group>
 
-	<gen_class type="standard" type-typescript="interface"
+	<gen_class type="standard" type-typescript="ts_interface"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
 		path-typescript="shared/interfaces" >
 	</gen_class>
