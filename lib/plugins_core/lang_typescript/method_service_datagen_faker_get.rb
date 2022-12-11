@@ -18,16 +18,14 @@ module XCTETypescript
       className = Utils.instance.getStyledClassName(cls.model.name)
       bld.startFunction("populateRandom(item: " + className + "): void")
 
-      for group in cls.model.groups
-        genPopulate(cls, bld, "item.")
-      end
+      genPopulate(cls, bld, "item.")
 
       bld.endFunction()
     end
 
     # process variable group
     def genPopulate(cls, bld, name = "")
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         varName = Utils.instance.getStyledVariableName(var)
 
         if Utils.instance.isPrimitive(var)
@@ -65,6 +63,14 @@ module XCTETypescript
         return "faker.random.numeric(8)"
       elsif (varType.start_with?("datetime"))
         return "faker.date.recent()"
+      elsif (var.name.include?("street") && var.name.include?("2"))
+        return "faker.address.secondaryAddress()"
+      elsif (var.name.include?("street"))
+        return "faker.address.street()"
+      elsif (var.name.include?("zip"))
+        return "faker.address.zipCode()"
+      elsif (var.name.include?("state"))
+        return "faker.address.stateAbbr()"
       elsif var.name.include? "first name"
         return "faker.name.firstName()"
       elsif var.name.include? "last name"

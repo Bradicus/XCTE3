@@ -57,7 +57,7 @@ module XCTECpp
       conDef = String.new
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.getStyledVariableName(var)
 
         if (Utils.instance.isPrimitive(var))

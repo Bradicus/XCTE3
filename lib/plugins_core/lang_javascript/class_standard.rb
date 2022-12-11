@@ -105,7 +105,7 @@ module XCTEJavascript
       # Generate class variables
       headerString << "    // -- Variables --\n"
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.elementId == CodeElem::ELEM_VARIABLE
           headerString << "    " << Utils.instance.getVarDec(var) << "\n"
         end

@@ -58,7 +58,7 @@ module XCTETypescript
       cls.addInclude("@angular/core", "Injectable")
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
           Utils.instance.tryAddIncludeForVar(cls, var, "ts_interface")
 
@@ -96,7 +96,7 @@ module XCTETypescript
 
       constructorParams = Array.new
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           varCls = Classes.findVarClass(var, "class_angular_data_map_service")
           if varCls != nil

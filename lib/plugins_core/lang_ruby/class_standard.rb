@@ -78,9 +78,7 @@ module XCTERuby
 
       accessors = Accessors.new
       # Do automatic static array size declairations at top of class
-      for group in cls.model.groups
-        process_var_accessors(accessors, cls, bld, group)
-      end
+      process_var_accessors(accessors, cls, bld, cls.model.varGroup)
 
       add_accessors("attr_accessor", accessors.both, bld)
       add_accessors("attr_attr_reader", accessors.readers, bld)
@@ -89,9 +87,7 @@ module XCTERuby
       bld.separate
 
       # Do automatic static array size declairations at top of class
-      for group in cls.model.groups
-        process_var_group(cls, bld, group)
-      end
+      process_var_group(cls, bld, cls.model.varGroup)
 
       bld.separate
       # Generate code for functions
@@ -110,7 +106,7 @@ module XCTERuby
           accessors.add(Accessor.new(var, var.genGet, var.genSet))
         end
 
-        for group in vGroup.groups
+        for group in vGroup.varGroups
           process_var_accessors(accessors, cls, bld, group)
         end
       end
@@ -143,7 +139,7 @@ module XCTERuby
         elsif var.elementId == CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
-        for group in vGroup.groups
+        for group in vGroup.varGroups
           process_var_group(cls, bld, group)
         end
       end

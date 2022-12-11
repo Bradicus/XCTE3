@@ -1,4 +1,4 @@
-##
+require "params/utils_each_var_params"
 
 #
 # Copyright XCTE Contributors
@@ -138,5 +138,35 @@ class XCTEPlugin
       puts "Category: " + plug.category
       puts "Author:   " + plug.author
     end
+  end
+
+  # Run a function on each variable in a class
+  def eachVar(params)
+    eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb)
+  end
+
+  # Run a function on each variable in a variable group and subgroups
+  def eachVarGrp(vGroup, bld, separateGroups, varFun)
+    for var in vGroup.vars
+      if var.elementId == CodeElem::ELEM_VARIABLE
+        varFun.call(var)
+      elsif bld != nil && var.elementId == CodeElem::ELEM_COMMENT
+        bld.sameLine(getComment(var))
+      elsif bld != nil && var.elementId == CodeElem::ELEM_FORMAT
+        bld.add(var.formatText)
+      end
+    end
+
+    for grp in vGroup.varGroups
+      eachVarGrp(grp, bld, separateGroups, varFun)
+      if (separateGroups && bld != nil)
+        bld.separate
+      end
+    end
+  end
+
+  # Generate params object
+  def uevParams()
+    return UtilsEachVarParams.new()
   end
 end

@@ -65,7 +65,7 @@ module XCTEHtml
           bld.add('<a class="nav-link active" aria-current="page" href="#">' + var.name + "</a>")
           bld.endBlock("</li>")
         end
-        for group in vGroup.groups
+        for group in vGroup.varGroups
           process_var_group_body(cls, bld, group)
         end
       end

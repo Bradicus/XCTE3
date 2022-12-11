@@ -53,10 +53,7 @@ module XCTETypescript
 
       super
 
-      # Generate class variables
-      for group in cls.model.groups
-        process_var_dependencies(cls, bld, group)
-      end
+      process_var_dependencies(cls, bld, cls.model.varGroup)
     end
 
     # Returns the code for the content for this class
@@ -87,10 +84,7 @@ module XCTETypescript
       bld.separate
 
       # Generate class variables
-      for group in cls.model.groups
-        process_var_group(cls, bld, group)
-        bld.sameLine(";")
-      end
+      process_var_group(cls, bld, cls.model.varGroup)
 
       bld.separate
 
@@ -174,7 +168,7 @@ module XCTETypescript
         end
       end
 
-      for grp in vGroup.groups
+      for grp in vGroup.varGroups
         process_var_dependencies(cls, bld, grp)
       end
     end

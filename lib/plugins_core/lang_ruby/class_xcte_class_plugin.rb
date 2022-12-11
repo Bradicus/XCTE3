@@ -177,7 +177,7 @@ module XCTERuby
       bld.add("bld.add(var.formatText)")
       bld.endBlock
       bld.endBlock
-      bld.startBlock("for group in vGroup.groups")
+      bld.startBlock("for group in vGroup.varGroups")
       bld.add("process_var_group(cls, bld, group)")
       bld.endBlock
       bld.endFunction

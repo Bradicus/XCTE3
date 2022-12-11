@@ -10,7 +10,7 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, bld, funItem)
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_data_map_service")
         end
@@ -24,7 +24,7 @@ module XCTETypescript
       bld.startFunction("populate(formGroup: FormGroup, src: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")
 
       bld.startBlock("if (src != null)")
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (Utils.instance.isPrimitive(var))
           vName = Utils.instance.getStyledVariableName(var)
           if (var.getUType().downcase == "datetime")

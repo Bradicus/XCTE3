@@ -106,7 +106,7 @@ module XCTECpp
       render_namespace_start(cls, bld)
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
           bld.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
         end
@@ -236,7 +236,7 @@ module XCTECpp
         end
       end
 
-      for group in vGroup.groups
+      for group in vGroup.varGroups
         process_header_var_group(cls, bld, group, vis)
       end
     end
@@ -266,7 +266,7 @@ module XCTECpp
         end
       end
 
-      for group in vGroup.groups
+      for group in vGroup.varGroups
         process_header_var_group_getter_setters(cls, bld, group)
       end
     end
@@ -279,7 +279,7 @@ module XCTECpp
       render_namespace_start(cls, bld)
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isStatic
           bld.add(Utils.instance.getTypeName(var) << " ")
           bld.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")

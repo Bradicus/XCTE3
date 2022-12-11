@@ -42,7 +42,7 @@ module XCTETypescript
       bld.separate
       bld.startBlock("export interface " + getClassName(cls))
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
 

@@ -118,7 +118,7 @@ module XCTECpp
 
       # Do automatic static array size declairations above class def
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
           hFile.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
         end
@@ -154,7 +154,7 @@ module XCTECpp
 
       # Generate class variables
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
           hFile.add(Utils.instance.getVarDec(var))
         end

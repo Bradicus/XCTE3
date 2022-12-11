@@ -177,11 +177,11 @@ module XCTETypescript
     end
 
     # process variable group
-    def getFormgroup(cls, bld, vGroup)
+    def getFormgroup(cls, bld, vGroup, separator = ";")
       bld.sameLine("new FormGroup({")
       bld.indent
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if isPrimitive(var)
           if var.listType == nil
             bld.add(genPrimitiveFormControl(var) + ",")
@@ -194,10 +194,7 @@ module XCTETypescript
           if var.listType == nil
             bld.add(getStyledVariableName(var) + ": ")
             if otherClass != nil
-              for group in otherClass.model.groups
-                getFormgroup(otherClass, bld, group)
-                bld.sameLine(",")
-              end
+              getFormgroup(otherClass, bld, otherClass.model.varGroup, ",")
             else
               bld.sameLine("new FormControl(''),")
             end
@@ -208,7 +205,7 @@ module XCTETypescript
       }))
 
       bld.unindent
-      bld.add("})")
+      bld.add("})" + separator)
     end
 
     def genPrimitiveFormControl(var)

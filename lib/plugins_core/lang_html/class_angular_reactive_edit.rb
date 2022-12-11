@@ -44,7 +44,7 @@ module XCTEHtml
         bld.startBlock('<div [formGroup]="' + formName + '">')
       end
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
           render_field(cls, bld, var, nil)
         else
@@ -55,7 +55,7 @@ module XCTEHtml
 
             varCls = Classes.findVarClass(var, "standard")
 
-            Utils.instance.eachVar(UtilsEachVarParams.new(varCls, bld, true, lambda { |innerVar|
+            eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).wVarCb(lambda { |innerVar|
               render_field(cls, bld, innerVar, vName)
             }))
 

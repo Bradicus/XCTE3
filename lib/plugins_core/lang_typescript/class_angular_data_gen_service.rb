@@ -57,14 +57,14 @@ module XCTETypescript
       cls.addInclude("@faker-js/faker", "faker")
 
       # Generate class variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
           varCls = Classes.findVarClass(var, "ts_interface")
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
         end
       }))
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_data_gen_service")
         end
@@ -88,7 +88,7 @@ module XCTETypescript
 
       constructorParams = Array.new
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
           varCls = Classes.findVarClass(var, "class_angular_data_gen_service")
           if varCls != nil

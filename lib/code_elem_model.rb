@@ -22,7 +22,7 @@ require "rexml/document"
 module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :classes, :name, :description,
-                  :case, :groups, :xmlFileName, :lastModified
+                  :case, :varGroup, :xmlFileName, :lastModified
 
     def initialize
       super()
@@ -32,7 +32,7 @@ module CodeStructure
       @case
       @description
       @classes = Array.new
-      @groups = Array.new
+      @varGroup
       @xmlFileName = ""
       @lastModified
     end
@@ -98,18 +98,13 @@ module CodeStructure
 
     def getFilteredVars(filterFun)
       varArray = Array.new
-
-      for vGroup in @groups
-        getFilteredGroup(vGroup, varArray, filterFun)
-      end
+      getFilteredGroup(@varGroup, varArray, filterFun)
 
       return varArray
     end
 
     def getScreenVars(varArray, filterFun)
-      for vGroup in @groups
-        getFilteredGroup(vGroup, varArray, filterFun)
-      end
+      getFilteredGroup(@varGroup, varArray, filterFun)
     end
 
     # Screen variables based on pass functoin
@@ -120,7 +115,7 @@ module CodeStructure
         end
       end
 
-      for grp in vGroup.groups
+      for grp in vGroup.varGroups
         getFilteredGroup(grp, varArray, filterFun)
       end
     end

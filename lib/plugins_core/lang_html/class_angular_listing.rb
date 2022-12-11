@@ -44,9 +44,8 @@ module XCTEHtml
       # Generate table header
       bld.startBlock("<thead>")
       bld.startBlock("<tr>")
-      for group in cls.model.groups
-        process_var_group_header(cls, bld, group)
-      end
+
+      process_var_group_header(cls, bld, cls.model.varGroup)
 
       bld.endBlock("</tr>")
       bld.endBlock("</thead>")
@@ -54,9 +53,9 @@ module XCTEHtml
       # Generate table body
       bld.startBlock("<body>")
       bld.startBlock('<tr *ngFor="let item of items | async">')
-      for group in cls.model.groups
-        process_var_group_body(cls, bld, group)
-      end
+
+      process_var_group_body(cls, bld, cls.model.varGroup)
+
       bld.add('<td><a class="button" routerLink="/user/view/{{item.id}}">View</a></td>')
       bld.add('<td><a class="button" routerLink="/user/edit/{{item.id}}">Edit</a></td>')
       bld.endBlock("</tr>")
@@ -77,7 +76,7 @@ module XCTEHtml
             bld.add("<th>" + var.getDisplayName() + "</th>")
           end
         end
-        for group in vGroup.groups
+        for group in vGroup.varGroups
           process_var_group_header(cls, bld, group)
         end
       end
@@ -93,7 +92,7 @@ module XCTEHtml
             bld.add("<td>{{item." + varName + "}}</td>")
           end
         end
-        for group in vGroup.groups
+        for group in vGroup.varGroups
           process_var_group_body(cls, bld, group)
         end
       end

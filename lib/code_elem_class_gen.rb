@@ -116,11 +116,9 @@ module CodeStructure
     end
 
     def findVar(varName, varNs = nil)
-      for grp in @model.groups
-        varFound = findVarInGroup(grp, varName, varNs)
-        if (varFound != nil)
-          return varFound
-        end
+      varFound = findVarInGroup(@model.varGroup, varName, varNs)
+      if (varFound != nil)
+        return varFound
       end
 
       return nil
@@ -133,7 +131,7 @@ module CodeStructure
         end
       end
 
-      for grp in vgroup.groups
+      for grp in vGroup.varGroups
         varFound = findVarInGroup(grp, varName, varNs)
         if (varFound != nil)
           return varFound

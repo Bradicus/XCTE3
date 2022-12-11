@@ -44,7 +44,7 @@ module XCTETypescript
           bld.add(var.formatText)
         end
       end
-      for group in vGroup.groups
+      for group in vGroup.varGroups
         process_var_group(cls, bld, group)
       end
     end

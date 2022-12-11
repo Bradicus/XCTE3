@@ -68,9 +68,7 @@ class UtilsBase
 
   # Run a function on each variable in a class
   def eachVar(params)
-    for vGroup in params.cls.model.groups
-      eachVarGrp(vGroup, params.bld, params.separateGroups, params.varCb)
-    end
+    eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb)
   end
 
   # Run a function on each variable in a variable group and subgroups
@@ -85,7 +83,7 @@ class UtilsBase
       end
     end
 
-    for grp in vGroup.groups
+    for grp in vGroup.varGroups
       eachVarGrp(grp, bld, separateGroups, varFun)
       if (separateGroups && bld != nil)
         bld.separate
@@ -150,7 +148,7 @@ class UtilsBase
   end
 
   def hasAnArray(cls)
-    eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+    eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
       if var.arrayElemCount > 0
         return true
       end

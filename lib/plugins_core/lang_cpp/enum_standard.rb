@@ -104,7 +104,7 @@ module XCTECpp
       enums = Array.new
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         enumDec = Utils.instance.getStyledEnumName(var.name)
         if (var.defaultValue != nil)
           enumDec += " = " + var.defaultValue

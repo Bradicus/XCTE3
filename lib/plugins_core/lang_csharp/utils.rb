@@ -248,7 +248,7 @@ module XCTECSharp
           end
         end
       end
-      for group in vGroup.groups
+      for group in vGroup.varGroups
         process_var_group_sql(cls, bld, group)
       end
     end
@@ -360,7 +360,7 @@ module XCTECSharp
         bld.separate
       end
 
-      for grp in vGroup.groups
+      for grp in vGroup.varGroups
         eachVarGrp(grp, bld, varFun)
       end
     end

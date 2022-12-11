@@ -64,7 +64,7 @@ module XCTETypescript
       super
 
       # Generate class variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !isPrimitive(var)
           Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_module")
         end
@@ -121,9 +121,7 @@ module XCTETypescript
 
       Utils.instance.addClassnamesFor(importList, cls, "typescript", "class_angular_module_routing")
 
-      for vGroup in cls.model.groups
-        process_var_group_imports(cls, bld, vGroup, importList)
-      end
+      process_var_group_imports(cls, bld, cls.model.varGroup, importList)
 
       bld.add "imports: ["
       Utils.instance.renderClassList(importList, bld)

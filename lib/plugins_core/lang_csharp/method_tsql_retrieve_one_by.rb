@@ -119,7 +119,7 @@ module XCTECSharp
             "] = @" + Utils.instance.getStyledVariableName(var.getParam())
           end
         end
-        for group in vGroup.groups
+        for group in vGroup.varGroups
           process_var_group_sql(cls, bld, group)
         end
       end

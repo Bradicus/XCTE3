@@ -32,7 +32,7 @@ class DataLoader
       newVGroup.loadAttributes(vargXML)
 
       loadVarGroupNode(newVGroup, vargXML, pComponent)
-      model.groups << newVGroup
+      model.varGroup = newVGroup
     }
 
     xmlDoc.root.elements.each("gen_class") { |genCXML|
@@ -129,7 +129,7 @@ class DataLoader
         newVG = CodeStructure::CodeElemVarGroup.new
         newVG.loadAttributes(varElem)
         loadVarGroupNode(newVG, varElem, pComponent)
-        vgNode.groups << newVG
+        vgNode.varGroups << newVG
       elsif (varElem.name == "comment")
         loadCommentNode(varElem, vgNode.vars)
       elsif (varElem.name == "br")

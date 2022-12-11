@@ -46,7 +46,7 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !Utils.instance.getTypeName(var).end_with?("Type"))
           #cls.addInclude(var.namespace, Utils.instance.getTypeName(var) )
           cls.addInclude(cls.namespace.get("/"), Utils.instance.getClassName(var) + "JsonEngine")
@@ -84,7 +84,7 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)

@@ -19,7 +19,7 @@ module XCTETypescript
 
       bld.startFunction("initData(item: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")
 
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (Utils.instance.isNumericPrimitive(var))
           bld.add("item." + Utils.instance.getStyledVariableName(var) + " = 0;")
         elsif (var.getUType().downcase == "datetime")
