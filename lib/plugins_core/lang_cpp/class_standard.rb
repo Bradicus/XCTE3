@@ -141,15 +141,11 @@ module XCTECpp
       bld.indent
 
       # Generate class variables
-      for group in cls.model.groups
-        process_header_var_group(cls, bld, group, "public")
-      end
+      process_header_var_group(cls, bld, cls.model.varGroup, "public")
 
       bld.separate
 
-      for group in cls.model.groups
-        process_header_var_group(cls, bld, group, "private")
-      end
+      process_header_var_group(cls, bld, cls.model.varGroup, "private")
 
       bld.separate
 
@@ -197,9 +193,7 @@ module XCTECpp
         end
       end
 
-      for group in cls.model.groups
-        process_header_var_group_getter_setters(cls, bld, group)
-      end
+      process_header_var_group_getter_setters(cls, bld, cls.model.varGroup)
 
       bld.separate
 

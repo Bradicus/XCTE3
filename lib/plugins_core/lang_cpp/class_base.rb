@@ -112,7 +112,7 @@ module XCTECpp
 
     def addAutoIncludes(cls)
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new(cls, nil, false, lambda { |var|
+      eachVar(uevParams().wCls(cls).wSeparate(false).wVarCb(lambda { |var|
         if (var.respond_to? :vtype)
           varTypeMap = Utils.instance.getType(var.vtype)
           if (varTypeMap != nil && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?)

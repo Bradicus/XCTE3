@@ -32,7 +32,7 @@ module CodeStructure
       @case
       @description
       @classes = Array.new
-      @varGroup
+      @varGroup = CodeElemVarGroup.new
       @xmlFileName = ""
       @lastModified
     end
