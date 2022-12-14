@@ -19,7 +19,10 @@
 	 	<function name="method_service_datagen_random" />
 		<function name="method_angular_reactive_call_datamap" />
 	</gen_class>
-	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" ></gen_class>
+
+	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" >
+	</gen_class>
+
 	<gen_class type="empty_file" name="user listing" namespace="" path="user/user-listing" ></gen_class>
 
 	<gen_class type="class_angular_data_store_service" path="shared/services" >
@@ -68,13 +71,13 @@
 
 	<var_group genGet="true" genSet="true">
 		<var name="id"		type="String" pkey="true" />
-			<var_group>
+		<var_group>
 				<var name="first name"		type="String" maxlen="255" />
 				<var name="last name"		type="String" maxlen="255" />
 				<var name="username"	type="String" maxlen="255" />
 				<var name="email"	type="String" maxlen="255" />
-			</var_group>
-			<var_group>
+		</var_group>
+		<var_group>
 			<var name="created date" type="DateTime" />
 			<var name="last login date" type="DateTime" />
 			<var name="mailing address" 	type="Address" />

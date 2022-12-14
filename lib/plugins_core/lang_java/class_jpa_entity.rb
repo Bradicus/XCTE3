@@ -18,7 +18,7 @@ require "code_elem_model.rb"
 require "lang_file.rb"
 
 module XCTEJava
-  class ClassStandard < XCTEPlugin
+  class ClassJpaEntity < XCTEPlugin
     def initialize
       @name = "standard"
       @language = "java"
@@ -32,7 +32,7 @@ module XCTEJava
 
       javaFile = LangFile.new
       javaFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
-      javaFile.lfExtension = XCTEJava::Utils::getExtension("body")
+      javaFile.lfExtension = Utils.instance.getExtension("body")
       javaFile.lfContents = genJavaFileComment(cls, bld, cfg)
       javaFile.lfContents << genJavaFileContent(cls, bld, cfg)
 
@@ -79,6 +79,8 @@ module XCTEJava
 
       bld.separate
 
+      bld.add("@Entity")
+      bld.add('@Table(name="' + XCTESql::Utils::getStyledTableName(cls.getUName()) + '")')
       bld.startClass("public class " << cls.name)
 
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
@@ -93,7 +95,13 @@ module XCTEJava
 
       # Generate class variables
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        bld.add(XCTEJava::Utils::getVarDec(var))
+        if (var.name == "id")
+          bld.add("@Id")
+          bld.add("@GeneratedValue(strategy=GenerationType.AUTO)")
+          bld.add(XCTEJava::Utils::getVarDec(var))
+        else
+          bld.add(XCTEJava::Utils::getVarDec(var))
+        end
       }))
 
       bld.separate
@@ -105,4 +113,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassStandard.new)
+XCTEPlugin::registerPlugin(XCTEJava::ClassJpaEntity.new)

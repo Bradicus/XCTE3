@@ -53,7 +53,11 @@ module XCTETypescript
 
       super
 
-      process_var_dependencies(cls, bld, cls.model.varGroup)
+      eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        if !Utils.instance.isPrimitive(var)
+          cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
+        end
+      }))
     end
 
     # Returns the code for the content for this class
@@ -127,7 +131,7 @@ module XCTETypescript
       bld.add("this.populate();")
       bld.endBlock
 
-      bld.add
+      bld.separate
       bld.startBlock("onSubmit()")
       if (idVar[0].getUType().downcase() == "string")
         bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
@@ -140,10 +144,11 @@ module XCTETypescript
       bld.endBlock
       bld.endBlock
 
-      # Generate code for functions
-      for fun in cls.functions
-        process_function(cls, bld, fun)
-      end
+      bld.separate
+      bld.startBlock("onExit()")
+      bld.endBlock
+
+      render_functions(cls, bld)
 
       bld.endBlock
     end
@@ -154,45 +159,6 @@ module XCTETypescript
       bld.add(clsVar + " = ")
 
       Utils.instance.getFormgroup(cls, bld, vGroup)
-    end
-
-    def process_var_dependencies(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if !Utils.instance.isPrimitive(var)
-            #varCls = Classes.findVarClass(var)
-            #fPath = Utils.instance.getStyledFileName(var.getUType() + " view", )
-            #cls.addInclude(varCls.path + "/" + fPath + "/" + fPath + ".component", Utils.instance.getStyledClassName(var.getUType() + " view component"))
-            cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
-          end
-        end
-      end
-
-      for grp in vGroup.varGroups
-        process_var_dependencies(cls, bld, grp)
-      end
-    end
-
-    def process_function(cls, bld, fun)
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
-          if templ != nil
-            bld.separate
-            templ.get_definition(cls, bld)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
-        else # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
-          if templ != nil
-            bld.separate
-            templ.get_definition(fun, cfg)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
-        end
-      end
     end
   end
 end

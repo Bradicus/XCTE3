@@ -20,7 +20,7 @@ class Classes
     return nil
   end
 
-  def self.findVarClass(var, plugName)
+  def self.findVarClass(var, plugName = nil)
     dList = @@list
     for c in @@list
       if c.model.name != nil
@@ -28,27 +28,10 @@ class Classes
           # puts c.model.name + " " + var.getUType()
           # puts c.ctype + " " + plugName
           if (nameMatches(c.model.name, var.getUType()) &&
-              nameMatches(c.ctype, plugName))
+              (plugName == nil || nameMatches(c.ctype, plugName)))
             if (c.namespace.same?(var.namespace))
               return c
             end
-          end
-        end
-      end
-    end
-
-    return nil
-  end
-
-  def self.findVarClass(var)
-    dList = @@list
-    for c in @@list
-      if c.model.name != nil
-        if (nameMatches(c.model.name, var.getUType()))
-          # puts c.model.name + " " + var.getUType()
-          # puts c.ctype + " " + plugName
-          if (c.namespace.same?(var.namespace))
-            return c
           end
         end
       end

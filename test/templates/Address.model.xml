@@ -18,13 +18,6 @@
 		type-typescript="ts_interface" path-typescript="shared/interfaces"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model" ></gen_class>
 
-	<gen_class type="class_angular_module" path="address" ></gen_class>
-	<gen_class type="class_angular_reactive_edit" namespace="" path="address/address-view" nested="true" >
-	 	<function name="method_service_datagen_random" />
-		<function name="method_angular_reactive_call_datamap" />
-	</gen_class>
-  <gen_class type="empty_file" name="address view" namespace="" path="address/address-view" ></gen_class>
-
 	<gen_class type="class_angular_data_gen_service" path="shared/services" >
 		<function name="method_service_datagen_faker_get" />
 		<function name="method_service_datagen_init" />
@@ -69,13 +62,4 @@
 		<function name="delete" interface="true" />
 		<function name="deleteBy" interface="true" />-->
 	</gen_class>
-
-	<empty_function name="weeeHoo" const="true">
-		<parameters>
-			<var name="name" type="String" const="true" />
-			<var name="countSomething" type="Int16" const="true" passby="Reference" />
-			<var name="anArray" type="UInt8" len="10" const="true" />
-		</parameters>
-		<return_var type="Boolean" const="true" />
-	</empty_function>
 </model>

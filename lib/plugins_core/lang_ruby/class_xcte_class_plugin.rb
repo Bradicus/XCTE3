@@ -103,13 +103,7 @@ module XCTERuby
         bld.add('@author = "' + UserSettings.instance.codeAuthor + '"')
       end
       bld.endFunction
-      bld.add
-
-      bld.startFunction("def getClassName(cls)")
-      bld.add("return Utils.instance.getStyledClassName(getUnformattedClassName(cls))")
-      bld.endFunction
-
-      bld.add
+      bld.separate
 
       bld.startFunction("def getUnformattedClassName(cls)")
       bld.add("return cls.getUName()")
@@ -119,11 +113,15 @@ module XCTERuby
 
       bld.startFunction("def genSourceFiles(cls)")
       bld.add("srcFiles = Array.new")
-      bld.add
+      bld.separate
       bld.add("bld = SourceRenderer" +
               CodeNameStyling.getStyled(cls.xmlElement.attributes["lang"], "PASCAL_CASE") + ".new")
       bld.add("bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))")
       bld.add("bld.lfExtension = Utils.instance.getExtension('body')")
+      bld.separate
+      bld.add("process_dependencies(cls, bld)")
+      bld.add("render_dependencies(cls, bld)")
+      bld.separate
       bld.add("genFileComment(cls, bld)")
       bld.add("genFileContent(cls, bld)")
       bld.add
@@ -141,24 +139,20 @@ module XCTERuby
 
       bld.add("# Returns the code for the content for this class")
       bld.startFunction("def genFileContent(cls, bld)")
-      bld.separate
-      bld.add("process_dependencies(cls, bld)")
+
+      bld.add('bld.startClass("class " + getClassName(cls))')
       bld.separate
       bld.add("bld.separate")
 
       bld.add("# Generate class variables")
-      bld.startBlock("for group in cls.model.groups")
-      bld.add("process_var_group(cls, bld, group)")
-      bld.endBlock
+      bld.add("eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|")
+      bld.add("}))")
 
       bld.separate
       bld.add("bld.separate")
 
       bld.add("# Generate code for functions")
-
-      bld.startBlock("for fun in cls.functions")
-      bld.add("process_function(cls, bld, fun)")
-      bld.endBlock
+      bld.add("process_functions(cls, bld, fun)")
 
       bld.separate
 
@@ -166,43 +160,8 @@ module XCTERuby
       bld.endFunction
       bld.add
 
-      bld.add("# process variable group")
-      bld.startFunction("def process_var_group(cls, bld, vGroup)")
-      bld.startBlock("for var in vGroup.vars")
-      bld.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
-      bld.add("bld.add(Utils.instance.getVarDec(var))")
-      bld.midBlock("elsif var.elementId == CodeElem::ELEM_COMMENT")
-      bld.add("bld.sameLine(Utils.instance.getComment(var))")
-      bld.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
-      bld.add("bld.add(var.formatText)")
-      bld.endBlock
-      bld.endBlock
-      bld.startBlock("for group in vGroup.varGroups")
-      bld.add("process_var_group(cls, bld, group)")
-      bld.endBlock
-      bld.endFunction
-
       bld.separate
 
-      bld.startFunction("def process_function(cls, bld, fun)")
-      bld.startBlock("if fun.elementId == CodeElem::ELEM_FUNCTION")
-      bld.startBlock("if fun.isTemplate")
-      bld.add('templ = XCTEPlugin::findMethodPlugin("' + cls.xmlElement.attributes["lang"] + '", fun.name)')
-      bld.add("if templ != nil")
-      bld.iadd(1, "templ.get_definition(cls, cfg)")
-      bld.add("else")
-      bld.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: '" + cls.xmlElement.attributes["lang"])
-      bld.add("end")
-      bld.midBlock("else  # Must be empty function")
-      bld.add('templ = XCTEPlugin::findMethodPlugin("' + cls.xmlElement.attributes["lang"] + '", "method_empty")')
-      bld.startBlock("if templ != nil")
-      bld.add("templ.get_definition(fun, cfg)")
-      bld.midBlock("else")
-      bld.add("#puts 'ERROR no plugin for function: ' + fun.name + '   language: '" + cls.xmlElement.attributes["lang"])
-      bld.endBlock
-      bld.endBlock
-      bld.endBlock
-      bld.endFunction
       bld.endBlock
 
       # Process namespace items
@@ -212,7 +171,7 @@ module XCTERuby
         end
       end
 
-      bld.add
+      bld.separate
 
       prefix = cls.namespace.get("::")
 

@@ -2,14 +2,14 @@
 #
 
 class UtilsEachVarParams
-  attr_accessor :cls, :bld, :separateGroups, :varCb
+  attr_accessor :cls, :bld, :separateGroups, :varCb, :bgCb, :agCb
 
-  @cls
-  @bld
+  @cls = nil
+  @bld = nil
   @separateGroups
   @varCb
-  @bgCb
-  @agCb
+  @bgCb = nil
+  @agCb = nil
 
   def wCls(cls)
     @cls = cls

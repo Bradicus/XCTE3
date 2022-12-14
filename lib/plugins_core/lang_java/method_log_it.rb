@@ -19,69 +19,65 @@ class XCTEJava::MethodLogIt < XCTEPlugin
   end  
 
   # Returns definition string for this class's logIt method
-  def get_definition(codeClass, cfg)
+  def get_definition(cls, cfg)
     logItString = String.new
-    indent = String.new("    ");
+    indent = String.new("");
         
-    logItString << indent << "/**\n" << indent << "* Logs this class's info to a stream\n"
-    logItString << indent << "* \n"
-    logItString << indent << "* @param outStr The stream theis class is being logged to\n"
-    logItString << indent << "* @param indent The amount we we indent each line in the class output\n"
-    logItString << indent << "* @param logChildren Whether or not we will write objects side this object\n"
-    logItString << indent << "* to the debug stream\n"
-    logItString << indent << "*/\n";
+    bld.add("/**") << indent << "* Logs this class's info to a stream")
+    bld.add( "* ")
+    bld.add( "* @param outStr The stream theis class is being logged to")
+    bld.add( "* @param indent The amount we we indent each line in the class output")
+    bld.add( "* @param logChildren Whether or not we will write objects side this object")
+    bld.add( "* to the debug stream")
+    bld.add( "*/");
             
-    logItString << indent << "void logIt(PrintStream pStream, String indent, boolean logChildren)\n"
-    logItString << indent << "{\n"
+    bld.add( "void logIt(PrintStream pStream, String indent, boolean logChildren)")
+    bld.add( "{")
         
-    if codeClass.hasAnArray
-      logItString << indent << "    int i;\n\n"
+    if cls.hasAnArray
+      bld.add("int i;\n")
     end
         
-    logItString << indent << "    pStream.println(indent + \" -- " << codeClass.name << " begin -- \");\n"
+    bld.add("pStream.println(indent + \" -- " << cls.name << " begin -- \");")
         
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
-
-    for var in varArray
+    eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
       if var.elementId == CodeElem::ELEM_VARIABLE
         if var.isPointer
           if var.arrayElemCount > 0
             if XCTECpp::Utils::isPrimitive(var)
-              logItString << indent << "    pStream.print(indent + \"" << var.name << ": \");\n"
-              logItString << indent << "    for (i = 0; i < " << var.name + ".length; i++)\n"
-              logItString << indent << "        pStream.print(" << var.name << "[i] + \"  \");\n"
-              logItString << indent << "    pStream.println();\n\n"
+              bld.add("pStream.print(indent + \"" << var.name << ": \");")
+              bld.add("for (i = 0; i < " << var.name + ".length; i++)")
+              bld.add("pStream.print(" << var.name << "[i] + \"  \");")
+              bld.add("pStream.println();\n")
             else
-              logItString << indent << "    pStream.println(indent + \"" << var.name << ": \");"
+              bld.add("pStream.println(indent + \"" << var.name << ": \");"
                             
-              logItString << indent << "    if (logChildren)\n"
-              logItString << indent << "        for (i = 0; i < " << var.name + ".length; i++)\n"
-              logItString << indent << "            " << var.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
-              logItString << indent << "        pStream.println();\n\n"
+              bld.startBlock("if (logChildren)")
+              bld.startBlock("for (i = 0; i < " << var.name + ".length; i++)")
+              bld.add(var.name << "[i].logIt(outStr,  indent + \"  \");\n")
+              bld.add("pStream.println();")
+              bld.endBlock
+              bld.endBlock
             end
           else  # Not an array                
             if XCTECpp::Utils::isPrimitive(var)
-              logItString << indent << "    pStream.println(indent + \"" << var.name << ": \" + " << var.name << ");\n"
+              bld.add("pStream.println(indent + \"" << var.name << ": \" + " << var.name << ");")
             else                        
-              logItString << indent << "    pStream.println(indent + \"Object " << var.name << ": \");"
-              logItString << indent << "    if (logChildren)\n"
-              logItString << indent << "        " << var.name << ".logIt(outStr,  indent + \"  \");\n"
+              bld.add("pStream.println(indent + \"Object " << var.name << ": \");")
+              bld.startBlock("if (logChildren)")
+              bld.add(var.name << ".logIt(outStr,  indent + \"  \");")
+              bld.endBlock
             end
           end  
         else
-          #logItString << indent << "    pStream.println(indent + " << varSec.name << ");\n"
+          #bld.add("pStream.println(indent + " << varSec.name << ");")
         end
-      elsif var.elementId == CodeElem::ELEM_COMMENT
-        logItString << indent << "    " << XCTEJava::Utils::getComment(var);
-      elsif var.elementId == CodeElem::ELEM_FORMAT
-        logItString << indent << var.formatText
       end
-    end
+    }))
  
-    logItString << indent << "    pStream.println(indent + \" -- " << codeClass.name << " end -- \");\n"
+    bld.add("pStream.println(indent + \" -- " << cls.name << " end -- \");")
         
-    logItString << indent << "}\n\n"
+    bld.endBlock
         
     return logItString
   end       

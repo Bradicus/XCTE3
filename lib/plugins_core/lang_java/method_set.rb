@@ -7,11 +7,10 @@
 #
 # This plugin creates a read meathod for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_java/x_c_t_e_java.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_java/x_c_t_e_java.rb"
 
 class XCTEJava::MethodSet < XCTEPlugin
-
   def initialize
     @name = "method_set"
     @language = "java"
@@ -19,31 +18,18 @@ class XCTEJava::MethodSet < XCTEPlugin
   end
 
   # Returns declairation string for this class's set method
-  def get_definition(codeClass, cfg)
-    defString = String.new
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
 
-    for varSec in varArray
-      if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == "true"
-        if !varSec.isPointer
-          if varSec.arrayElemCount == 0
-            if XCTEJava::Utils::isPrimitive(varSec)
-              defString << "        void set" << XCTEJava::Utils::getCapitalizedFirst(varSec.name)
-              defString << "(" << XCTEJava::Utils::getTypeName(varSec.vtype) << " new" << XCTEJava::Utils::getCapitalizedFirst(varSec.name)
-              defString << ")\t{ " << varSec.name << " = new" << XCTEJava::Utils::getCapitalizedFirst(varSec.name) << "; }\n"
-            end
-          end
+  def get_definition(cls, bld, cfg)
+    eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      if var.genGet == "true" && !var.isPointer
+        if Utils.instance.isPrimitive(var)
+          varName = Utils.instance.getStyledVariableName(var)
+          bld.add("void " + Utils.instance.getStyledFunctionName("set " + varSec.name))
+          bld.sameLine("(" << XCTEJava::Utils::getTypeName(varSec.vtype) << varName)
+          bld.sameLine(")\t{ " << varSec.name << " = new" << XCTEJava::Utils::getCapitalizedFirst(varSec.name) << "; }")
         end
-
-      elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        defString << "    " << XCTEJava::Utils::getComment(varSec)
-      elsif varSec.elementId == CodeElem::ELEM_FORMAT
-        defString << varSec.formatText
       end
-    end
-
-    return(defString);
+    }))
   end
 end
 

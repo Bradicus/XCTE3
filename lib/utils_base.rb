@@ -68,11 +68,11 @@ class UtilsBase
 
   # Run a function on each variable in a class
   def eachVar(params)
-    eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb)
+    eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb, params.bgCb, params.agCb)
   end
 
   # Run a function on each variable in a variable group and subgroups
-  def eachVarGrp(vGroup, bld, separateGroups, varFun)
+  def eachVarGrp(vGroup, bld, separateGroups, varFun, bgCb, agCb)
     for var in vGroup.vars
       if var.elementId == CodeElem::ELEM_VARIABLE
         varFun.call(var)
@@ -84,7 +84,13 @@ class UtilsBase
     end
 
     for grp in vGroup.varGroups
-      eachVarGrp(grp, bld, separateGroups, varFun)
+      if (bgCb != nil)
+        bgCb.call(grp)
+      end
+      eachVarGrp(grp, bld, separateGroups, varFun, bgCb, agCb)
+      if (agCb != nil)
+        agCb.call(grp)
+      end
       if (separateGroups && bld != nil)
         bld.separate
       end
@@ -135,7 +141,7 @@ class UtilsBase
     clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
     clsGen = Classes.findClass(plugName, var.getUType())
 
-    if clsPlug != nil
+    if clsPlug != nil && clsGen != nil
       cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
     end
   end

@@ -12,7 +12,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld)
+    def get_definition(cls, bld, fun)
       dataGenUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_gen_service")
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
 
