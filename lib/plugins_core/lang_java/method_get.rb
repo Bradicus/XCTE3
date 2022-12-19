@@ -18,15 +18,13 @@ class XCTEJava::MethodGet < XCTEPlugin
   end
 
   # Returns declairation string for this class's get method
-  def get_definition(codeClass, cfg)
-    eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-      if var.genGet == "true" && !var.isPointer
-        if Utils.instance.isPrimitive(var)
-          bld.add(Utils.instance.getTypeName(var.vtype) << " get" << XCTEJava::Utils::getCapitalizedFirst(var.name))
-          bld.sameLine("()\t{ return(" << var.name << "); }")
-        end
+  def get_definition(var, bld)
+    if var.genGet == "true" && !var.isPointer
+      if Utils.instance.isPrimitive(var)
+        bld.add(Utils.instance.getTypeName(var.vtype) << " get" << XCTEJava::Utils::getCapitalizedFirst(var.name))
+        bld.sameLine("()\t{ return(" << var.name << "); }")
       end
-    }))
+    end
   end
 end
 

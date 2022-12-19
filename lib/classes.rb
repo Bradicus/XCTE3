@@ -11,7 +11,7 @@ class Classes
 
   def self.findClass(classType, classPlugName)
     for c in @@list
-      puts c.ctype + " " + c.model.name
+      #puts c.ctype + " " + c.model.name
       if (c.ctype == classType && nameMatches(c.model.name, classPlugName))
         return c
       end

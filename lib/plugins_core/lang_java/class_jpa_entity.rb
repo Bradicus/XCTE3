@@ -12,36 +12,38 @@
 
 require "plugins_core/lang_java/utils.rb"
 require "plugins_core/lang_java/x_c_t_e_java.rb"
+require "plugins_core/lang_java/class_base.rb"
 require "code_elem.rb"
 require "code_elem_parent.rb"
 require "code_elem_model.rb"
 require "lang_file.rb"
 
 module XCTEJava
-  class ClassJpaEntity < XCTEPlugin
+  class ClassJpaEntity < ClassBase
     def initialize
-      @name = "standard"
+      @name = "class_jpa_entity"
       @language = "java"
       @category = XCTEPlugin::CAT_CLASS
+    end
+
+    def getUnformattedClassName(cls)
+      return cls.getUName()
     end
 
     def genSourceFiles(cls, cfg)
       srcFiles = Array.new
 
-      bld = SourceRendererJava.new
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, bld)
 
-      javaFile = LangFile.new
-      javaFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
-      javaFile.lfExtension = Utils.instance.getExtension("body")
-      javaFile.lfContents = genJavaFileComment(cls, bld, cfg)
-      javaFile.lfContents << genJavaFileContent(cls, bld, cfg)
-
-      srcFiles << javaFile
+      srcFiles << bld
 
       return srcFiles
     end
 
-    def genJavaFileComment(cls, bld, cfg)
+    def genFileComment(cls, bld, cfg)
       bld.add("/**")
       bld.add("* @class " + cls.name)
 
@@ -72,7 +74,7 @@ module XCTEJava
     end
 
     # Returns the code for the header for this class
-    def genJavaFileContent(cls, bld, cfg)
+    def genFileContent(cls, bld, cfg)
       for inc in cls.includesList
         bld.add('import "' + inc.path + inc.name + "\";")
       end

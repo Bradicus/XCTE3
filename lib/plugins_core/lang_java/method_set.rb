@@ -19,17 +19,15 @@ class XCTEJava::MethodSet < XCTEPlugin
 
   # Returns declairation string for this class's set method
 
-  def get_definition(cls, bld, cfg)
-    eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-      if var.genGet == "true" && !var.isPointer
-        if Utils.instance.isPrimitive(var)
-          varName = Utils.instance.getStyledVariableName(var)
-          bld.add("void " + Utils.instance.getStyledFunctionName("set " + varSec.name))
-          bld.sameLine("(" << XCTEJava::Utils::getTypeName(varSec.vtype) << varName)
-          bld.sameLine(")\t{ " << varSec.name << " = new" << XCTEJava::Utils::getCapitalizedFirst(varSec.name) << "; }")
-        end
+  def get_definition(var, bld)
+    if var.genGet == "true" && !var.isPointer
+      if Utils.instance.isPrimitive(var)
+        varName = Utils.instance.getStyledVariableName(var)
+        bld.add("void " + Utils.instance.getStyledFunctionName("set " + varSec.name))
+        bld.sameLine("(" << XCTEJava::Utils::getTypeName(varSec.vtype) << varName)
+        bld.sameLine(")\t{ " << varSec.name << " = new" << XCTEJava::Utils::getCapitalizedFirst(varSec.name) << "; }")
       end
-    }))
+    end
   end
 end
 

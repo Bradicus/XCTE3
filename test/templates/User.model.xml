@@ -6,8 +6,8 @@
 
 	<gen_class type="standard"
 		type-typescript="ts_interface" path-typescript="shared/interfaces"
-		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model" >
-		<include name="Address" path="shared/interfaces/address" />
+		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
+		path-java="Model" >
 		<use-csharp name="System.Collections.Generic" />
 	</gen_class>
 
@@ -46,7 +46,13 @@
 		<function name="method_ef_configuration" />
 	</gen_class>
 
-	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
+
+
+	<gen_class type="web_api_controller"
+		ns-csharp="XCTE.API.Controllers"
+		path-csharp="XCTE.API/Controllers"
+		ns-java="demo.api"
+		path-java="Api" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
 
@@ -69,7 +75,7 @@
 			<function name="deleteBy" interface="true" />-->
 		</gen_class>
 
-	<var_group genGet="true" genSet="true">
+	<var_group genGet="true" genSet="true" visibility="private">
 		<var name="id"		type="String" pkey="true" />
 		<var_group>
 				<var name="first name"		type="String" maxlen="255" />

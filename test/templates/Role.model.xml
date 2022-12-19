@@ -4,17 +4,23 @@
 	<description>
 	</description>
 
-	<var_group genGet="true" genSet="true">
+	<var_group genGet="true" genSet="true" visibility="private">
 		<var name="id"		type="String" pkey="true" />
 		<var name="user role"		type="String" maxlen="50" />
 	</var_group>
 
 	<gen_class type="standard" type-typescript="ts_interface"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
-		path-typescript="shared/interfaces" >
+		path-typescript="shared/interfaces"
+		path-java="Model">
 	</gen_class>
 
-	<gen_class type="web_api_controller" namespace="XCTE.API.Controllers" base_class="ApiController" path="XCTE.API/Controllers" >
+	<gen_class type="web_api_controller"
+		base_class="ApiController"
+		ns-csharp="XCTE.API.Controllers"
+		path-csharp="XCTE.API/Controllers"
+		ns-java="demo.api"
+		path-java="Api" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
 

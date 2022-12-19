@@ -9,7 +9,7 @@
 
 require "source_renderer_brace_delim.rb"
 
-class SourceRendererCSharp < SourceRendererBraceDelim
+class SourceRendererJava < SourceRendererBraceDelim
   def initialize()
     super
 

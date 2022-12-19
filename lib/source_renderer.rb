@@ -7,7 +7,7 @@
 #
 # This class renders source code
 class SourceRenderer
-  attr_accessor :lfName, :lfPath, :lfExtension, :lfContents, :indentLevel, :indentChars, :hangingFunctionStart, :hangingBlockStart,
+  attr_accessor :lfName, :lfPath, :lfExtension, :indentLevel, :indentChars, :hangingFunctionStart, :hangingBlockStart,
                 :customCode, :lines
 
   def initialize

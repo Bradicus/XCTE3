@@ -19,15 +19,15 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName())
+    def getUnformattedClassName(cls)
+      return cls.getUName()
     end
 
     def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
       genFileContent(cls, bld)
 

@@ -340,16 +340,10 @@ class DataLoader
     end
 
     # Try load from parent first
-    if (xml.parent != nil)
-      for atrName in atrNames
-        atr = xml.parent.attributes[atrName + "-" + language]
-        if atr != nil
-          return atr
-        end
-        atr = xml.parent.attributes[atrName]
-        if atr != nil
-          return atr
-        end
+    if (xml.parent != nil && xml.parent.name == "var_group")
+      pLoad = loadInheritableAttribute(xml.parent, atrNames, language, default)
+      if (pLoad != nil)
+        return pLoad
       end
     end
 

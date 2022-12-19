@@ -21,10 +21,6 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName())
-    end
-
     def genSourceFiles(cls)
       srcFiles = Array.new
 
@@ -55,8 +51,7 @@ module XCTECSharp
         end
       end
 
-      cls.uses.push(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
-      cls.uses.push(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
+      cls.addUse(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
 
       Utils.instance.genUses(cls.uses, bld)
       Utils.instance.genNamespaceStart(cls.namespace, bld)
