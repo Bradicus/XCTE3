@@ -8,21 +8,25 @@
 # This plugin creates a get meathod for a class
 
 require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_java/utils.rb"
 require "plugins_core/lang_java/x_c_t_e_java.rb"
 
-class XCTEJava::MethodGet < XCTEPlugin
-  def initialize
-    @name = "method_get"
-    @language = "java"
-    @category = XCTEPlugin::CAT_METHOD
-  end
+module XCTEJava
+  class MethodGet < XCTEPlugin
+    def initialize
+      @name = "method_get"
+      @language = "java"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-  # Returns declairation string for this class's get method
-  def get_definition(var, bld)
-    if var.genGet == "true" && !var.isPointer
-      if Utils.instance.isPrimitive(var)
-        bld.add(Utils.instance.getTypeName(var.vtype) << " get" << XCTEJava::Utils::getCapitalizedFirst(var.name))
-        bld.sameLine("()\t{ return(" << var.name << "); }")
+    # Returns declairation string for this class's get method
+    def get_definition(var, bld)
+      if var.genGet == true && !var.isPointer
+        if Utils.instance.isPrimitive(var)
+          varName = Utils.instance.getStyledVariableName(var)
+          bld.add(Utils.instance.getTypeName(var) + " " + Utils.instance.getStyledFunctionName(" get" + var.name))
+          bld.sameLine("()\t{ return(" + varName + "); }")
+        end
       end
     end
   end
