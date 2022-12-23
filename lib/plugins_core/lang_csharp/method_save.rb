@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -20,39 +20,39 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Save all components of this ")
-      codeBuilder.add("///")
+    def get_definition(cls, bld, fun)
+      bld.add("///")
+      bld.add("/// Save all components of this object")
+      bld.add("///")
 
-      codeBuilder.startFunction("public void Save()")
+      bld.startFunction("public void Save()")
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, bld, fun)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Save();")
+    def get_declairation(cls, bld, fun)
+      bld.add("void Save();")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System", "Exception")
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("System", "Exception")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, bld, fun)
       conDef = String.new
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      cls.model.getAllVarsFor(varArray)
 
-      codeBuilder.add("_conn.Open();")
+      bld.add("_conn.Open();")
 
       for var in varArray
         if (Utils.instance.isPrimitive(var) == false)
           varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, "tsql_engine", "method_tsql_create")
           if varCreateFun != nil
-            codeBuilder.add("_" + Utils.instance.getStyledVariableName(var, "") + ".Create(o);")
+            bld.add("_" + Utils.instance.getStyledVariableName(var, "") + ".Create(o);")
           end
         end
       end

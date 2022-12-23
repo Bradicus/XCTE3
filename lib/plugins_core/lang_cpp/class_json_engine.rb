@@ -1,19 +1,19 @@
 ##
 
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+#
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This class generates source files for a json_engine classes
 
-require 'plugins_core/lang_cpp/utils.rb'
-require 'plugins_core/lang_cpp/method_empty.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "plugins_core/lang_cpp/method_empty.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 module XCTECpp
   class ClassJsonEngine < ClassBase
@@ -23,259 +23,136 @@ module XCTECpp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(dataModel, genClass)
-      return dataModel.name + ' json engine'
-    end    
-    
-    def genSourceFiles(dataModel, genClass, cfg)
+    def getUnformattedClassName(cls)
+      return cls.getUName() + " json engine"
+    end
+
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
-      genClass.setName(getUnformattedClassName(dataModel, genClass))
-            
-      hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(dataModel.name + 'JsonEngine')
-      hFile.lfExtension = Utils.instance.getExtension('header')
-      genHeaderComment(dataModel, genClass, cfg, hFile)
-      genHeader(dataModel, genClass, cfg, hFile)
-      
-      cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(dataModel.name + 'JsonEngine')
-      cppFile.lfExtension = Utils.instance.getExtension('body')
-      genHeaderComment(dataModel, genClass, cfg, cppFile)
-      genBody(dataModel, genClass, cfg, cppFile)
-      
-      srcFiles << hFile
-      srcFiles << cppFile
-      
-      return srcFiles
-    end  
+      cls.setName(getUnformattedClassName(cls))
 
-    def genHeaderComment(dataModel, genClass, cfg, hFile)
-    
-      hFile.add("/**")    
-      hFile.add("* @class " + Utils.instance.getStyledClassName(dataModel.name + 'JsonEngine'))
-      
+      bld = SourceRendererCpp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
+      bld.lfExtension = Utils.instance.getExtension("header")
+      genHeaderComment(cls, bld)
+      genHeader(cls, bld)
+
+      bld = SourceRendererCpp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genHeaderComment(cls, bld)
+      genBody(cls, bld)
+
+      srcFiles << bld
+      srcFiles << bld
+
+      return srcFiles
+    end
+
+    def genHeaderComment(cls, bld)
+      cfg = UserSettings.instance
+
+      bld.add("/**")
+      bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine"))
+
       if (cfg.codeAuthor != nil)
-        hFile.add("* @author " + cfg.codeAuthor)
+        bld.add("* @author " + cfg.codeAuthor)
       end
-          
+
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        hFile.add("* " + cfg.codeCompany)
+        bld.add("* " + cfg.codeCompany)
       end
-      
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
+
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
-          
-      hFile.add("* ")
-      
-      if (dataModel.description != nil)
-        dataModel.description.each_line { |descLine|
+
+      bld.add("* ")
+
+      if (cls.model.description != nil)
+        cls.model.description.each_line { |descLine|
           if descLine.strip.size > 0
-            hFile.add("* " << descLine.strip)
+            bld.add("* " << descLine.strip)
           end
-        }      
-      end    
-      
-      hFile.add("*/")
+        }
+      end
+
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
-    def genHeader(dataModel, genClass, cfg, hFile)
-
-      genIfndef(dataModel, genClass, hFile)
+    def genHeader(cls, bld)
+      render_ifndef(cls, bld)
 
       # get list of includes needed by functions
-      
-      # Get dependencies for functions
-      for funItem in genClass.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              templ.get_dependencies(dataModel, genClass, funItem, hFile)
-            else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          end
-        end
-      end
 
-      genIncludes(dataModel, genClass, cfg, hFile)
-      
-      if genClass.includes.length > 0
-        hFile.add
+      render_fun_dependencies(cls, bld)
+      render_dependencies(cls, bld)
+
+      if cls.includes.length > 0
+        bld.add
       end
 
       # Process namespace items
-      if genClass.namespaceList != nil
-        for nsItem in genClass.namespaceList
-          hFile.startBlock("namespace " << nsItem)
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
+          bld.startBlock("namespace " << nsItem)
         end
-        hFile.add
+        bld.add
       end
-      
-      classDec = "class " + Utils.instance.getStyledClassName(dataModel.name + 'JsonEngine')
-          
-      for par in (0..genClass.baseClasses.size)
+
+      classDec = "class " + Utils.instance.getDerivedClassPrefix(cls)
+
+      for par in (0..cls.baseClasses.size)
         nameSp = ""
-        if par == 0 && genClass.baseClasses[par] != nil
+        if par == 0 && cls.baseClasses[par] != nil
           classDec << " : "
-        elsif genClass.baseClasses[par] != nil
+        elsif cls.baseClasses[par] != nil
           classDec << ", "
         end
 
-        if genClass.baseClasses[par] != nil
-          if genClass.baseClasses[par].namespaceList != nil && genClass.baseClasses[par].namespaceList.size > 0
-            nameSp = genClass.baseClasses[par].namespaceList.join("::") + "::"
+        if cls.baseClasses[par] != nil
+          if cls.baseClasses[par].namespace.hasItems?() && cls.baseClasses[par].namespace.nsList.size > 0
+            nameSp = cls.baseClasses[par].namespace.get("::") + "::"
           end
 
-          classDec << genClass.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
+          classDec << cls.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(cls.baseClasses[par].name)
         end
       end
-      
-      hFile.startClass(classDec)
-       
-      hFile.add("public:")
-      hFile.indent
-            
-      # Generate class variables
-      varArray = Array.new
-      
-      # Generate function declarations
-      for funItem in genClass.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              if (funItem.isInline)
-                templ.get_declaration_inline(dataModel, genClass, funItem, hFile)
-              else
-                templ.get_declaration(dataModel, genClass, funItem, hFile)
-              end
-            else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          else  # Must be an empty function          
-            templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
-            if templ != nil
-              if (funItem.isInline)
-                templ.get_declaration_inline(dataModel, genClass, funItem, hFile)
-              else
-                templ.get_declaration(dataModel, genClass, funItem, hFile)
-              end
-            else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end         
-          end
-        elsif funItem.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(funItem))
-        elsif funItem.elementId == CodeElem::ELEM_FORMAT
-          if (funItem.formatText == "\n")
-            hFile.add
-          else
-            hFile.sameLine(funItem.formatText)
-          end       
-        end
-      end
-    
-      hFile.unindent
-          
-      hFile.endClass
+
+      bld.startClass(classDec)
+
+      bld.add("public:")
+      bld.indent
+
+      render_function_declairations(cls, bld)
+
+      bld.unindent
+
+      bld.endClass
 
       # Process namespace items
-      if genClass.namespaceList != nil
-        genClass.namespaceList.reverse_each do |nsItem|
-          hFile.endBlock("  // namespace " << nsItem)
+      if cls.namespace.hasItems?()
+        cls.namespace.nsList.reverse_each do |nsItem|
+          bld.endBlock("  // namespace " << nsItem)
         end
-        hFile.add
+        bld.add
       end
 
-      hFile.add("#endif")
+      bld.add("#endif")
     end
-    
+
     # Returns the code for the body for this class
-    def genBody(dataModel, genClass, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(dataModel.name + 'JsonEngine') << '.h"')
-      cppGen.add
+    def genBody(cls, bld)
+      bld.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine") << '.h"')
+      bld.add
 
-      # Process namespace items
-      if genClass.namespaceList != nil
-        for nsItem in genClass.namespaceList
-          cppGen.startBlock("namespace " << nsItem)
-        end
-      end
-
-      # Initialize static variables
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.isStatic
-            cppGen.add(Utils.instance.getTypeName(var) << " ")
-            cppGen.sameLine(Utils.instance.getStyledClassName(dataModel.name) << " :: ")
-            cppGen.sameLine(Utils.instance.getStyledVariableName(var))
-                      
-            if var.arrayElemCount.to_i > 0 # This is an array
-              cppGen.sameLine("[" + Utils.instance.getSizeConst(var) << "]")
-            end
-                      
-            cppGen.sameLine(";")
-          end
-        end
-      end
-                  
-      cppGen.add
-          
-      # Generate code for functions
-      for fun in genClass.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate             
-            templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
-            
-            puts "processing template for function " +fun.name
-            if templ != nil
-              if (!fun.isInline)
-                templ.get_definition(dataModel, genClass, fun, cppGen)
-              end
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          else  # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
-            if templ != nil
-              if (!fun.isInline)
-                templ.get_definition(dataModel, genClass, fun, cppGen)
-              end
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          end
-        end
-      end
-
-      # Process namespace items
-      if genClass.namespaceList != nil
-        genClass.namespaceList.reverse_each do |nsItem|
-          cppGen.endBlock
-          cppGen.sameLine(";   // namespace " << nsItem)
-        end
-        #cppGen.add("\n"
-      end
+      render_namespace_start(cls, bld)
+      render_functions(cls, bld)
+      render_namespace_end(cls, bld)
     end
-
-    def getVarsFor(varGroup, cfg, vArray)
-      for var in varGroup.vars
-        vArray << var
-      end
-
-      for grp in varGroup.groups
-        getVarsFor(grp, cfg, vArray)
-      end
-    end
-    
   end
 end
 

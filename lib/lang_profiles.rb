@@ -1,6 +1,5 @@
-
-require 'lang_profile'
-require 'singleton'
+require "lang_profile"
+require "singleton"
 
 class LangProfiles
   include Singleton
@@ -9,7 +8,7 @@ class LangProfiles
   def load(project)
     @profiles = Hash.new
 
-    codeRootDir = File.dirname(File.realpath(__FILE__)) 
+    codeRootDir = File.dirname(File.realpath(__FILE__))
     langProfileDir = codeRootDir + "/../lang_profiles"
 
     loadFromPath(project, langProfileDir)
@@ -31,13 +30,15 @@ class LangProfiles
           langProfile = LangProfile.new
           langProfile.name = langName
 
-          filePath = path + '/' + fileName
+          filePath = path + "/" + fileName
           file = File.new filePath
 
-          xmlDoc = REXML::Document.new file      
-            
+          xmlDoc = REXML::Document.new file
+
           langProfile.load(xmlDoc)
-          
+
+          #puts "Loaded language " + langName + " from " + fileName
+
           @profiles[langName] = langProfile
         end
       end

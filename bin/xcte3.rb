@@ -3,7 +3,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -20,9 +20,10 @@ require "code_elem_model.rb"
 require "code_elem_project.rb"
 require "x_c_t_e_plugin.rb"
 require "user_settings.rb"
+require "types.rb"
 
 require "run_settings"
-require "class_plan"
+require "project_plans"
 require "project_plan"
 require "lang_profiles"
 require "data_loader"
@@ -35,102 +36,199 @@ def isModelFile(filePath)
            (filePath.include?(".model.xml") || filePath.include?(".class.xml"))
 end
 
-def processProjectComponentGroup(project, pcGroup, cfg)
+def processProjectComponentGroup(project, pcGroup)
   currentDir = Dir.pwd
-
-  projectPlan = ProjectPlan.instance
 
   # preload an extra set of data models, so they can be referenced if needed
   for pComponent in pcGroup.components
-    #puts "Processing component: " + pComponent.path
-    if (pComponent.elementId == CodeElem::ELEM_TEMPLATE_DIRECTORY)
-      puts "Processing component path: " + pComponent.path
-      Find.find(currentDir + "/" + pComponent.path) do |path|
-        if isModelFile(path)
-          puts "Processing model: " + path
+    #puts "Processing component: " + pComponent.tplPath
+    projectPlan = ProjectPlan.new
+    ProjectPlans.instance.plans[pComponent.language] = projectPlan
+    Classes.reset()
 
-          basepn = Pathname.new(currentDir + "/" + pComponent.path)
-          pn = Pathname.new(path)
+    puts "Processing component path: " + pComponent.tplPath
+    Find.find(currentDir + "/" + pComponent.tplPath) do |path|
+      if isModelFile(path)
+        puts "Processing model: " + path
 
-          dataModel = CodeStructure::CodeElemModel.new
-          DataLoader.loadXMLClassFile(dataModel, path, pComponent.isStatic)
+        basepn = Pathname.new(currentDir + "/" + pComponent.tplPath)
+        pn = Pathname.new(path)
 
-          for langName in pComponent.languages
-            language = XCTEPlugin::getLanguages()[langName]
+        dataModel = CodeStructure::CodeElemModel.new
+        DataLoader.loadXMLClassFile(dataModel, path, pComponent)
 
-            if (language == nil)
-              puts "No language found for: " + langName
+        language = XCTEPlugin::getLanguages()[pComponent.language]
+
+        if (language == nil)
+          puts "No language found for: " + pComponent.language
+        end
+
+        projectPlan.models << dataModel
+
+        for cls in dataModel.classes
+          cls.model = dataModel
+          if (cls.language != nil)
+            language = XCTEPlugin::getLanguages()[cls.language]
+          else
+            language = XCTEPlugin::getLanguages()[pComponent.language]
+          end
+
+          if language.has_key?(cls.ctype)
+            if cls.path != nil
+              newPath = pComponent.dest + "/" + cls.path
+            else
+              newPath = pComponent.dest + "/" + cls.namespace.get("/")
             end
 
-            if projectPlan.models[langName] == nil
-              projectPlan.models[langName] = Array.new
+            lClass = cls.clone()
+            lClass.filePath = newPath
+            lClass.name = language[lClass.ctype].getClassName(lClass)
+            lClass.genCfg = pComponent
+
+            if (lClass.language == nil)
+              lClass.language = pComponent.language
             end
 
-            projectPlan.models[langName] << dataModel
-
-            for genClass in dataModel.classes
-              if (genClass.language != nil)
-                language = XCTEPlugin::getLanguages()[genClass.language]
-              else
-                language = XCTEPlugin::getLanguages()[langName]
-              end
-
-              if language.has_key?(genClass.ctype)
-                if genClass.path != nil
-                  newPath = pComponent.dest + "/" + genClass.path
-                else
-                  newPath = pComponent.dest + "/" + genClass.namespaceList.join("/")
-                end
-
-                if !File.directory?(newPath)
-                  FileUtils.mkdir_p(newPath)
-                  #   puts "Creating folder: " + newPath
-                end
-
-                classPlan = ClassPlan.new
-
-                classPlan.model = dataModel
-                classPlan.class = genClass
-                classPlan.path = newPath
-                #         classPlan.className = language[genClass.ctype].getClassName(dataModel, genClass)
-
-                if projectPlan.classPlans[language] == nil
-                  projectPlan.classPlans[language] = Array.new
-                end
-
-                projectPlan.classPlans[language] << classPlan
-              end
+            if (cls.language == nil || cls.language == pComponent.language)
+              projectPlan.classes << lClass
             end
           end
         end
       end
     end
+
+    for plan in projectPlan.classes
+      language = XCTEPlugin::getLanguages()[plan.language]
+
+      puts "generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language +
+             "  namespace: " + plan.namespace.get(".")
+
+      #project.singleFile = "map gen settings"
+
+      if (project.singleFile == nil || project.singleFile == plan.model.name)
+        srcFiles = language[plan.ctype].genSourceFiles(plan)
+
+        for srcFile in srcFiles
+          foundStart = false
+          foundEnd = false
+          overwriteFile = false
+          fName = plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
+
+          if (File.file?(fName))
+            plan.customCode = extractCustomCode(fName)
+
+            if (plan.customCode != nil && plan.customCode.strip.length > 0)
+              srcFile.lines = insertCustomCode(plan.customCode, srcFile)
+            end
+          end
+
+          if (!File.file?(fName))
+            overwriteFile = true
+          else
+            existingFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "r")
+            fileData = existingFile.read
+            genContents = srcFile.getContents
+
+            if (fileData != genContents)
+              overwriteFile = true
+            end
+
+            existingFile.close
+          end
+        end
+
+        if (overwriteFile)
+          puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
+          if !File.directory?(plan.filePath)
+            FileUtils.mkdir_p(plan.filePath)
+            #   puts "Creating folder: " + newPath
+          end
+          sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
+          sFile << srcFile.getContents
+          sFile.close
+        end
+      end
+    end
+
+    for pSubgroup in pcGroup.subGroups
+      processProjectComponentGroup(project, pSubgroup)
+    end
+  end
+end
+
+def extractCustomCode(fName)
+  customCode = nil
+  foundStart = false
+  foundEnd = false
+  customCodeStart = "//+XCTE Custom Code Area"
+  customCodeEnd = "//-XCTE Custom Code Area"
+
+  File.open(fName).each_line do |line|
+    if (!foundStart)
+      if (line.include?(customCodeStart))
+        foundStart = true
+        customCode = ""
+      end
+    else
+      if (!foundEnd)
+        foundEnd = line.include?(customCodeEnd)
+        if (line.include?(customCodeEnd))
+          foundEnd = true
+        else
+          customCode += line
+        end
+      end
+    end
   end
 
-  projectPlan.classPlans.each { |language, plans|
-    for plan in plans
-      srcFiles = language[plan.class.ctype].genSourceFiles(plan.model, plan.class, cfg)
+  return customCode
+end
 
-      for srcFile in srcFiles
-        sFile = File.new(plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension, mode: "w")
+def insertCustomCode(customCode, srcRend)
+  customCodeStart = "//+XCTE Custom Code Area"
+  customCodeEnd = "//-XCTE Custom Code Area"
 
-        puts "writing file: " + plan.path + "/" + srcFile.lfName + "." + srcFile.lfExtension
-        sFile << srcFile.getContents
-        sFile.close
+  finalLines = []
+  started = false
+  ended = false
+
+  srcRend.lines.each_with_index { |line, index|
+    if (!started && line.include?(customCodeStart))
+      started = true
+      finalLines << line
+    elsif (started && !ended)
+      if (line.include? customCodeEnd)
+        ended = true
+        finalLines << customCode + line
       end
+    else
+      finalLines << line
     end
   }
 
-  for pSubgroup in pcGroup.subGroups
-    processProjectComponentGroup(project, pSubgroup, cfg)
+  return finalLines
+end
+
+# Main
+options = ARGV
+prj = CodeStructure::ElemProject.new
+
+(0..options.length / 2 - 1).each do |i|
+  if (options[i] == "-f")
+    prj.singleFile = options[i + 1]
   end
 end
 
 codeRootDir = File.dirname(File.realpath(__FILE__))
 
-cfg = UserSettings.new
-cfg.load(codeRootDir + "/../default_settings.xml")
-RunSettings.setUserSettings(cfg)
+UserSettings.instance.load(codeRootDir + "/../default_settings.xml")
+#RunSettings.setUserSettings(cfg)
+
+# Load variable types
+Types.instance.load(codeRootDir + "/../types_basic.xml")
+
+# Load language profiles
+LangProfiles.instance.load(prj)
 
 currentDir = Dir.pwd
 
@@ -139,14 +237,10 @@ if (!FileTest.file?(currentDir + "/xcte.project.xml"))
   exit 0
 end
 
-prj = CodeStructure::ElemProject.new
 prj.loadProject(currentDir + "/xcte.project.xml")
-
-# Load language profiles
-LangProfiles.instance.load(prj)
 
 XCTEPlugin::loadPLugins
 
-processProjectComponentGroup(prj, prj.componentGroup, cfg)
+processProjectComponentGroup(prj, prj.componentGroup)
 
 #XCTEPlugin::listPlugins

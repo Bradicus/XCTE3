@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -24,7 +24,7 @@ class XCTEPhp::MethodSet < XCTEPlugin
   end
 
   # Returns definition string for this class's set method
-  def get_definition(codeClass, cfg, outCode)
+  def get_definition(codeClass, outCode)
     varArray = Array.new
     codeClass.getAllVarsFor(varArray);
 	

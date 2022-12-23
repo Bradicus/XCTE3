@@ -1,0 +1,5 @@
+<project>
+  <generate tpl_path="templates" dest="./gen" language="ruby">
+  </generate>
+  
+</project>

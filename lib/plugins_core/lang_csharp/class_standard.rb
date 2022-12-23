@@ -3,104 +3,86 @@
 # Author:: Brad Ottoson
 #
 
-require 'plugins_core/lang_csharp/utils.rb'
-require 'plugins_core/lang_csharp/source_renderer_csharp.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_csharp/utils.rb"
+require "plugins_core/lang_csharp/class_base.rb"
+require "plugins_core/lang_csharp/source_renderer_csharp.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
-  class ClassStandard < XCTEPlugin
-
+  class ClassStandard < ClassBase
     def initialize
       @name = "standard"
       @language = "csharp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(dataModel)
-      return Utils.instance.getStyledClassName(dataModel.name)
+    def getUnformattedClassName(cls)
+      return cls.getUName()
     end
-    
-    def genSourceFiles(dataModel, genClass, cfg)
+
+    def genSourceFiles(cls)
       srcFiles = Array.new
-    
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      codeBuilder.lfExtension = Utils.instance.getExtension('body')
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
-      
-      srcFiles << codeBuilder
-      
+
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, bld)
+
+      srcFiles << bld
+
       return srcFiles
     end
-    
+
     # Returns the code for the content for this class
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, bld)
 
       # Add in any dependencies required by functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.process_dependencies(cls, bld, fun)
             else
-              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           end
         end
       end
 
-      Utils.instance.genUses(genClass.uses, codeBuilder)
-      Utils.instance.genNamespaceStart(genClass.namespaceList, codeBuilder)
-      
-      classDec = dataModel.visibility + " class " + getClassName(dataModel)
-          
-      for par in (0..genClass.baseClasses.size)
-        if par == 0 && genClass.baseClasses[par] != nil
-          classDec << " < " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
-        elsif genClass.baseClasses[par] != nil
-          classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
-        end
-      end
-      
-      codeBuilder.startClass(classDec)
+      Utils.instance.genUses(cls.uses, bld)
+      Utils.instance.genNamespaceStart(cls.namespace, bld)
 
-      if genClass.dontModifyCode
-        codeBuilder.add("#region DON'T MODYFY THIS CLASS, IT WILL BE OVERWRITTEN BY GENERATOR")
-      end
-          
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      classDec = cls.model.visibility + " class " + getClassName(cls)
 
-      # Generate class variables
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.add(XCTECSharp::Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          codeBuilder.sameLine(XCTECSharp::Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
+      for par in (0..cls.baseClasses.size)
+        if par == 0 && cls.baseClasses[par] != nil
+          classDec << " : " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
+        elsif cls.baseClasses[par] != nil
+          classDec << ", " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         end
       end
 
-      if (genClass.functions.length > 0)
-        codeBuilder.add
+      bld.startClass(classDec)
+
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        XCTECSharp::Utils.instance.getVarDec(var)
+      })
+
+      if (cls.functions.length > 0)
+        bld.add
       end
 
       # Generate code for functions
-      Utils.instance.genFunctions(dataModel, genClass, codeBuilder)
-      
-      
-      if genClass.dontModifyCode
-        codeBuilder.add("#endregion")
-      end
+      render_functions(cls, bld)
 
-      codeBuilder.endClass
+      bld.endClass
 
-      Utils.instance.genNamespaceEnd(genClass.namespaceList, codeBuilder)
+      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

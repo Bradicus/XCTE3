@@ -1,35 +1,35 @@
 ##
 
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+#
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates an empty method with the specified function name
 # and parameters
 
-require 'code_elem_model.rb'
-require 'lang_file.rb'
+require "code_elem_model.rb"
+require "lang_file.rb"
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
 module XCTECpp
-  class MethodEmpty < XCTEPlugin  
+  class MethodEmpty < XCTEPlugin
     def initialize
       @name = "method_empty"
       @language = "cpp"
       @category = XCTEPlugin::CAT_METHOD
     end
-    
+
     # Returns declairation string for this empty method
-    def get_declaration(dataModel, genClass, fun, hFile)
+    def get_declaration(cls, bld, fun)
       eDecl = String.new
 
       if fun.isVirtual
         eDecl << "virtual "
       end
-          
+
       if fun.isStatic
         eDecl << "static "
       end
@@ -37,47 +37,47 @@ module XCTECpp
       if fun.returnValue.isConst
         eDecl << "const "
       end
-          
+
       eDecl << Utils.instance.getTypeName(fun.returnValue) << " "
       eDecl << fun.name << "("
 
-      for param in (0..(fun.parameters.vars.size - 1))           
+      for param in (0..(fun.parameters.vars.size - 1))
         if param != 0
           eDecl << ", "
         end
-        
+
         eDecl << Utils.instance.getParamDec(fun.parameters.vars[param])
       end
-      
+
       eDecl << ")"
 
       if fun.isConst
-        eDecl << " const";
+        eDecl << " const"
       end
 
-      eDecl << ";";
+      eDecl << ";"
 
-      hFile.add(eDecl)
+      bld.add(eDecl)
     end
-    
+
     # Returns definition string for an empty method
-    def get_definition(dataModel, genClass, fun, codeBuilder)
+    def get_definition(cls, bld, fun)
 
       # Skeleton of comment block
-      codeBuilder.add("/**")
-      codeBuilder.add("* ")
-      codeBuilder.add("* ")
-      
+      bld.add("/**")
+      bld.add("* ")
+      bld.add("* ")
+
       for param in fun.parameters.vars
-        codeBuilder.add("* @param " + Utils.instance.getStyledVariableName(param))
+        bld.add("* @param " + Utils.instance.getStyledVariableName(param))
       end
-          
+
       if fun.returnValue.vtype != "void"
-        codeBuilder.add("*")
-        codeBuilder.add("* @return ")
-      end  
-          
-      codeBuilder.add("*/ ")
+        bld.add("*")
+        bld.add("* @return ")
+      end
+
+      bld.add("*/ ")
 
       funDec = String.new
 
@@ -85,34 +85,33 @@ module XCTECpp
       if fun.returnValue.isConst
         funDec << "const "
       end
-          
+
       funDec << Utils.instance.getTypeName(fun.returnValue) + " "
-      funDec << Utils.instance.getStyledClassName(dataModel.name) + " :: "
+      funDec << Utils.instance.getStyledClassName(cls.getUName()) + " :: "
       funDec << Utils.instance.getStyledFunctionName(fun.name) << "("
 
-      for param in (0..(fun.parameters.vars.size - 1))            
+      for param in (0..(fun.parameters.vars.size - 1))
         if param != 0
           funDec << ", "
         end
 
         funDec << Utils.instance.getParamDec(fun.parameters.vars[param])
       end
-          
+
       funDec << ")"
 
       if fun.isConst
-        funDec << " const"        
+        funDec << " const"
       end
 
-      codeBuilder.startFunction(funDec)
+      bld.startFunction(funDec)
 
       if fun.returnValue.vtype != "void"
-        codeBuilder.add("return();")
+        bld.add("return();")
       end
-          
-      codeBuilder.endFunction()
+
+      bld.endFunction()
     end
-    
   end
 end
 

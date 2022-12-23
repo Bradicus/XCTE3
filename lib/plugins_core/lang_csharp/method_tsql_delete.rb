@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -19,65 +19,65 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Delete the record for the model with this id")
-      codeBuilder.add("///")
+    def get_definition(cls, bld, fun)
+      bld.add("///")
+      bld.add("/// Delete the record for the model with this id")
+      bld.add("///")
 
-      identVar = dataModel.getIdentityVar()
-
-      if (identVar)
-        codeBuilder.startClass("public void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
-                               ", SqlConnection conn, SqlTransaction trans = null)")
-      end
-
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
-
-      codeBuilder.endClass
-    end
-
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      identVar = dataModel.getIdentityVar()
+      identVar = cls.model.getIdentityVar()
 
       if (identVar)
-        codeBuilder.add("void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
-                        ", SqlConnection conn, SqlTransaction trans = null);")
+        bld.startClass("public void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
+                       ", SqlConnection conn, SqlTransaction trans = null)")
+      end
+
+      get_body(cls, bld, fun)
+
+      bld.endClass
+    end
+
+    def get_declairation(cls, bld, fun)
+      identVar = cls.model.getIdentityVar()
+
+      if (identVar)
+        bld.add("void Delete(" + Utils.instance.getParamDec(identVar.getParam()) +
+                ", SqlConnection conn, SqlTransaction trans = null);")
       end
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, bld, fun)
       conDef = String.new
       varArray = Array.new
 
-      identVar = dataModel.getIdentityVar()
+      identVar = cls.model.getIdentityVar()
 
       if (identVar)
         identParamName = Utils.instance.getStyledVariableName(identVar.getParam())
 
-        dataModel.getAllVarsFor(varArray)
+        cls.model.getAllVarsFor(varArray)
 
-        codeBuilder.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) +
-                        " WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
-                        "] = @" + identParamName + '";')
+        bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) +
+                " WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
+                "] = @" + identParamName + '";')
 
-        codeBuilder.add
+        bld.add
 
-        codeBuilder.startBlock("try")
-        codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-        codeBuilder.add("cmd.Transaction = trans;")
-        codeBuilder.add
-        codeBuilder.add('cmd.Parameters.AddWithValue("@' + identParamName +
-                        '", ' + identParamName + ");")
-        codeBuilder.endBlock
-        codeBuilder.endBlock
-        codeBuilder.startBlock("catch(Exception e)")
-        codeBuilder.add('throw new Exception("Error deleting ' + dataModel.name + " with " +
-                        identVar.name + ' = "' + " + " + identParamName + ", e);")
-        codeBuilder.endBlock
+        bld.startBlock("try")
+        bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+        bld.add("cmd.Transaction = trans;")
+        bld.add
+        bld.add('cmd.Parameters.AddWithValue("@' + identParamName +
+                '", ' + identParamName + ");")
+        bld.endBlock
+        bld.endBlock
+        bld.startBlock("catch(Exception e)")
+        bld.add('throw new Exception("Error deleting ' + cls.getUName() + " with " +
+                identVar.name + ' = "' + " + " + identParamName + ", e);")
+        bld.endBlock
       end
     end
   end

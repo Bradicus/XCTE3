@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -20,79 +20,78 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Update the record for this model")
-      codeBuilder.add("///")
+    def get_definition(cls, bld, fun)
+      bld.add("///")
+      bld.add("/// Update the record for this model")
+      bld.add("///")
 
-      codeBuilder.startClass("public void Update(" +
-                             Utils.instance.getStyledClassName(dataModel.name) +
-                             " o, SqlConnection conn, SqlTransaction trans)")
+      bld.startClass("public void Update(" +
+                     Utils.instance.getStyledClassName(cls.getUName()) +
+                     " o, SqlConnection conn, SqlTransaction trans)")
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, bld, fun)
 
-      codeBuilder.endClass
+      bld.endClass
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("void Update(" +
-                      Utils.instance.getStyledClassName(dataModel.name) +
-                      " o, SqlConnection conn, SqlTransaction trans);")
+    def get_declairation(cls, bld, fun)
+      bld.add("void Update(" +
+              Utils.instance.getStyledClassName(cls.getUName()) +
+              " o, SqlConnection conn, SqlTransaction trans);")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, bld, fun)
       conDef = String.new
 
-      codeBuilder.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + " SET ")
+      bld.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + " SET ")
 
-      codeBuilder.indent
+      bld.indent
 
       separater = ""
       varArray = Array.new
-      dataModel.getNonIdentityVars(varArray)
+      cls.model.getNonIdentityVars(varArray)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.sameLine(separater)
-          codeBuilder.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, genClass.varPrefix) +
-                          "] = @" + Utils.instance.getStyledVariableName(var))
+          bld.sameLine(separater)
+          bld.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) +
+                  "] = @" + Utils.instance.getStyledVariableName(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
-          codeBuilder.add(var.formatText)
+          bld.add(var.formatText)
         end
         separater = ","
       end
 
-      codeBuilder.unindent
+      bld.unindent
 
-      identVar = dataModel.getIdentityVar()
+      identVar = cls.model.getIdentityVar()
 
       if identVar
-        codeBuilder.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, genClass.varPrefix) +
-                        "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
+        bld.add("WHERE [" + XCTETSql::Utils.instance.getStyledVariableName(identVar, cls.varPrefix) +
+                "] = @" + Utils.instance.getStyledVariableName(identVar) + '";')
+      else
+        bld.add("WHERE" + '";')
       end
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.add("cmd.Transaction = trans;")
 
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      Utils.instance.addParameters(varArray, cls, bld)
 
-      Utils.instance.addParameters(varArray, genClass, codeBuilder)
-
-      codeBuilder.add
-      codeBuilder.add("cmd.ExecuteScalar();")
-      codeBuilder.endBlock
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error updating ' + dataModel.name + " with " +
-                      varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
-      codeBuilder.endBlock(";")
+      bld.add
+      bld.add("cmd.ExecuteScalar();")
+      bld.endBlock
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error updating ' + cls.getUName() + " with " +
+              varArray[0].name + ' = "' + " + o." + CodeNameStyling.stylePascal(varArray[0].name) + ", e);")
+      bld.endBlock(";")
     end
   end
 end

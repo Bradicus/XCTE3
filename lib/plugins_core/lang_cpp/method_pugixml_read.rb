@@ -1,107 +1,103 @@
 ##
 
-# 
+#
 # Copyright (C) 2017 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a constructor for a class
- 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
 module XCTECpp
-class MethodPugiXmlRead < XCTEPlugin
-  
-  def initialize
-    @name = "method_pugixml_read"
-    @language = "cpp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
-  
-  # Returns declairation string for this class's constructor
-  def get_declaration(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.add("void load(pugi::xml_node node, " +
-      Utils.instance.getStyledClassName(genClass.name) + "& item);")
-  end
+  class MethodPugiXmlRead < XCTEPlugin
+    def initialize
+      @name = "method_pugixml_read"
+      @language = "cpp"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-  # Returns declairation string for this class's constructor
-  def get_declaration_inline(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.startFuction("void load(pugi::xml_node node, " + 
-      Utils.instance.getStyledClassName(genClass.name) + "& item);")
-    codeStr << get_body(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.endFunction
-  end
+    # Returns declairation string for this class's constructor
+    def get_declaration(cls, bld, codeFun)
+      bld.add("void load(pugi::xml_node node, " +
+              Utils.instance.getStyledClassName(cls.name) + "& item);")
+    end
 
-  def get_dependencies(dataModel, genClass, codeFun, codeBuilder)
-    genClass.addInclude('', 'pugixml.hpp')
-  end
-  
-  # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, codeFun, codeBuilder)
-    codeBuilder.add("/**")
-    codeBuilder.add("* Load this classes primitives from a xml element")
-    codeBuilder.add("*/")
-      
-    classDef = String.new  
-    classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " << 
-      Utils.instance.getStyledClassName(genClass.name) << " :: " << "read(pugi::xml_node node, " +
-      Utils.instance.getStyledClassName(genClass.name) + "& item)"
-    codeBuilder.startClass(classDef)
+    # Returns declairation string for this class's constructor
+    def get_declaration_inline(cls, bld, codeFun)
+      bld.startFuction("void load(pugi::xml_node node, " +
+                       Utils.instance.getStyledClassName(cls.name) + "& item);")
+      codeStr << get_body(cls, bld, codeFun)
+      bld.endFunction
+    end
 
-    get_body(dataModel, genClass, codeFun, codeBuilder)
-        
-    codeBuilder.endFunction
-  end
+    def process_dependencies(cls, bld, codeFun)
+      cls.addInclude("", "pugixml.hpp")
+    end
 
-  def get_body(dataModel, genClass, codeFun, codeBuilder)
-    conDef = String.new
-    varArray = Array.new
-    dataModel.getAllVarsFor(varArray);
+    # Returns definition string for this class's constructor
+    def get_definition(cls, bld, codeFun)
+      bld.add("/**")
+      bld.add("* Load this classes primitives from a xml element")
+      bld.add("*/")
 
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      classDef = String.new
+      classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " <<
+        Utils.instance.getStyledClassName(cls.name) << " :: " << "read(pugi::xml_node node, " +
+                                                                 Utils.instance.getStyledClassName(cls.name) + "& item)"
+      bld.startClass(classDef)
+
+      get_body(cls, bld, codeFun)
+
+      bld.endFunction
+    end
+
+    def get_body(cls, bld, codeFun)
+      conDef = String.new
+
+      # Process variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.getStyledVariableName(var)
 
-        pugiCast = 'to_string()';
-        if (var.vtype.start_with?'Int')
-          pugiCast = 'to_int()'
+        pugiCast = "to_string()"
+        if (var.vtype.start_with? "Int")
+          pugiCast = "to_int()"
         end
-        if (var.vtype.start_with?'Float')
-          pugiCast = 'to_float()'
+        if (var.vtype.start_with? "Float")
+          pugiCast = "to_float()"
         end
 
         if (Utils.instance.isPrimitive(var))
           if var.listType == nil
-            codeBuilder.add(styledVarName + " = item.child(" + styledVarName + ")." + pugiCast + ";")
-          else            
-            codeBuilder.startBlock('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
-            codeBuilder.add(styledVarName + '.push_back(pNode.'+ pugiCast + ');')
-            codeBuilder.endBlock
+            bld.add(styledVarName + " = item.child(" + styledVarName + ")." + pugiCast + ";")
+          else
+            bld.startBlock('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
+            bld.add(styledVarName + ".push_back(pNode." + pugiCast + ");")
+            bld.endBlock
           end
         else
           if var.listType == nil
-            codeBuilder.add(
-              Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(' +
-              Utils.instance.getStyledVariableName(var) + 
-                '(json["' + Utils.instance.getStyledVariableName(var) + '"], ' + Utils.instance.getStyledVariableName(var) + ');')
+            bld.add(
+              Utils.instance.getTypeName(var) + "JsonEngine::loadFromJson(" +
+              Utils.instance.getStyledVariableName(var) +
+                '(json["' + Utils.instance.getStyledVariableName(var) + '"], ' + Utils.instance.getStyledVariableName(var) + ");"
+            )
           else
-            codeBuilder.startBlock('for (auto aJson : json["' + Utils.instance.getStyledVariableName(var) + '"])')
+            bld.startBlock('for (auto aJson : json["' + Utils.instance.getStyledVariableName(var) + '"])')
             if (var.listType == nil)
-              codeBuilder.add(Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(aJson, item);')
+              bld.add(Utils.instance.getTypeName(var) + "JsonEngine::loadFromJson(aJson, item);")
             else
-              codeBuilder.add(Utils.instance.getTypeName(var) + ' newVar;')
-              codeBuilder.add(Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(aJson, item);')
-              codeBuilder.add(Utils.instance.getStyledVariableName(var) + '.push_back(newVar);')
+              bld.add(Utils.instance.getTypeName(var) + " newVar;")
+              bld.add(Utils.instance.getTypeName(var) + "JsonEngine::loadFromJson(aJson, item);")
+              bld.add(Utils.instance.getStyledVariableName(var) + ".push_back(newVar);")
             end
-            codeBuilder.endBlock
+            bld.endBlock
           end
         end
-      end
+      }))
     end
   end
-  
-end
 end
 
 # Now register an instance of our plugin

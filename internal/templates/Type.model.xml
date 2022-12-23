@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="type" >
+
+	<description>
+	Basic variable type
+	</description>
+				
+	<gen_class type="standard" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="name"		type="String" />
+		<var name="category"	type="String" />
+	</var_group>		
+	
+</model>

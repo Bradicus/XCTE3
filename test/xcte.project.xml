@@ -1,5 +1,12 @@
 <project>
-  <template_dir path="templates" languages="csharp" static_code="true" />
-  
+<!--  <generate language="csharp" tpl_path="templates" dest="./csharp_razor" /> -->
+  <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app" />
+  <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
+    <framework name="bootstrap" version="5" />
+    <framework name="angular" />
+  </generate>
+  <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
+  <generate language="java" tpl_path="templates" dest="./maven/demo/src/main/java/com/example/demo" />
+
   <custom_lang_profiles path="lang_profiles" />
 </project>

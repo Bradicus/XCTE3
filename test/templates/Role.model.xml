@@ -2,13 +2,60 @@
 <model name="role" >
 
 	<description>
-	</description>			
-				
-	<gen_class type="standard" namespace="rmx" >
-		<function name="method_load_from_nlohmann_json" />
-	</gen_class>
-	
-	<var_group genGet="true" genSet="true">	
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id"		type="String" pkey="true" />
 		<var name="user role"		type="String" maxlen="50" />
-	</var_group>	
+	</var_group>
+
+	<gen_class type="standard" type-typescript="ts_interface"
+		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
+		path-typescript="shared/interfaces"
+		path-java="Model">
+	</gen_class>
+
+	<gen_class type="web_api_controller"
+		base_class="ApiController"
+		ns-csharp="XCTE.API.Controllers"
+		path-csharp="XCTE.API/Controllers"
+		ns-java="demo.api"
+		path-java="Api" >
+		<function name="method_web_api_read_one" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_store_service" path="shared/services" >
+		<function name="method_angular_service_detail" />
+		<function name="method_angular_service_listing" />
+		<function name="method_angular_service_create" />
+		<function name="method_angular_service_update" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_gen_service" path="shared/services" >
+		<function name="method_service_datagen_faker_get" />
+		<function name="method_service_datagen_init" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_map_service" path="shared/services" >
+		<function name="method_datamap_model_to_reactive_form" />
+	</gen_class>
+
+			<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
+					   var_prefix = "a "
+					   interface_namespace="XCTE.Base.Data.Io"
+					   interface_path="XCTE.Base/Data/Io"
+					   test_namespace="Test"
+					   test_path="Test" >
+				<function name="method_tsql_create" interface="true" />
+				<function name="method_tsql_update" interface="true" />
+				<function name="method_tsql_retrieve_all" interface="true" />
+				<function name="method_tsql_retrieve_one_by" interface="true" >
+					<var_ref name="id" />
+				</function>
+
+			<!--	<function name="method_tsql_delete" interface="true" />-->
+				<!--<function name="update" interface="true" />
+				<function name="delete" interface="true" />
+				<function name="deleteBy" interface="true" />-->
+			</gen_class>
 </model>

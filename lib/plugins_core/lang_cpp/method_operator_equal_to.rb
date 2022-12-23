@@ -1,71 +1,70 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates an equality assignment operator for making
 # a copy of a class
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
-class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
+module XCTECpp
+  class XCTECpp::MethodOperatorEqualTo < XCTEPlugin
+    def initialize
+      @name = "method_operator_equal_to"
+      @language = "cpp"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-  def initialize
-    @name = "method_operator_equal_to"
-    @language = "cpp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
+    # Returns declairation string for this class's equality assignment operator
+    def get_declaration(cls, bld, funItem)
+      eqString = String.new
 
-  # Returns declairation string for this class's equality assignment operator
-  def get_declaration(dataModel, genClass, funItem, codeBuilder)
-    eqString = String.new
+      bld.add("bool operator==" << "(const " << cls.name)
+      bld.sameLine(eqString << " src" << cls.name << ") const;")
 
-    eqString << "        bool operator==" << "(const " << codeClass.name
-    eqString << " src" << codeClass.name << ") const;\n"
+      return eqString
+    end
 
-    return eqString
-  end
+    def process_dependencies(cls, bld, funItem)
+    end
 
-  def get_dependencies(dataModel, genClass, funItem, codeBuilder)
-  end
+    # Returns definition string for this class's equality assignment operator
+    def get_definition(cls, bld, funItem)
+      longArrayFound = false
+      seperator = ""
 
-  # Returns definition string for this class's equality assignment operator
-  def get_definition(dataModel, genClass, funItem, codeBuilder)
-    eqString = String.new
-    longArrayFound = false;
-    seperator = ""
+      bld.add("/**")
+      bld.add("* Sets this object equal to incoming object")
+      bld.add("*/")
+      bld.startClass("bool " + cls.name + " :: operator==" + "(const " + cls.name + " src" + cls.name + ") const")
 
-    eqString << "/**\n* Sets this object equal to incoming object\n*/\n"
-    eqString << "bool " << codeClass.name << " :: operator==" << "(const " << codeClass.name
-    eqString << " src" + codeClass.name << ") const\n"
-    eqString << "{\n"
+      bld.add("return(")
+      bld.indent
 
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
-
-    eqString << "    return(\n"
-
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if !var.isStatic   # Ignore static variables
-          if XCTECpp::Utils::isPrimitive(var)
-            if var.arrayElemCount.to_i == 0	# Array of primitives
-              eqString << "        " << seperator << Utils.instance.getStyledVariableName(var) << " == "
-              eqString << "src" << codeClass.name << "."
-              eqString << Utils.instance.getStyledVariableName(var) << "\n"
+      # Process variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !var.isStatic # Ignore static variables
+          if (Utils.instance.isPrimitive(var))
+            if var.arrayElemCount.to_i == 0 # Array of primitives
+              bld.add(seperator << Utils.instance.getStyledVariableName(var) << " == ")
+              bld.sameLine("src" << cls.name << ".")
+              bld.sameLine(Utils.instance.getStyledVariableName(var))
 
               seperator = "&& "
             end
           end
         end
-      end
+      }))
+
+      bld.unindent
+
+      bld.add(");")
+      bld.endBlock
     end
-
-
-    eqString << "    );\n";
-    eqString << "}\n\n";
   end
 end
 

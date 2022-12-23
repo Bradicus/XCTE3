@@ -1,90 +1,86 @@
 ##
 
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+#
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a constructor for a class
- 
-require 'x_c_t_e_plugin.rb'
+
+require "x_c_t_e_plugin.rb"
 
 module XCTECSharp
   class MethodTsqlRetrieveAll < XCTEPlugin
-    
     def initialize
       @name = "method_tsql_retrieve_all"
       @language = "csharp"
       @category = XCTEPlugin::CAT_METHOD
     end
-    
+
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add('/// <summary>')
-      codeBuilder.add('/// Reads data set from sql database')
-      codeBuilder.add('/// </summary>')
+    def get_definition(cls, bld, fun)
+      bld.add("/// <summary>")
+      bld.add("/// Reads data set from sql database")
+      bld.add("/// </summary>")
 
-      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
+      standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.startClass("public IEnumerable<" + standardClassName + 
-          "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)")
+      bld.startClass("public IEnumerable<" + standardClassName +
+                     "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)")
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
-          
-      codeBuilder.endClass
+      get_body(cls, bld, fun)
+
+      bld.endClass
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("IEnumerable<" +
-          Utils.instance.getStyledClassName(dataModel.name) + 
-          "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);")
+    def get_declairation(cls, bld, fun)
+      bld.add("IEnumerable<" +
+              Utils.instance.getStyledClassName(cls.getUName()) +
+              "> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse('System.Collections.Generic', 'IEnumerable')
-      genClass.addUse('System.Data.SqlClient', 'SqlConnection')
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("System.Collections.Generic", "IEnumerable")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, bld, fun)
       conDef = String.new
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
 
-      tableName = Utils.instance.getStyledClassName(dataModel.name)
-      codeBuilder.add('List<' + tableName + '> resultList = new List<' + tableName + '>();')
-      codeBuilder.add('string sql = @"SELECT ')
+      tableName = Utils.instance.getStyledClassName(cls.getUName())
+      bld.add("List<" + tableName + "> resultList = new List<" + tableName + ">();")
+      bld.add('string sql = @"SELECT ')
 
-      codeBuilder.indent
+      bld.indent
 
-      Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
+      Utils.instance.genVarList(cls, bld, cls.varPrefix)
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add('FROM ' + tableName + '";')
-      codeBuilder.add
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
-      codeBuilder.add
-      codeBuilder.add('SqlDataReader results = cmd.ExecuteReader();')
-      codeBuilder.startBlock('while(results.Read())')
+      bld.add("FROM " + tableName + '";')
+      bld.add
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.add("cmd.Transaction = trans;")
+      bld.add
+      bld.add("SqlDataReader results = cmd.ExecuteReader();")
+      bld.startBlock("while(results.Read())")
 
-      codeBuilder.add('var o = new ' + tableName + '();')
+      bld.add("var o = new " + tableName + "();")
 
-      Utils.instance.genAssignResults(varArray, genClass, codeBuilder)
+      Utils.instance.genAssignResults(cls, bld)
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving all items from ' + tableName + '", e);')
-      codeBuilder.endBlock(';')
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error retrieving all items from ' + tableName + '", e);')
+      bld.endBlock(";")
 
-      codeBuilder.add
-      codeBuilder.add('return resultList;')
+      bld.add
+      bld.add("return resultList;")
     end
-
   end
 end
 

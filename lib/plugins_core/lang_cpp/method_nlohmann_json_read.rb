@@ -17,124 +17,125 @@ module XCTECpp
       @name = "method_nlohmann_json_read"
       @language = "cpp"
       @category = XCTEPlugin::CAT_METHOD
-      @standardClass
-      @standardClassType
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(dataModel, genClass, codeFun, codeBuilder)
-      getStandardClassInfo(dataModel, genClass, codeFun, codeBuilder)
+    def get_declaration(cls, bld, codeFun)
+      Utils.instance.getStandardClassInfo(cls)
 
-      codeBuilder.add("static void read(const nlohmann::json& json, " +
-                      @standardClassType + "& item);")
+      bld.add("static void read(const nlohmann::json& json, " +
+              cls.standardClassType + "& item);")
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration_inline(dataModel, genClass, codeFun, codeBuilder)
-      getStandardClassInfo(dataModel, genClass, codeFun, codeBuilder)
+    def get_declaration_inline(cls, bld, codeFun)
+      Utils.instance.getStandardClassInfo(cls)
 
-      codeBuilder.startFuction("static void read(const nlohmann::json& json, " +
-                               @standardClassType + "& item);")
-      codeStr << get_body(dataModel, genClass, codeFun, codeBuilder)
-      codeBuilder.endFunction
+      bld.startFuction("static void read(const nlohmann::json& json, " +
+                       cls.standardClassType + "& item);")
+      codeStr << get_body(cls, bld, codeFun)
+      bld.endFunction
     end
 
-    #
-    def getStandardClassInfo(dataModel, genClass, codeFun, codeBuilder)
-      @standardClass = dataModel.findClass("standard")
+    def process_dependencies(cls, bld, codeFun)
+      cls.addInclude("", "json.hpp")
+      Utils.instance.getStandardClassInfo(cls)
 
-      if (@standardClass.namespaceList != nil)
-        ns = @standardClass.namespaceList.join("::") + "::"
-      else
-        ns = ""
+      for bc in cls.standardClass.baseClasses
+        cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
       end
 
-      @standardClassType = ns + Utils.instance.getStyledClassName(@standardClass.name)
-
-      if (@standardClass != nil && @standardClass.ctype != "enum")
-        genClass.addInclude(@standardClass.namespaceList.join("/"), Utils.instance.getStyledClassName(dataModel.name))
-      end
-    end
-
-    def get_dependencies(dataModel, genClass, codeFun, codeBuilder)
-      genClass.addInclude("", "json.hpp")
-
-      # Add dependecies for all variables that aren't primitives, and their engines
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if (!Utils.instance.isPrimitive(var) && !Utils.instance.getTypeName(var).end_with?("Type"))
-            #genClass.addInclude(var.namespace, Utils.instance.getTypeName(var) )
-            genClass.addInclude(genClass.namespaceList.join("/"), Utils.instance.getClassName(var) + "JsonEngine")
-          end
+      # Process variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        if (!Utils.instance.isPrimitive(var) && !Utils.instance.getTypeName(var).end_with?("Type"))
+          #cls.addInclude(var.namespace, Utils.instance.getTypeName(var) )
+          cls.addInclude(cls.namespace.get("/"), Utils.instance.getClassName(var) + "JsonEngine")
         end
-      end
+      }))
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, codeFun, codeBuilder)
-      codeBuilder.add("/**")
-      codeBuilder.add("* Reads this classes primitives from a json element")
-      codeBuilder.add("*/")
+    def get_definition(cls, bld, codeFun)
+      bld.add("/**")
+      bld.add("* Reads this classes primitives from a json element")
+      bld.add("*/")
+
+      Utils.instance.getStandardClassInfo(cls)
 
       classDef = String.new
       classDef << Utils.instance.getTypeName(codeFun.returnValue) << " " <<
-        Utils.instance.getStyledClassName(genClass.name) << " :: " << "read(const nlohmann::json& json, " +
-                                                                      @standardClassType + "& item)"
-      codeBuilder.startClass(classDef)
+        Utils.instance.getStyledClassName(cls.name) << " :: " << "read(const nlohmann::json& json, " +
+                                                                 cls.standardClassType + "& item)"
+      bld.startClass(classDef)
 
-      get_body(dataModel, genClass, codeFun, codeBuilder)
+      get_body(cls, bld, codeFun)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_body(dataModel, genClass, codeFun, codeBuilder)
+    def get_body(cls, bld, codeFun)
       conDef = String.new
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
 
-      codeBuilder.startBlock("if (json.is_null() == false)")
+      bld.startBlock("if (json.is_null() == false)")
 
-      standardClass = Classes.findClass("standard")
+      for bc in cls.standardClass.baseClasses
+        bClass = Classes.findClass("standard", bc.name)
+        bld.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::read(json, item);")
+      end
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+      # Process variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
           curVarClass = Classes.findVarClass(var)
+
           isEnum = curVarClass != nil && curVarClass.ctype == "enum"
 
           if (Utils.instance.isPrimitive(var) || isEnum)
             if var.listType == nil
-              codeBuilder.add('if (json.find("' + Utils.instance.getStyledVariableName(var) + '") != json.end()) item.' + Utils.instance.getStyledVariableName(var) +
-                              ' = json["' + Utils.instance.getStyledVariableName(var) + '"].get<' + Utils.instance.getTypeName(var) + ">();")
+              if !isEnum
+                bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
+                        ' = json["' + curVarName + '"].get<' + Utils.instance.getTypeName(var) + ">();")
+              else
+                bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
+                        ' = json["' + curVarName + '"].get<' + Utils.instance.getTypeName(var) + ">();")
+              end
             else
-              codeBuilder.startBlock('for (auto child : json["' + Utils.instance.getStyledVariableName(var) + '"])')
-              codeBuilder.add("item." + Utils.instance.getStyledVariableName(var) + ".push_back(child.get<" + Utils.instance.getTypeName(var) + ">());")
-              codeBuilder.endBlock
+              bld.add("item." + curVarName + ".clear();")
+              bld.startBlock('for (auto child : json["' + curVarName + '"])')
+              bld.add("item." + curVarName + ".push_back(child.get<" + Utils.instance.getBaseTypeName(var) + ">());")
+              bld.endBlock
             end
           else
             if var.listType == nil
-              codeBuilder.add(
-                Utils.instance.getClassName(var) + "JsonEngine::read(" +
-                  'json["' + Utils.instance.getStyledVariableName(var) + '"], item.' + Utils.instance.getStyledVariableName(var) + ");"
+              bld.add(
+                'if (json.contains("' + curVarName + '")) ' + Utils.instance.getClassName(var) + "JsonEngine::read(" +
+                  'json["' + curVarName + '"], item.' + curVarName + ");"
               )
             else
-              codeBuilder.startBlock('for (auto aJson : json["' + Utils.instance.getStyledVariableName(var) + '"])')
+              bld.startBlock('if (json.contains("' + curVarName + '"))')
 
-              codeBuilder.add(Utils.instance.getTypeName(var) + " newVar;")
-              codeBuilder.add(Utils.instance.getClassName(var) + "JsonEngine::read(aJson, newVar);")
-              codeBuilder.add("item." + Utils.instance.getStyledVariableName(var) + ".push_back(newVar);")
+              bld.startBlock('for (auto aJson : json["' + curVarName + '"])')
 
-              codeBuilder.endBlock
+              if (var.isSharedPointer)
+                bld.add(Utils.instance.getSingleItemTypeName(var) + " newVar(new " + Utils.instance.getBaseTypeName(var) + "());")
+                bld.add(Utils.instance.getClassName(var) + "JsonEngine::read(aJson, *newVar);")
+              else
+                bld.add(Utils.instance.getSingleItemTypeName(var) + " newVar;")
+                bld.add(Utils.instance.getClassName(var) + "JsonEngine::read(aJson, newVar);")
+              end
+
+              bld.add("item." + curVarName + ".push_back(newVar);")
+
+              bld.endBlock
+              bld.endBlock
             end
           end
         end
-      end
+      }))
 
-      codeBuilder.endBlock
+      bld.endBlock
     end
   end
 end

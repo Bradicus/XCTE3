@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -11,7 +11,7 @@
 module CodeStructure
   class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
-      :visibility, :isConst, :isStatic, :isPointer, :isVirtual, :passBy, :genSet, :genGet,
+      :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
       :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace
 
     def initialize(parentElem)
@@ -19,7 +19,8 @@ module CodeStructure
 
       @elementId = CodeElem::ELEM_VARIABLE
 
-      @vtype
+      @vtype  # Type name
+      @utype  # Unformatted type name
       @templateType
       @defaultValue
       @comment
@@ -27,7 +28,9 @@ module CodeStructure
       @isConst = false
       @isStatic = false
       @isPointer = false
-      @namespace = nil
+      @isSharedPointer = false
+      @init = nil
+      @namespace = CodeElemNamespace.new
       @passBy = "value"
       @genSet = false
       @genGet = false
@@ -54,6 +57,26 @@ module CodeStructure
       param.arrayElemCount = @arrayElemCount
 
       return param
+    end
+
+    def getUType()
+      if (utype == nil)
+        return vtype
+      end
+
+      return utype
+    end
+
+    def getDisplayName()
+      if displayName != nil
+        return displayName
+      end
+
+      return name.capitalize
+    end
+
+    def hasMultipleItems()
+      return listType != nil || arrayElemCount > 0
     end
   end
 end

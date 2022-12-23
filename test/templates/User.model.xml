@@ -1,29 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="User">
+<model name="user">
 
 	<description>
 	</description>
-				
-	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" >
-		<use name="System.Collections.Generic" />
-		<function name="method_constructor" />
-		<function name="method_equality_assign" />
+
+	<gen_class type="standard"
+		type-typescript="ts_interface" path-typescript="shared/interfaces"
+		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
+		path-java="Model" >
+		<use-csharp name="System.Collections.Generic" />
 	</gen_class>
-				
-	<gen_class type="ef_configuration" namespace="XCTE.Data" path="XCTE.Data" >
-		<use name="System.Collections.Generic" />
+
+	<gen_class type="class_angular_module" path="user" ></gen_class>
+	<gen_class type="class_angular_module_routing" path="user" ></gen_class>
+
+  <gen_class type="class_angular_listing" path="user/user-listing" ></gen_class>
+	<gen_class type="class_angular_reactive_edit" path="user/user-view" >
+	 	<function name="method_service_datagen_random" />
+		<function name="method_angular_reactive_call_datamap" />
+	</gen_class>
+
+	<gen_class type="empty_file" name="user view" namespace="" path="user/user-view" >
+	</gen_class>
+
+	<gen_class type="empty_file" name="user listing" namespace="" path="user/user-listing" ></gen_class>
+
+	<gen_class type="class_angular_data_store_service" path="shared/services" >
+		<function name="method_angular_service_detail" />
+		<function name="method_angular_service_listing" />
+		<function name="method_angular_service_create" />
+		<function name="method_angular_service_update" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_gen_service" path="shared/services" >
+		<function name="method_service_datagen_faker_get" />
+		<function name="method_service_datagen_init" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_map_service" path="shared/services" >
+		<function name="method_datamap_model_to_reactive_form" />
+	</gen_class>
+
+	<gen_class type="ef_configuration" namespace="XCTE.Base.Data.Config" path="XCTE.Base/Data/Config" >
+		<use-csharp name="System.Collections.Generic" />
 		<function name="method_ef_configuration" />
 	</gen_class>
-				
-	<gen_class type="web_api_controller" namespace="XCTE.API" base_class="ApiController" path="XCTE.API" >
+
+
+
+	<gen_class type="web_api_controller"
+		ns-csharp="XCTE.API.Controllers"
+		path-csharp="XCTE.API/Controllers"
+		ns-java="demo.api"
+		path-java="Api" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
-				
-	<var_group genGet="true" genSet="true">	
-		<var name="first name"		type="String" maxlen="50" />
-		<var name="last name"		type="String" maxlen="50" />
-		<var name="username"	type="String" maxlen="50" />
-		<var name="address" 	utype="address" />
-		<var name="roles"		utype="role" collection="List" />
-	</var_group>	
+
+		<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
+				   var_prefix = "a "
+				   interface_namespace="XCTE.Base.Data.Io"
+				   interface_path="XCTE.Base/Data/Io"
+				   test_namespace="Test"
+				   test_path="Test" >
+			<function name="method_tsql_create" interface="true" />
+			<function name="method_tsql_update" interface="true" />
+			<function name="method_tsql_retrieve_all" interface="true" />
+			<function name="method_tsql_retrieve_one_by" interface="true" >
+				<var_ref name="id" />
+			</function>
+
+		<!--	<function name="method_tsql_delete" interface="true" />-->
+			<!--<function name="update" interface="true" />
+			<function name="delete" interface="true" />
+			<function name="deleteBy" interface="true" />-->
+		</gen_class>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id"		type="String" pkey="true" />
+		<var_group>
+				<var name="first name"		type="String" maxlen="255" />
+				<var name="last name"		type="String" maxlen="255" />
+				<var name="username"	type="String" maxlen="255" />
+				<var name="email"	type="String" maxlen="255" />
+		</var_group>
+		<var_group>
+			<var name="created date" type="DateTime" />
+			<var name="last login date" type="DateTime" />
+			<var name="mailing address" 	type="Address" />
+			<var name="physical address" 	type="Address" />
+			<var name="roles"		type="Role" set="List" />
+		</var_group>
+	</var_group>
 </model>

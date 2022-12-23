@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LANGUAGE_DEFS>
+
+	<STYLING namespace="PASCAL_CASE" variable="CAMEL_CASE" class="PASCAL_CASE" function="CAMEL_CASE" file="DASH_LOWER" />
+
+	<FILE_TYPES>
+		<FILE_TYPE type="body" extension="html" />
+	</FILE_TYPES>
+
+	<!-- These don't do much but let the program know which variable types 
+	     are primitives
+	-->
+
+	<TYPE_MAPS>	
+		<TYPE_MAP genType="Boolean" langType="boolean" />
+		<TYPE_MAP genType="Char" 	langType="string" />
+		<TYPE_MAP genType="UChar" 	langType="number" />
+		<TYPE_MAP genType="UNC16" 	langType="number" />
+		
+		<TYPE_MAP genType="Int8" 	langType="number" />
+		<TYPE_MAP genType="Int16" 	langType="number" />
+		<TYPE_MAP genType="Int32" 	langType="number" />
+		<TYPE_MAP genType="Int64" 	langType="number" />
+		
+		<!-- Wastes space but java has no unsigned -->
+		<TYPE_MAP genType="UInt8" 	langType="number" />
+		<TYPE_MAP genType="UInt16" 	langType="number" />
+		<TYPE_MAP genType="UInt32" 	langType="number" />
+		<TYPE_MAP genType="UInt64" 	langType="number" />
+		
+		<TYPE_MAP genType="Float32" langType="number" />
+		<TYPE_MAP genType="Float64" langType="number" />
+		<TYPE_MAP genType="String" 	langType="string" />
+		
+		<TYPE_MAP genType="DateTime" 	langType="Date" />
+	</TYPE_MAPS>
+	
+</LANGUAGE_DEFS>

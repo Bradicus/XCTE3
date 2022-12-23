@@ -7,7 +7,7 @@
 
 module CodeStructure
   class CodeElemTemplateDirectory < CodeElem
-     attr_accessor :name, :path, :baseNamespace, :isStatic, :dest, :languages
+    attr_accessor :name, :path, :namespace, :isStatic, :dest, :languages
 
     def initialize(name = String.new, path = String.new, dest = String.new, baseNamespace = Array.new)
       @elementId = CodeElem::ELEM_TEMPLATE_DIRECTORY
@@ -15,10 +15,10 @@ module CodeStructure
       @name = name
       @path = path
       @dest = dest
-      
+
       @languages = Array.new
       @isStatic = "static"
-      @baseNamespace = baseNamespace
+      @namespace = baseNamespace
     end
   end
 end

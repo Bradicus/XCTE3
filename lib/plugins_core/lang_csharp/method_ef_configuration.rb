@@ -1,60 +1,59 @@
 ##
 
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+#
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a constructor for a class
- 
-require 'x_c_t_e_plugin.rb'
 
-class XCTECSharp::MethodEFConfiguration < XCTEPlugin
-  
-  def initialize
-    @name = "method_ef_configuration"
-    @language = "csharp"
-    @category = XCTEPlugin::CAT_METHOD
-  end
-  
-  # Returns definition string for this class's constructor
-  def get_definition(dataModel, genClass, fun, cfg, codeBuilder)
-    codeBuilder.add("//")
-    codeBuilder.add("// Configuration ")
-    codeBuilder.add("//")
+require "x_c_t_e_plugin.rb"
 
-    entityClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
-    configFunName = 'Configure(EntityTypeBuilder<' + entityClassName + '> builder)'
+module XCTECSharp
+  class MethodEFConfiguration < XCTEPlugin
+    def initialize
+      @name = "method_ef_configuration"
+      @language = "csharp"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-    codeBuilder.startFunction('public void ' + configFunName)
+    # Returns definition string for this class's constructor
+    def get_definition(cls, bld, fun)
+      bld.add("//")
+      bld.add("// Configuration ")
+      bld.add("//")
 
-    get_body(dataModel, genClass, fun, cfg, codeBuilder)
-        
-    codeBuilder.endFunction
-  end
-  
-  # No deps
-  def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-  end
+      entityClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
+      configFunName = "Configure(EntityTypeBuilder<" + entityClassName + "> builder)"
 
-  def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
-    varArray = Array.new
-    dataModel.getAllVarsFor(varArray);
+      bld.startFunction("public void " + configFunName)
 
-    codeBuilder.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(dataModel.name) + '", "dbo");')
+      get_body(cls, bld, fun)
 
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-          codeBuilder.add('builder.Property(e => e.' + var.name + ')')
-          codeBuilder.indent
-          codeBuilder.add('.HasColumnName("' + XCTETSql::Utils.instance.getStyledVariableName(var) + '")')
-          codeBuilder.unindent
+      bld.endFunction
+    end
 
-          codeBuilder.add
-      end
+    def get_body(cls, bld, fun)
+      bld.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + '", "dbo");')
+
+      # Process variables
+      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if var.genGet || var.genSet
+            bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledFunctionName(var.name) + ")")
+          else
+            bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledVariableName(var.name) + ")")
+          end
+
+          bld.indent
+          bld.add('.HasColumnName("' + XCTETSql::Utils.instance.getStyledVariableName(var) + '");')
+          bld.unindent
+
+          bld.add
+        end
+      })
     end
   end
-  
 end
 
 # Now register an instance of our plugin

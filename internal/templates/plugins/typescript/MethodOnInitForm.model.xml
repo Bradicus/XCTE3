@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="method on init form" >
+
+	<description>
+	Constructor
+	</description>
+				
+	<gen_class type="xcte_method_plugin" ns="XCTETypescript" path="XCTETypescript" lang="ruby" >
+	</gen_class>	
+	
+</model>

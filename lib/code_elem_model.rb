@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -22,7 +22,7 @@ require "rexml/document"
 module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :classes, :name, :description,
-                  :case, :groups, :xmlFileName
+                  :case, :varGroup, :xmlFileName, :lastModified
 
     def initialize
       super()
@@ -32,25 +32,22 @@ module CodeStructure
       @case
       @description
       @classes = Array.new
-      @groups = Array.new
+      @varGroup = CodeElemVarGroup.new
       @xmlFileName = ""
+      @lastModified
     end
 
-    # Returns whether or not this class has an array variable
-    def hasAnArray
-      varArray = Array.new
-
-      for vGrp in groups
-        CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount.to_i > 0
-          return true
+    #
+    # Finds a class that this model has by type name
+    #
+    def findClassByType(classType)
+      for cls in @classes
+        if cls.ctype == classType
+          return cls
         end
       end
 
-      return false
+      return nil
     end
 
     # Returns whether or not this class has an variable of this type
@@ -99,42 +96,27 @@ module CodeStructure
       end
     end
 
-    # Returns all variables in this class that match the cfg
-    def self.getVarsFor(vGroup, vArray)
-      for var in vGroup.vars
-        vArray << var
-      end
+    def getFilteredVars(filterFun)
+      varArray = Array.new
+      getFilteredGroup(@varGroup, varArray, filterFun)
 
-      for grp in vGroup.groups
-        getVarsFor(grp, vArray)
-      end
-
-      # puts vArray.size
+      return varArray
     end
 
-    # Returns all variables in this class that match the cfg
-    def getAllVarsFor(varArray)
-      for vGroup in @groups
-        CodeElemModel.getVarsFor(vGroup, varArray)
-      end
-    end
-
-    def getScreenVars(varArray, screenFunction)
-      for vGroup in @groups
-        getScreenGroup(vGroup, varArray, screenFunction)
-      end
+    def getScreenVars(varArray, filterFun)
+      getFilteredGroup(@varGroup, varArray, filterFun)
     end
 
     # Screen variables based on pass functoin
-    def getScreenGroup(vGroup, varArray, screenFunction)
+    def getFilteredGroup(vGroup, varArray, filterFun)
       for var in vGroup.vars
-        if screenFunction.call(var)
+        if filterFun.call(var)
           varArray << var
         end
       end
 
-      for grp in vGroup.groups
-        getScreenGroup(grp, varArray, screenFunction)
+      for grp in vGroup.varGroups
+        getFilteredGroup(grp, varArray, filterFun)
       end
     end
 
@@ -160,17 +142,8 @@ module CodeStructure
       return nil
     end
 
-    # Returns namespaces separated by .
-    def getNamespaceList(cfg, varArray)
-      if @namespaceList != nil
-        return @namespaceList.join(".")
-      else
-        return ""
-      end
-    end
-
     # Find class
-    def findClass(classPlugName)
+    def findClassModel(classPlugName)
       for c in @classes
         if (c.ctype == classPlugName)
           return c

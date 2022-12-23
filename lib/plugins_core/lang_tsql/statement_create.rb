@@ -1,18 +1,17 @@
 ##
 
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+#
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This plugin generates a create statement for a database based 
+# This plugin generates a create statement for a database based
 # on this class
- 
-require 'x_c_t_e_plugin.rb'
+
+require "x_c_t_e_plugin.rb"
 
 module XCTETSql
   class StatementCreate < XCTEPlugin
-      
     def initialize
       @name = "statement_create"
       @language = "tsql"
@@ -20,47 +19,47 @@ module XCTETSql
       @author = "Brad Ottoson"
     end
 
-    def getClassName(dataModel, genClass)
-      return XCTETSql::Utils.instance.getStyledClassName(dataModel.name)
+    def getClassName(cls)
+      return XCTETSql::Utils.instance.getStyledClassName(cls.getUName())
     end
 
-    def genSourceFiles(dataModel, genClass, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
-      genClass.setName(getClassName(dataModel, genClass))
+      cls.setName(getClassName(cls))
 
-      codeBuilder = SourceRenderer.new
-      codeBuilder.lfName = dataModel.name
-      codeBuilder.lfExtension = 'sql'
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
+      bld = SourceRenderer.new
+      bld.lfName = cls.getUName()
+      bld.lfExtension = "sql"
+      genFileContent(cls, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, bld)
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("CREATE TABLE [" + genClass.name + "] (")
-      codeBuilder.indent
+      bld.add("CREATE TABLE [" + cls.name + "] (")
+      bld.indent
 
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
+      cls.model.getAllVarsFor(varArray)
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !first
-            codeBuilder.sameLine(", ")
+            bld.sameLine(", ")
           end
           first = false
 
-          codeBuilder.add(XCTETSql::Utils.instance.getVarDec(var, genClass.varPrefix))
+          bld.add(XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix))
 
           if var.defaultValue != nil
-            codeBuilder.sameLine(" default '" << var.defaultValue << "'")
+            bld.sameLine(" default '" << var.defaultValue << "'")
           end
         end
       end
@@ -69,19 +68,18 @@ module XCTETSql
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           if var.isPrimary == true
-            primKeys << '[' + Utils.instance.getStyledVariableName(var, genClass.varPrefix) + ']'
+            primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) + "]"
           end
         end
       end
 
       if primKeys.length > 0
-        codeBuilder.sameLine(',')
-        codeBuilder.add("PRIMARY KEY (" + primKeys.join(', ') + ")")
+        bld.sameLine(",")
+        bld.add("PRIMARY KEY (" + primKeys.join(", ") + ")")
       end
 
-      codeBuilder.unindent
-      codeBuilder.add(") ")
-
+      bld.unindent
+      bld.add(") ")
     end
   end
 end

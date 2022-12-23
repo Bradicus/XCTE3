@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -11,13 +11,15 @@
 require "code_elem.rb"
 require "code_elem_include.rb"
 require "code_elem_use.rb"
+require "code_elem_namespace.rb"
 
 module CodeStructure
   class CodeElemClassGen < CodeElem
-    attr_accessor :functions, :namespaceList, :ctype, :interfaceNamespace, :interfacePath,
-                  :testNamespace, :testPath,
-                  :includes, :uses, :baseClasses, :language, :path, :varPrefix, :model,
-                  :dontModifyCode
+    attr_accessor :functions, :namespace, :ctype, :interfaceNamespace, :interfacePath,
+                  :testNamespace, :testPath, :templateParams,
+                  :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
+                  :dontModifyCode,
+                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className, :genCfg
     attr_reader :name
 
     def initialize(parentElem, model, isStatic)
@@ -25,17 +27,31 @@ module CodeStructure
 
       @elementId = CodeElem::ELEM_CLASS_GEN
       @name = nil
+      @className = nil # Override name for generated class
 
       @language = nil
       @includes = Array.new
       @uses = Array.new
       @functions = Array.new
       @baseClasses = Array.new
-      @namespaceList = Array.new
+      @interfaces = Array.new
+      @namespace = CodeElemNamespace.new
+      @interfaceNamespace = CodeElemNamespace.new
+      @testNamespace = CodeElemNamespace.new
+      @templateParams = Array.new
       @varPrefix = ""
+      @preDefs = Array.new
       @path = nil
       @model = model
       @dontModifyCode = isStatic
+      @genCfg
+
+      # Used by per lang instance of class
+      @name = nil
+      @filePath = nil
+      @standardClass = nil
+      @standardClassType = nil
+      @customCode = nil
     end
 
     def addInclude(iPath, iName, iType = nil)
@@ -63,15 +79,16 @@ module CodeStructure
 
     def addUse(use, forClass = nil)
       curUse = nil
+      usNs = CodeElemNamespace.new(use)
 
       for i in @uses
-        if i.namespace == use
+        if i.namespace.same?(usNs)
           curUse = i
         end
       end
 
       if curUse == nil
-        curUse = CodeElemUse.new(use)
+        curUse = CodeElemUse.new(usNs)
         @uses << curUse
       end
     end
@@ -86,8 +103,42 @@ module CodeStructure
       return false
     end
 
+    def getUName()
+      if (@className != nil)
+        return @className
+      end
+
+      return @model.name
+    end
+
     def setName(newName)
       @name = newName
+    end
+
+    def findVar(varName, varNs = nil)
+      varFound = findVarInGroup(@model.varGroup, varName, varNs)
+      if (varFound != nil)
+        return varFound
+      end
+
+      return nil
+    end
+
+    def findVarInGroup(vgroup, varName, varNs)
+      for var in vgroup.vars
+        if var.name == varName && (varNs == nil || var.namespace.get(".") == varNs)
+          return var
+        end
+      end
+
+      for grp in vGroup.varGroups
+        varFound = findVarInGroup(grp, varName, varNs)
+        if (varFound != nil)
+          return varFound
+        end
+      end
+
+      return nil
     end
   end
 end

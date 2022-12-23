@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="class xcte class plugin" >
+
+	<description>
+	Regular unspecialized ruby class
+	</description>
+				
+	<gen_class type="xcte_class_plugin" ns="XCTEJava" path="XCTEJava" lang="java" >
+	</gen_class>	
+	
+</model>

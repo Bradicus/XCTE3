@@ -1,18 +1,17 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_python/x_c_t_e_python.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_python/x_c_t_e_python.rb"
 
-module XCTEPython    
+module XCTEPython
   class MethodConstructor < XCTEPlugin
-
     def initialize
       @name = "method_constructor"
       @language = "python"
@@ -20,15 +19,15 @@ module XCTEPython
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, fun, rend)
+    def get_definition(cls, fun, rend)
       conDef = String.new
-      
+
       rend.add("# Initializer")
 
       rend.startFunction("def __init__(self)")
 
       varArray = Array.new
-      dataModel.getAllVarsFor(varArray);
+      cls.model.getAllVarsFor(varArray)
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE && var.isStatic != true
@@ -42,19 +41,18 @@ module XCTEPython
             end
 
             if var.comment != nil
-              rend.sameLine("\t# " + var.comment);
+              rend.sameLine("\t# " + var.comment)
             end
 
             rend.add
           else
             rend.add("self." << Utils.instance.getStyledVariableName(var) + " = None")
-          end          
+          end
         end
       end
 
       rend.endBlock("# init")
     end
-
   end
 end
 

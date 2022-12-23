@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="accessor" >
+
+	<description>
+	Ruby accessor
+	</description>
+				
+	<gen_class type="standard" ns="XCTERuby" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="has get"		type="String" />
+		<var name="has set"		type="String" />
+	</var_group>		
+	
+</model>

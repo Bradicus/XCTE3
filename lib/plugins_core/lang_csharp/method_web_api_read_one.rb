@@ -1,19 +1,18 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'code_name_styling.rb'
-require 'plugins_core/lang_csharp/utils.rb'
+require "x_c_t_e_plugin.rb"
+require "code_name_styling.rb"
+require "plugins_core/lang_csharp/utils.rb"
 
 module XCTECSharp
   class MethodWebApiRead < XCTEPlugin
-
     def initialize
       @name = "method_web_api_read_one"
       @language = "csharp"
@@ -21,40 +20,50 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Web API get single " + dataModel.name)
-      codeBuilder.add("///")
+    def get_definition(cls, bld, fun)
+      bld.add("///")
+      bld.add("/// Web API get single " + cls.getUName())
+      bld.add("///")
 
-      codeBuilder.startFunction("public IQueryable<" + Utils.instance.getStyledClassName(dataModel.name) + "> Get" + Utils.instance.getStyledClassName(dataModel.name) + "(int id)")
+      get_body(cls, bld, fun)
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
-
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("public IQueryable<" + Utils.instance.getStyledClassName(dataModel.name) + 
-          "> Get" + Utils.instance.getStyledClassName(dataModel.name) + "(int id);")
+    def get_declairation(cls, bld, fun)
+      bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
+              " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse('System.Collections.Generic', 'List')
-      genClass.addUse('System.Web.Http', 'ApiController')
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("System.Collections.Generic", "List")
+      cls.addUse("System.Web.Http", "ApiController")
+      Utils.instance.addClassInclude(cls, "standard")
+      Utils.instance.addClassInclude(cls, "tsql_data_store")
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, bld, fun)
       conDef = String.new
-      varArray = Array.new
-      engineName = Utils.instance.getStyledClassName(dataModel.name) + 'Engine'
-      dataModel.getAllVarsFor(varArray)
+      engineName = Utils.instance.getStyledClassName(cls.getUName() + " data store")
 
-      codeBuilder.add('using (SqlConnection conn = new SqlConnection())')
-      codeBuilder.startBlock('using (I' + engineName + ' eng = new ' + engineName + '())')
+      pkeys = Array.new
+      cls.model.getPrimaryKeyVars(pkeys)
+      params = Array.new
+      for pkey in pkeys
+        params << Utils.instance.getParamDec(pkey)
+      end
 
-      codeBuilder.add('var obj = eng.RetrieveOneById(id);');
+      bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) +
+                        " Get" + Utils.instance.getStyledClassName(cls.getUName()) +
+                        "(" + params.join(", ") + ")")
 
-      codeBuilder.endBlock();
+      bld.startBlock("using (SqlConnection conn = new SqlConnection())")
+      bld.add("I" + engineName + " eng = new " + engineName + "();")
+
+      bld.add("var obj = eng.RetrieveOneById(id, conn);")
+      bld.add("return obj;")
+
+      bld.endBlock()
     end
   end
 end

@@ -1,0 +1,27 @@
+<types>
+	<type name="boolean" />
+	<type name="char" category="text" />
+	<type name="uchar"/>
+	<type name="unc16" category="text" />
+		
+	<type name="int8" category="number" />
+	<type name="int16" category="number" />
+	<type name="int32" category="number" />
+	<type name="int64" category="number" />
+		
+	<type name="uint8" category="number" />
+	<type name="uint16" category="number" />
+	<type name="uint32" category="number" />
+	<type name="uint64" category="number" />
+		
+	<type name="float32" category="number" />
+	<type name="float64" category="number" />
+    <type name="decimal" category="number" />
+
+	<type name="string" category="text" />
+	<type name="stringunc16" category="text" />
+		
+	<type name="date" category="time" />
+	<type name="time" category="time" />
+	<type name="datetime" category="time" />
+</types>

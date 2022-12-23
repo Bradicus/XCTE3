@@ -1,17 +1,16 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates an equality assignment operator for making
 # a copy of a class
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
 class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
-
   def initialize
     @name = "method_operator_equals_by_value"
     @language = "cpp"
@@ -19,80 +18,79 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
   end
 
   # Returns declairation string for this class's equality assignment operator
-  def get_declaration(codeClass, cfg, codeBuilder)
+  def get_declaration(codeClass, bld)
     eqString = String.new
 
-    codeBuilder.add("const " << Utils.instance.getStyledClassName(codeClass.name) << "& operator=" << "(const " << Utils.instance.getStyledClassName(codeClass.name))
-    codeBuilder.sameLine("& src" << Utils.instance.getStyledClassName(codeClass.name) << ");")
-    codeBuilder.add
+    bld.add("const " << Utils.instance.getStyledClassName(codeClass.name) << "& operator=" << "(const " << Utils.instance.getStyledClassName(codeClass.name))
+    bld.sameLine("& src" << Utils.instance.getStyledClassName(codeClass.name) << ");")
+    bld.add
 
     return eqString
   end
 
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, cfg, codeBuilder)
+  def get_definition(codeClass, bld)
     eqString = String.new
-    longArrayFound = false;
+    longArrayFound = false
 
     styledCName = Utils.instance.getStyledClassName(codeClass.name)
 
-    codeBuilder.add("/**")
-    codeBuilder.add(" * Sets this object equal to incoming object")
-    codeBuilder.add(" */")
-    codeBuilder.startClass("const " + styledCName +
-         "& " + styledCName + " :: operator=(const " + styledCName + "& src" + styledCName + ");")
-    
-#    if codeClass.hasAnArray
-#      codeBuilder.add("    unsigned int i;\n");
-#    end
+    bld.add("/**")
+    bld.add(" * Sets this object equal to incoming object")
+    bld.add(" */")
+    bld.startClass("const " + styledCName +
+                   "& " + styledCName + " :: operator=(const " + styledCName + "& src" + styledCName + ");")
+
+    #    if codeClass.hasAnArray
+    #      bld.add("    unsigned int i;\n");
+    #    end
 
     for par in codeClass.baseClasses
-      codeBuilder.add("    " << par.name << "::operator=(src" + styledCName << ");")
+      bld.add("    " << par.name << "::operator=(src" + styledCName << ");")
     end
 
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
         fmtVarName = Utils.instance.getStyledVariableName(var)
-        if !var.isStatic   # Ignore static variables
+        if !var.isStatic # Ignore static variables
           if Utils.instance.isPrimitive(var)
-            if var.arrayElemCount.to_i > 0	# Array of primitives
-              codeBuilder.add("memcpy(" << fmtVarName << ", ")
-              codeBuilder.sameLine("src" << styledCName << ".")
-              codeBuilder.sameLine(fmtVarName << ", ")
-              codeBuilder.sameLine("sizeof(" + Utils.instance.getTypeName(var.vtype) << ") * " << Utils.instance.getSizeConst(var))
-              codeBuilder.sameLine(");")
+            if var.arrayElemCount.to_i > 0 # Array of primitives
+              bld.add("memcpy(" << fmtVarName << ", ")
+              bld.sameLine("src" << styledCName << ".")
+              bld.sameLine(fmtVarName << ", ")
+              bld.sameLine("sizeof(" + Utils.instance.getTypeName(var.vtype) << ") * " << Utils.instance.getSizeConst(var))
+              bld.sameLine(");")
             else
-              codeBuilder.add(fmtVarName << " = src" << styledCName << "." << fmtVarName << ";")
+              bld.add(fmtVarName << " = src" << styledCName << "." << fmtVarName << ";")
             end
-          else	# Not a primitive
-            if var.arrayElemCount > 0	# Array of objects
-                if !longArrayFound
-                  codeBuilder.add("unsigned int i;")
-                  codeBuilder.add
-                  longArrayFound = true
-                end
-              codeBuilder.startBlock("for (i = 0; i < " << Utils.instance.getSizeConst(var) << "; i++)")
-              codeBuilder.add(fmtVarName + "[i] = src" + styledCName + "." + "[i];")
-              codeBuilder.endBlock
+          else # Not a primitive
+            if var.arrayElemCount > 0 # Array of objects
+              if !longArrayFound
+                bld.add("unsigned int i;")
+                bld.add
+                longArrayFound = true
+              end
+              bld.startBlock("for (i = 0; i < " << Utils.instance.getSizeConst(var) << "; i++)")
+              bld.add(fmtVarName + "[i] = src" + styledCName + "." + "[i];")
+              bld.endBlock
             else
-              codeBuilder.add(fmtVarName + " = src" + styledCName + "." + fmtVarName + ";")
+              bld.add(fmtVarName + " = src" + styledCName + "." + fmtVarName + ";")
             end
           end
         end
-
       elsif var.elementId == CodeElem::ELEM_COMMENT
-        codeBuilder.add(Utils.instance.getComment(var))
+        bld.add(Utils.instance.getComment(var))
       elsif var.elementId == CodeElem::ELEM_FORMAT
-        codeBuilder.add(var.formatText)
+        bld.add(var.formatText)
       end
     end
 
-    codeBuilder.add
-    codeBuilder.add("return(*this);")
-    codeBuilder.endBlock
+    bld.add
+    bld.add("return(*this);")
+    bld.endBlock
   end
 end
 

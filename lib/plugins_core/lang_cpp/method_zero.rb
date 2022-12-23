@@ -1,17 +1,16 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates an equality assignment operator for making
 # a copy of a class
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
 
 class XCTECpp::MethodZero < XCTEPlugin
-
   def initialize
     @name = "method_zero"
     @language = "cpp"
@@ -21,7 +20,7 @@ class XCTECpp::MethodZero < XCTEPlugin
   # Returns declairation string for this class's equality assignment operator
   def get_declaration(codeClass, cfg)
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     eqString = String.new
     seperator = ""
@@ -34,32 +33,32 @@ class XCTECpp::MethodZero < XCTEPlugin
   def get_definition(codeClass, cfg)
     eqString = String.new
     seperator = ""
-    longArrayFound = false;
+    longArrayFound = false
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     eqString << "/**\n* Defines the variables in an object\n*/\n"
     eqString << "void " << codeClass.name << " :: zero()\n"
     eqString << "{\n"
 
-#    if codeClass.hasAnArray
-#      eqString << "    unsigned int i;\n\n";
-#    end
+    #    if codeClass.hasAnArray
+    #      eqString << "    unsigned int i;\n\n";
+    #    end
 
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE
-        if !var.isStatic   # Ignore static variables
+        if !var.isStatic # Ignore static variables
           if XCTECpp::Utils::isPrimitive(var)
-              eqString << "    " << var.name << " = " << XCTECpp::Utils::getZero(var) << ";\n"
-            end
+            eqString << "    " << var.name << " = " << XCTECpp::Utils::getZero(var) << ";\n"
           end
         end
+      end
     end
 
-    eqString << "}\n\n";
+    eqString << "}\n\n"
   end
 end
 

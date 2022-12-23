@@ -1,7 +1,7 @@
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -20,55 +20,54 @@ module XCTERazor
       @author = "Brad Ottoson"
     end
 
-    def getClassName(dataModel, genClass)
-      return Utils.instance.getStyledClassName(dataModel.name)
+    def getClassName(cls)
+      return Utils.instance.getStyledClassName(cls.getUName())
     end
 
-    def genSourceFiles(dataModel, genClass, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
-      codeBuilder = SourceRendererRazor.new
-      codeBuilder.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      codeBuilder.lfExtension = "cshtml"
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
+      bld = SourceRendererRazor.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
+      bld.lfExtension = "cshtml"
+      genFileContent(cls, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns definition string for this class's constructor
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, bld)
       sqlCDef = Array.new
       first = true
 
-      codeBuilder.add("@Model " + genClass.namespaceList.join(".") + "." +
-                      XCTECSharp::Utils.instance.getStandardName(dataModel))
-      codeBuilder.add
-      codeBuilder.add("<form>")
-      codeBuilder.indent
+      bld.add("@Model " + XCTECSharp::Utils.instance.getClassTypeName(cls))
+      bld.add
+      bld.add("<form>")
+      bld.indent
 
-      processVarGroup(dataModel, genClass, cfg, codeBuilder, dataModel.groups)
+      processVarGroup(cls, bld, cls.model.groups)
 
-      codeBuilder.unindent
-      codeBuilder.add("</form>")
+      bld.unindent
+      bld.add("</form>")
     end
 
-    def processVarGroup(dataModel, genClass, cfg, codeBuilder, varGroup)
+    def processVarGroup(cls, bld, varGroup)
       for grp in varGroup
         for var in grp.vars
           if var.elementId == CodeElem::ELEM_VARIABLE
             if var.vtype == "String"
-              codeBuilder.add('<input type="text" name="' +
-                              XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
-                              XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
+              bld.add('<input type="text" name="' +
+                      XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" value="model.' +
+                      XCTECSharp::Utils.instance.getStyledVariableName(var.name) + '" />')
             elsif (var.vtype != nil && var.vtype.start_with?("Int")) || (var.utype != nil && var.utype.start_with?("int"))
-              codeBuilder.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
+              bld.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
             end
           end
         end
 
-        processVarGroup(dataModel, genClass, cfg, codeBuilder, grp.groups)
+        processVarGroup(cls, bld, grp.groups)
       end
     end
   end

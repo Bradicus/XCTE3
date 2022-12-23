@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="lang generator config" >
+
+	<description>
+	Code Element
+	</description>
+				
+	<gen_class type="standard" baseClass="CodeElem" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="language"		type="String" />
+		<var name="path"			type="String" />
+		<var name="dest"			type="String" />
+		<var name="namespace"		type="CodeElemNamespace" />
+	</var_group>		
+	
+</model>

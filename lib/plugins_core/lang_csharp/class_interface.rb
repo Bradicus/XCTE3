@@ -18,45 +18,47 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(dataModel, genClass)
-      if (genClass.parentElem.is_a?(CodeElemClassGen))
-        return "i " + genClass.parentElem.name
+    def getClassName(cls)
+      if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
+        parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.ctype)
+        return "i " + parentPlug.getUnformattedClassName(cls.parentElem)
       else
-        return "i " + dataModel.name
+        return "i " + cls.getUName()
       end
     end
 
-    def genSourceFiles(dataModel, genClass, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
-      if (genClass.parentElem.is_a?(CodeStructure::CodeElemClassGen))
-        genClass.setName("i " + genClass.parentElem.name)
+      if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
+        parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.ctype)
+        cls.setName("i " + parentPlug.getUnformattedClassName(cls.parentElem))
       else
-        genClass.setName("i " + dataModel.name)
+        cls.setName("i " + cls.getUName())
       end
 
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
 
-      codeBuilder = SourceRendererCSharp.new
-      codeBuilder.lfName = Utils.instance.getStyledClassName(genClass.name)
-      codeBuilder.lfExtension = Utils.instance.getExtension("body")
-      genFileContent(dataModel, genClass, cfg, codeBuilder)
+      bld = SourceRendererCSharp.new
+      bld.lfName = Utils.instance.getStyledClassName(cls.name)
+      bld.lfExtension = Utils.instance.getExtension("body")
+      genFileContent(cls, bld)
 
-      srcFiles << codeBuilder
+      srcFiles << bld
 
       return srcFiles
     end
 
     # Returns the code for the content for this class
-    def genFileContent(dataModel, genClass, cfg, codeBuilder)
+    def genFileContent(cls, bld)
 
       # Add in any dependencies required by functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_dependencies(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.process_dependencies(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
@@ -64,54 +66,31 @@ module XCTECSharp
         end
       end
 
-      Utils.instance.genUses(genClass.uses, codeBuilder)
+      Utils.instance.genUses(cls.uses, bld)
 
       # Process namespace items
-      if genClass.namespaceList != nil
-        codeBuilder.startBlock("namespace " << genClass.namespaceList.join("."))
+      if cls.namespace.hasItems?()
+        bld.startBlock("namespace " << cls.namespace.get("."))
       end
 
-      classDec = dataModel.visibility + " interface " + Utils.instance.getStyledClassName(genClass.name)
+      classDec = cls.model.visibility + " interface " + Utils.instance.getStyledClassName(cls.name)
 
-      for par in (0..genClass.baseClasses.size)
-        if par == 0 && genClass.baseClasses[par] != nil
-          classDec << " : " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
-        elsif genClass.baseClasses[par] != nil
-          classDec << ", " << genClass.baseClasses[par].visibility << " " << genClass.baseClasses[par].name
+      for par in (0..cls.baseClasses.size)
+        if par == 0 && cls.baseClasses[par] != nil
+          classDec << " : " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
+        elsif cls.baseClasses[par] != nil
+          classDec << ", " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         end
       end
 
-      codeBuilder.startClass(classDec)
+      bld.startClass(classDec)
 
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
-
-      # Generate code for functions
-      for fun in genClass.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
-              templ.get_declairation(dataModel, genClass, fun, cfg, codeBuilder)
-            else
-              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
-            if templ != nil
-              templ.get_declairation(fun, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          end
-        end
-      end  # class  + dataModel.name
-      codeBuilder.endClass
+      bld.endClass
 
       # Process namespace items
-      if genClass.namespaceList != nil
-        codeBuilder.endBlock(" // namespace " + genClass.namespaceList.join("."))
-        codeBuilder.add
+      if cls.namespace.hasItems?()
+        bld.endBlock(" // namespace " + cls.namespace.get("."))
+        bld.add
       end
     end
   end

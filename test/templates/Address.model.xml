@@ -3,27 +3,55 @@
 
 	<description>
 	</description>
-								
-	<var_group virtual="true" genGet="true" genSet="true">
-		<var name="id"		type="Int32" pkey="true" identity="(1, 1)" />
-		<var name="street1"	type="String" pkey="true" maxlen="50" />
-		<var name="street2"	type="String" maxlen="50" />
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id"		type="Int32" pkey="true" />
+		<var name="street 1"	type="String" maxlen="50" />
+		<var name="street 2"	type="String" maxlen="50" />
 		<var name="city"	type="String" maxlen="50" />
 		<var name="state"	type="String" maxlen="2" />
+		<var name="country"	type="String" maxlen="2" />
 		<var name="zip code"		type="String" maxlen="20" />
 	</var_group>
 
-	<gen_class type="standard" namespace="XCTE.Foundation" path="XCTE.Foundation" ></gen_class>
-	
-	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" modelns="XCTE.Foundation" ></gen_class>	
-	<gen_class language="tsql" type="statement_create" namespace="XCTE.Database" path="XCTE.Database" var_prefix = "a "></gen_class>
+	<gen_class type="standard"
+		type-typescript="ts_interface" path-typescript="shared/interfaces"
+		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
+		path-java="Model" ></gen_class>
 
-	<gen_class type="tsql_engine" namespace="XCTE.Data" path="XCTE.Data"
+	<gen_class type="class_angular_data_gen_service" path="shared/services" >
+		<function name="method_service_datagen_faker_get" />
+		<function name="method_service_datagen_init" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_store_service" path="shared/services" >
+		<function name="method_angular_service_detail" />
+		<function name="method_angular_service_listing" />
+		<function name="method_angular_service_create" />
+		<function name="method_angular_service_update" />
+	</gen_class>
+
+	<gen_class type="class_angular_data_map_service" path="shared/services" >
+		<function name="method_datamap_model_to_reactive_form" />
+	</gen_class>
+
+	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" ></gen_class>
+	<gen_class language="tsql" type="statement_create" namespace="Database" path="sql" var_prefix = "a "></gen_class>
+
+	<gen_class type="web_api_controller"
+		ns-csharp="XCTE.API.Controllers"
+		path-csharp="XCTE.API/Controllers"
+		ns-java="demo.api"
+		path-java="Api" >
+		<function name="method_web_api_read_one" />
+	</gen_class>
+
+	<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
 			   var_prefix = "a "
-			   interface_namespace="XCTE.Foundation" 
-			   interface_path="XCTE.Foundation"
-			   test_namespace="XCTE.Test" 
-			   test_path="XCTE.Test" >
+			   interface_namespace="XCTE.Base.Data.Io"
+			   interface_path="XCTE.Base/Data/Io"
+			   test_namespace="Test"
+			   test_path="Test" >
 		<function name="method_tsql_create" interface="true" />
 		<function name="method_tsql_update" interface="true" />
 		<function name="method_tsql_retrieve_all" interface="true" />
@@ -34,18 +62,9 @@
 			<var_ref name="city" />
 			<var_ref name="zip code" />
 		</function>
-		<function name="method_tsql_delete" interface="true" />
+	<!--	<function name="method_tsql_delete" interface="true" />-->
 		<!--<function name="update" interface="true" />
 		<function name="delete" interface="true" />
 		<function name="deleteBy" interface="true" />-->
 	</gen_class>
-	
-	<empty_function name="weeeHoo" const="true">
-		<parameters>
-			<var name="name" type="String" const="true" />
-			<var name="countSomething" type="Int16" const="true" passby="Reference" />
-			<var name="anArray" type="UInt8" len="10" const="true" />
-		</parameters>
-		<return_var type="Boolean" const="true" />
-	</empty_function>
 </model>

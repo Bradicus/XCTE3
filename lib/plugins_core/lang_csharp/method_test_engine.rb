@@ -4,7 +4,7 @@ end
 ##
 
 #
-# Copyright (C) 2008 Brad Ottoson
+# Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
@@ -21,92 +21,92 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, cfg, codeBuilder)
-      codeBuilder.add("///")
-      codeBuilder.add("/// Constructor")
-      codeBuilder.add("///")
+    def get_definition(cls, bld)
+      bld.add("///")
+      bld.add("/// Constructor")
+      bld.add("///")
 
-      codeBuilder.add("[TestMethod]")
-      codeBuilder.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + dataModel.name + " engine") + "()")
-      get_body(dataModel, genClass, cfg, codeBuilder)
+      bld.add("[TestMethod]")
+      bld.startFunction("public void " + Utils.instance.getStyledFunctionName("test " + cls.getUName() + " engine") + "()")
+      get_body(cls, bld)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_dependencies(dataModel, genClass, cfg, codeBuilder)
-      genClass.addUse("System.Collections.Generic", "IEnumerable")
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
-      genClass.addUse("System.Configuration", "ConfigurationManager")
-      genClass.addUse("System", "Exception")
-      genClass.addUse("System.Transactions", "TransactionScope")
-      genClass.addUse("Microsoft.VisualStudio.TestTools.UnitTesting", "TestMethod")
-      genClass.addUse("XCTE.Foundation", Utils.instance.getStyledClassName("i " + dataModel.name + " engine"))
-      genClass.addUse("XCTE.Data", Utils.instance.getStyledClassName(dataModel.name + " engine"))
+    def process_dependencies(cls, bld)
+      cls.addUse("System.Collections.Generic", "IEnumerable")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
+      cls.addUse("System.Configuration", "ConfigurationManager")
+      cls.addUse("System", "Exception")
+      cls.addUse("System.Transactions", "TransactionScope")
+      cls.addUse("Microsoft.VisualStudio.TestTools.UnitTesting", "TestMethod")
+      cls.addUse("XCTE.Foundation", Utils.instance.getStyledClassName("i " + cls.getUName() + " engine"))
+      cls.addUse("XCTE.Data", Utils.instance.getStyledClassName(cls.getUName() + " engine"))
     end
 
-    def get_body(dataModel, genClass, cfg, codeBuilder)
-      stdClassName = Utils.instance.getStyledClassName(dataModel.name)
+    def get_body(cls, bld)
+      stdClassName = Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.add(Utils.instance.getStyledClassName("i " + dataModel.name + " engine") + " intf = new " + Utils.instance.getStyledClassName(dataModel.name + " engine") + "();")
-      codeBuilder.add(stdClassName + " obj = new " + stdClassName + "();")
-      codeBuilder.add
-      codeBuilder.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
+      bld.add(Utils.instance.getStyledClassName("i " + cls.getUName() + " engine") + " intf = new " + Utils.instance.getStyledClassName(cls.getUName() + " engine") + "();")
+      bld.add(stdClassName + " obj = new " + stdClassName + "();")
+      bld.add
+      bld.add('string connString = ConfigurationManager.ConnectionStrings["testDb"].ConnectionString;')
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using (var tScope = new TransactionScope())")
-      codeBuilder.startBlock("using (SqlConnection conn = new SqlConnection(connString))")
-      codeBuilder.add("conn.Open();")
+      bld.startBlock("try")
+      bld.startBlock("using (var tScope = new TransactionScope())")
+      bld.startBlock("using (SqlConnection conn = new SqlConnection(connString))")
+      bld.add("conn.Open();")
 
       varArray = Array.new
-      dataModel.getNonIdentityVars(varArray)
+      cls.model.getNonIdentityVars(varArray)
 
       # # Generate class variables
       # for var in varArray
       #   if var.elementId == CodeElem::ELEM_VARIABLE
       #       if var.vtype == 'String'
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "TS";')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = "TS";')
       #       elsif var.vtype.start_with?('Int')
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43;')
       #       elsif var.vtype.start_with?('Decimal')
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
       #       elsif var.vtype.start_with?('Float')
-      #         codeBuilder.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
+      #         bld.add('obj.'+ Utils.instance.getStyledVariableName(var) + ' = 43.2;')
       #       end
       #     end
       # end
 
-      codeBuilder.add
-      codeBuilder.add("intf.Create(obj, conn);")
+      bld.add
+      bld.add("intf.Create(obj, conn);")
 
-      codeBuilder.endBlock
+      bld.endBlock
 
-      codeBuilder.add
-      codeBuilder.add("tScope.Complete();")
+      bld.add
+      bld.add("tScope.Complete();")
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
-      codeBuilder.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
+      bld.endBlock
 
       # Generate code for functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
             if templ != nil
-              templ.get_definition(dataModel, genClass, fun, cfg, codeBuilder)
+              templ.get_definition(cls, bld, fun)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
 
-            codeBuilder.add
+            bld.add
           end
         end
-      end  # class  + dataModel.name
+      end  # class  + cls.getUName()
     end
   end
 end

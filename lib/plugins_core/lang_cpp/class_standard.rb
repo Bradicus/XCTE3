@@ -1,22 +1,22 @@
 ##
 
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+#
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes, 
+# This class generates source files for "standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_cpp/utils.rb'
-require 'plugins_core/lang_cpp/method_empty.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'lang_file.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "plugins_core/lang_cpp/method_empty.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "lang_file.rb"
+require "x_c_t_e_plugin.rb"
 
 module XCTECpp
   class ClassStandard < ClassBase
@@ -24,269 +24,288 @@ module XCTECpp
       @name = "standard"
       @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
+      @activeVisibility = ""
     end
 
-    def getUnformattedClassName(dataModel, genClass)
-      return dataModel.name
-    end    
-    
-    def genSourceFiles(dataModel, genClass, cfg)
+    def getUnformattedClassName(cls)
+      return cls.getUName()
+    end
+
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
-      genClass.setName(getUnformattedClassName(dataModel, genClass))
-            
-      hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      hFile.lfExtension = Utils.instance.getExtension('header')
-      genHeaderComment(dataModel, genClass, cfg, hFile)
-      genHeader(dataModel, genClass, cfg, hFile)
-      
-      cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(dataModel.name)
-      cppFile.lfExtension = Utils.instance.getExtension('body')
-      genHeaderComment(dataModel, genClass, cfg, cppFile)
-      genBody(dataModel, genClass, cfg, cppFile)
-      
-      srcFiles << hFile
-      srcFiles << cppFile
-      
-      return srcFiles
-    end  
+      bld = SourceRendererCpp.new
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName())
+      bld.lfExtension = Utils.instance.getExtension("header")
+      genHeaderComment(cls, bld)
+      genHeader(cls, bld)
 
-    def genHeaderComment(dataModel, genClass, cfg, hFile)
-    
-      hFile.add("/**")    
-      hFile.add("* @class " + Utils.instance.getStyledClassName(dataModel.name))
-      
-      if (cfg.codeAuthor != nil)
-        hFile.add("* @author " + cfg.codeAuthor)
+      cppFile = SourceRendererCpp.new
+      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
+      cppFile.lfExtension = Utils.instance.getExtension("body")
+      genHeaderComment(cls, cppFile)
+      genBody(cls, cppFile)
+
+      srcFiles << bld
+      srcFiles << cppFile
+
+      return srcFiles
+    end
+
+    def genHeaderComment(cls, bld)
+      cfg = UserSettings.instance
+
+      bld.add("/**")
+      bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName()))
+
+      if (UserSettings.instance.codeAuthor != nil)
+        bld.add("* @author " + cfg.codeAuthor)
       end
-          
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        hFile.add("* " + cfg.codeCompany)
+
+      if UserSettings.instance.codeCompany != nil && cfg.codeCompany.size > 0
+        bld.add("* " + cfg.codeCompany)
       end
-      
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
+
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
-          
-      hFile.add("* ")
-      
-      if (dataModel.description != nil)
-        dataModel.description.each_line { |descLine|
+
+      bld.add("* ")
+
+      if (cls.model.description != nil)
+        cls.model.description.each_line { |descLine|
           if descLine.strip.size > 0
-            hFile.add("* " << descLine.strip)
+            bld.add("* " << descLine.strip)
           end
-        }      
-      end    
-      
-      hFile.add("*/")
+        }
+      end
+
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
-    def genHeader(dataModel, genClass, cfg, hFile)
-
-      genIfndef(dataModel, genClass, hFile)
+    def genHeader(cls, bld)
+      @activeVisibility = ""
+      render_ifndef(cls, bld)
 
       # get list of includes needed by functions
-      
-      # Generate function declarations
-      for funItem in genClass.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              templ.get_dependencies(dataModel, genClass, funItem, hFile)
-            else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          end
+
+      # Generate function dependencies
+      render_fun_dependencies(cls, bld)
+      render_dependencies(cls, bld)
+
+      if cls.includes.length > 0
+        bld.add
+      end
+
+      render_namespace_start(cls, bld)
+
+      # Process variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.arrayElemCount > 0
+          bld.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
         end
+      }))
+
+      if Utils.instance.hasAnArray(cls)
+        bld.separate
       end
 
-      genIncludes(dataModel, genClass, cfg, hFile)
-      
-      if genClass.includes.length > 0
-        hFile.add
+      for pd in cls.preDefs
+        bld.add("class " + pd + ";")
       end
 
-      # Process namespace items
-      if genClass.namespaceList != nil
-        for nsItem in genClass.namespaceList
-          hFile.startBlock("namespace " << nsItem)
-        end
-        hFile.add
+      classDec = "class " + Utils.instance.getStyledClassName(cls.getUName())
+
+      inheritFrom = Array.new
+
+      for bcls in cls.baseClasses
+        inheritFrom.push(bcls.visibility + " " + Utils.instance.getClassTypeName(bcls))
       end
 
-      # Do automatic static array size declairations above class def
-      varArray = Array.new
-
-      for vGrp in dataModel.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
+      for icls in cls.interfaces
+        inheritFrom.push(icls.visibility + " " + Utils.instance.getClassTypeName(icls))
       end
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.arrayElemCount > 0
-          hFile.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
-        end
+      if (inheritFrom.length > 0)
+        classDec += " : " + inheritFrom.join(", ")
       end
-          
-      if dataModel.hasAnArray
-        hFile.add
-      end
-      
-      classDec = "class " + Utils.instance.getStyledClassName(dataModel.name)
-          
-      for par in (0..genClass.baseClasses.size)
-        nameSp = ""
-        if par == 0 && genClass.baseClasses[par] != nil
-          classDec << " : "
-        elsif genClass.baseClasses[par] != nil
-          classDec << ", "
-        end
 
-        if genClass.baseClasses[par] != nil
-          if genClass.baseClasses[par].namespaceList != nil && genClass.baseClasses[par].namespaceList.size > 0 &&
-             genClass.baseClasses[par].namespaceList.join('.') != genClass.namespaceList.join('.')
-            nameSp = genClass.baseClasses[par].namespaceList.join("::") + "::"
-          end
+      bld.startClass(classDec)
 
-          classDec << genClass.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(genClass.baseClasses[par].name)
-        end
-      end
-      
-      hFile.startClass(classDec)
-       
-      hFile.add("public:")
-      hFile.indent
-            
+      bld.indent
+
       # Generate class variables
-      varArray = Array.new
+      process_header_var_group(cls, bld, cls.model.varGroup, "public")
 
-      for vGrp in dataModel.groups
-      getVarsFor(vGrp, cfg, varArray)
-      end
+      bld.separate
 
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          hFile.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          hFile.add(var.formatText)
-        end
-      end
+      process_header_var_group(cls, bld, cls.model.varGroup, "private")
 
-      if (genClass.functions.length > 0)
-        hFile.add
-      end
-      
+      bld.separate
+
       # Generate function declarations
-      for funItem in genClass.functions
+      for funItem in cls.functions
         if funItem.elementId == CodeElem::ELEM_FUNCTION
+          if funItem.visibility != @activeVisibility
+            @activeVisibility = funItem.visibility
+            bld.unindent
+            bld.add(funItem.visibility + ":")
+            bld.indent
+          end
+
           if funItem.isTemplate
             templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(dataModel, genClass, funItem, hFile)
+                templ.get_declaration_inline(cls, bld, funItem)
               else
-                templ.get_declaration(dataModel, genClass, funItem, hFile)
+                templ.get_declaration(cls, bld, funItem)
               end
             else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
+              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
-          else  # Must be an empty function          
+          else # Must be an empty function
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (funItem.isInline)
-                templ.get_declaration_inline(dataModel, genClass, funItem, hFile)
+                templ.get_declaration_inline(cls, bld, funItem)
               else
-                templ.get_declaration(dataModel, genClass, funItem, hFile)
+                templ.get_declaration(cls, bld, funItem)
               end
             else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end         
+              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
+            end
           end
         elsif funItem.elementId == CodeElem::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(funItem))
+          bld.add(Utils.instance.getComment(funItem))
         elsif funItem.elementId == CodeElem::ELEM_FORMAT
           if (funItem.formatText == "\n")
-            hFile.add
+            bld.add
           else
-            hFile.sameLine(funItem.formatText)
-          end       
-        end
-      end
-    
-      hFile.unindent
-          
-      hFile.endClass
-
-      # Process namespace items
-      if genClass.namespaceList != nil
-        genClass.namespaceList.reverse_each do |nsItem|
-          hFile.endBlock("  // namespace " << nsItem)
-        end
-        hFile.add
-      end
-
-      hFile.add("#endif")
-    end
-    
-    # Returns the code for the body for this class
-    def genBody(dataModel, genClass, cfg, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(dataModel.name) << ".h\"")
-      cppGen.add
-
-      # Process namespace items
-      if genClass.namespaceList != nil
-        for nsItem in genClass.namespaceList
-          cppGen.startBlock("namespace " << nsItem)
-        end
-      end
-
-      # Initialize static variables
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.isStatic
-            cppGen.add(Utils.instance.getTypeName(var) << " ")
-            cppGen.sameLine(Utils.instance.getStyledClassName(dataModel.name) << " :: ")
-            cppGen.sameLine(Utils.instance.getStyledVariableName(var))
-                      
-            if var.arrayElemCount.to_i > 0 # This is an array
-              cppGen.sameLine("[" + Utils.instance.getSizeConst(var) << "]")
-            end
-                      
-            cppGen.sameLine(";")
+            bld.sameLine(funItem.formatText)
           end
         end
       end
-                  
-      cppGen.add
-          
+
+      process_header_var_group_getter_setters(cls, bld, cls.model.varGroup)
+
+      bld.separate
+
+      bld.unindent
+
+      bld.add("//+XCTE Custom Code Area")
+      bld.add
+      bld.add("//-XCTE Custom Code Area")
+
+      bld.endClass
+
+      render_namespace_end(cls, bld)
+
+      bld.add("#endif")
+    end
+
+    # process variable group
+    def process_header_var_group(cls, bld, vGroup, vis)
+      for var in vGroup.vars
+        if var.visibility == vis
+          if var.elementId == CodeElem::ELEM_VARIABLE
+            if var.visibility != @activeVisibility
+              @activeVisibility = var.visibility
+              bld.unindent
+              bld.add(var.visibility + ":")
+              bld.indent
+            end
+            bld.add(Utils.instance.getVarDec(var))
+          elsif var.elementId == CodeElem::ELEM_COMMENT
+            bld.sameLine(Utils.instance.getComment(var))
+          elsif var.elementId == CodeElem::ELEM_FORMAT
+            bld.add(var.formatText)
+          end
+        end
+      end
+
+      for group in vGroup.varGroups
+        process_header_var_group(cls, bld, group, vis)
+      end
+    end
+
+    def process_header_var_group_getter_setters(cls, bld, vGroup)
+      for var in vGroup.vars
+        if "public" != @activeVisibility
+          @activeVisibility = "public"
+          bld.unindent
+          bld.add("public:")
+          bld.indent
+        end
+
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if (var.genGet)
+            templ = XCTEPlugin::findMethodPlugin("cpp", "method_get")
+            if templ != nil
+              templ.get_declaration(var, bld)
+            end
+          end
+          if (var.genSet)
+            templ = XCTEPlugin::findMethodPlugin("cpp", "method_set")
+            if templ != nil
+              templ.get_declaration(var, bld)
+            end
+          end
+        end
+      end
+
+      for group in vGroup.varGroups
+        process_header_var_group_getter_setters(cls, bld, group)
+      end
+    end
+
+    # Returns the code for the body for this class
+    def genBody(cls, bld)
+      bld.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
+      bld.add
+
+      render_namespace_start(cls, bld)
+
+      # Process variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.isStatic
+          bld.add(Utils.instance.getTypeName(var) << " ")
+          bld.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
+          bld.sameLine(Utils.instance.getStyledVariableName(var))
+
+          if var.arrayElemCount.to_i > 0 # This is an array
+            bld.sameLine("[" + Utils.instance.getSizeConst(var) << "]")
+          elsif var.defaultValue != nil
+            bld.sameLine(" = " + var.defaultValue)
+          end
+
+          bld.sameLine(";")
+        end
+      }))
+
+      bld.add
+
       # Generate code for functions
-      for fun in genClass.functions
+      for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate             
+          if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
-            
-            puts "processing template for function " +fun.name
+
+            puts "processing template for function " + fun.name
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(dataModel, genClass, fun, cppGen)
+                templ.get_definition(cls, bld, fun)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end
-          else  # Must be empty function
+          else # Must be empty function
             templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
             if templ != nil
               if (!fun.isInline)
-                templ.get_definition(dataModel, genClass, fun, cppGen)
+                templ.get_definition(cls, bld, fun)
               end
             else
               #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
@@ -295,26 +314,12 @@ module XCTECpp
         end
       end
 
-      # Process namespace items
-      if genClass.namespaceList != nil
-        genClass.namespaceList.reverse_each do |nsItem|
-          cppGen.endBlock
-          cppGen.sameLine(";   // namespace " << nsItem)
-        end
-        #cppGen.add("\n"
-      end
-    end
+      bld.add("//+XCTE Custom Code Area")
+      bld.add
+      bld.add("//-XCTE Custom Code Area")
 
-    def getVarsFor(varGroup, cfg, vArray)
-      for var in varGroup.vars
-        vArray << var
-      end
-
-      for grp in varGroup.groups
-        getVarsFor(grp, cfg, vArray)
-      end
+      render_namespace_end(cls, bld)
     end
-    
   end
 end
 

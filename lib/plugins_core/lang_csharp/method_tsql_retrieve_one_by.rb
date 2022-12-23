@@ -11,33 +11,33 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add("/// <summary>")
-      codeBuilder.add("/// Reads one result using the specified filter parameters")
-      codeBuilder.add("/// </summary>")
-      codeBuilder.startFunction("public " + get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder))
+    def get_definition(cls, bld, fun)
+      bld.add("/// <summary>")
+      bld.add("/// Reads one result using the specified filter parameters")
+      bld.add("/// </summary>")
+      bld.startFunction("public " + get_function_signature(cls, bld, fun))
 
-      get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+      get_body(cls, bld, fun)
 
-      codeBuilder.endFunction
+      bld.endFunction
     end
 
-    def get_declairation(dataModel, genClass, genFun, cfg, codeBuilder)
-      codeBuilder.add(get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder) + ";")
+    def get_declairation(cls, bld, fun)
+      bld.add(get_function_signature(cls, bld, fun) + ";")
     end
 
-    def get_dependencies(dataModel, genClass, genFun, cfg, codeBuilder)
-      genClass.addUse("System.Collections.Generic", "IEnumerable")
-      genClass.addUse("System.Data.SqlClient", "SqlConnection")
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("System.Collections.Generic", "IEnumerable")
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
-    def get_function_signature(dataModel, genClass, genFun, cfg, codeBuilder)
-      standardClassName = Utils.instance.getStyledClassName(dataModel.name)
+    def get_function_signature(cls, bld, fun)
+      standardClassName = Utils.instance.getStyledClassName(cls.getUName())
 
       paramDec = Array.new
       paramNames = Array.new
 
-      genFun.variableReferences.each() { |param|
+      fun.variableReferences.each() { |param|
         paramDec << Utils.instance.getParamDec(param.getParam())
         paramNames << Utils.instance.getStyledVariableName(param)
       }
@@ -46,70 +46,83 @@ module XCTECSharp
                "(" + paramDec.join(", ") + ", SqlConnection conn, SqlTransaction trans = null)"
     end
 
-    def get_body(dataModel, genClass, genFun, cfg, codeBuilder)
+    def get_body(cls, bld, fun)
       conDef = String.new
-      varArray = Array.new
-      dataModel.getAllVarsFor(varArray)
 
-      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(dataModel.name)
+      styledClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
 
-      codeBuilder.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(dataModel.name) + "();")
+      bld.add("var o = new " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
 
-      codeBuilder.add('string sql = @"SELECT TOP 1 ')
+      bld.add('string sql = @"SELECT TOP 1 ')
 
-      codeBuilder.indent
+      bld.indent
 
-      XCTECSharp::Utils.instance.genVarList(varArray, codeBuilder, genClass.varPrefix)
+      bld.unindent
 
-      codeBuilder.unindent
+      bld.add("FROM " + cls.getUName())
+      bld.add("WHERE ")
 
-      codeBuilder.add("FROM " + dataModel.name)
-      codeBuilder.add("WHERE ")
-
-      codeBuilder.indent
+      bld.indent
 
       whereItems = Array.new
-      genFun.variableReferences.each() { |param|
+      fun.variableReferences.each() { |param|
         whereCondition = "[" +
-                         XCTETSql::Utils.instance.getStyledVariableName(param, genClass.varPrefix) +
+                         XCTETSql::Utils.instance.getStyledVariableName(param, cls.varPrefix) +
                          "] = @" + Utils.instance.getStyledVariableName(param.getParam())
 
         whereItems << whereCondition
       }
-      codeBuilder.add(whereItems.join(" AND "))
-      codeBuilder.sameLine('";')
+      bld.add(whereItems.join(" AND "))
+      bld.sameLine('";')
 
-      codeBuilder.unindent
+      bld.unindent
 
-      codeBuilder.add
+      bld.add
 
-      codeBuilder.startBlock("try")
-      codeBuilder.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
-      codeBuilder.add("cmd.Transaction = trans;")
-      codeBuilder.add
+      bld.startBlock("try")
+      bld.startBlock("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+      bld.add("cmd.Transaction = trans;")
+      bld.add
 
-      genFun.variableReferences.each() { |param|
-        codeBuilder.add("cmd.Parameters.AddWithValue(" +
-                        '"@' + XCTETSql::Utils.instance.getStyledVariableName(param) +
-                        '", ' + XCTECSharp::Utils.instance.getStyledVariableName(param.getParam()) + ");")
+      fun.variableReferences.each() { |param|
+        bld.add("cmd.Parameters.AddWithValue(" +
+                '"@' + XCTETSql::Utils.instance.getStyledVariableName(param) +
+                '", ' + XCTECSharp::Utils.instance.getStyledVariableName(param.getParam()) + ");")
       }
 
-      codeBuilder.add("SqlDataReader results = cmd.ExecuteReader();")
+      bld.add("SqlDataReader results = cmd.ExecuteReader();")
 
-      codeBuilder.startBlock("while(results.Read())")
+      bld.startBlock("while(results.Read())")
 
-      Utils.instance.genAssignResults(varArray, genClass, codeBuilder)
+      Utils.instance.genAssignResults(cls, bld)
 
-      codeBuilder.endBlock
-      codeBuilder.endBlock
+      bld.endBlock
+      bld.endBlock
 
-      codeBuilder.endBlock
-      codeBuilder.startBlock("catch(Exception e)")
-      codeBuilder.add('throw new Exception("Error retrieving one item from ' + dataModel.name + '", e);')
-      codeBuilder.endBlock(";")
+      bld.endBlock
+      bld.startBlock("catch(Exception e)")
+      bld.add('throw new Exception("Error retrieving one item from ' + cls.getUName() + '", e);')
+      bld.endBlock(";")
 
-      codeBuilder.add
-      codeBuilder.add("return o;")
+      bld.add
+      bld.add("return o;")
+    end
+
+    # process variable group
+    def process_var_group_sql(cls, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if Utils.instance.isPrimitive(var)
+            return
+            "[" +
+            XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) +
+            "] = @" + Utils.instance.getStyledVariableName(var.getParam())
+          end
+        end
+        for group in vGroup.varGroups
+          process_var_group_sql(cls, bld, group)
+        end
+      end
     end
   end
 end

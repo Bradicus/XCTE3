@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LANGUAGE_DEFS>
 
-	<STYLING variable="CAMEL_CASE" class="PASCAL_CASE" function="CAMEL_CASE" file="PASCAL_CASE" enum="UNDERSCORE_UPPER" />
+	<STYLING namespace="CAMEL_CASE" variable="CAMEL_CASE" class="PASCAL_CASE" function="CAMEL_CASE" file="PASCAL_CASE" enum="UNDERSCORE_UPPER" />
 	
 	<FILE_TYPES>
 		<FILE_TYPE type="header" 	extension="h" />

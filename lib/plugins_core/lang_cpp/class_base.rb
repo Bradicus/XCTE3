@@ -1,66 +1,125 @@
-
-require 'plugins_core/lang_cpp/utils.rb'
-require 'x_c_t_e_plugin.rb'
+require "plugins_core/lang_cpp/utils.rb"
+require "x_c_t_e_class_base.rb"
 
 # This class contains functions that may be usefull in any type of class
 module XCTECpp
-  class ClassBase < XCTEPlugin 
-
-    def genIfndef(dataModel, genClass, hFile)
-      if (genClass.namespaceList != nil)
-        hFile.add("#ifndef _" + genClass.namespaceList.join('_') + "_" + getStyledClassName(dataModel) + "_H")
-        hFile.add("#define _" + genClass.namespaceList.join('_') + "_" + getStyledClassName(dataModel) + "_H")
-        hFile.add
+  class ClassBase < XCTEClassBase
+    def render_ifndef(cls, bld)
+      if (cls.namespace.hasItems?())
+        bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+        bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.getStyledClassName(cls.name) + "_H")
+        bld.add
       else
-        hFile.add("#ifndef _" + getStyledClassName(dataModel) + "_H")
-        hFile.add("#define _" + getStyledClassName(dataModel) + "_H")
-        hFile.add
+        bld.add("#ifndef __" + cls.name + "_H")
+        bld.add("#define __" + cls.name + "_H")
+        bld.add
       end
     end
 
-    def getStyledClassName(dataModel)
-      return Utils.instance.getStyledClassName(dataModel.name)
+    def get_default_utils
+      return Utils.instance
     end
 
-    def genIncludes(dataModel, genClass, cfg, hFile)
-      addAutoIncludes(dataModel, genClass, cfg)
+    def render_dependencies(cls, bld)
+      addAutoIncludes(cls)
 
-        for inc in genClass.includes
-          if (inc.path.length > 0)
-            incPathAndName = inc.path + '/' + inc.name
-          else
-            incPathAndName = inc.name
-          end
-
-          if inc.itype == '<'
-            hFile.add("#include <" << incPathAndName << '>')
-          elsif inc.name.count(".") > 0
-            hFile.add('#include "' << incPathAndName << '"')
-          else
-            hFile.add('#include "' << incPathAndName << "." << Utils.instance.getExtension('header') << '"')
-          end
+      for inc in cls.includes
+        if (inc.path.length > 0)
+          incPathAndName = inc.path + "/" + inc.name
+        else
+          incPathAndName = inc.name
         end
-    end
 
-    def genUsings(dataModel, genClass, cfg, hFile)
-      for us in genClass.uses
-        hFile.add('using namespace ' + us.namespace.split('.').join("::") + ';')
-      end
-    end
-
-    def addAutoIncludes(dataModel, genClass, cfg)
-      varArray = Array.new
-
-      for vGrp in dataModel.groups
-        CodeStructure::CodeElemModel.getVarsFor(vGrp, varArray)
-      end
-
-      for var in varArray
-        varTypeMap = Utils.instance.getType(var.vtype)
-        if (varTypeMap != nil && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?)
-          genClass.addInclude(varTypeMap.autoInclude.path, varTypeMap.autoInclude.name, varTypeMap.autoInclude.itype)
+        if inc.itype == "<"
+          bld.add("#include <" << incPathAndName << ">")
+        elsif inc.name.count(".") > 0
+          bld.add('#include "' << incPathAndName << '"')
+        else
+          bld.add('#include "' << incPathAndName << "." << Utils.instance.getExtension("header") << '"')
         end
       end
+    end
+
+    def render_fun_dependencies(cls, bld)
+      # Get dependencies for functions
+      for fun in cls.functions
+        if fun.elementId == CodeElem::ELEM_FUNCTION
+          if fun.isTemplate
+            templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
+            if templ != nil
+              templ.process_dependencies(cls, bld, fun)
+            else
+              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
+            end
+          end
+        end
+      end
+    end
+
+    def render_function_declairations(cls, bld)
+      Utils.instance.eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
+          if templ != nil
+            if (fun.isInline)
+              templ.get_declaration_inline(cls, bld, fun)
+            else
+              templ.get_declaration(cls, bld, fun)
+            end
+          else
+            # puts 'ERROR no plugin 4 function: ' << fun.name << '   language: cpp'
+          end
+        else # Must be an empty function
+          templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
+          if templ != nil
+            if (fun.isInline)
+              templ.get_declaration_inline(cls, bld, fun)
+            else
+              templ.get_declaration(cls, bld, fun)
+            end
+          else
+            # puts 'ERROR no plugin 4 function: ' << fun.name << '   language: cpp'
+          end
+        end
+      }))
+    end
+
+    def render_ifndef(cls, bld)
+      for us in cls.uses
+        bld.add("using namespace " + us.namespace.get("::") + ";")
+      end
+    end
+
+    def render_namespace_start(cls, bld)
+      # Process namespace items
+      if cls.namespace.hasItems?()
+        for nsItem in cls.namespace.nsList
+          bld.startBlock("namespace " << nsItem)
+        end
+      end
+    end
+
+    def render_namespace_end(cls, bld, nsCloseChar = "")
+      # Process namespace items
+      if cls.namespace.hasItems?()
+        cls.namespace.nsList.reverse_each do |nsItem|
+          bld.endBlock
+          bld.sameLine(nsCloseChar + "  // namespace " << nsItem)
+        end
+        #bld.add("\n"
+      end
+    end
+
+    def addAutoIncludes(cls)
+      # Process variables
+      eachVar(uevParams().wCls(cls).wSeparate(false).wVarCb(lambda { |var|
+        if (var.respond_to? :vtype)
+          varTypeMap = Utils.instance.getType(var.vtype)
+          if (varTypeMap != nil && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?)
+            cls.addInclude(varTypeMap.autoInclude.path, varTypeMap.autoInclude.name, varTypeMap.autoInclude.itype)
+          end
+        end
+      }))
     end
   end
 end

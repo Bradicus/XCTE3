@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="utils each var params" >
+
+	<description>
+	Parameters to each val function in utilities
+	</description>
+
+	<gen_class type="standard" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="cls"		type="CodeElemClass" />
+		<var name="bld"			type="SourceRenderer" />
+		<var name="separateGroups"		type="Boolean" />
+		<var name="funCb"	note="Callback for each variable processed"	type="Function" />
+	</var_group>
+
+</model>

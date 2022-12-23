@@ -1,145 +1,145 @@
 ##
-
-# 
-# Copyright (C) 2008 Brad Ottoson
-# This file is released under the zlib/libpng license, see license.txt in the 
+# Copyright XCTE Contributors
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes, 
+# This class generates source files for "standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_typescript/utils.rb'
-require 'plugins_core/lang_typescript/x_c_t_e_typescript.rb'
-require 'code_elem.rb'
-require 'code_elem_parent.rb'
-require 'code_elem_model.rb'
-require 'lang_file.rb'
+require "plugins_core/lang_typescript/utils.rb"
+require "plugins_core/lang_typescript/x_c_t_e_typescript.rb"
+require "code_elem.rb"
+require "code_elem_parent.rb"
+require "code_elem_model.rb"
+require "lang_file.rb"
 
 module XCTETypescript
-  class ClassStandard < XCTEPlugin
+  class ClassStandard < ClassBase
     def initialize
       @name = "standard"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
-    
-    def genSourceFiles(codeClass, cfg)
+
+    def getUnformattedClassName(cls)
+      return cls.getUName()
+    end
+
+    def genSourceFiles(cls)
       srcFiles = Array.new
-      
-      codeBuilder = SourceRendererTypescript.new
-      codeBuilder.lfName = codeClass.name
-      codeBuilder.lfExtension = XCTETypescript::Utils::getExtension('body')
-      codeBuilder.lfContents = genFileComment(codeClass, cfg, codeBuilder)
-      codeBuilder.lfContents << genFileContent(codeClass, cfg, codeBuilder)
-      
-      srcFiles << codeBuilder
-      
+
+      bld = SourceRendererTypescript.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, bld)
+      render_dependencies(cls, bld)
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
+
+      srcFiles << bld
+
       return srcFiles
-    end    
-    
-    def genFileComment(codeClass, cfg, codeBuilder)
+    end
+
+    def genFileComment(cls, bld)
       headerString = String.new
-      
-      headerString << "/**\n";
-      headerString << "* @class " + codeClass.name + "\n";
-      
+
+      bld.add("/**")
+      bld.add("* @class " + cls.name)
+
       if (cfg.codeAuthor != nil)
-        headerString << "* @author " + cfg.codeAuthor + "\n";
+        bld.add("* @author " + cfg.codeAuthor)
       end
-          
+
       if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        headerString << "* " + cfg.codeCompany + "\n";
+        bld.add("* " + cfg.codeCompany)
       end
-      
-      if cfg.codeLicense != nil && cfg.codeLicense.size > 0
-        headerString << "*\n* " + cfg.codeLicense + "\n";
+
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
+        bld.add("*\n* " + cfg.codeLicense)
       end
-          
-      headerString << "* \n";
-      
-      if (codeClass.description != nil)
-        codeClass.description.each_line { |descLine|
+
+      bld.add("* ")
+
+      if (cls.description != nil)
+        cls.description.each_line { |descLine|
           if descLine.strip.size > 0
-            headerString << "* " << descLine.chomp << "\n";       
+            bld.add("* " << descLine.chomp)
           end
-        }      
-      end    
-      
-      headerString << "*/\n\n";
-          
-      return(headerString);
+        }
+      end
+
+      bld.add("*/")
+
+      return(headerString)
     end
 
     # Returns the code for the header for this class
-    def genFileContent(codeClass, cfg, codeBuilder)
+    def genFileContent(cls, bld)
       headerString = String.new
-      
-      headerString << "\n";
-      
-      for inc in codeClass.includes
-        headerString << 'import "' << inc.path << inc.name << "\";\n"
+
+      bld.separate
+
+      for inc in cls.includes
+        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
       end
-      
-      if !codeClass.includes.empty?
-        headerString << "\n"
-      end
-          
-      if codeClass.hasAnArray
-        headerString << "\n"
-      end
-      
-      headerString << "angular.module('" << "'), []).controller(" << codeClass.name << ", "
-      headerString << "function ($scope) {\n"
-      
-      # Do automatic static array size declairations at top of class
-      varArray = Array.new
-      codeClass.getAllVarsFor(varArray);
-      
-      if codeClass.hasAnArray
-        headerString << "\n"  # If we declaired array size variables add a seperator
-      end
-              
+
+      bld.separate
+      bld.startClass("class " + getClassName(cls))
+
       # Generate class variables
-      headerString << "    // -- Variables --\n"
-      
-      for var in varArray
+      for group in cls.model.groups
+        process_var_group(cls, bld, group)
+      end
+
+      bld.add
+      # Generate code for functions
+      for fun in cls.functions
+        process_function(cls, bld, fun)
+      end
+
+      bld.endClass
+    end
+
+    # process variable group
+    def process_var_group(cls, bld, vGroup)
+      for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          headerString << "    " << XCTETypescript::Utils::getVarDec(var) << "\n";
+          bld.add(Utils.instance.getVarDec(var))
         elsif var.elementId == CodeElem::ELEM_COMMENT
-          headerString << "    " <<  XCTETypescript::Utils::getComment(var)
+          bld.sameLine(Utils.instance.getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
-          headerString << var.formatText
+          bld.add(var.formatText)
         end
       end
-      
-      headerString << "\n"
-      
-      # Generate code for functions
-      for fun in codeClass.functionSection
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate             
-            templ = XCTEPlugin::findMethodPlugin("java", fun.name)
-            if templ != nil            
-              headerString << templ.get_definition(codeClass, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
-            end
-          else  # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("java", "method_empty")
-            if templ != nil            
-              headerString << templ.get_definition(fun, cfg)
-            else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
-            end
+      for group in vGroup.varGroups
+        process_var_group(cls, bld, group)
+      end
+    end
+
+    def process_function(cls, bld, fun)
+      if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.isTemplate
+          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
+          if templ != nil
+            bld.separate
+            bld.add(templ.get_definition(cls, cfg))
+          else
+            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
+          end
+        else # Must be empty function
+          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
+          if templ != nil
+            bld.separate
+            bld.add(templ.get_definition(fun, cfg))
+          else
+            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
           end
         end
       end
-          
-      headerString << "}\n\n";
-          
-      return(headerString);
     end
   end
 end

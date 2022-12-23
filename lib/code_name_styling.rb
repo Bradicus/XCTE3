@@ -1,19 +1,20 @@
 # This class contains functions for styling variables by various standards
 
 class CodeNameStyling
-
   def self.getStyled(name, styleName)
     case styleName
-      when 'CAMEL_CASE'
-        return self.styleCamel(name)
-      when 'PASCAL_CASE'
-        return self.stylePascal(name)
-      when 'UNDERSCORE_UPPER'
-        return self.styleUnderscoreUpper(name)
-      when 'UNDERSCORE_LOWER'
-        return self.styleUnderscoreLower(name)
-      else
-        raise('Undefined style type: ' + styleName.to_s)
+    when "CAMEL_CASE"
+      return self.styleCamel(name)
+    when "PASCAL_CASE"
+      return self.stylePascal(name)
+    when "UNDERSCORE_UPPER"
+      return self.styleUnderscoreUpper(name)
+    when "UNDERSCORE_LOWER"
+      return self.styleUnderscoreLower(name)
+    when "DASH_LOWER"
+      return self.styleDashLower(name)
+    else
+      raise("Undefined style type: " + styleName.to_s)
     end
   end
 
@@ -30,21 +31,28 @@ class CodeNameStyling
       nameParts[i] = self.getCapitalizedFirst(nameParts[i])
     end
 
-    return(nameParts.join(''))
+    return(nameParts.join(""))
   end
 
   # Format in uppercase with underscores
   def self.styleUnderscoreUpper(name)
     name = name.upcase
     nameParts = name.split(" ")
-    return(nameParts.join('_'))
+    return(nameParts.join("_"))
   end
 
   # Format in uppercase with underscores
   def self.styleUnderscoreLower(name)
     name = name.downcase
     nameParts = name.split(" ")
-    return(nameParts.join('_'))
+    return(nameParts.join("_"))
+  end
+
+  # Format in uppercase with underscores
+  def self.styleDashLower(name)
+    name = name.downcase
+    nameParts = name.split(" ")
+    return(nameParts.join("-"))
   end
 
   # Capitalizes the first letter of a string

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="method web api read one" >
+
+	<description>
+	Read a single item
+	</description>
+				
+	<gen_class type="xcte_method_plugin" ns="XCTEJava" path="XCTEJava" lang="java" >
+	</gen_class>	
+	
+</model>
