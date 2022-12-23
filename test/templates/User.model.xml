@@ -11,6 +11,14 @@
 		<use-csharp name="System.Collections.Generic" />
 	</gen_class>
 
+	<gen_class type="standard">
+  </gen_class>
+
+	<gen_class type="class_repository"
+		ns-java="demo.data"
+		path-java="Data" >
+	</gen_class>
+
 	<gen_class type="class_angular_module" path="user" ></gen_class>
 	<gen_class type="class_angular_module_routing" path="user" ></gen_class>
 

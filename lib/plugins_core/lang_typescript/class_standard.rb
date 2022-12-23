@@ -45,6 +45,7 @@ module XCTETypescript
     end
 
     def genFileComment(cls, bld)
+      cfg = UserSettings.instance
       headerString = String.new
 
       bld.add("/**")
@@ -91,55 +92,15 @@ module XCTETypescript
       bld.startClass("class " + getClassName(cls))
 
       # Generate class variables
-      for group in cls.model.groups
-        process_var_group(cls, bld, group)
-      end
+      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        bld.add(Utils.instance.getVarDec(var))
+      }))
 
-      bld.add
+      bld.separate
       # Generate code for functions
-      for fun in cls.functions
-        process_function(cls, bld, fun)
-      end
+      render_functions(cls, bld)
 
       bld.endClass
-    end
-
-    # process variable group
-    def process_var_group(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-      end
-      for group in vGroup.varGroups
-        process_var_group(cls, bld, group)
-      end
-    end
-
-    def process_function(cls, bld, fun)
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
-          if templ != nil
-            bld.separate
-            bld.add(templ.get_definition(cls, cfg))
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
-        else # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
-          if templ != nil
-            bld.separate
-            bld.add(templ.get_definition(fun, cfg))
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
-        end
-      end
     end
   end
 end

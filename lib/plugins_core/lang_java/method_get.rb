@@ -24,7 +24,7 @@ module XCTEJava
       if var.genGet == true && !var.isPointer
         if Utils.instance.isPrimitive(var)
           varName = Utils.instance.getStyledVariableName(var)
-          bld.add(Utils.instance.getTypeName(var) + " " + Utils.instance.getStyledFunctionName(" get" + var.name))
+          bld.add(Utils.instance.getTypeName(var) + " " + Utils.instance.getStyledFunctionName("get " + var.name))
           bld.sameLine("()\t{ return(" + varName + "); }")
         end
       end

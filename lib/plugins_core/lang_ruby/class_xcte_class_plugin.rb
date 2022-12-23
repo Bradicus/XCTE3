@@ -93,7 +93,7 @@ module XCTERuby
         end
       end
 
-      bld.startClass("class " + getClassName(cls) + " < XCTEPlugin")
+      bld.startClass("class " + getClassName(cls) + " < ClassBase")
 
       bld.startFunction("def initialize")
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName()) + '"')
@@ -152,7 +152,7 @@ module XCTERuby
       bld.add("bld.separate")
 
       bld.add("# Generate code for functions")
-      bld.add("process_functions(cls, bld, fun)")
+      bld.add("render_functions(cls, bld)")
 
       bld.separate
 

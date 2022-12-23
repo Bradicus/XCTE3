@@ -24,10 +24,9 @@ module XCTEJava
       if var.genGet == true && !var.isPointer
         if Utils.instance.isPrimitive(var)
           varName = Utils.instance.getStyledVariableName(var)
-          paramName = CodeNameStyling.getStyled("new " + var.name, Utils.instance.langProfile.variableNameStyle)
           bld.add("void " + Utils.instance.getStyledFunctionName("set " + var.name))
-          bld.sameLine("(" + Utils.instance.getTypeName(var) + " " + paramName)
-          bld.sameLine(")\t{ " + varName + " = " + paramName + "; }")
+          bld.sameLine("(" + Utils.instance.getTypeName(var) + " " + varName)
+          bld.sameLine(")\t{ this." + varName + " = " + varName + "; }")
         end
       end
     end
