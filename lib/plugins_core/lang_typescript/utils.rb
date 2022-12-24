@@ -108,7 +108,7 @@ module XCTETypescript
       typeName = getSingleItemTypeName(var)
 
       if (var.listType != nil)
-        typeName = "[]"
+        typeName << "[]"
       end
 
       return typeName

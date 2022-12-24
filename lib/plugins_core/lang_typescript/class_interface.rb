@@ -25,6 +25,7 @@ module XCTETypescript
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+      process_dependencies(cls, bld)
       render_dependencies(cls, bld)
       genFileComment(cls, bld)
       genFileContent(cls, bld)
@@ -32,6 +33,18 @@ module XCTETypescript
       srcFiles << bld
 
       return srcFiles
+    end
+
+    def process_dependencies(cls, bld)
+      super
+
+      # Generate class variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !Utils.instance.isPrimitive(var)
+          varCls = Classes.findVarClass(var, "ts_interface")
+          cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
+        end
+      }))
     end
 
     def genFileComment(cls, bld)

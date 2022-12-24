@@ -69,12 +69,7 @@ module XCTEJava
       bld.add("@RestController")
       bld.startClass(classDec)
 
-      if (cls.functions.length > 0)
-        bld.add
-      end
-
       # Generate code for functions
-
       render_functions(cls, bld)
 
       bld.endClass

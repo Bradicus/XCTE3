@@ -68,6 +68,10 @@ module XCTEHtml
 
             bld.add("</div>")
             bld.endBlock("</fieldset>")
+          else
+            vName = Utils.instance.getStyledVariableName(var)
+            varCls = Classes.findVarClass(var)
+            TableUtil.instance.render_table(varCls, bld, "item." + vName, vName + "Item")
           end
         end
       }).
