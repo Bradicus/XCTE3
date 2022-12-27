@@ -17,10 +17,6 @@ module XCTETypescript
       return Utils.instance.getStyledClassName(uName)
     end
 
-    def isPrimitive(var)
-      return Utils.instance.isPrimitive(var)
-    end
-
     def process_dependencies(cls, bld)
       # Generate dependency code for functions
       for fun in cls.functions

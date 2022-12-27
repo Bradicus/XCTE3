@@ -36,12 +36,33 @@ module XCTEJava
       bld = SourceRendererJava.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, bld)
+
+      render_package_start(cls, bld)
+      render_dependencies(cls, bld)
+
       genFileComment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
+    end
+
+    def process_dependencies(cls, bld)
+      # Generate class variables
+      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !isPrimitive(var)
+          Utils.instance.requires_var(cls, var, "standard")
+        end
+      }))
+
+      if hasList(cls) == true
+        cls.addUse("java.util.*")
+      end
+
+      super
     end
 
     def genFileComment(cls, bld)
@@ -73,18 +94,11 @@ module XCTEJava
       end
 
       bld.add("*/")
-      bld.separate
     end
 
     # Returns the code for the header for this class
     def genFileContent(cls, bld)
       cfg = UserSettings.instance
-
-      for inc in cls.includes
-        bld.add('import "' + inc.path + inc.name + "\";")
-      end
-
-      bld.separate
 
       bld.startClass("public class " << cls.name)
 

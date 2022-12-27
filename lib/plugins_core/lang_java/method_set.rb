@@ -22,12 +22,10 @@ module XCTEJava
     # Returns declairation string for this class's set method
     def get_definition(var, bld)
       if var.genGet == true && !var.isPointer
-        if Utils.instance.isPrimitive(var)
-          varName = Utils.instance.getStyledVariableName(var)
-          bld.add("void " + Utils.instance.getStyledFunctionName("set " + var.name))
-          bld.sameLine("(" + Utils.instance.getTypeName(var) + " " + varName)
-          bld.sameLine(")\t{ this." + varName + " = " + varName + "; }")
-        end
+        varName = Utils.instance.getStyledVariableName(var)
+        bld.add("void " + Utils.instance.getStyledFunctionName("set " + var.name))
+        bld.sameLine("(" + Utils.instance.getFullType(var) + " " + varName)
+        bld.sameLine(")\t{ this." + varName + " = " + varName + "; }")
       end
     end
   end

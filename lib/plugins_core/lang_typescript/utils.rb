@@ -54,21 +54,6 @@ module XCTETypescript
       return pDec
     end
 
-    def createVarFor(cls, plugName)
-      plugClass = cls.model.findClassModel(plugName)
-      plug = XCTEPlugin::findClassPlugin("typescript", plugName)
-
-      if (plugClass == nil || plug == nil)
-        return nil
-      end
-
-      newVar = CodeStructure::CodeElemVariable.new(nil)
-      newVar.utype = plug.getUnformattedClassName(cls)
-      newVar.name = newVar.utype
-
-      return newVar
-    end
-
     # Returns variable declaration for the specified variable
     def getVarDec(var)
       vDec = String.new
@@ -158,10 +143,6 @@ module XCTETypescript
     # not the comment atribute of a variable
     def getComment(var)
       return "/* " << var.text << " */\n"
-    end
-
-    def isPrimitive(var)
-      return @langProfile.isPrimitive(var)
     end
 
     # Capitalizes the first letter of a string

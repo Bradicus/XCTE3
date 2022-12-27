@@ -22,7 +22,7 @@ module XCTEJava
     def getParamDec(var)
       pDec = String.new
 
-      pDec << self.getTypeName(var)
+      pDec << getFullType(var)
 
       pDec << " " << self.getStyledVariableName(var)
 
@@ -47,13 +47,7 @@ module XCTEJava
         vDec << "virtual "
       end
 
-      if (var.templateType != nil)
-        vDec << var.templateType << "<" << self.getTypeName(var) << ">"
-      elsif (var.listType != nil)
-        vDec << var.listType << "<" << self.getTypeName(var) << ">"
-      else
-        vDec << self.getTypeName(var)
-      end
+      vDec << getFullType(var)
 
       vDec << " "
 
@@ -69,6 +63,18 @@ module XCTEJava
       end
 
       return vDec
+    end
+
+    def getFullType(var)
+      fType = ""
+
+      if (var.templateType != nil)
+        fType << var.templateType << "<" << self.getTypeName(var) << ">"
+      elsif (var.listType != nil)
+        fType << var.listType << "<" << self.getTypeName(var) << ">"
+      else
+        fType << self.getTypeName(var)
+      end
     end
 
     # Returns a size constant for the specified variable
@@ -87,10 +93,6 @@ module XCTEJava
       return "/* " << var.text << " */\n"
     end
 
-    def isPrimitive(var)
-      return @langProfile.isPrimitive(var)
-    end
-
     # Capitalizes the first letter of a string
     def getCapitalizedFirst(str)
       newStr = String.new
@@ -107,8 +109,32 @@ module XCTEJava
       return CodeNameStyling.getStyled(name, "DASH_LOWER")
     end
 
-    def addClassInclude(cls, ctype)
-      cls.addUse(cls.model.findClassByType(ctype).namespace.get("."))
+    def requires_var(cls, var, ctype)
+      varClass = cls.model.findClassByType(ctype)
+      requires_other_class_type(cls, varClass, ctype)
+    end
+
+    def requires_other_class_type(cls, otherCls, ctype)
+      ctypeClass = cls.model.findClassByType(ctype)
+      if !cls.namespace.same?(ctypeClass.namespace)
+        cls.addUse(ctypeClass.namespace.get(".") + ".*")
+      end
+    end
+
+    def requires_class_type(cls, ctype)
+      ctypeClass = cls.model.findClassByType(ctype)
+      cls.addUse(ctypeClass.namespace.get(".") + ".*")
+    end
+
+    def addClassInjection(cls, ctype)
+      varClass = cls.model.findClassByType(ctype)
+      var = createVarFor(varClass, ctype)
+      var.visibility = "private"
+
+      if varClass != nil && var != nil
+        cls.addInjection(var)
+        requires_var(cls, varClass, "standard")
+      end
     end
   end
 end

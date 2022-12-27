@@ -141,10 +141,6 @@ module XCTECSharp
       return "0"
     end
 
-    def isPrimitive(var)
-      return @langProfile.isPrimitive(var)
-    end
-
     def getDataListInfo(classXML)
       dInfo = Hash.new
 
@@ -346,6 +342,10 @@ module XCTECSharp
 
     # Run a function on each variable in a variable group and subgroups
     def eachVarGrp(vGroup, bld, separateGroups, varFun)
+      if (separateGroups)
+        bld.separate
+      end
+
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           varFun.call(var)
@@ -354,10 +354,6 @@ module XCTECSharp
         elsif var.elementId == CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
-      end
-
-      if (separateGroups)
-        bld.separate
       end
 
       for grp in vGroup.varGroups

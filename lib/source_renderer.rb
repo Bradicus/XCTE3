@@ -69,6 +69,13 @@ class SourceRenderer
     end
   end
 
+  # if the last line isn't a blank line, add one for separation
+  def separateIf(condition)
+    if (condition && @lines.count > 0 && !@lines.last.strip.empty?)
+      add
+    end
+  end
+
   def getIndent(extraIndent = 0)
     totalIndent = ""
     for i in 0..(@indentLevel + extraIndent - 1)

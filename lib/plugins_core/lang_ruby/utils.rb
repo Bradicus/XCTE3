@@ -64,11 +64,6 @@ module XCTERuby
       return "ARRAYSZ_" << var.name.upcase
     end
 
-    # Get a parameter declaration for a method parameter
-    def getTypeName(gType)
-      return @langProfile.getTypeName(gType)
-    end
-
     # Get the extension for a file type
     def getExtension(eType)
       return @langProfile.getExtension(eType)
@@ -78,10 +73,6 @@ module XCTERuby
     # not the comment atribute of a variable
     def getComment(var)
       return "# " << var.text << " \n"
-    end
-
-    def isPrimitive(var)
-      return @langProfile.isPrimitive(var)
     end
   end
 end

@@ -11,9 +11,5 @@ module XCTETypescript
     def getStyledClassName(uName)
       return Utils.instance.getStyledClassName(uName)
     end
-
-    def isPrimitive(var)
-      return Utils.instance.isPrimitive(var)
-    end
   end
 end

@@ -12,15 +12,16 @@
 	<gen_class type="standard" type-typescript="ts_interface"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
 		path-typescript="shared/interfaces"
-		path-java="Model">
+		path-java="model"
+		ns-java="com.example.demo.model">
 	</gen_class>
 
 	<gen_class type="web_api_controller"
 		base_class="ApiController"
 		ns-csharp="XCTE.API.Controllers"
 		path-csharp="XCTE.API/Controllers"
-		ns-java="demo.api"
-		path-java="Api" >
+		ns-java="com.example.demo.api"
+		path-java="api" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
 
@@ -40,8 +41,11 @@
 		<function name="method_datamap_model_to_reactive_form" />
 	</gen_class>
 
-			<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
+			<gen_class type="tsql_data_store"
+				namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"
 					   var_prefix = "a "
+					 		ns-java="com.example.demo.data"
+					 		path-java="data"
 					   interface_namespace="XCTE.Base.Data.Io"
 					   interface_path="XCTE.Base/Data/Io"
 					   test_namespace="Test"

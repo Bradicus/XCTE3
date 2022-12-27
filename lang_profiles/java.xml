@@ -27,6 +27,11 @@
 		<TYPE_MAP genType="Float32" langType="float" />
 		<TYPE_MAP genType="Float64" langType="double" />
 		<TYPE_MAP genType="String" 	langType="String" />
+		<TYPE_MAP genType="DateTime" 	langType="LocalDateTime" />
+		<TYPE_MAP genType="Date" 	langType="LocalDate" />
+		<TYPE_MAP genType="Time" 	langType="LocalTime" />
+
+		LocalDateTime
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

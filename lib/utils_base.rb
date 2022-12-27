@@ -66,6 +66,22 @@ class UtilsBase
     return @langProfile.getExtension(eType)
   end
 
+  # Create a variable with a type cls
+  def createVarFor(cls, plugName)
+    plugClass = cls.model.findClassModel(plugName)
+    plug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
+
+    if (plugClass == nil || plug == nil)
+      return nil
+    end
+
+    newVar = CodeStructure::CodeElemVariable.new(nil)
+    newVar.utype = plug.getUnformattedClassName(cls)
+    newVar.name = newVar.utype
+
+    return newVar
+  end
+
   # Run a function on each variable in a class
   def eachVar(params)
     eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb, params.bgCb, params.agCb)

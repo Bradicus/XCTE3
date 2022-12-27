@@ -28,6 +28,20 @@ class XCTEClassBase < XCTEPlugin
     return get_default_utils().getStyledFileName(getUnformattedClassName(cls))
   end
 
+  def isPrimitive(var)
+    return get_default_utils().isPrimitive(var)
+  end
+
+  def hasList(cls)
+    eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
+      if (var.listType != nil)
+        return true
+      end
+    }))
+
+    return false
+  end
+
   def render_functions(cls, bld)
     get_default_utils().eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
       if fun.isTemplate

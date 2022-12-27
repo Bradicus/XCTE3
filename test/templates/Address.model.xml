@@ -17,7 +17,8 @@
 	<gen_class type="standard"
 		type-typescript="ts_interface" path-typescript="shared/interfaces"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
-		path-java="Model" ></gen_class>
+			ns-java="com.example.demo.model"
+		path-java="model" ></gen_class>
 
 	<gen_class type="class_angular_data_gen_service" path="shared/services" >
 		<function name="method_service_datagen_faker_get" />
@@ -41,12 +42,15 @@
 	<gen_class type="web_api_controller"
 		ns-csharp="XCTE.API.Controllers"
 		path-csharp="XCTE.API/Controllers"
-		ns-java="demo.api"
-		path-java="Api" >
+		ns-java="com.example.demo.api"
+		path-java="api" >
 		<function name="method_web_api_read_one" />
 	</gen_class>
 
-	<gen_class type="tsql_data_store" namespace="XCTE.Base.Data.Io" path="XCTE.Base/Data/Io"
+	<gen_class type="tsql_data_store"
+				namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"
+					ns-java="com.example.demo.data"
+					path-java="data"
 			   var_prefix = "a "
 			   interface_namespace="XCTE.Base.Data.Io"
 			   interface_path="XCTE.Base/Data/Io"
@@ -62,6 +66,7 @@
 			<var_ref name="city" />
 			<var_ref name="zip code" />
 		</function>
+
 	<!--	<function name="method_tsql_delete" interface="true" />-->
 		<!--<function name="update" interface="true" />
 		<function name="delete" interface="true" />

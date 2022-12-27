@@ -31,11 +31,35 @@ module XCTEJava
       bld = SourceRendererJava.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, bld)
+
+      render_package_start(cls, bld)
+      render_dependencies(cls, bld)
+
+      genFileComment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
 
       return srcFiles
+    end
+
+    def genFileComment(cls, bld)
+      bld.add("/**")
+      bld.add("* Web API controller")
+      bld.add("*/")
+    end
+
+    def process_dependencies(cls, bld)
+      #cls.addUse("System.Data.SqlClient")
+      Utils.instance.requires_class_type(cls, "standard")
+      cls.addUse("org.springframework.data.repository.*")
+      cls.addUse("org.springframework.beans.factory.annotation.Autowired")
+      cls.addUse("org.springframework.web.bind.annotation.GetMapping")
+      cls.addUse("org.springframework.web.bind.annotation.RestController")
+      cls.addUse("javax.persistence.*")
+      super
     end
 
     # Returns the code for the content for this class
@@ -53,11 +77,6 @@ module XCTEJava
         end
       }))
 
-      cls.addUse("System.Data.SqlClient")
-
-      render_dependencies(cls, bld)
-      render_package_start(cls, bld)
-
       classDec = cls.model.visibility + " class " + getClassName(cls)
 
       for par in (0..cls.baseClasses.size)
@@ -68,6 +87,11 @@ module XCTEJava
 
       bld.add("@RestController")
       bld.startClass(classDec)
+
+      for inj in cls.injections
+        bld.add("@Autowired")
+        bld.add(Utils.instance.getVarDec(inj))
+      end
 
       # Generate code for functions
       render_functions(cls, bld)

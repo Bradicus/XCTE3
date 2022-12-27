@@ -19,7 +19,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :dontModifyCode,
-                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className, :genCfg
+                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className, :genCfg, :injections
     attr_reader :name
 
     def initialize(parentElem, model, isStatic)
@@ -35,6 +35,7 @@ module CodeStructure
       @functions = Array.new
       @baseClasses = Array.new
       @interfaces = Array.new
+      @injections = Array.new
       @namespace = CodeElemNamespace.new
       @interfaceNamespace = CodeElemNamespace.new
       @testNamespace = CodeElemNamespace.new
@@ -91,6 +92,17 @@ module CodeStructure
         curUse = CodeElemUse.new(usNs)
         @uses << curUse
       end
+    end
+
+    def addInjection(var)
+      found = false
+      for inj in @injections
+        if (inj.name == var.name && inj.getUType() == var.getUType())
+          return true
+        end
+      end
+
+      @injections << var
     end
 
     def hasUsing(useName)

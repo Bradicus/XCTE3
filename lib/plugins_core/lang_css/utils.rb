@@ -124,10 +124,6 @@ module XCTECss
       return "/* " << var.text << " */\n"
     end
 
-    def isPrimitive(var)
-      return @langProfile.isPrimitive(var)
-    end
-
     # Capitalizes the first letter of a string
     def getCapitalizedFirst(str)
       newStr = String.new

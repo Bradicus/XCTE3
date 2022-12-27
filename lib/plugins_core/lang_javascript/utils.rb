@@ -69,11 +69,6 @@ module XCTEJavascript
       return "ARRAYSZ_" << var.name.upcase
     end
 
-    # Get a parameter declaration for a method parameter
-    def getTypeName(gType)
-      return @langProfile.getTypeName(gType)
-    end
-
     # Get the extension for a file type
     def getExtension(eType)
       return @langProfile.getExtension(eType)

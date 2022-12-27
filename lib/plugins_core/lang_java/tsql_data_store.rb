@@ -4,7 +4,7 @@
 module XCTEJava
   class ClassRepository < ClassBase
     def initialize
-      @name = "class_repository"
+      @name = "tsql_data_store"
       @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -34,6 +34,10 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
+      Utils.instance.requires_class_type(cls, "standard")
+      cls.addUse("org.springframework.data.repository.*")
+      cls.addUse("javax.persistence.*")
+
       super
     end
 
@@ -44,7 +48,7 @@ module XCTEJava
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       bld.add("@Entity")
-      bld.startClass("public inteface " + getClassName(cls) + " extends PagingAndSortingRepository<" +
+      bld.startClass("public interface " + getClassName(cls) + " extends PagingAndSortingRepository<" +
                      Utils.instance.getStyledClassName(cls.model.name) + ", Long>")
 
       bld.separate

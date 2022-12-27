@@ -17,9 +17,9 @@ module XCTEJava
 
     def process_fuction_dependencies(cls, bld, fun)
       if fun.elementId == CodeElem::ELEM_FUNCTION
-        templ = XCTEPlugin::findMethodPlugin(get_default_utils().langPrifle.name, fun.name)
+        templ = XCTEPlugin::findMethodPlugin(get_default_utils().langProfile.name, fun.name)
         if templ != nil
-          templ.process_dependencies(cls, bld)
+          templ.process_dependencies(cls, bld, fun)
         else
           #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end
@@ -27,12 +27,10 @@ module XCTEJava
     end
 
     def render_dependencies(cls, bld)
-      for inc in cls.includes
-        # if (inc.path.length > 0)
-        #   incPathAndName = inc.path + "/" + inc.name
-        # else
-        #   incPathAndName = inc.name
-        # end
+      bld.separateIf(cls.uses.length > 0)
+
+      for use in cls.uses
+        bld.add("import " + use.namespace.get(".") + ";")
 
         # if inc.itype == "<"
         #   bld.add("#include <" << incPathAndName << ">")
@@ -42,12 +40,14 @@ module XCTEJava
         #   bld.add('#include "' << incPathAndName << "." << Utils.instance.getExtension("header") << '"')
         # end
       end
+
+      bld.separateIf(cls.uses.length > 0)
     end
 
     def render_package_start(cls, bld)
       # Process namespace items
       if cls.namespace.hasItems?()
-        bld.add("package " + cls.namespace.get("."))
+        bld.add("package " + cls.namespace.get(".") + ";")
         bld.separate
       end
     end

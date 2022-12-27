@@ -65,7 +65,7 @@ module XCTETypescript
 
       # Generate class variables
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        if !isPrimitive(var)
+        if !Utils.instance.isPrimitive(var)
           Utils.instance.tryAddIncludeForVar(cls, var, "class_angular_module")
         end
       }))

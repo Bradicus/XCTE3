@@ -12,9 +12,9 @@ require "code_name_styling.rb"
 require "plugins_core/lang_java/utils.rb"
 
 module XCTEJava
-  class MethodWebApiRead < XCTEPlugin
+  class MethodWebApiReadMany < XCTEPlugin
     def initialize
-      @name = "method_web_api_read_one"
+      @name = "method_web_api_read_many"
       @language = "java"
       @category = XCTEPlugin::CAT_METHOD
     end
@@ -34,8 +34,8 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld, fun)
-      Utils.instance.requires_class_type(cls, "standard")
-      Utils.instance.requires_class_type(cls, "tsql_data_store")
+      Utils.instance.addClassInclude(cls, "standard")
+      Utils.instance.addClassInclude(cls, "tsql_data_store")
 
       Utils.instance.addClassInjection(cls, "tsql_data_store")
     end
@@ -63,4 +63,4 @@ module XCTEJava
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiRead.new)
+XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiReadMany.new)
