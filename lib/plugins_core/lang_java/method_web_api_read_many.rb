@@ -34,9 +34,8 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld, fun)
-      Utils.instance.addClassInclude(cls, "standard")
+      Utils.instance.addClassInclude(cls, "class_jpa_entity")
       Utils.instance.addClassInclude(cls, "tsql_data_store")
-
       Utils.instance.addClassInjection(cls, "tsql_data_store")
     end
 

@@ -30,12 +30,19 @@ module XCTEJava
       return cls.getUName()
     end
 
-    def genSourceFiles(cls, cfg)
+    def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, bld)
+
+      render_package_start(cls, bld)
+      render_dependencies(cls, bld)
+
+      genFileComment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -43,7 +50,14 @@ module XCTEJava
       return srcFiles
     end
 
-    def genFileComment(cls, bld, cfg)
+    def process_dependencies(cls, bld)
+      cls.addUse("javax.persistence.*")
+      super
+    end
+
+    def genFileComment(cls, bld)
+      cfg = UserSettings.instance
+
       bld.add("/**")
       bld.add("* @class " + cls.name)
 
@@ -74,24 +88,24 @@ module XCTEJava
     end
 
     # Returns the code for the header for this class
-    def genFileContent(cls, bld, cfg)
-      for inc in cls.includesList
-        bld.add('import "' + inc.path + inc.name + "\";")
-      end
-
+    def genFileContent(cls, bld)
       bld.separate
+      clsName = getClassName(cls)
+      tableName = XCTESql::Utils.instance.getStyledTableName(cls.getUName())
 
       bld.add("@Entity")
-      bld.add('@Table(name="' + XCTESql::Utils::getStyledTableName(cls.getUName()) + '")')
-      bld.startClass("public class " << cls.name)
+      if (tableName != clsName)
+        bld.add('@Table(name="' + tableName + '")')
+      end
+      bld.startClass("public class " + clsName)
 
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          bld.add("public static final int " + XCTEJava::Utils::getSizeConst(var) + " = " << var.arrayElemCount.to_s + ";")
+          bld.add("public static final int " + Utils.instance.getSizeConst(var) + " = " << var.arrayElemCount.to_s + ";")
         end
       }))
 
-      if cls.hasAnArray
+      if Utils.instance.hasAnArray(cls)
         bld.separate
       end
 
@@ -100,15 +114,16 @@ module XCTEJava
         if (var.name == "id")
           bld.add("@Id")
           bld.add("@GeneratedValue(strategy=GenerationType.AUTO)")
-          bld.add(XCTEJava::Utils::getVarDec(var))
+          bld.add(Utils.instance.getVarDec(var))
         else
-          bld.add(XCTEJava::Utils::getVarDec(var))
+          bld.add(Utils.instance.getVarDec(var))
         end
       }))
 
       bld.separate
 
-      render_functions()
+      render_functions(cls, bld)
+      render_header_var_group_getter_setters(cls, bld)
 
       bld.endClass
     end

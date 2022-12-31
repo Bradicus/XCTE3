@@ -17,7 +17,8 @@
 	<gen_class type="standard"
 		type-typescript="ts_interface" path-typescript="shared/interfaces"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
-			ns-java="com.example.demo.model"
+		type-java="class_jpa_entity"
+		ns-java="com.example.demo.model"
 		path-java="model" ></gen_class>
 
 	<gen_class type="class_angular_data_gen_service" path="shared/services" >

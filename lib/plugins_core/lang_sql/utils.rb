@@ -8,25 +8,26 @@
 # This class contains utility functions for a language
 
 require "lang_profile.rb"
+require "utils_base.rb"
 
 module XCTESql
-  class Utils
+  class Utils < UtilsBase
+    include Singleton
     @@langProfile = LangProfile.new
 
-    def self.init
-      @@langProfile.name = "sql"
-      @@langProfile.loadProfile
+    def initialize
+      super("sql")
     end
 
     # Returns variable declaration for the specified variable
-    def self.getVarDec(var)
+    def getVarDec(var)
       vDec = String.new
 
       vDec << "`" << var.name << "` "
       if (var.arrayElemCount.to_i > 0) # All arrays will be csv strings
         vDec << "TEXT"
       else
-        tName = self.getTypeName(var.vtype)
+        tName = getTypeName(var.vtype)
 
         if tName != var.vtype
           vDec << tName
@@ -39,27 +40,27 @@ module XCTESql
     end
 
     # Get a parameter declaration for a method parameter
-    def self.getTypeName(gType)
+    def getTypeName(gType)
       return @@langProfile.getTypeName(gType)
     end
 
     # Get the extension for a file type
-    def self.getExtension(eType)
+    def getExtension(eType)
       return @@langProfile.getExtension(eType)
     end
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def self.getComment(var)
+    def getComment(var)
       return "/* " << var.text << " */\n"
     end
 
-    def self.isPrimitive(var)
+    def isPrimitive(var)
       return @@langProfile.isPrimitive(var)
     end
 
     def getStyledTableName(name)
-      return CodeNameStyling.getStyled(fileName, @langProfile.tableNameStyle)
+      return CodeNameStyling.getStyled(name, @langProfile.classNameStyle)
     end
   end
 end

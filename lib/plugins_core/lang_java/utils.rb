@@ -77,9 +77,44 @@ module XCTEJava
       end
     end
 
+    def getFullOjbType(var)
+      fType = ""
+
+      if (var.templateType != nil)
+        fType << var.templateType << "<" << self.getTypeName(var) << ">"
+      elsif (var.listType != nil)
+        fType << var.listType << "<" << self.getTypeName(var) << ">"
+      else
+        fType << self.getTypeName(var)
+      end
+    end
+
+    # Return the language type based on the generic type
+    def getTypeName(var)
+      if (var.vtype != nil)
+        return @langProfile.getTypeName(var.vtype)
+      else
+        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+      end
+    end
+
+    # Return the language type based on the generic type
+    def getObjTypeName(var)
+      if (var.vtype != nil)
+        objType = getType(var.vtype + "obj")
+        if (objType != nil)
+          return objType.langType
+        end
+
+        return @langProfile.getTypeName(var.vtype)
+      else
+        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+      end
+    end
+
     # Returns a size constant for the specified variable
     def getSizeConst(var)
-      return "MAX_LEN_" << var.name.upcase
+      return CodeNameStyling.getStyled("max len " + var.name, @langProfile.constNameStyle)
     end
 
     # Get the extension for a file type
@@ -133,7 +168,7 @@ module XCTEJava
 
       if varClass != nil && var != nil
         cls.addInjection(var)
-        requires_var(cls, varClass, "standard")
+        requires_var(cls, varClass, ctype)
       end
     end
   end

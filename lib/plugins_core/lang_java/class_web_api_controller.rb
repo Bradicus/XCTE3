@@ -52,13 +52,9 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      #cls.addUse("System.Data.SqlClient")
-      Utils.instance.requires_class_type(cls, "standard")
-      cls.addUse("org.springframework.data.repository.*")
+      Utils.instance.requires_class_type(cls, "class_jpa_entity")
+      cls.addUse("org.springframework.web.bind.annotation.*")
       cls.addUse("org.springframework.beans.factory.annotation.Autowired")
-      cls.addUse("org.springframework.web.bind.annotation.GetMapping")
-      cls.addUse("org.springframework.web.bind.annotation.RestController")
-      cls.addUse("javax.persistence.*")
       super
     end
 

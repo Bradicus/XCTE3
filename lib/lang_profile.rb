@@ -13,7 +13,7 @@ require "lang_profile_type_map.rb"
 class LangProfile
   attr_accessor :name, :fileTypes, :typeMaps, :variableNameStyle,
                 :functionNameStyle, :classNameStyle, :fileNameStyle,
-                :enumNameStyle
+                :enumNameStyle, :constNameStyle
 
   def initialize
     @name       # Defined in the initialize method of child classes
@@ -25,6 +25,7 @@ class LangProfile
     @functionNameStyle = nil
     @fileNameStyle = nil
     @enumNameStyle = nil
+    @constNameStyle = nil
   end
 
   def load(xmlDoc)
@@ -52,6 +53,7 @@ class LangProfile
       @functionNameStyle = styling.attributes["function"]
       @fileNameStyle = styling.attributes["file"]
       @enumNameStyle = styling.attributes["enum"]
+      @constNameStyle = styling.attributes["const"]
     }
 
     if (@fileNameStyle == nil)

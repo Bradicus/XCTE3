@@ -1,8 +1,8 @@
 ##
-# Class:: ClassRepository
+# Class:: ClassTsqlDataStore
 #
 module XCTEJava
-  class ClassRepository < ClassBase
+  class ClassTsqlDataStore < ClassBase
     def initialize
       @name = "tsql_data_store"
       @language = "java"
@@ -10,7 +10,7 @@ module XCTEJava
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " repository"
+      return cls.getUName() + " data store"
     end
 
     def genSourceFiles(cls)
@@ -34,9 +34,8 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, "standard")
-      cls.addUse("org.springframework.data.repository.*")
-      cls.addUse("javax.persistence.*")
+      Utils.instance.requires_class_type(cls, "class_jpa_entity")
+      cls.addUse("org.springframework.data.jpa.repository.*")
 
       super
     end
@@ -47,9 +46,10 @@ module XCTEJava
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      bld.add("@Entity")
-      bld.startClass("public interface " + getClassName(cls) + " extends PagingAndSortingRepository<" +
-                     Utils.instance.getStyledClassName(cls.model.name) + ", Long>")
+      idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
+      bld.startClass("public interface " + getClassName(cls) + " extends JpaRepository<" +
+                     Utils.instance.getStyledClassName(cls.model.name) + ", " +
+                     Utils.instance.getObjTypeName(idVar[0]) + ">")
 
       bld.separate
       # Generate class variables
@@ -64,4 +64,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassRepository.new)
+XCTEPlugin::registerPlugin(XCTEJava::ClassTsqlDataStore.new)

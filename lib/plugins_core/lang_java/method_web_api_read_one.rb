@@ -34,15 +34,15 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld, fun)
-      Utils.instance.requires_class_type(cls, "standard")
+      Utils.instance.requires_class_type(cls, "class_jpa_entity")
       Utils.instance.requires_class_type(cls, "tsql_data_store")
-
       Utils.instance.addClassInjection(cls, "tsql_data_store")
     end
 
     def get_body(cls, bld, fun)
       conDef = String.new
-      engineName = Utils.instance.getStyledClassName(cls.getUName() + " data store")
+      dataStoreName =
+        CodeNameStyling.getStyled(cls.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
 
       pkeys = Array.new
       cls.model.getPrimaryKeyVars(pkeys)
@@ -51,11 +51,14 @@ module XCTEJava
         params << Utils.instance.getParamDec(pkey)
       end
 
-      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '")')
+      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '/{id}")')
 
       bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) +
                         " Get" + Utils.instance.getStyledClassName(cls.getUName()) +
                         "(" + params.join(", ") + ")")
+
+      bld.add("var item = " + dataStoreName + ".findById(id);")
+      bld.add("return item.get();")
 
       bld.endFunction
     end

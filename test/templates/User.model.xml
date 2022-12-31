@@ -7,6 +7,7 @@
 	<gen_class type="standard"
 		type-typescript="ts_interface" path-typescript="shared/interfaces"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
+		type-java="class_jpa_entity"
 		path-java="model"
 		ns-java="com.example.demo.model" >
 		<use-csharp name="System.Collections.Generic" />
