@@ -26,10 +26,6 @@ module XCTECpp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
-    end
-
     def getUnformattedClassName(cls)
       return cls.getUName()
     end

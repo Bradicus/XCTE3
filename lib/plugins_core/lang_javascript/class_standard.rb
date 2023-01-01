@@ -25,10 +25,6 @@ module XCTEJavascript
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName())
-    end
-
     def genSourceFiles(codeClass, cfg)
       srcFiles = Array.new
 

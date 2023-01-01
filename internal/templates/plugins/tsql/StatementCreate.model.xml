@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="statement create" >
+
+	<description>
+	TSQL create statement
+	</description>
+				
+	<gen_class type="xcte_class_plugin" ns="XCTETsql" path="tsql" lang="tsql" >
+	</gen_class>	
+	
+</model>

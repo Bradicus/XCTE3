@@ -9,36 +9,41 @@
 # on this class
 
 require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_tsql/class_base"
 
 module XCTETSql
-  class StatementCreate < XCTEPlugin
+  class StatementCreate < ClassBase
     def initialize
       @name = "statement_create"
       @language = "tsql"
       @category = XCTEPlugin::CAT_METHOD
-      @author = "Brad Ottoson"
     end
 
-    def getClassName(cls)
-      return XCTETSql::Utils.instance.getStyledClassName(cls.getUName())
+    def getUnformattedClassName(cls)
+      return cls.getUName()
     end
-
+    
     def genSourceFiles(cls)
       srcFiles = Array.new
-
-      cls.setName(getClassName(cls))
-
-      bld = SourceRenderer.new
-      bld.lfName = cls.getUName()
-      bld.lfExtension = "sql"
+      
+      bld = SourceRendererTSql.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
+      
+      genFileComment(cls, bld)
       genFileContent(cls, bld)
-
+      
       srcFiles << bld
-
+      
       return srcFiles
     end
-
-    # Returns definition string for this class's constructor
+    
+    # Returns the code for the comment for this class
+    def genFileComment(cls, bld)
+      
+    end
+    
+    # Returns the code for the content for this class
     def genFileContent(cls, bld)
       sqlCDef = Array.new
       first = true
@@ -46,11 +51,8 @@ module XCTETSql
       bld.add("CREATE TABLE [" + cls.name + "] (")
       bld.indent
 
-      varArray = Array.new
-      cls.model.getAllVarsFor(varArray)
-
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+      # Generate code for class variables
+      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|        
           if !first
             bld.sameLine(", ")
           end
@@ -60,18 +62,16 @@ module XCTETSql
 
           if var.defaultValue != nil
             bld.sameLine(" default '" << var.defaultValue << "'")
-          end
-        end
-      end
+          end        
+      }))
 
       primKeys = Array.new
-      for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.isPrimary == true
-            primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) + "]"
-          end
-        end
-      end
+    
+      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|           
+        if var.isPrimary == true
+           primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) << "]"
+        end        
+      }))
 
       if primKeys.length > 0
         bld.sameLine(",")

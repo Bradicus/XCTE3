@@ -10,9 +10,10 @@
 
 require "x_c_t_e_plugin.rb"
 require "plugins_core/lang_razor/source_renderer_razor.rb"
+require "plugins_core/lang_razor/class_base"
 
 module XCTERazor
-  class RazorEditor < XCTEPlugin
+  class RazorEditor < ClassBase
     def initialize
       @name = "razor_edit"
       @language = "razor"
@@ -20,8 +21,8 @@ module XCTERazor
       @author = "Brad Ottoson"
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName())
+    def getUnformattedClassName(cls)
+      return cls.getUName()
     end
 
     def genSourceFiles(cls)

@@ -26,16 +26,8 @@ module XCTECpp
       @author = "Brad Ottoson"
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
-    end
-
     def getUnformattedClassName(cls)
       return cls.getUName() + " container"
-    end
-
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
     end
 
     def genSourceFiles(cls)

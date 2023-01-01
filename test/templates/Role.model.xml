@@ -47,6 +47,9 @@
 		<function name="method_datamap_model_to_reactive_form" />
 	</gen_class>
 
+	<gen_class type="statement_create">
+	</gen_class>
+
 			<gen_class type="tsql_data_store"
 				namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"
 					   var_prefix = "a "
@@ -62,6 +65,8 @@
 				<function name="method_tsql_retrieve_one_by" interface="true" >
 					<var_ref name="id" />
 				</function>
+
+
 
 			<!--	<function name="method_tsql_delete" interface="true" />-->
 				<!--<function name="update" interface="true" />

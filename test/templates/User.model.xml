@@ -81,6 +81,9 @@
 		<function name="method_web_api_read_one" />
 	</gen_class>
 
+	<gen_class type="statement_create">
+	</gen_class>
+
 		<gen_class type="tsql_data_store"
 			 		namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"
 						ns-java="com.example.demo.data"

@@ -19,10 +19,6 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName() + " data store")
-    end
-
     def getUnformattedClassName(cls)
       return cls.getUName() + " data store"
     end

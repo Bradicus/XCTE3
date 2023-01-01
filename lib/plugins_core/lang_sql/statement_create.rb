@@ -22,16 +22,16 @@ module XCTESql
     end
 
     # Returns definition string for this class's constructor
-    def get_lines(codeClass, cfg)
+    def get_lines(cls, cfg)
       sqlCDef = Array.new
       indent = ""
 
-      codeLine = indent + "CREATE TABLE `" + codeClass.name + "List` ("
+      codeLine = indent + "CREATE TABLE `" + cls.name + "List` ("
       sqlCDef << codeLine
       sqlCDef << indent << "`id` INT"
 
       varArray = Array.new
-      codeClass.getAllVarsFor(varArray);
+      cls.getAllVarsFor(varArray);
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE

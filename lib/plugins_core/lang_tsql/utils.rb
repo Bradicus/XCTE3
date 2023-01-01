@@ -16,14 +16,19 @@ module XCTETSql
     include Singleton
 
     def initialize
-      super("csharp")
+      super("tsql")
     end
 
     # Returns variable declaration for the specified variable
-    def getVarDec(var, varPrefix = "")
+    def getVarDec(var, varPrefix)
       vDec = String.new
+      if varPrefix == nil
+        vPrevix = ""
+      else
+        vPrevix = varPrefix
+      end
 
-      vDec << "[" + CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle) + "]"
+      vDec << "[" << CodeNameStyling.getStyled(vPrevix + var.name, @langProfile.variableNameStyle) << "]"
 
       tName = getTypeName(var)
 
@@ -67,6 +72,9 @@ module XCTETSql
 
     # Returns the version of this name styled for this language
     def getStyledVariableName(var, prefix = "")
+      if (prefix == nil)
+        prefix = ""
+      end
       return CodeNameStyling.getStyled(prefix + var.name, @langProfile.variableNameStyle)
     end
 
