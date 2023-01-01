@@ -4,6 +4,27 @@
 	<description>
 	</description>
 
+<var_group genGet="true" genSet="true" visibility="private">
+	<var name="id"		type="String" pkey="true" />
+	<var_group>
+			<var name="first name"		type="String" maxlen="255" />
+			<var name="last name"		type="String" maxlen="255" />
+			<var name="username"	type="String" maxlen="255" />
+			<var name="email"	type="String" maxlen="255" />
+	</var_group>
+	<var_group>
+		<var name="created date" type="DateTime" />
+		<var name="last login date" type="DateTime" />
+		<var name="mailing address" 	type="Address" />
+		<var name="physical address" 	type="Address" />
+		<var name="roles"		type="String" set="List" select_from="role options" />
+		<var name="role options"		type="Role" set="List" options="true" />
+		<var name="disabled" type="boolean" />
+		<var name="theme" type="String" maxlen="255" select_from="role options"  />
+		<var name="theme options" type="Theme" set="List" options="true" />
+	</var_group>
+</var_group>
+
 	<gen_class type="standard"
 		type-typescript="ts_interface" path-typescript="shared/interfaces"
 		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
@@ -82,21 +103,4 @@
 			<function name="delete" interface="true" />
 			<function name="deleteBy" interface="true" />-->
 		</gen_class>
-
-	<var_group genGet="true" genSet="true" visibility="private">
-		<var name="id"		type="String" pkey="true" />
-		<var_group>
-				<var name="first name"		type="String" maxlen="255" />
-				<var name="last name"		type="String" maxlen="255" />
-				<var name="username"	type="String" maxlen="255" />
-				<var name="email"	type="String" maxlen="255" />
-		</var_group>
-		<var_group>
-			<var name="created date" type="DateTime" />
-			<var name="last login date" type="DateTime" />
-			<var name="mailing address" 	type="Address" />
-			<var name="physical address" 	type="Address" />
-			<var name="roles"		type="Role" set="List" />
-		</var_group>
-	</var_group>
 </model>

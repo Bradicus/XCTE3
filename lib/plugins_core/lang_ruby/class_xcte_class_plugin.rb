@@ -144,7 +144,7 @@ module XCTERuby
       bld.separate
       bld.add("bld.separate")
 
-      bld.add("# Generate class variables")
+      bld.add("# Generate code for class variables")
       bld.add("eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|")
       bld.add("}))")
 

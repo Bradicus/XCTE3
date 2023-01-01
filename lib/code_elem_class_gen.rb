@@ -136,8 +136,8 @@ module CodeStructure
       return nil
     end
 
-    def findVarInGroup(vgroup, varName, varNs)
-      for var in vgroup.vars
+    def findVarInGroup(vGroup, varName, varNs)
+      for var in vGroup.vars
         if var.name == varName && (varNs == nil || var.namespace.get(".") == varNs)
           return var
         end

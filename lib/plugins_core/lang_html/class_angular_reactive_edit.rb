@@ -49,7 +49,7 @@ module XCTEHtml
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).
         wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
           render_field(cls, bld, var, nil)
         else
           if (!var.hasMultipleItems())
@@ -70,8 +70,20 @@ module XCTEHtml
             bld.endBlock("</fieldset>")
           else
             vName = Utils.instance.getStyledVariableName(var)
-            varCls = Classes.findVarClass(var)
-            TableUtil.instance.render_table(varCls, bld, "item." + vName, vName + "Item")
+            # List of primitive "ids" linked to an options list
+            if Utils.instance.isPrimitive(var) && var.selectFrom != nil
+              optVar = cls.findVar(var.selectFrom)
+              optVarName = Utils.instance.getStyledVariableName(optVar)
+              TableUtil.instance.render_sel_option_table(bld, var, optVar, "item." + vName, vName + "Item")
+            # Not an options list, just a reglar array of data
+            elsif !var.isOptionsList
+              varCls = Classes.findVarClass(var)
+              if (varCls == nil)
+                puts "Unable to find variable call " + var.getUType()
+              end
+
+              TableUtil.instance.render_table(varCls, bld, "item." + vName, vName + "Item")
+            end
           end
         end
       }).
@@ -119,10 +131,19 @@ module XCTEHtml
         varId = varName
       end
 
-      bld.startBlock("<div" + divCss + ">")
-      bld.add("<label" + labelCss + ' for="' + varId + '" >' + var.getDisplayName() + "</label>")
-      bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
-      bld.endBlock("</div>")
+      if !var.isOptionsList
+        bld.startBlock("<div" + divCss + ">")
+        bld.add("<label" + labelCss + ' for="' + varId + '" >' + var.getDisplayName() + "</label>")
+        if var.selectFrom != nil
+          itemName = varName + 'Item'
+          bld.add("<select" + inputCss + ' id="' + varId + '" formControlName="' + varName + '">')
+          bld.iadd('<option *ngFor="let '+ itemName + ' of ' + varName + 'value="' + itemName + '.id">{{' + itemName + '.name}}</option>')
+          bld.add("</select>")
+        else
+          bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
+        end
+        bld.endBlock("</div>")
+      end
     end
 
     def getClassDec(classList)

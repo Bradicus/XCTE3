@@ -6,7 +6,8 @@
 
 	<var_group genGet="true" genSet="true" visibility="private">
 		<var name="id"		type="String" pkey="true" />
-		<var name="user role"		type="String" maxlen="50" />
+		<var name="name"		type="String" maxlen="50" />
+		<var name="description"		type="String" />
 	</var_group>
 
 	<gen_class type="standard" type-typescript="ts_interface"
@@ -15,6 +16,10 @@
 		type-java="class_jpa_entity"
 		path-java="model"
 		ns-java="com.example.demo.model">
+	</gen_class>
+
+	<gen_class type="class_angular_shared_data_store_service"
+		path-typescript="shared/services" >
 	</gen_class>
 
 	<gen_class type="web_api_controller"

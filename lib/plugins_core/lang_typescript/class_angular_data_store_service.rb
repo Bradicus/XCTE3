@@ -63,14 +63,14 @@ module XCTETypescript
       # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
 
       bld.separate
-      bld.startFunction("constructor(private httpClient: HttpClient)")
+      bld.startFunction("constructor()")
       bld.add("this.apiUrl = environment.apiUrl;")
       bld.endFunction
+      
+      bld.separate
 
       # Generate code for functions
-      for fun in cls.functions
-        process_function(cls, bld, fun)
-      end
+      render_functions(cls, bld)
 
       bld.endClass
     end

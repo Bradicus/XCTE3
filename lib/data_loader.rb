@@ -102,6 +102,8 @@ class DataLoader
     curVar.isPrimary = varXML.attributes["pkey"] == "true"
     curVar.name = varXML.attributes["name"]
     curVar.displayName = varXML.attributes["display"]
+    curVar.selectFrom = varXML.attributes["select_from"]
+    curVar.isOptionsList = (varXML.attributes["options"] == "true")
 
     curVar.genGet = loadInheritableAttribute(varXML, "genGet", pComponent.language, curVar.genGet) == "true"
     curVar.genSet = loadInheritableAttribute(varXML, "genSet", pComponent.language, curVar.genSet) == "true"

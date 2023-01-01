@@ -103,22 +103,13 @@ module XCTERuby
       bld.add
 
       bld.add("# Returns the code for the content for this function")
-      bld.startFunction("def get_definition(cls, bld)")
+      bld.startFunction("def get_definition(cls, bld, fun)")
 
       bld.add("# process class variables")
 
-      bld.startBlock("for group in cls.model.groups")
-      bld.add("process_var_group(cls, bld, group)")
-      bld.endBlock
-      bld.endFunction
-
-      bld.add
-
-      bld.add("# process variable group")
-      bld.startFunction("def process_var_group(cls, bld, vGroup)")
-      bld.startBlock("for var in vGroup.vars")
-
-      bld.startBlock("if var.elementId == CodeElem::ELEM_VARIABLE")
+      bld.add("# Generate code for class variables")
+      bld.add("eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|")
+      
       bld.startBlock("if !var.isStatic   # Ignore static variables")
       bld.startBlock("if Utils.instance.isPrimitive(var)")
       bld.startBlock("if var.arrayElemCount.to_i > 0	# Array of primitives)")
@@ -141,18 +132,9 @@ module XCTERuby
       bld.endBlock
       bld.endBlock
       bld.endBlock
-
-      bld.midBlock("elsif var.elementId == CodeElem::ELEM_COMMENT")
-      bld.add("bld.add(Utils.instance.getComment(var))")
-      bld.midBlock("elsif var.elementId == CodeElem::ELEM_FORMAT")
-      bld.add("bld.add(var.formatText)")
+      
+      bld.add("}))")
       bld.endBlock
-
-      bld.endBlock
-      bld.startBlock("for group in vGroup")
-      bld.add("process_var_group(cls, bld, group)")
-      bld.endBlock
-      bld.endFunction
       bld.endBlock
 
       # Process namespace items

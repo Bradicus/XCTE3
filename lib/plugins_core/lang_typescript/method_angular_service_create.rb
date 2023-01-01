@@ -11,7 +11,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld)
+    def get_definition(cls, bld, fun)
       className = Utils.instance.getStyledClassName(cls.getUName())
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
 

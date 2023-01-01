@@ -12,7 +12,7 @@ module CodeStructure
   class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
       :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
-      :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace
+      :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList
 
     def initialize(parentElem)
       super(parentElem)
@@ -38,6 +38,8 @@ module CodeStructure
       @identity = nil
       @isPrimary = false
       @listType = nil
+      @selectFrom = nil
+      @isOptionsList = false
 
       # Stored only for arrays
       @arrayElemCount = 0 	# Array size of 0 means this isn't an array
@@ -76,7 +78,11 @@ module CodeStructure
     end
 
     def hasMultipleItems()
-      return listType != nil || arrayElemCount > 0
+      return listType != nil || (arrayElemCount > 0 && getUType().downcase != 'string')
+    end
+
+    def hasSet()
+      return listType != nil
     end
   end
 end

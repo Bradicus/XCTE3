@@ -43,5 +43,9 @@ module XCTEHtml
 
       return "text"
     end
+
+    def getStyledUrlName(name)
+      return CodeNameStyling.getStyled(name, "DASH_LOWER")
+    end
   end
 end
