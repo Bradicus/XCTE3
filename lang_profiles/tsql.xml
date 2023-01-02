@@ -31,6 +31,8 @@
 		<TYPE_MAP genType="Date" 		langType="DATE" />
 		<TYPE_MAP genType="Time" 		langType="TIME" />
 		<TYPE_MAP genType="DateTime"	langType="DATETIME" />
+
+		<TYPE_MAP genType="Guid"		langType="UNIQUEIDENTIFIER" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

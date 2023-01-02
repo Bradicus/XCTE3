@@ -27,6 +27,8 @@
 		<TYPE_MAP genType="Float64" 	langType="double" />
 		<TYPE_MAP genType="String" 		langType="string" />
 		<TYPE_MAP genType="StringUNC16" langType="string" />
+		
+		<TYPE_MAP genType="Guid"		langType="Guid" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

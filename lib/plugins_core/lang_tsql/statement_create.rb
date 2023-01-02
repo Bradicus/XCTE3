@@ -69,7 +69,7 @@ module XCTETSql
     
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|           
         if var.isPrimary == true
-           primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) << "]"
+           primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) + "]"
         end        
       }))
 

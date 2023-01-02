@@ -33,6 +33,7 @@
 		<TYPE_MAP genType="String" 	langType="string" />
 		
 		<TYPE_MAP genType="DateTime" 	langType="Date" />
+		<TYPE_MAP genType="Guid"		langType="string" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

@@ -38,7 +38,7 @@ module XCTETSql
           vDec << " IDENTITY" << var.identity
         end
       else
-        vDec << "TEXT"
+        vDec << " TEXT"
       end
 
       return vDec
@@ -48,9 +48,13 @@ module XCTETSql
     def getTypeName(var)
       if (var.vtype == "String")
         if (var.arrayElemCount > 9999)
-          return("TEXT")
+          return("VARCHAR(MAX)")
         else
-          return("VARCHAR(" + var.arrayElemCount.to_s + ")")
+          if (var.arrayElemCount > 0)
+            return("VARCHAR(" + var.arrayElemCount.to_s + ")")
+          else
+            return("VARCHAR(MAX)")
+          end
         end
       else
         if (var.vtype == "StringUNC16")

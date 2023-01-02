@@ -6,5 +6,5 @@ CREATE TABLE [Address] (
   [aState] VARCHAR(2), 
   [aCountry] VARCHAR(2), 
   [aZipCode] VARCHAR(20),
-  PRIMARY KEY ([aId, ])
+  PRIMARY KEY ([aId])
 ) 

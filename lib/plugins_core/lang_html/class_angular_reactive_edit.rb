@@ -59,7 +59,7 @@ module XCTEHtml
 
             bld.add('<div class="row">')
 
-            varCls = Classes.findVarClass(var, "standard")
+            varCls = Classes.findVarClass(var)
 
             eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).
               wVarCb(lambda { |innerVar|

@@ -12,25 +12,29 @@
 	-->
 
 	<TYPE_MAPS>	
-		<TYPE_MAP genType="Boolean" langType="Boolean" />
-		<TYPE_MAP genType="Char" 	langType="Char" />
-		<TYPE_MAP genType="UChar" 	langType="UChar" />
-		<TYPE_MAP genType="UNC16" 	langType="UNC16" />
+		<TYPE_MAP genType="Boolean" langType="boolean" />
+		<TYPE_MAP genType="Char" 	langType="string" />
+		<TYPE_MAP genType="UChar" 	langType="number" />
+		<TYPE_MAP genType="UNC16" 	langType="number" />
 		
-		<TYPE_MAP genType="Int8" 	langType="Int8" />
-		<TYPE_MAP genType="Int16" 	langType="Int16" />
-		<TYPE_MAP genType="Int32" 	langType="Int32" />
-		<TYPE_MAP genType="Int64" 	langType="Int64" />
+		<TYPE_MAP genType="Int8" 	langType="number" />
+		<TYPE_MAP genType="Int16" 	langType="number" />
+		<TYPE_MAP genType="Int32" 	langType="number" />
+		<TYPE_MAP genType="Int64" 	langType="number" />
 		
 		<!-- Wastes space but java has no unsigned -->
-		<TYPE_MAP genType="UInt8" 	langType="UInt8" />
-		<TYPE_MAP genType="UInt16" 	langType="UInt16" />
-		<TYPE_MAP genType="UInt32" 	langType="UInt32" />
-		<TYPE_MAP genType="UInt64" 	langType="UInt64" />
+		<TYPE_MAP genType="UInt8" 	langType="number" />
+		<TYPE_MAP genType="UInt16" 	langType="number" />
+		<TYPE_MAP genType="UInt32" 	langType="number" />
+		<TYPE_MAP genType="UInt64" 	langType="number" />
 		
-		<TYPE_MAP genType="Float32" langType="Float32" />
-		<TYPE_MAP genType="Float64" langType="Float64" />
-		<TYPE_MAP genType="String" 	langType="String" />
+		<TYPE_MAP genType="Float32" langType="number" />
+		<TYPE_MAP genType="Float64" langType="number" />
+		<TYPE_MAP genType="String" 	langType="string" />
+		
+		<TYPE_MAP genType="DateTime" 	langType="Date" />
+		
+		<TYPE_MAP genType="Guid"		langType="string" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

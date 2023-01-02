@@ -38,7 +38,7 @@
 	</gen_class>
 
 	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" ></gen_class>
-	<gen_class language="tsql" type="statement_create" namespace="Database" path="sql" var_prefix = "a "></gen_class>
+	<gen_class language="tsql" type="statement_create" namespace="auth" path="sql" var_prefix = "a "></gen_class>
 
 	<gen_class type="web_api_controller"
 		ns-csharp="XCTE.API.Controllers"

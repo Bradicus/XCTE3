@@ -24,6 +24,7 @@ class Classes
     dList = @@list
     for c in @@list
       if c.model.name != nil
+        #puts c.model.name + " " + var.getUType()
         if (nameMatches(c.model.name, var.getUType()))
           # puts c.model.name + " " + var.getUType()
           # puts c.ctype + " " + plugName

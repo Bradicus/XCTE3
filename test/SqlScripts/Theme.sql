@@ -1,6 +1,6 @@
 CREATE TABLE [Theme] (
-  [id] VARCHAR(0), 
+  [id] VARCHAR(MAX), 
   [name] VARCHAR(50), 
-  [description] VARCHAR(0),
-  PRIMARY KEY ([id, ])
+  [description] VARCHAR(MAX),
+  PRIMARY KEY ([id])
 ) 

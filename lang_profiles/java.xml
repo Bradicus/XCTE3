@@ -41,8 +41,8 @@
 		<TYPE_MAP genType="DateTime" 	langType="LocalDateTime" />
 		<TYPE_MAP genType="Date" 	langType="LocalDate" />
 		<TYPE_MAP genType="Time" 	langType="LocalTime" />
-
-		LocalDateTime
+		
+		<TYPE_MAP genType="Guid"		langType="UUID" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>
