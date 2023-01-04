@@ -104,24 +104,23 @@ class SourceRenderer
   end
 
   def startFunctionParamed(functionName, paramList)
-    add(functionName + "(")
-
+    
     oneLiner = paramList.join(", ")
     if oneLiner.length > 100
+      paramStr = ''
+      
       (0..paramList.length - 1).each do |i|
         if (i < paramList.length - 1)
-          iadd(paramList[i] + ",")
+          paramStr += (paramList[i] + getIndent(1) + ",")
         else
-          iadd(paramList[i])
+          paramStr += (paramList[i] + getIndent(1))
         end
       end
+      
+      startDelimedChunk(functionName + "(" + paramStr + ")")
     else
-      sameLine(oneLiner)
+      startDelimedChunk(functionName + "(" + oneLiner + ")")
     end
-
-    sameLine(")")
-
-    startDelimedChunk()
   end
 
   def endFunction()

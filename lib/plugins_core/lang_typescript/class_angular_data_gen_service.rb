@@ -56,7 +56,7 @@ module XCTETypescript
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("@faker-js/faker", "faker")
 
-      # Generate class variables
+      # Include variable interfaces
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
           varCls = Classes.findVarClass(var, "ts_interface")

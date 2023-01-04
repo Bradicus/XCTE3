@@ -6,7 +6,7 @@
     <framework name="angular" />
   </generate>
   <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
-  <generate language="java" tpl_path="templates" dest="./maven/demo/src/main/java/com/example/demo" />
+  <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" />
   <generate language="tsql" tpl_path="templates" dest="./SqlScripts" />
 
   <custom_lang_profiles path="lang_profiles" />

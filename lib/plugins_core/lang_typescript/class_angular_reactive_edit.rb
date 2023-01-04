@@ -133,7 +133,7 @@ module XCTETypescript
 
       bld.separate
       bld.startBlock("onSubmit()")
-      if (idVar[0].getUType().downcase() == "string")
+      if (idVar[0].getUType().downcase() == "string" || idVar[0].getUType().downcase() == "guid")
         bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
       else
         bld.startBlock("if (this." + clsVar + ".controls['id'].value === null || this." + clsVar + ".controls['id'].value > 0)")

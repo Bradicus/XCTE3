@@ -20,28 +20,32 @@ module XCTETypescript
       bld.startFunction("initData(item: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if (Utils.instance.isNumericPrimitive(var))
-          bld.add("item." + Utils.instance.getStyledVariableName(var) + " = 0;")
-        elsif (var.getUType().downcase == "datetime")
-          bld.add("item." + Utils.instance.getStyledVariableName(var) + " = new Date();")
-        elsif (Utils.instance.isPrimitive(var))
-          bld.add("item." + Utils.instance.getStyledVariableName(var) + " = '';")
-        elsif (!var.hasMultipleItems())
-          bld.add("item." + Utils.instance.getStyledVariableName(var) +
-                  " = {} as " + Utils.instance.getStyledClassName(var.getUType()) + ";")
-          varCls = Classes.findVarClass(var, "ts_interface")
-          if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
-
-            if vService != nil
-              srcName = "item." + Utils.instance.getStyledVariableName(var)
-              bld.add("this." + Utils.instance.getStyledVariableName(vService) +
-                      ".initData(" + srcName + ");")
+        if var.hasMultipleItems()
+          bld.add("item." + Utils.instance.getStyledVariableName(var) + " = [];")
+        else
+          if Utils.instance.isNumericPrimitive(var)
+            bld.add("item." + Utils.instance.getStyledVariableName(var) + " = 0;")
+          elsif var.getUType().downcase == 'boolean'
+              bld.add("item." + Utils.instance.getStyledVariableName(var) + " = false;")
+          elsif var.getUType().downcase == "datetime"
+            bld.add("item." + Utils.instance.getStyledVariableName(var) + " = new Date();")
+          elsif Utils.instance.isPrimitive(var)
+            bld.add("item." + Utils.instance.getStyledVariableName(var) + " = '';")
+          else
+            bld.add("item." + Utils.instance.getStyledVariableName(var) +
+                    " = {} as " + Utils.instance.getStyledClassName(var.getUType()) + ";")
+            varCls = Classes.findVarClass(var, "ts_interface")
+            if varCls != nil
+              vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
+  
+              if vService != nil
+                srcName = "item." + Utils.instance.getStyledVariableName(var)
+                bld.add("this." + Utils.instance.getStyledVariableName(vService) +
+                        ".initData(" + srcName + ");")
+              end
             end
           end
-        else
-          bld.add("item." + Utils.instance.getStyledVariableName(var) + " = [];")
-        end
+        end        
       }))
 
       bld.endFunction()

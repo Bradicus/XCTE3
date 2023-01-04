@@ -42,7 +42,7 @@
 		<TYPE_MAP genType="Date" 	langType="LocalDate" />
 		<TYPE_MAP genType="Time" 	langType="LocalTime" />
 		
-		<TYPE_MAP genType="Guid"		langType="UUID" />
+		<TYPE_MAP genType="Guid"		langType="java.util.UUID" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

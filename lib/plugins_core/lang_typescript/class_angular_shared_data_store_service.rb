@@ -43,9 +43,26 @@ module XCTETypescript
       bld.endBlock(")")
       bld.startClass("export class " + getClassName(cls))
       
+      itemVar = Utils.instance.createVarFor(cls, "ts_interface")
+
+      if cls.xmlElement['isList'] == "true"
+        observableType = "Observable<" + Utils.instance.getStyledClassName(cls.model.name) + "[]>"
+        bld.add("item: " + observableType + " = {} as " + observableType + ";")
+      else
+        observableType = "Observable<" + Utils.instance.getStyledClassName(cls.model.name) + ">"
+        bld.add("item: " + observableType + " = {} as " + observableType + ";")
+      end
+
+      bld.add('lastUpdate: Date = new Date(0);')
+      bld.add('expireMinutes: Number = 5;')
+
+      dataServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
+      
+      constructorParams = Array.new
+      Utils.instance.addParamIfAvailable(constructorParams, dataServiceVar)
+
       bld.separate
-      bld.startFunction("constructor(private httpClient: HttpClient)")
-      bld.add("this.apiUrl = environment.apiUrl;")
+      bld.startFunctionParamed("constructor", constructorParams)
       bld.endFunction
             
       # Generate code for functions

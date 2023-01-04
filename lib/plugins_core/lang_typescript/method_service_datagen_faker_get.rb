@@ -39,7 +39,7 @@ module XCTETypescript
           elsif var.listType == nil
             bld.add(name + varName + " = " + getFakerAssignment(var) + ";")
           else
-            bld.add(name + varName + ".push_back(" + getFakerAssignment(var) + ");")
+            bld.add(name + varName + ".push(" + getFakerAssignment(var) + ");")
           end
         elsif (!var.hasMultipleItems())
           varCls = Classes.findVarClass(var, "ts_interface")
@@ -63,6 +63,8 @@ module XCTETypescript
         return "faker.random.numeric(8)"
       elsif (varType.start_with?("datetime"))
         return "faker.date.recent()"
+      elsif (varType.start_with?("boolean"))
+        return "faker.datatype.boolean()"
       elsif (var.name.include?("street") && var.name.include?("2"))
         return "faker.address.secondaryAddress()"
       elsif (var.name.include?("street"))

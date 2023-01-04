@@ -51,7 +51,7 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      cls.addUse("javax.persistence.*")
+      cls.addUse("jakarta.persistence.*")
       super
     end
 

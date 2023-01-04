@@ -59,7 +59,7 @@ module XCTETypescript
       # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
 
       bld.separate
-      bld.startFunction("constructor()")
+      bld.startFunction("constructor(private httpClient: HttpClient)")
       bld.add("this.apiUrl = environment.apiUrl;")
       bld.endFunction
       

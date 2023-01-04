@@ -167,7 +167,7 @@ module XCTETypescript
           if var.listType == nil
             bld.add(genPrimitiveFormControl(var) + ",")
           else
-            bld.add(getStyledVariableName(var) + ": new FormArray([])),")
+            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         else
           otherClass = Classes.findVarClass(var, "ts_interface")
@@ -193,8 +193,10 @@ module XCTETypescript
       if (var.getUType().downcase().start_with?("date"))
         return getStyledVariableName(var) + ": new FormControl<Date>(new Date())"
       else
-        if Types.instance.inCategory(var, "text")
+        if Types.instance.inCategory(var, "text") || var.getUType().downcase == 'guid'
           return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">('')"
+        elsif var.getUType().downcase == 'boolean'
+          return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(false)"
         end
         return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(0)"
       end

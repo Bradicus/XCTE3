@@ -93,7 +93,7 @@ module XCTEHtml
           varName = Utils.instance.getStyledVariableName(var)
 
           bld.add('')
-          bld.add('<td *ngIf="">{{' + iteratorName + "." + varName + "}}</td>")
+         # bld.add('<td *ngIf="">{{' + iteratorName + "." + varName + "}}</td>")
         end
       }))
 

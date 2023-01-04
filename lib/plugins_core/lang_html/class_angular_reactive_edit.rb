@@ -137,7 +137,7 @@ module XCTEHtml
         if var.selectFrom != nil
           itemName = varName + 'Item'
           bld.add("<select" + inputCss + ' id="' + varId + '" formControlName="' + varName + '">')
-          bld.iadd('<option *ngFor="let '+ itemName + ' of ' + varName + 'value="' + itemName + '.id">{{' + itemName + '.name}}</option>')
+          bld.iadd('<option *ngFor="let '+ itemName + ' of ' + varName + 'Options" value="' + itemName + '.id">{{' + itemName + '.name}}</option>')
           bld.add("</select>")
         else
           bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')

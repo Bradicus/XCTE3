@@ -8,3 +8,4 @@ test/bin/
 test/packages/
 .idea/
 /internal/gen
+/test/angular/ClientApp/nbproject/private/
