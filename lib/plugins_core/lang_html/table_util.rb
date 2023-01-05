@@ -86,7 +86,7 @@ module XCTEHtml
 
       # Generate table body
       bld.startBlock("<tbody>")
-      bld.startBlock('<tr *ngFor="let ' + iteratorName + " of " + listVarName + asyncStr + '">')
+      bld.startBlock('<tr *ngFor="let ' + iteratorName + " of " + 'item.' + listVarName + asyncStr + '">')
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && 

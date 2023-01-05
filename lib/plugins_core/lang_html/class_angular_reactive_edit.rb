@@ -74,7 +74,7 @@ module XCTEHtml
             if Utils.instance.isPrimitive(var) && var.selectFrom != nil
               optVar = cls.findVar(var.selectFrom)
               optVarName = Utils.instance.getStyledVariableName(optVar)
-              TableUtil.instance.render_sel_option_table(bld, var, optVar, "item." + vName, vName + "Item")
+              TableUtil.instance.render_sel_option_table(bld, var, optVar, vName + "Item")
             # Not an options list, just a reglar array of data
             elsif !var.isOptionsList
               varCls = Classes.findVarClass(var)
@@ -137,8 +137,10 @@ module XCTEHtml
         if var.selectFrom != nil
           itemName = varName + 'Item'
           bld.add("<select" + inputCss + ' id="' + varId + '" formControlName="' + varName + '">')
-          bld.iadd('<option *ngFor="let '+ itemName + ' of ' + varName + 'Options" value="' + itemName + '.id">{{' + itemName + '.name}}</option>')
+          bld.iadd('<option *ngFor="let '+ itemName + ' of item.' + varName + 'Options" value="' + itemName + '.id">{{' + itemName + '.name}}</option>')
           bld.add("</select>")
+        elsif
+          bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
         else
           bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
         end

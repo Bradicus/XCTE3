@@ -1,6 +1,6 @@
 #
 module XCTETypescript
-  class MethodAngularServiceListing < XCTEPlugin
+  class MethodAngularSharedServiceListing < XCTEPlugin
     def initialize
       @name = "method_angular_shared_service_listing"
       @language = "typescript"
@@ -17,8 +17,8 @@ module XCTETypescript
       dataServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
 
       bld.startFunction("listing(): Observable<" + className + "[]>")
-      bld.startBlock("if (lastUpdate < new Date().addMinutes(-expireMinutes)")
-      bld.add('item = ' + Utils.instance.getStyledVariableName(dataServiceVar) + '.listing();')
+      bld.startBlock("if ((this.lastUpdate + this.expireMinutes * 60000) < new Date())")
+      bld.add('this.item = ' + Utils.instance.getStyledVariableName(dataServiceVar) + '.listing();')
       bld.endBlock
       bld.separate
       bld.add("return this.item;")
@@ -27,4 +27,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::MethodAngularServiceListing.new)
+XCTEPlugin::registerPlugin(XCTETypescript::MethodAngularSharedServiceListing.new)
