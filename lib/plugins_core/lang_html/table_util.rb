@@ -17,92 +17,92 @@ module XCTEHtml
     include Singleton
 
     # Return formatted class name
-    def render_table(cls, bld, listVarName, iteratorName, async = "")
-      bld.startBlock('<table class="table">')
+    def make_table(cls, listVarName, iteratorName, async = "")
+      tableElem = HtmlNode.new('table')
+        .add_class("table")      
+
       asyncStr = ""
       if async == "async"
         asyncStr = " | async"
       end
 
       # Generate table header
-      bld.startBlock("<thead>")
-      bld.startBlock("<tr>")
+      tHead = HtmlNode.new('thead')
+      tHeadRow = HtmlNode.new('tr')
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          varName = Utils.instance.getStyledVariableName(var)
-
-          bld.add("<th>" + var.getDisplayName() + "</th>")
+          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName()))          
         end
       }))
 
-      bld.endBlock("</tr>")
-      bld.endBlock("</thead>")
+      tHead.add_child(tHeadRow)
+      tableElem.add_child(tHead)
 
       # Generate table body
-      bld.startBlock("<tbody>")
-      bld.startBlock('<tr *ngFor="let ' + iteratorName + " of " + listVarName + asyncStr + '">')
+      tBody = HtmlNode.new('tbody')
+      tBodyRow = HtmlNode.new('tr').
+        add_attribute('*ngFor', "let " + iteratorName + " of " + listVarName + asyncStr)
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          varName = Utils.instance.getStyledVariableName(var)
-
-          bld.add("<td>{{" + iteratorName + "." + varName + "}}</td>")
+          tBodyRow.add_child(HtmlNode.new('td').
+            add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end
       }))
 
-      bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/view/{{item.id}}">View</a></td>')
-      bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/{{item.id}}">Edit</a></td>')
-      bld.endBlock("</tr>")
-      bld.endBlock("</tbody>")
-
-      bld.endBlock("</table>")
-    end
-
-    def render_sel_option_table(bld, listVar, optionsVar, iteratorName, async = "")
-      bld.startBlock('<table class="table">')
-      asyncStr = ""
-      if async == "async"
-        asyncStr = " | async"
-      end
-
-      # Generate table header
-      bld.startBlock("<thead>")
-      bld.startBlock("<tr>")
-
-      listVarName = Utils.instance.getStyledVariableName(listVar)
-      optClass = Classes.findVarClass(optionsVar)
-
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
-          varName = Utils.instance.getStyledVariableName(var)
-
-          bld.add("<th>" + var.getDisplayName() + "</th>")
-        end
-      }))
-
-      bld.endBlock("</tr>")
-      bld.endBlock("</thead>")
-
-      # Generate table body
-      bld.startBlock("<tbody>")
-      bld.startBlock('<tr *ngFor="let ' + iteratorName + " of " + 'item.' + listVarName + asyncStr + '">')
-
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && 
-          varName = Utils.instance.getStyledVariableName(var)
-
-          bld.add('')
-         # bld.add('<td *ngIf="">{{' + iteratorName + "." + varName + "}}</td>")
-        end
-      }))
+      tBody.add_child(tBodyRow)
+      tableElem.add_child(tBody)
 
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/view/{{item.id}}">View</a></td>')
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/{{item.id}}">Edit</a></td>')
-      bld.endBlock("</tr>")
-      bld.endBlock("</tbody>")
+      # bld.endBlock("</tr>")
+      # bld.endBlock("</tbody>")
 
-      bld.endBlock("</table>")
+      # bld.endBlock("</table>")
+    end
+
+    def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")
+      tableElem = HtmlNode.new('table')
+      .add_class("table")      
+
+      asyncStr = ""
+      if async == "async"
+        asyncStr = " | async"
+      end
+
+      # Generate table header
+      tHead = HtmlNode.new('thead')
+      tHeadRow = HtmlNode.new('tr')
+      
+      listVarName = Utils.instance.getStyledVariableName(listVar)
+      optClass = Classes.findVarClass(optionsVar)
+
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
+        if Utils.instance.isPrimitive(var)
+          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName()))
+        end
+      }))
+
+      tHead.add_child(tHeadRow)
+      tableElem.add_child(tHead)
+
+      # Generate table body
+      tBody = HtmlNode.new('tbody')
+      tBodyRow = HtmlNode.new('tr').
+        add_attribute('*ngFor', "let " + iteratorName + " of " + listVarName + asyncStr)
+
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
+        if Utils.instance.isPrimitive(var)
+          tBodyRow.add_child(HtmlNode.new('td')) #.
+            #add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+        end
+      }))
+  
+      tBody.add_child(tBodyRow)
+      tableElem.add_child(tBody)
+
+      return tableElem
     end
   end
 end

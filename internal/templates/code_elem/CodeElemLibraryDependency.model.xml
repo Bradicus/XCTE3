@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem library dependency" >
+
+	<description>
+	Code Element
+	</description>
+
+	<gen_class type="standard" ns="code element" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">		
+		<var name="name"			type="String" />        
+        <var name="versionMin"			type="String" />        
+        <var name="versionMax"			type="String" />        
+	</var_group>
+
+</model>

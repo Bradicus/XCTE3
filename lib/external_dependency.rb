@@ -4,10 +4,12 @@
 # root directory
 #
 
-class Framework
-  attr_accessor :name, :version
+class ExternalDependency
+  attr_accessor :name, :version, :minVer, :maxVer
   
   @name
   @version
+  @minVer
+  @maxVer
   
 end

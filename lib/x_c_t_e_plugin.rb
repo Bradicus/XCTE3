@@ -23,6 +23,7 @@ class XCTEPlugin
     @language
     @category
     @author
+    @dependencies = Array.new
   end
 
   # Recursively load all plugins from the plugins folder

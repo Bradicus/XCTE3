@@ -14,7 +14,7 @@ require "code_elem_template_directory.rb"
 require "code_elem_build_type.rb"
 require "code_elem_build_option.rb"
 require "code_elem_project_component_group.rb"
-require "framework.rb"
+require "external_dependency"
 require "lang_generator_config.rb"
 
 require "rexml/document"
@@ -153,9 +153,11 @@ module CodeStructure
       bNode.case = bNodeXML.attributes["case"]
     end
 
-    def loadFrameworkNode(fw, fwXML)
+    def loadExternalDependency(fw, fwXML)
       fw.name = fwXML.attributes["name"]
       fw.version = fwXML.attributes["version"]
+      fw.minVer = fwXML.attributes["minVer"]
+      fw.maxVer = fwXML.attributes["maxVer"]
     end
 
     def loadTemplateNode(tNode, tNodeXml)
@@ -188,10 +190,10 @@ module CodeStructure
         tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes["base_namespace"])
       end
 
-      tNodeXml.elements.each("framework") { |fwNode|
-        fw = Framework.new
-        loadFrameworkNode(fw, fwNode)
-        tNode.frameworks << fw
+      tNodeXml.elements.each("xdep") { |fwNode|
+        fw = ExternalDependency.new
+        loadExternalDependency(fw, fwNode)
+        tNode.xDeps << fw
       }
     end
 

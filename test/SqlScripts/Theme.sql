@@ -1,5 +1,5 @@
 CREATE TABLE [Theme] (
-  [id] VARCHAR(MAX), 
+  [id] BIGINT, 
   [name] VARCHAR(50), 
   [description] VARCHAR(MAX),
   PRIMARY KEY ([id])

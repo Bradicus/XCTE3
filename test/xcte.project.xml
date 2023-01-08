@@ -1,12 +1,16 @@
 <project>
 <!--  <generate language="csharp" tpl_path="templates" dest="./csharp_razor" /> -->
-  <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app" />
+  <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app">
+    <xdep name="angular" version="14"  />
+  </generate>
   <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
-    <framework name="bootstrap" version="5" />
-    <framework name="angular" />
+    <xdep name="bootstrap" version="5" />
+    <xdep name="angular" version="14"  />
   </generate>
   <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
-  <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" />
+  <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" >
+    <xdep name="spring-boot" version="3" />
+  </generate>
   <generate language="tsql" tpl_path="templates" dest="./SqlScripts" />
 
   <custom_lang_profiles path="lang_profiles" />

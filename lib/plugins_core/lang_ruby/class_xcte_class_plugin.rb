@@ -19,7 +19,7 @@ require "code_elem_model.rb"
 require "lang_file.rb"
 
 module XCTERuby
-  class ClassXCTEClassPlugin < XCTEPlugin
+  class ClassXCTEClassPlugin < ClassBase
     def initialize
       @name = "xcte_class_plugin"
       @language = "ruby"

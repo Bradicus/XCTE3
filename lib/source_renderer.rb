@@ -103,8 +103,7 @@ class SourceRenderer
     startDelimedChunk(functionDeclairation, @hangingFunctionStart)
   end
 
-  def startFunctionParamed(functionName, paramList)
-    
+  def startFunctionParamed(functionName, paramList)    
     oneLiner = paramList.join(", ")
     if oneLiner.length > 100
       paramStr = ''

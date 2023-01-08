@@ -5,19 +5,19 @@ require "code_elem_namespace.rb"
 #
 
 class LangGeneratorConfig
-  attr_accessor :language, :tplPath, :dest, :namespace, :frameworks
+  attr_accessor :language, :tplPath, :dest, :namespace, :xDeps
 
   def initialize
     @language
     @tplPath
     @dest
     @namespace = CodeStructure::CodeElemNamespace.new
-    @frameworks = Array.new
+    @xDeps = Array.new
   end
 
-  def usesFramework(fwk)
-    for fw in frameworks
-      if fw.name == fwk
+  def usesExternalDependency(xdep)
+    for fw in xDeps
+      if fw.name == xdep
         return true
       end
     end

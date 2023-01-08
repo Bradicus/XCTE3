@@ -36,7 +36,7 @@ module XCTEHtml
                 Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/0">New ' + cls.getUName() + "</button>")
       end
 
-      TableUtil.instance.render_table(cls, bld, "items", "item", "async")
+      tbl = TableUtil.instance.make_table(cls, "items", "item", "async")
 
       bld.add
     end

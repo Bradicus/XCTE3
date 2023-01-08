@@ -20,6 +20,20 @@ module XCTEHtml
       super("html")
     end
 
+    def make_primary_button(genCfg, bText)
+      newButton = HtmlNode.new('button').
+        add_attribute('type', 'button').
+        add_text(bText)
+
+      HtmlStyleUtil.instance.stylePrimaryButton(genCfg, newButton);
+    end
+
+    def make_node(genCfg, nodeName)
+      newNode = HtmlNode.new(nodeName)
+
+      return newNode
+    end
+
     # Return formatted class name
     def getClassName(var)
       if (var.vtype != nil)
@@ -34,11 +48,17 @@ module XCTEHtml
         lowType = var.vtype.downcase
         if (lowType.start_with?("int") || lowType.start_with?("float"))
           return "number"
+        elsif lowType.include?("email")
+          return "email"
+        elsif lowType.include?("phone")
+          return "tel"
         elsif lowType == "datetime"
           return "datetime-local"
         elsif lowType == "date"
           return "date"
-        end
+        elsif lowType == 'boolean'
+          return 'checkbox'
+        end        
       end
 
       return "text"

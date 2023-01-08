@@ -5,7 +5,7 @@
 	</description>
 
 <var_group genGet="true" genSet="true" visibility="private">
-	<var name="id"		type="Guid" pkey="true" />
+	<var name="id"		type="Int64" pkey="true" />
 	<var_group>
 			<var name="first name"		type="String" maxlen="255" />
 			<var name="last name"		type="String" maxlen="255" />
@@ -19,7 +19,7 @@
 		<var name="physical address" 	type="Address" />
 		<var name="roles"		type="String" maxlen="50" set="List" select_from="role options" />
 		<var name="role options"		type="Role" set="List" options="true" />
-		<var name="disabled" type="boolean" />
+		<var name="active" type="boolean" />
 		<var name="theme" type="String" maxlen="255" select_from="role options"  />
 		<var name="theme options" type="Theme" set="List" options="true" />
 	</var_group>
@@ -81,7 +81,7 @@
 		<function name="method_web_api_read_one" />
 	</gen_class>
 
-<gen_class language="tsql" type="statement_create" namespace="Database" path="sql" var_prefix = "a "></gen_class>
+<gen_class language="tsql" type="statement_create" namespace="Database" var_prefix = "a "></gen_class>
 
 		<gen_class type="tsql_data_store"
 			 		namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"

@@ -1,3 +1,6 @@
+require "rexml/document"
+require "rexml/element"
+
 ##
 # Class:: ClassAngularReactiveEdit
 #
@@ -7,10 +10,6 @@ module XCTEHtml
       @name = "class_angular_reactive_edit"
       @language = "html"
       @category = XCTEPlugin::CAT_CLASS
-    end
-
-    def getClassName(cls)
-      return Utils.instance.getStyledClassName(getUnformattedClassName(cls))
     end
 
     def getUnformattedClassName(cls)
@@ -32,49 +31,79 @@ module XCTEHtml
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def genFileContent(cls, bld)      
       nested = (cls.xmlElement.attributes["nested"] == "true")
+      contentNode = Utils.instance.make_node(cls.genCfg, 'div')
+      
       formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
-
+      formNode = nil
+      
       if (!nested)
-        bld.add("<h2>" + cls.model.name.capitalize + " view</h2>")
-        bld.startBlock('<form [formGroup]="' + formName + '" (ngSubmit)="onSubmit()">')
-        bld.add('<button type="button" class="btn btn-primary" (click)="populateRandom()">Populate</button>')
+        contentNode.add_child(Utils.instance.make_node(cls.genCfg, 'h2').add_text(cls.model.name.capitalize))
+        formNode = Utils.instance.make_node(cls.genCfg, 'form').
+          add_attribute('[formGroup]', formName).
+          add_attribute('(ngSubmit)', 'onSubmit()')
 
-        bld.add('<button type="button" class="btn btn-primary" (click)="onSubmit()">Save</button>')
-        bld.add('<button type="button" class="btn btn-primary" (click)="onExit()">Cancel</button>')
-      else
-        bld.startBlock('<div [formGroup]="' + formName + '">')
+        populateButton = Utils.instance.make_primary_button(cls.genCfg, "Populate").
+          add_attribute('(click)', 'populateRandom()')
+
+        contentNode.add_child(populateButton)        
+
+        submitButton = Utils.instance.make_primary_button(cls.genCfg, "Submit").
+          add_attribute('(click)', 'onSubmit()')
+
+        contentNode.add_child(submitButton)
+      else        
+        formNode = formNode = Utils.instance.make_node(cls.genCfg, 'div').
+          add_attribute('[formGroup]', formName)
       end
+
+      contentNode.add_child(formNode)
+
+      rowContainer = formNode
+
+      rowNode = Utils.instance.make_node(cls.genCfg, 'div').
+        add_class('row', 'form-group')
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).
         wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
-          render_field(cls, bld, var, nil)
+          if !var.isOptionsList
+            fldNode = make_field(cls, var, nil)
+            rowNode.add_child(fldNode)
+          end
         else
           if (!var.hasMultipleItems())
             vName = Utils.instance.getStyledVariableName(var)
-            bld.startBlock('<fieldset formGroupName="' + vName + '">')
-            bld.add("<legend>" + var.getDisplayName() + "</legend>")
+            fieldsetNode = Utils.instance.make_node(cls.genCfg, 'fieldset').
+              add_attribute('formGroupName', vName)
 
-            bld.add('<div class="row">')
+            legNode = Utils.instance.make_node(cls.genCfg, 'legend').
+              add_text(var.getDisplayName())
+            fieldsetNode.add_child(legNode)
+            
+            rowNode = new_row(cls, rowContainer, rowNode)
+            rowContainer = fieldsetNode
 
             varCls = Classes.findVarClass(var)
 
             eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).
               wVarCb(lambda { |innerVar|
-              render_field(cls, bld, innerVar, vName)
+                rowNode.add_child(make_field(cls, innerVar, vName))
             }))
 
-            bld.add("</div>")
-            bld.endBlock("</fieldset>")
+            rowNode = new_row(cls, rowContainer, rowNode)
+            formNode.add_child(fieldsetNode)
+
+            rowContainer = formNode
           else
             vName = Utils.instance.getStyledVariableName(var)
             # List of primitive "ids" linked to an options list
             if Utils.instance.isPrimitive(var) && var.selectFrom != nil
               optVar = cls.findVar(var.selectFrom)
               optVarName = Utils.instance.getStyledVariableName(optVar)
-              TableUtil.instance.render_sel_option_table(bld, var, optVar, vName + "Item")
+              tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item")
+              formNode.add_child(tableNode)
             # Not an options list, just a reglar array of data
             elsif !var.isOptionsList
               varCls = Classes.findVarClass(var)
@@ -82,78 +111,97 @@ module XCTEHtml
                 puts "Unable to find variable call " + var.getUType()
               end
 
-              TableUtil.instance.render_table(varCls, bld, "item." + vName, vName + "Item")
+              tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item")
+              rowContainer.add_child(tableNode)
             end
           end
         end
       }).
-        wBeforeGroupCb(lambda { |innerVar|
-        bld.add('<div class="row">')
-        bld.indent
+        wBeforeGroupCb(lambda { |innerVar|     
+          if (rowContainer != nil && rowNode.children.length > 0)
+            rowNode = new_row(cls, rowContainer, rowNode)
+          end
+
+          rowContainer = formNode
       }).
         wAfterGroupCb(lambda { |innerVar|
-        bld.unindent
-        bld.add("</div>")
+          if (rowContainer != nil && rowNode.children.length > 0)
+            rowNode = new_row(cls, rowContainer, rowNode)
+          end
+
+          rowContainer = formNode
       }))
 
-      if (!nested)
-        bld.endBlock("</form>")
-      else
-        bld.endBlock("</div>")
-      end
-
-      bld.add
+      # Flush out data in remaining row if need be
+      rowNode = new_row(cls, rowContainer, rowNode)
+           
+      bld.render_html(contentNode)
     end
 
-    def render_field(cls, bld, var, varPrefix)
-      varName = Utils.instance.getStyledVariableName(var)
-      labelClasses = []
-      inputClasses = []
-      divClasses = []
-      if (cls.genCfg.usesFramework("bootstrap"))
-        labelClasses << "form-label"
-        inputClasses << "form-control"
-        if (var.name.downcase == "id")
-          labelClasses << "visually-hidden"
-          inputClasses << "visually-hidden"
-        else
-          divClasses << "col-md-3"
+    def new_row(cls, rowContainer, rowNode)
+      if (rowContainer != nil && rowNode.children.length > 0)     
+        rowContainer.add_child(rowNode)
+        rowNode = Utils.instance.make_node(cls.genCfg, 'div').
+          add_class('row', 'form-group')
+      end
+      return rowNode
+    end
+
+    def make_field(cls, var, varPrefix)
+        varName = Utils.instance.getStyledVariableName(var)
+        fldNode = HtmlNode.new('div')
+        
+        if (cls.genCfg.usesExternalDependency("bootstrap"))
+          fldNode.add_class('col-md-3')
+          
+          if (var.name.downcase == "id")
+            fldNode.add_class('visually-hidden')
+          end
         end
-      end
 
-      labelCss = getClassDec(labelClasses)
-      inputCss = getClassDec(inputClasses)
-      divCss = getClassDec(divClasses)
+        if (varPrefix != nil)
+          varId = varPrefix + "-" + varName
+        else
+          varId = varName
+        end
 
-      if (varPrefix != nil)
-        varId = varPrefix + "-" + varName
-      else
-        varId = varName
-      end
+        labelNode = HtmlNode.new('label').add_text(var.getDisplayName())
+        inputNode = HtmlNode.new('input')
+        selectNode = HtmlNode.new('select')
+        
+        fldNode.add_child(labelNode)
 
-      if !var.isOptionsList
-        bld.startBlock("<div" + divCss + ">")
-        bld.add("<label" + labelCss + ' for="' + varId + '" >' + var.getDisplayName() + "</label>")
+        if (cls.genCfg.usesExternalDependency("bootstrap"))
+          labelNode.add_class('form-label')
+          if (var.getUType().downcase == 'boolean')
+            inputNode.add_class('form-check-input')
+          else
+            inputNode.add_class('form-control')
+          end
+          selectNode.add_class('form-select')
+        end
+
+        labelNode.add_attribute('for', varId)
+
         if var.selectFrom != nil
           itemName = varName + 'Item'
-          bld.add("<select" + inputCss + ' id="' + varId + '" formControlName="' + varName + '">')
-          bld.iadd('<option *ngFor="let '+ itemName + ' of item.' + varName + 'Options" value="' + itemName + '.id">{{' + itemName + '.name}}</option>')
-          bld.add("</select>")
-        elsif
-          bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
-        else
-          bld.add("<input" + inputCss + ' id="' + varId + '" formControlName="' + varName + '" type="' + Utils.instance.getInputType(var) + '">')
-        end
-        bld.endBlock("</div>")
-      end
-    end
+          selectNode.add_attribute('id', varId)
+          selectNode.add_attribute('formControlName', varName)
+          selectNode.add_child(HtmlNode.new('option').
+            add_attribute('*ngFor', 'let '+ itemName + ' of item.' + varName + 'Options').
+            add_attribute('value', itemName + '.id').
+            add_text('{{' + itemName + '.name}}'))
 
-    def getClassDec(classList)
-      if classList.length > 0
-        return ' class="' + classList.join(" ") + '"'
-      else
-        return ""
-      end
+          fldNode.add_child(selectNode)
+        else
+          inputNode.
+            add_attribute('id', varId).
+            add_attribute('formControlName', varName).
+            add_attribute('type', Utils.instance.getInputType(var))
+          fldNode.add_child(inputNode)
+        end
+
+        return fldNode
     end
   end
 end
