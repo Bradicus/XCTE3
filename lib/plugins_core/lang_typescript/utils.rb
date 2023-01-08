@@ -70,8 +70,8 @@ module XCTETypescript
       vDec << getStyledVariableName(var)
       vDec << ": " + getTypeName(var)
 
-      if var.arrayElemCount.to_i > 0 && var.vtype != "String"
-        vDec << "[" + getSizeConst(var) << "]"
+      if (var.defaultValue != nil)
+        vDec << " = " << var.defaultValue
       end
 
       vDec << ";"
@@ -92,8 +92,16 @@ module XCTETypescript
     def getTypeName(var)
       typeName = getSingleItemTypeName(var)
 
-      if (var.listType != nil)
+      if var.listType != nil
         typeName << "[]"
+      end
+
+      for tpl in var.templates
+        if tpl.isCollection
+          typeName << "[]"
+        else
+          typeName = tpl.name + "<" + typeName + ">"
+        end
       end
 
       return typeName
@@ -193,9 +201,9 @@ module XCTETypescript
       if (var.getUType().downcase().start_with?("date"))
         return getStyledVariableName(var) + ": new FormControl<Date>(new Date())"
       else
-        if Types.instance.inCategory(var, "text") || var.getUType().downcase == 'guid'
+        if Types.instance.inCategory(var, "text") || var.getUType().downcase == "guid"
           return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">('')"
-        elsif var.getUType().downcase == 'boolean'
+        elsif var.getUType().downcase == "boolean"
           return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(false)"
         end
         return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(0)"
@@ -233,6 +241,20 @@ module XCTETypescript
         bld.iadd(c)
         firstLine = false
       end
+    end
+
+    def getOptionsVarFor(var)
+      optVar = var.clone
+      optVar.name = optVar.name + " options"
+      optVar.utype = var.selectFrom
+      optVar.vtype = nil
+      optVar.listType = nil
+      optVar.defaultValue = "of([])"
+      optVar.templates = Array.new
+      optVar.addTpl("List", true)
+      optVar.addTpl("Observable")
+
+      return optVar
     end
   end
 end

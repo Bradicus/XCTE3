@@ -17,11 +17,11 @@
 		<var name="last login date" type="DateTime" />
 		<var name="mailing address" 	type="Address" />
 		<var name="physical address" 	type="Address" />
-		<var name="roles"		type="String" maxlen="50" set="List" select_from="role options" />
-		<var name="role options"		type="Role" set="List" options="true" />
+		<var name="roles"		type="String" maxlen="50" set="List" select_from="role" attribs="ManyToMany" />
+		<!--<var name="role options"		type="Role" set="List" options="true" />-->
 		<var name="active" type="boolean" />
-		<var name="theme" type="String" maxlen="255" select_from="role options"  />
-		<var name="theme options" type="Theme" set="List" options="true" />
+		<var name="theme" type="String" maxlen="255" select_from="theme" attribs="OneToMany" />
+		<!--<var name="theme options" type="Theme" set="List" options="true" />-->
 	</var_group>
 </var_group>
 

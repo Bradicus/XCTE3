@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem template" >
+
+	<description>
+	Code Element for Templates or in some languages arrays
+	</description>
+
+	<gen_class type="standard" ns="code element" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">		
+		<var name="name"			type="string" />        
+        <var name="isPointerTpl"	type="boolean" />        
+        <var name="isCollection"	type="boolean" />
+	</var_group>
+
+</model>

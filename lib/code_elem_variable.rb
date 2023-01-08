@@ -8,11 +8,14 @@
 # This class stores information for the variable code structure
 # read in from an xml file
 
+require "code_elem_template"
+
 module CodeStructure
   class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
       :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
-      :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList
+      :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
+      :templates
 
     def initialize(parentElem)
       super(parentElem)
@@ -37,9 +40,10 @@ module CodeStructure
       @nullable = false
       @identity = nil
       @isPrimary = false
-      @listType = nil
       @selectFrom = nil
       @isOptionsList = false
+      @templates = Array.new
+      @attribs = Array.new
 
       # Stored only for arrays
       @arrayElemCount = 0 	# Array size of 0 means this isn't an array
@@ -78,11 +82,19 @@ module CodeStructure
     end
 
     def hasMultipleItems()
-      return listType != nil || (arrayElemCount > 0 && getUType().downcase != 'string')
+      return listType != nil || (arrayElemCount > 0 && getUType().downcase != "string")
     end
 
     def hasSet()
       return listType != nil
+    end
+
+    def addTpl(name, isCollection = false, isPtr = false)
+      tpl = CodeElemTemplate.new
+      tpl.name = name
+      tpl.isCollection = isCollection
+      tpl.isPointerTpl = isPtr
+      @templates.push(tpl)
     end
   end
 end

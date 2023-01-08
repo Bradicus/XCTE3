@@ -44,6 +44,7 @@ module XCTETypescript
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("@angular/router", "ActivatedRoute")
+      cls.addInclude("rxjs", "Observable, of", "lib")
 
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
@@ -56,6 +57,11 @@ module XCTETypescript
       eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
+        end
+        if var.selectFrom != nil
+          optVar = Utils.instance.getOptionsVarFor(var)
+          cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(optVar.getUType()),
+                         Utils.instance.getStyledClassName(optVar.getUType()))
         end
       }))
     end
@@ -89,6 +95,14 @@ module XCTETypescript
 
       # Generate class variables
       process_var_group(cls, bld, cls.model.varGroup)
+
+      # Generate any selection list variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.selectFrom != nil
+          optVar = Utils.instance.getOptionsVarFor(var)
+          bld.add(Utils.instance.getVarDec(optVar))
+        end
+      }))
 
       bld.separate
 

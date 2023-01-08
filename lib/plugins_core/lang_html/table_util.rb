@@ -18,8 +18,8 @@ module XCTEHtml
 
     # Return formatted class name
     def make_table(cls, listVarName, iteratorName, async = "")
-      tableElem = HtmlNode.new('table')
-        .add_class("table")      
+      tableElem = HtmlNode.new("table")
+        .add_class("table")
 
       asyncStr = ""
       if async == "async"
@@ -27,12 +27,12 @@ module XCTEHtml
       end
 
       # Generate table header
-      tHead = HtmlNode.new('thead')
-      tHeadRow = HtmlNode.new('tr')
+      tHead = HtmlNode.new("thead")
+      tHeadRow = HtmlNode.new("tr")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName()))          
+          tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
         end
       }))
 
@@ -40,13 +40,13 @@ module XCTEHtml
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new('tbody')
-      tBodyRow = HtmlNode.new('tr').
-        add_attribute('*ngFor', "let " + iteratorName + " of " + listVarName + asyncStr)
+      tBody = HtmlNode.new("tbody")
+      tBodyRow = HtmlNode.new("tr").
+        add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + asyncStr)
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tBodyRow.add_child(HtmlNode.new('td').
+          tBodyRow.add_child(HtmlNode.new("td").
             add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end
       }))
@@ -63,8 +63,8 @@ module XCTEHtml
     end
 
     def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")
-      tableElem = HtmlNode.new('table')
-      .add_class("table")      
+      tableElem = HtmlNode.new("table")
+        .add_class("table")
 
       asyncStr = ""
       if async == "async"
@@ -72,15 +72,15 @@ module XCTEHtml
       end
 
       # Generate table header
-      tHead = HtmlNode.new('thead')
-      tHeadRow = HtmlNode.new('tr')
-      
-      listVarName = Utils.instance.getStyledVariableName(listVar)
+      tHead = HtmlNode.new("thead")
+      tHeadRow = HtmlNode.new("tr")
+
       optClass = Classes.findVarClass(optionsVar)
+      listVarName = Utils.instance.getStyledVariableName(optionsVar)
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName()))
+          tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
         end
       }))
 
@@ -88,17 +88,17 @@ module XCTEHtml
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new('tbody')
-      tBodyRow = HtmlNode.new('tr').
-        add_attribute('*ngFor', "let " + iteratorName + " of " + listVarName + asyncStr)
+      tBody = HtmlNode.new("tbody")
+      tBodyRow = HtmlNode.new("tr").
+        add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + asyncStr)
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tBodyRow.add_child(HtmlNode.new('td')) #.
-            #add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+          tBodyRow.add_child(HtmlNode.new("td")) #.
+          #add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end
       }))
-  
+
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
 
