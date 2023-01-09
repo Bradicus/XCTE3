@@ -15,7 +15,7 @@ module CodeStructure
     attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
       :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
       :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
-      :templates
+      :templates, :attribs
 
     def initialize(parentElem)
       super(parentElem)

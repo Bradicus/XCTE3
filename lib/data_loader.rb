@@ -4,6 +4,7 @@ require "code_elem_model"
 require "code_elem_class_gen"
 require "code_elem_variable"
 require "code_elem_namespace"
+require "code_elem_attrib"
 require "classes"
 
 class DataLoader
@@ -105,6 +106,10 @@ class DataLoader
     curVar.selectFrom = varXML.attributes["select_from"]
     curVar.isOptionsList = (varXML.attributes["options"] == "true")
 
+    if (varXML.attributes.get_attribute("attribs"))
+      loadAttribNode(curVar, varXML.attributes["attribs"])
+    end
+
     curVar.genGet = loadInheritableAttribute(varXML, "genGet", pComponent.language, curVar.genGet) == "true"
     curVar.genSet = loadInheritableAttribute(varXML, "genSet", pComponent.language, curVar.genSet) == "true"
 
@@ -114,6 +119,14 @@ class DataLoader
     # puts "[ElemClass::loadVariable] loaded variable: " << curVar.name
 
     parentElem.vars << curVar
+  end
+
+  def self.loadAttribNode(curVar, attribs)
+    for at in attribs.split(",")
+      newAtt = CodeStructure::CodeElemAttrib.new
+      newAtt.name = at.strip
+      curVar.attribs.push(newAtt)
+    end
   end
 
   # Loads a group node from an XML template vargroup node

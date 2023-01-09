@@ -116,6 +116,9 @@ module XCTEJava
           bld.add("@GeneratedValue(strategy=GenerationType.AUTO)")
           bld.add(Utils.instance.getVarDec(var))
         else
+          for attrib in var.attribs
+            bld.add("@" + attrib.name)
+          end
           bld.add(Utils.instance.getVarDec(var))
         end
       }))
