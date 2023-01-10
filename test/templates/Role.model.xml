@@ -5,7 +5,7 @@
 	</description>
 
 	<var_group genGet="true" genSet="true" visibility="private">
-		<var name="id"		type="String" maxlen="10" pkey="true" />
+		<var name="id"		type="Int64" maxlen="10" pkey="true" />
 		<var name="name"		type="String" maxlen="50" />
 		<var name="description"		type="String" />
 	</var_group>

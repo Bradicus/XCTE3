@@ -106,6 +106,9 @@ class DataLoader
     curVar.selectFrom = varXML.attributes["select_from"]
     curVar.isOptionsList = (varXML.attributes["options"] == "true")
 
+    curVar.required = loadInheritableAttribute(varXML, "required", pComponent.language, "false") == "true"
+    curVar.readonly = loadInheritableAttribute(varXML, "readonly", pComponent.language, "false") == "true"
+
     if (varXML.attributes.get_attribute("attribs"))
       loadAttribNode(curVar, varXML.attributes["attribs"])
     end
@@ -354,14 +357,6 @@ class DataLoader
       atrNames = Array[atrNames]
     end
 
-    # Try load from parent first
-    if (xml.parent != nil && xml.parent.name == "var_group")
-      pLoad = loadInheritableAttribute(xml.parent, atrNames, language, default)
-      if (pLoad != nil)
-        return pLoad
-      end
-    end
-
     for atrName in atrNames
       atr = xml.attributes[atrName + "-" + language]
       if atr != nil
@@ -370,6 +365,14 @@ class DataLoader
       atr = xml.attributes[atrName]
       if atr != nil
         return atr
+      end
+    end
+
+    # Parent if we didn't find it
+    if (xml.parent != nil && xml.parent.name == "var_group")
+      pLoad = loadInheritableAttribute(xml.parent, atrNames, language, nil)
+      if (pLoad != nil)
+        return pLoad
       end
     end
 

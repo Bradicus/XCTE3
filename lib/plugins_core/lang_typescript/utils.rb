@@ -198,15 +198,28 @@ module XCTETypescript
     end
 
     def genPrimitiveFormControl(var)
-      if (var.getUType().downcase().start_with?("date"))
-        return getStyledVariableName(var) + ": new FormControl<Date>(new Date())"
+      validators = []
+      if var.required
+        validators << "Validators.required"
+      end
+      if var.arrayElemCount > 0
+        validators << "Validators.maxLength(" + var.arrayElemCount.to_s + ")"
+      end
+
+      vdString = ""
+      if validators.length > 0
+        vdString = ", [" + validators.join(", ") + "]"
+      end
+
+      if var.getUType().downcase().start_with?("date")
+        return getStyledVariableName(var) + ": new FormControl<Date>(new Date()" + vdString + ")"
       else
         if Types.instance.inCategory(var, "text") || var.getUType().downcase == "guid"
-          return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">('')"
+          return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(''" + vdString + ")"
         elsif var.getUType().downcase == "boolean"
           return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(false)"
         end
-        return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(0)"
+        return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
       end
     end
 

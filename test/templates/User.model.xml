@@ -7,14 +7,14 @@
 <var_group genGet="true" genSet="true" visibility="private">
 	<var name="id"		type="Int64" pkey="true" />
 	<var_group>
-			<var name="first name"		type="String" maxlen="255" />
-			<var name="last name"		type="String" maxlen="255" />
-			<var name="username"	type="String" maxlen="255" />
-			<var name="email"	type="String" maxlen="255" />
+			<var name="first name"		type="String" maxlen="255" required="true" />
+			<var name="last name"		type="String" maxlen="255" required="true" />
+			<var name="username"	type="String" maxlen="255" readonly="true"/>
+			<var name="email"	type="String" maxlen="255" required="true"  />
 	</var_group>
 	<var_group>
-		<var name="created date" type="DateTime" />
-		<var name="last login date" type="DateTime" />
+		<var name="created date" type="DateTime" readonly="true" />
+		<var name="last login date" type="DateTime" readonly="true" />
 		<var name="mailing address" 	type="Address" />
 		<var name="physical address" 	type="Address" />
 		<var name="roles"		type="String" maxlen="50" set="List" select_from="role" attribs="ManyToMany" />

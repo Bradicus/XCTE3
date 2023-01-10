@@ -15,7 +15,7 @@ module CodeStructure
     attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
       :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
       :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
-      :templates, :attribs
+      :templates, :attribs, :required, :readonly
 
     def initialize(parentElem)
       super(parentElem)
@@ -44,6 +44,9 @@ module CodeStructure
       @isOptionsList = false
       @templates = Array.new
       @attribs = Array.new
+
+      @required = false
+      @readonly = false
 
       # Stored only for arrays
       @arrayElemCount = 0 	# Array size of 0 means this isn't an array

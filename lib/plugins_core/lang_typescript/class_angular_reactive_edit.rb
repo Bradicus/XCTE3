@@ -42,7 +42,7 @@ module XCTETypescript
 
     def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
-      cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
+      cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray, Validators")
       cls.addInclude("@angular/router", "ActivatedRoute")
       cls.addInclude("rxjs", "Observable, of", "lib")
 

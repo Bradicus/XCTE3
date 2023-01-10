@@ -168,6 +168,13 @@ module XCTEHtml
       inputNode = HtmlNode.new("input")
       selectNode = HtmlNode.new("select")
 
+      if (var.readonly)
+        inputNode.add_attribute("[readonly]", "true")
+        inputNode.add_attribute("[disabled]", "true")
+        selectNode.add_attribute("[readonly]", "true")
+        selectNode.add_attribute("[disabled]", "true")
+      end
+
       fldNode.add_child(labelNode)
 
       if (cls.genCfg.usesExternalDependency("bootstrap"))
