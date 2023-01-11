@@ -148,6 +148,7 @@ module XCTEHtml
 
     def make_field(cls, var, varPrefix)
       varName = Utils.instance.getStyledVariableName(var)
+      formVar = CodeNameStyling.getStyled(cls.model.name + " form", Utils.instance.langProfile.variableNameStyle)
       fldNode = HtmlNode.new("div")
 
       if (cls.genCfg.usesExternalDependency("bootstrap"))
@@ -205,6 +206,28 @@ module XCTEHtml
           add_attribute("formControlName", varName).
           add_attribute("type", Utils.instance.getInputType(var))
         fldNode.add_child(inputNode)
+      end
+
+      # Display validation messages
+      if var.needsValidation()
+        formVarRef = formVar + ".get('" + varName + "')"
+        validationNode = HtmlNode.new("div").
+          add_attribute("*ngIf", formVarRef + "?.invalid && (" + formVarRef + "?.dirty || " + formVarRef + "?.touched)").
+          add_class("alert alert-danger")
+
+        if var.required
+          validationNode.add_child(HtmlNode.new("div").
+            add_attribute("*ngIf", formVarRef + "?.errors?.['required']").
+            add_text(var.getDisplayName() + " is required"))
+        end
+
+        if var.arrayElemCount > 0
+          validationNode.add_child(HtmlNode.new("div").
+            add_attribute("*ngIf", formVarRef + "?.errors?.['minlength']").
+            add_text(var.getDisplayName() + " is required"))
+        end
+
+        fldNode.add_child(validationNode)
       end
 
       return fldNode
