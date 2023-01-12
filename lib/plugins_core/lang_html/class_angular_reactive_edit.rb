@@ -67,7 +67,7 @@ module XCTEHtml
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).
         wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
-          if !var.isOptionsList
+          if var.selectFrom == nil || !var.hasMultipleItems()
             fldNode = make_field(cls, var, nil)
             rowNode.add_child(fldNode)
           end
@@ -223,7 +223,7 @@ module XCTEHtml
 
         if var.arrayElemCount > 0
           validationNode.add_child(HtmlNode.new("div").
-            add_attribute("*ngIf", formVarRef + "?.errors?.['minlength']").
+            add_attribute("*ngIf", formVarRef + "?.errors?.['maxLength']").
             add_text(var.getDisplayName() + " is required"))
         end
 

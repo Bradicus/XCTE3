@@ -38,7 +38,7 @@ module XCTEHtml
 
       tbl = TableUtil.instance.make_table(cls, "items", "item", "async")
 
-      bld.add
+      bld.render_html(tbl)
     end
   end
 end

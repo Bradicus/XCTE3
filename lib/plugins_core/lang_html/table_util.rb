@@ -31,7 +31,7 @@ module XCTEHtml
       tHeadRow = HtmlNode.new("tr")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
           tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
         end
       }))
@@ -45,7 +45,7 @@ module XCTEHtml
         add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + asyncStr)
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
           tBodyRow.add_child(HtmlNode.new("td").
             add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end
@@ -53,6 +53,8 @@ module XCTEHtml
 
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
+
+      return tableElem
 
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/view/{{item.id}}">View</a></td>')
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/{{item.id}}">Edit</a></td>')
@@ -94,8 +96,8 @@ module XCTEHtml
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tBodyRow.add_child(HtmlNode.new("td")) #.
-          #add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+          tBodyRow.add_child(HtmlNode.new("td").
+            add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end
       }))
 

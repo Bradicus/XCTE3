@@ -85,7 +85,11 @@ module CodeStructure
     end
 
     def hasMultipleItems()
-      return listType != nil || (@arrayElemCount > 0 && getUType().downcase != "string")
+      hasList = @listType != nil
+      hasArray = @arrayElemCount > 0 && getUType().downcase != "string"
+      hasTpl = hasTemplate("List")
+
+      return hasList || hasArray || hasTpl
     end
 
     def hasSet()
@@ -98,6 +102,16 @@ module CodeStructure
       tpl.isCollection = isCollection
       tpl.isPointerTpl = isPtr
       @templates.push(tpl)
+    end
+
+    def hasTemplate(tplName)
+      for tpl in @templates
+        if (tpl.downcase == tplName.downcase)
+          return true
+        end
+      end
+
+      return false
     end
 
     def needsValidation()

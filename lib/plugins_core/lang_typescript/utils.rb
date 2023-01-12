@@ -172,10 +172,11 @@ module XCTETypescript
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if isPrimitive(var)
-          if var.listType == nil
+          hasMult = var.hasMultipleItems()
+          if !var.hasMultipleItems()
             bld.add(genPrimitiveFormControl(var) + ",")
           else
-            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+            #bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         else
           otherClass = Classes.findVarClass(var, "ts_interface")

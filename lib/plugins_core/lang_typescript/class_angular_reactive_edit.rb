@@ -147,6 +147,7 @@ module XCTETypescript
 
       bld.separate
       bld.startBlock("onSubmit()")
+      bld.startBlock("if (!this." + clsVar + ".invalid)")
       if (idVar[0].getUType().downcase() == "string" || idVar[0].getUType().downcase() == "guid")
         bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
       else
@@ -155,6 +156,7 @@ module XCTETypescript
       bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".create(this." + clsVar + ".value);")
       bld.midBlock("else")
       bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".update(this." + clsVar + ".value);")
+      bld.endBlock
       bld.endBlock
       bld.endBlock
 
