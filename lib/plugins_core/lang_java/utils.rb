@@ -22,7 +22,7 @@ module XCTEJava
     def getParamDec(var)
       pDec = String.new
 
-      pDec << getFullType(var)
+      pDec << getTypeName(var)
 
       pDec << " " << self.getStyledVariableName(var)
 
@@ -47,7 +47,7 @@ module XCTEJava
         vDec << "virtual "
       end
 
-      vDec << getFullType(var)
+      vDec << getTypeName(var)
 
       vDec << " "
 
@@ -65,27 +65,27 @@ module XCTEJava
       return vDec
     end
 
-    def getFullType(var)
-      fType = ""
+    # def getFullType(var)
+    #   fType = ""
 
-      if (var.templateType != nil)
-        fType << var.templateType << "<" << self.getTypeName(var) << ">"
-      elsif (var.listType != nil)
-        fType << var.listType << "<" << self.getTypeName(var) << ">"
-      else
-        fType << self.getTypeName(var)
-      end
-    end
+    #   if (var.templateType != nil)
+    #     fType << var.templateType << "<" << self.getTypeName(var) << ">"
+    #   elsif (var.listType != nil)
+    #     fType << var.listType << "<" << self.getTypeName(var) << ">"
+    #   else
+    #     fType << self.getTypeName(var)
+    #   end
+    # end
 
     def getFullOjbType(var)
       fType = ""
 
       if (var.templateType != nil)
-        fType << var.templateType << "<" << self.getTypeName(var) << ">"
+        fType += var.templateType + "<" + self.getTypeName(var) + ">"
       elsif (var.listType != nil)
-        fType << var.listType << "<" << self.getTypeName(var) << ">"
+        fType += var.listType + "<" + self.getTypeName(var) + ">"
       else
-        fType << self.getTypeName(var)
+        fType += self.getTypeName(var)
       end
     end
 

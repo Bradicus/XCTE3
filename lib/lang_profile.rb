@@ -41,6 +41,7 @@ class LangProfile
       typeMaps.elements.each("TYPE_MAP") { |typeMap|
         @typeMaps << LangProfileTypeMap.new(typeMap.attributes["genType"],
                                             typeMap.attributes["langType"],
+                                            typeMap.attributes["tplType"],
                                             typeMap.attributes["autoIncludePath"],
                                             typeMap.attributes["autoIncludeName"],
                                             typeMap.attributes["autoIncludeType"])
@@ -84,7 +85,11 @@ class LangProfile
   def getTypeName(gType)
     for tMap in @typeMaps
       if tMap.genericType == gType
-        return tMap.langType
+        if (tMap.tplType == nil)
+          return tMap.langType
+        else
+          return tMap.langType + "#" + tMap.tplType
+        end
       end
     end
 

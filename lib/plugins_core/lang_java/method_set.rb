@@ -24,7 +24,7 @@ module XCTEJava
       if var.genGet == true && !var.isPointer
         varName = Utils.instance.getStyledVariableName(var)
         bld.add("void " + Utils.instance.getStyledFunctionName("set " + var.name))
-        bld.sameLine("(" + Utils.instance.getFullType(var) + " " + varName)
+        bld.sameLine("(" + Utils.instance.getTypeName(var) + " " + varName)
         bld.sameLine(")\t{ this." + varName + " = " + varName + "; }")
       end
     end

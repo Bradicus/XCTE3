@@ -69,7 +69,7 @@ module XCTECpp
         end
 
         if (Utils.instance.isPrimitive(var))
-          if var.listType == nil
+          if !var.isList()
             bld.add(styledVarName + " = item.child(" + styledVarName + ")." + pugiCast + ";")
           else
             bld.startBlock('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
@@ -77,7 +77,7 @@ module XCTECpp
             bld.endBlock
           end
         else
-          if var.listType == nil
+          if !var.isList()
             bld.add(
               Utils.instance.getTypeName(var) + "JsonEngine::loadFromJson(" +
               Utils.instance.getStyledVariableName(var) +
@@ -85,7 +85,7 @@ module XCTECpp
             )
           else
             bld.startBlock('for (auto aJson : json["' + Utils.instance.getStyledVariableName(var) + '"])')
-            if (var.listType == nil)
+            if (!var.isList())
               bld.add(Utils.instance.getTypeName(var) + "JsonEngine::loadFromJson(aJson, item);")
             else
               bld.add(Utils.instance.getTypeName(var) + " newVar;")

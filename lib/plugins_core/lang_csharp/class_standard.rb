@@ -69,9 +69,9 @@ module XCTECSharp
       bld.startClass(classDec)
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
+      eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         XCTECSharp::Utils.instance.getVarDec(var)
-      })
+      }))
 
       if (cls.functions.length > 0)
         bld.add

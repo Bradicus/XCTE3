@@ -21,6 +21,10 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
+    def getUnformattedClassName(cls)
+      return cls.getUName() + " controller"
+    end
+
     def genSourceFiles(cls)
       srcFiles = Array.new
 
@@ -51,7 +55,7 @@ module XCTECSharp
         end
       end
 
-      cls.addUse(CodeElemUse.new(CodeStructure::CodeElemNamespace.new("System.Data.SqlClient")))
+      cls.addUse("System.Data.SqlClient")
 
       Utils.instance.genUses(cls.uses, bld)
       Utils.instance.genNamespaceStart(cls.namespace, bld)

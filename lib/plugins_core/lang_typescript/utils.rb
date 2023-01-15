@@ -92,31 +92,34 @@ module XCTETypescript
     def getTypeName(var)
       typeName = getSingleItemTypeName(var)
 
-      if var.listType != nil
-        typeName << "[]"
-      end
-
-      for tpl in var.templates
-        if tpl.isCollection
-          typeName << "[]"
-        else
-          typeName = tpl.name + "<" + typeName + ">"
-        end
+      if var.isList()
+        typeName = apply_template(var.templates[0], typeName)
       end
 
       return typeName
     end
 
     def getSingleItemTypeName(var)
-      typeName = ""
-      baseTypeName = getBaseTypeName(var)
+      typeName = getBaseTypeName(var)
 
-      if (var.templateType != nil)
-        typeName = var.templateType + "<" + baseTypeName + ">"
+      singleTpls = var.templates
+      if var.isList()
+        singleTpls = singleTpls.drop(1)
       end
 
-      if (typeName.length == 0)
-        typeName = baseTypeName
+      for tpl in singleTpls.reverse()
+        typeName = apply_template(tpl, typeName)
+      end
+
+      return typeName
+    end
+
+    def apply_template(tpl, curTypeName)
+      tplType = @langProfile.getTypeName(tpl.name)
+      if tpl.name.downcase == "list"
+        typeName = curTypeName + "[]"
+      else
+        typeName = tplType + "<" + curTypeName + ">"
       end
 
       return typeName
@@ -172,16 +175,16 @@ module XCTETypescript
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if isPrimitive(var)
-          hasMult = var.hasMultipleItems()
-          if !var.hasMultipleItems()
+          hasMult = var.isList()
+          if !var.isList()
             bld.add(genPrimitiveFormControl(var) + ",")
           else
-            #bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         else
           otherClass = Classes.findVarClass(var, "ts_interface")
 
-          if var.listType == nil
+          if !var.isList()
             bld.add(getStyledVariableName(var) + ": ")
             if otherClass != nil
               getFormgroup(otherClass, bld, otherClass.model.varGroup, ",")
@@ -262,11 +265,10 @@ module XCTETypescript
       optVar.name = optVar.name + " options"
       optVar.utype = var.selectFrom
       optVar.vtype = nil
-      optVar.listType = nil
       optVar.defaultValue = "of([])"
       optVar.templates = Array.new
-      optVar.addTpl("List", true)
       optVar.addTpl("Observable")
+      optVar.addTpl("List", true)
 
       return optVar
     end

@@ -144,7 +144,7 @@ module XCTECss
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if Utils.instance.isPrimitive(var)
-            if var.listType == nil
+            if var.isList()
               bld.add(Utils.instance.getStyledVariableName(var) + ": [''],")
             else
               bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array(),")
@@ -152,7 +152,7 @@ module XCTECss
           else
             otherClass = Classes.findVarClass(var)
 
-            if var.listType == nil
+            if var.isList()
               bld.add(Utils.instance.getStyledVariableName(var) + ": ")
               if otherClass != nil
                 for group in otherClass.model.groups

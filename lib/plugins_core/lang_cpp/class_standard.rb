@@ -208,27 +208,16 @@ module XCTECpp
 
     # process variable group
     def process_header_var_group(cls, bld, vGroup, vis)
-      for var in vGroup.vars
-        if var.visibility == vis
-          if var.elementId == CodeElem::ELEM_VARIABLE
-            if var.visibility != @activeVisibility
-              @activeVisibility = var.visibility
-              bld.unindent
-              bld.add(var.visibility + ":")
-              bld.indent
-            end
-            bld.add(Utils.instance.getVarDec(var))
-          elsif var.elementId == CodeElem::ELEM_COMMENT
-            bld.sameLine(Utils.instance.getComment(var))
-          elsif var.elementId == CodeElem::ELEM_FORMAT
-            bld.add(var.formatText)
-          end
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.visibility != @activeVisibility
+          @activeVisibility = var.visibility
+          bld.unindent
+          bld.add(var.visibility + ":")
+          bld.indent
         end
-      end
 
-      for group in vGroup.varGroups
-        process_header_var_group(cls, bld, group, vis)
-      end
+        bld.add(Utils.instance.getVarDec(var))
+      }))
     end
 
     def process_header_var_group_getter_setters(cls, bld, vGroup)

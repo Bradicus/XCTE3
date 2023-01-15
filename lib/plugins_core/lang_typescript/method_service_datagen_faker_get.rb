@@ -36,12 +36,12 @@ module XCTETypescript
             else
               bld.iadd(name + varName + " = '';")
             end
-          elsif var.listType == nil
+          elsif !var.isList()
             bld.add(name + varName + " = " + getFakerAssignment(var) + ";")
           else
             bld.add(name + varName + ".push(" + getFakerAssignment(var) + ");")
           end
-        elsif (!var.hasMultipleItems())
+        elsif (!var.isList())
           varCls = Classes.findVarClass(var, "ts_interface")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")

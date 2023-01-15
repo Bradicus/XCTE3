@@ -203,34 +203,27 @@ module XCTECSharp
     def genParamList(cls, bld, varPrefix = "")
       separator = ""
       # Process variables
-      eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.sameLine(separator)
         bld.add("@" + getStyledVariableName(var, varPrefix))
         separator = ","
-      })
+      }))
     end
 
     # Generate a list of variables
     def genVarList(cls, bld, varPrefix = "")
       separator = ""
       # Process variables
-      eachVar(cls, bld, true, lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.sameLine(separator)
         bld.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, varPrefix) + "]")
         separator = ","
-      })
+      }))
     end
 
     def genAssignResults(cls, bld)
-      for grp in cls.model.groups
-        process_var_group_assign_results(cls, bld, grp)
-      end
-    end
-
-    # process variable group
-    def process_var_group_assign_results(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.listType == nil && isPrimitive(var)
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.isList() && isPrimitive(var)
           resultVal = 'results["' +
                       XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) + '"]'
           objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
@@ -243,10 +236,7 @@ module XCTECSharp
                     var.vtype + "(" + resultVal + ");")
           end
         end
-      end
-      for group in vGroup.varGroups
-        process_var_group_sql(cls, bld, group)
-      end
+      }))
     end
 
     def genFunctions(cls, bld)
@@ -331,34 +321,6 @@ module XCTECSharp
       end
 
       return cls.standardClass
-    end
-
-    # Run a function on each variable in a class
-    def eachVar(cls, bld, separateGroups, varFun)
-      for vGroup in cls.model.groups
-        eachVarGrp(vGroup, bld, separateGroups, varFun)
-      end
-    end
-
-    # Run a function on each variable in a variable group and subgroups
-    def eachVarGrp(vGroup, bld, separateGroups, varFun)
-      if (separateGroups)
-        bld.separate
-      end
-
-      for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          varFun.call(var)
-        elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-      end
-
-      for grp in vGroup.varGroups
-        eachVarGrp(grp, bld, varFun)
-      end
     end
   end
 end

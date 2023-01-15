@@ -83,17 +83,16 @@ class DataLoader
     curVar.utype = varXML.attributes["utype"]
     curVar.visibility = loadInheritableAttribute(varXML, "visibility", pComponent.language, curVar.visibility)
     curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
-    if (varXML.attributes.get_attribute("collection") != nil)
-      curVar.listType = varXML.attributes["collection"]
-    elsif (varXML.attributes.get_attribute("set") != nil)
-      curVar.listType = varXML.attributes["set"]
-    elsif (varXML.attributes.get_attribute("tpl") != nil)
-      curVar.templateType = varXML.attributes["tpl"]
+    if hasAttribut(varXML, "set")
+      loadTemplateAttribute(curVar, varXML, "set", pComponent.language)
+    end
+    if hasAttribut(varXML, "tpl")
+      loadTemplateAttribute(curVar, varXML, "tpl", pComponent.language)
     end
     curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
     curVar.isConst = varXML.attributes.get_attribute("const") != nil
     curVar.isStatic = varXML.attributes.get_attribute("static") != nil
-    curVar.isPointer = varXML.attributes.get_attribute("pointer") != nil || varXML.attributes.get_attribute("ptr") != nil
+    #curVar.isPointer = varXML.attributes.get_attribute("pointer") != nil || varXML.attributes.get_attribute("ptr") != nil
     curVar.isSharedPointer = varXML.attributes.get_attribute("sharedptr") != nil
     curVar.init = varXML.attributes["init"]
     curVar.namespace = loadNamespaces(varXML, pComponent)
@@ -122,6 +121,10 @@ class DataLoader
     # puts "[ElemClass::loadVariable] loaded variable: " << curVar.name
 
     parentElem.vars << curVar
+  end
+
+  def self.hasAttribut(xmlNode, attName)
+    return xmlNode.attributes.get_attribute(attName) != nil
   end
 
   def self.loadAttribNode(curVar, attribs)
@@ -316,6 +319,16 @@ class DataLoader
         loadVariableNode(funElemXML, funXml)
         newFun.returnValue = parentElem.vars[0]
       end
+    end
+  end
+
+  def self.loadTemplateAttribute(var, varXml, attribName, language)
+    tpls = loadAttribute(varXml, attribName, language)
+
+    tplItems = tpls.split(",")
+    for tplItem in tplItems
+      tplC = CodeStructure::CodeElemTemplate.new(tplItem.strip())
+      var.templates.push(tplC)
     end
   end
 

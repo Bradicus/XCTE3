@@ -76,7 +76,7 @@ module XCTECpp
           isEnum = curVarClass != nil && curVarClass.ctype == "enum"
 
           if (Utils.instance.isPrimitive(var) || isEnum)
-            if var.listType == nil
+            if !var.isList()
               if (var.getUType().downcase == "string")
                 bld.add("if (item." + curVarName + '.size() > 0) json["' + curVarName + '"] = item.' + curVarName + ";")
               else
@@ -91,7 +91,7 @@ module XCTECpp
           elsif (isEnum)
             bld.add('json["' + curVarName + '"] = (int)item.' + curVarName + ";")
           else
-            if var.listType == nil
+            if !var.isList()
               bld.add(
                 Utils.instance.getClassName(var) + 'JsonEngine::write(json["' + curVarName + '"]' + ", item." + curVarName + ");"
               )
@@ -100,7 +100,7 @@ module XCTECpp
               bld.add()
               bld.startBlock("for (auto const& val: item." + curVarName + ")")
               bld.add("nlohmann::json newNode;")
-              if (var.isSharedPointer)
+              if (var.isPointer(1))
                 bld.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, *val);")
               else
                 bld.add(Utils.instance.getClassName(var) + "JsonEngine::write(newNode, val);")

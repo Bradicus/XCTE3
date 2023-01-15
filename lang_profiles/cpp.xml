@@ -34,7 +34,7 @@
 		<TYPE_MAP genType="Time" 		langType="tm" />
 		<TYPE_MAP genType="DateTime"	langType="tm" />
 
-		<TYPE_MAP genType="List"		langType="std::vector"  autoIncludeName="vector" autoIncludeType="&lt;" />
+		<TYPE_MAP genType="List"		langType="std::vector" tplType="list"  autoIncludeName="vector" autoIncludeType="&lt;" />
 	</TYPE_MAPS>
 	
 </LANGUAGE_DEFS>

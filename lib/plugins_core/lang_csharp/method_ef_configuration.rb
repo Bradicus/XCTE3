@@ -37,21 +37,19 @@ module XCTECSharp
       bld.add('builder.ToTable("' + XCTETSql::Utils.instance.getStyledClassName(cls.getUName()) + '", "dbo");')
 
       # Process variables
-      Utils.instance.eachVar(cls, bld, true, lambda { |var|
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.genGet || var.genSet
-            bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledFunctionName(var.name) + ")")
-          else
-            bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledVariableName(var.name) + ")")
-          end
-
-          bld.indent
-          bld.add('.HasColumnName("' + XCTETSql::Utils.instance.getStyledVariableName(var) + '");')
-          bld.unindent
-
-          bld.add
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.genGet || var.genSet
+          bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledFunctionName(var.name) + ")")
+        else
+          bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.getStyledVariableName(var.name) + ")")
         end
-      })
+
+        bld.indent
+        bld.add('.HasColumnName("' + XCTETSql::Utils.instance.getStyledVariableName(var) + '");')
+        bld.unindent
+
+        bld.add
+      }))
     end
   end
 end

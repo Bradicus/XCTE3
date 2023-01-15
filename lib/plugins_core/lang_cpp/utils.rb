@@ -25,22 +25,22 @@ module XCTECpp
       pDec = String.new
 
       if var.isConst
-        pDec << "const "
+        pDec += "const "
       end
 
-      pDec << getTypeName(var)
+      pDec += getTypeName(var)
 
       if var.passBy.upcase == "REFERENCE"
-        pDec << "&"
+        pDec += "&"
       end
       if var.isPointer
-        pDec << "*"
+        pDec += "*"
       end
 
-      pDec << " " << getStyledVariableName(var)
+      pDec += " " + getStyledVariableName(var)
 
       if var.arrayElemCount > 0
-        pDec << "[]"
+        pDec += "[]"
       end
 
       return pDec
@@ -52,33 +52,33 @@ module XCTECpp
       typeName = String.new
 
       if var.isConst
-        vDec << "const "
+        vDec += "const "
       end
 
       if var.isStatic
-        vDec << "static "
+        vDec += "static "
       end
 
-      vDec << getTypeName(var)
+      vDec += getTypeName(var)
 
       if var.isPointer
-        vDec << "*"
+        vDec += "*"
       end
 
       if var.passBy.upcase == "REFERENCE"
-        vDec << "&"
+        vDec += "&"
       end
 
-      vDec << " " << getStyledVariableName(var)
+      vDec += " " + getStyledVariableName(var)
 
       if var.arrayElemCount.to_i > 0
-        vDec << "[" + getSizeConst(var) << "]"
+        vDec += "[" + getSizeConst(var) + "]"
       end
 
-      vDec << ";"
+      vDec += ";"
 
       if var.comment != nil
-        vDec << "\t/** " << var.comment << " */"
+        vDec += "\t/** " + var.comment + " */"
       end
 
       return vDec
@@ -86,7 +86,7 @@ module XCTECpp
 
     # Returns a size constant for the specified variable
     def getSizeConst(var)
-      return "ARRAYSZ_" << var.name.upcase
+      return "ARRAYSZ_" + var.name.upcase
     end
 
     # Capitalizes the first letter of a string
@@ -105,47 +105,44 @@ module XCTECpp
     def getTypeName(var)
       typeName = getSingleItemTypeName(var)
 
-      if (var.listType != nil)
-        typeName = getListTypeName(var.listType) + "<" + typeName + ">"
+      if var.templates.length > 0 && var.templates[0].isCollection
+        tplType = @langProfile.getTypeName(var.templates[0].name)
+        typeName = tplType + "<" + typeName + ">"
       end
 
       return typeName
     end
 
     def getSingleItemTypeName(var)
-      typeName = ""
-      baseTypeName = getBaseTypeName(var)
+      typeName = getBaseTypeName(var)
 
-      if (var.isSharedPointer)
-        typeName = "std::shared_ptr<" + baseTypeName + ">"
+      singleTpls = var.templates
+      if singleTpls.length > 0 && singleTpls[0].isCollection
+        singleTpls = singleTpls.drop(1)
       end
 
-      if (var.templateType != nil)
-        typeName = var.templateType + "<" + baseTypeName + ">"
+      for tpl in singleTpls.reverse()
+        typeName = tpl.name + "<" + typeName + ">"
       end
 
-      if (typeName.length == 0)
-        typeName = baseTypeName
-      end
-
-      return typeName
+      return typeName.strip
     end
 
     # Return the language type based on the generic type
     def getBaseTypeName(var)
       nsPrefix = ""
+      langType = @langProfile.getTypeName(var.getUType())
+
+      if (var.utype != nil) # Only unformatted name needs styling
+        baseTypeName = CodeNameStyling.getStyled(langType, @langProfile.classNameStyle)
+      else
+        baseTypeName = langType
+      end
+
       if var.namespace.hasItems?()
         nsPrefix = var.namespace.get("::") + "::"
+        baseTypeName = nsPrefix + baseTypeName
       end
-
-      baseTypeName = ""
-      if (var.vtype != nil)
-        baseTypeName = @langProfile.getTypeName(var.vtype)
-      else
-        baseTypeName = CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
-      end
-
-      baseTypeName = nsPrefix + baseTypeName
 
       return baseTypeName
     end
@@ -198,7 +195,7 @@ module XCTECpp
     end
 
     def getComment(var)
-      return "/* " << var.text << " */\n"
+      return "/* " + var.text + " */\n"
     end
 
     def getZero(var)

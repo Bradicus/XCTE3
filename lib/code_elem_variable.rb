@@ -12,9 +12,9 @@ require "code_elem_template"
 
 module CodeStructure
   class CodeElemVariable < CodeElem
-    attr_accessor :vtype, :utype, :templateType, :defaultValue, :comment,
-      :visibility, :isConst, :isStatic, :isPointer, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
-      :arrayElemCount, :listType, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
+    attr_accessor :vtype, :utype, :defaultValue, :comment,
+      :visibility, :isConst, :isStatic, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
+      :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
       :templates, :attribs, :required, :readonly
 
     def initialize(parentElem)
@@ -24,13 +24,11 @@ module CodeStructure
 
       @vtype  # Type name
       @utype  # Unformatted type name
-      @templateType
       @defaultValue
       @comment
       @isVirtual = false
       @isConst = false
       @isStatic = false
-      @isPointer = false
       @isSharedPointer = false
       @init = nil
       @namespace = CodeElemNamespace.new
@@ -61,8 +59,7 @@ module CodeStructure
       param.name = @name
       param.vtype = @vtype
       param.utype = @utype
-      param.templateType = @templateType
-      param.listType = @listType
+      param.templates = @templates
       param.arrayElemCount = @arrayElemCount
 
       return param
@@ -85,22 +82,18 @@ module CodeStructure
     end
 
     def hasMultipleItems()
-      hasList = @listType != nil
-      hasArray = @arrayElemCount > 0 && getUType().downcase != "string"
-      hasTpl = hasTemplate("List")
-
-      return hasList || hasArray || hasTpl
+      return isArray() || isList()
     end
 
     def hasSet()
       return listType != nil
     end
 
-    def addTpl(name, isCollection = false, isPtr = false)
+    def addTpl(name, isCollection = false, ptrType = nil)
       tpl = CodeElemTemplate.new
       tpl.name = name
       tpl.isCollection = isCollection
-      tpl.isPointerTpl = isPtr
+      tpl.pointerTpl = ptrType
       @templates.push(tpl)
     end
 
@@ -116,6 +109,26 @@ module CodeStructure
 
     def needsValidation()
       return @readonly || @required || @arrayElemCount > 0
+    end
+
+    def isList(depth = 0)
+      if @templates.length <= depth
+        return false
+      end
+
+      return @templates[depth].isCollection
+    end
+
+    def isArray()
+      return arrayElemCount > 0
+    end
+
+    def isPointer(depth = 0)
+      if @templates.length <= depth
+        return false
+      end
+
+      return @templates[depth].pointerTpl != nil
     end
   end
 end

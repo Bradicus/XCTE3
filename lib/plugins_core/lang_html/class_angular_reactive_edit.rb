@@ -66,13 +66,13 @@ module XCTEHtml
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).
         wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
-          if var.selectFrom == nil || !var.hasMultipleItems()
+        if Utils.instance.isPrimitive(var) && !var.isList()
+          if var.selectFrom == nil || !var.isList()
             fldNode = make_field(cls, var, nil)
             rowNode.add_child(fldNode)
           end
         else
-          if (!var.hasMultipleItems())
+          if (!var.isList())
             vName = Utils.instance.getStyledVariableName(var)
             fieldsetNode = Utils.instance.make_node(cls.genCfg, "fieldset").
               add_attribute("formGroupName", vName)

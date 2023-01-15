@@ -21,11 +21,13 @@ module XCTEHtml
     end
 
     def make_primary_button(genCfg, bText)
-      newButton = HtmlNode.new('button').
-        add_attribute('type', 'button').
+      newButton = HtmlNode.new("button").
+        add_attribute("type", "button").
         add_text(bText)
 
-      HtmlStyleUtil.instance.stylePrimaryButton(genCfg, newButton);
+      HtmlStyleUtil.instance.stylePrimaryButton(genCfg, newButton)
+
+      return newButton
     end
 
     def make_node(genCfg, nodeName)
@@ -56,9 +58,9 @@ module XCTEHtml
           return "datetime-local"
         elsif lowType == "date"
           return "date"
-        elsif lowType == 'boolean'
-          return 'checkbox'
-        end        
+        elsif lowType == "boolean"
+          return "checkbox"
+        end
       end
 
       return "text"

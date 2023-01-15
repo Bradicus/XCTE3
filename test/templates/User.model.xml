@@ -17,7 +17,7 @@
 		<var name="last login date" type="DateTime" readonly="true" />
 		<var name="mailing address" 	type="Address" />
 		<var name="physical address" 	type="Address" />
-		<var name="roles"		type="String" maxlen="50" set="List" select_from="role" attribs="ManyToMany" />
+		<var name="roles"		type="String" maxlen="50" tpl="List" select_from="role" attribs="ManyToMany" />
 		<!--<var name="role options"		type="Role" set="List" options="true" />-->
 		<var name="active" type="boolean" />
 		<var name="theme" type="String" maxlen="255" select_from="theme" attribs="OneToMany" />
@@ -40,6 +40,7 @@
 	<gen_class type="class_angular_module_routing" path="user" ></gen_class>
 
   <gen_class type="class_angular_listing" path="user/user-listing" ></gen_class>
+
 	<gen_class type="class_angular_reactive_edit" path="user/user-view" >
 	 	<function name="method_service_datagen_random" />
 		<function name="method_angular_reactive_call_datamap" />

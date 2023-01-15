@@ -93,7 +93,7 @@ module XCTECpp
           isEnum = curVarClass != nil && curVarClass.ctype == "enum"
 
           if (Utils.instance.isPrimitive(var) || isEnum)
-            if var.listType == nil
+            if !var.isList()
               if !isEnum
                 bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
                         ' = json["' + curVarName + '"].get<' + Utils.instance.getTypeName(var) + ">();")
@@ -108,7 +108,7 @@ module XCTECpp
               bld.endBlock
             end
           else
-            if var.listType == nil
+            if !var.isList()
               bld.add(
                 'if (json.contains("' + curVarName + '")) ' + Utils.instance.getClassName(var) + "JsonEngine::read(" +
                   'json["' + curVarName + '"], item.' + curVarName + ");"
@@ -118,7 +118,7 @@ module XCTECpp
 
               bld.startBlock('for (auto aJson : json["' + curVarName + '"])')
 
-              if (var.isSharedPointer)
+              if (var.isPointer(1))
                 bld.add(Utils.instance.getSingleItemTypeName(var) + " newVar(new " + Utils.instance.getBaseTypeName(var) + "());")
                 bld.add(Utils.instance.getClassName(var) + "JsonEngine::read(aJson, *newVar);")
               else
