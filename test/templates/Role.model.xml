@@ -5,7 +5,7 @@
 	</description>
 
 	<var_group genGet="true" genSet="true" visibility="private">
-		<var name="id"		type="Int64" maxlen="10" pkey="true" />
+		<var name="id"	identity="(1,1)"	type="Int64" maxlen="10" pkey="true" />
 		<var name="name"		type="String" maxlen="50" />
 		<var name="description"		type="String" />
 	</var_group>
@@ -47,11 +47,10 @@
 		<function name="method_datamap_model_to_reactive_form" />
 	</gen_class>
 
-<gen_class language="tsql" type="statement_create" namespace="Database" var_prefix = "a "></gen_class>
+<gen_class language="tsql" type="statement_create" namespace="Database" ></gen_class>
 
 			<gen_class type="tsql_data_store"
 				namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"
-					   var_prefix = "a "
 					 		ns-java="com.example.demo.data"
 					 		path-java="data"
 					   interface_namespace="XCTE.Base.Data.Io"

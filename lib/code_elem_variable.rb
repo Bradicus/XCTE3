@@ -15,7 +15,7 @@ module CodeStructure
     attr_accessor :vtype, :utype, :defaultValue, :comment,
       :visibility, :isConst, :isStatic, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
       :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
-      :templates, :attribs, :required, :readonly
+      :templates, :attribs, :required, :readonly, :relation, :storeIn
 
     def initialize(parentElem)
       super(parentElem)
@@ -45,6 +45,8 @@ module CodeStructure
 
       @required = false
       @readonly = false
+      @relation = nil
+      @storeIn = nil
 
       # Stored only for arrays
       @arrayElemCount = 0 	# Array size of 0 means this isn't an array
@@ -129,6 +131,18 @@ module CodeStructure
       end
 
       return @templates[depth].pointerTpl != nil
+    end
+
+    def hasOneToOneRelation()
+      return @relation != nil && @relation.start_with?("one-to-one")
+    end
+
+    def hasOneToManyRelation()
+      return @relation != nil && @relation.start_with?("one-to-many")
+    end
+
+    def hasManyToManyRelation()
+      return @relation != nil && @relation.start_with?("many-to-many")
     end
   end
 end

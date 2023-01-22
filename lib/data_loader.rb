@@ -104,6 +104,8 @@ class DataLoader
     curVar.displayName = varXML.attributes["display"]
     curVar.selectFrom = varXML.attributes["select_from"]
     curVar.isOptionsList = (varXML.attributes["options"] == "true")
+    curVar.relation = loadAttribute(varXML, "rel", pComponent.language)
+    curVar.storeIn = loadAttribute(varXML, "store_in", pComponent.language)
 
     curVar.required = loadInheritableAttribute(varXML, "required", pComponent.language, "false") == "true"
     curVar.readonly = loadInheritableAttribute(varXML, "readonly", pComponent.language, "false") == "true"

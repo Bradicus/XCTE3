@@ -91,11 +91,52 @@ module XCTEJava
 
     # Return the language type based on the generic type
     def getTypeName(var)
-      if (var.vtype != nil)
-        return @langProfile.getTypeName(var.vtype)
-      else
-        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
+      typeName = getSingleItemTypeName(var)
+
+      if var.templates.length > 0 && var.templates[0].isCollection
+        tplType = @langProfile.getTypeName(var.templates[0].name)
+        typeName = tplType + "<" + typeName + ">"
       end
+
+      return typeName
+    end
+
+    def getSingleItemTypeName(var)
+      typeName = getBaseTypeName(var)
+
+      singleTpls = var.templates
+      if singleTpls.length > 0 && singleTpls[0].isCollection
+        singleTpls = singleTpls.drop(1)
+
+        if isPrimitive(var)
+          typeName = getObjTypeName(var)
+        end
+      end
+
+      for tpl in singleTpls.reverse()
+        typeName = tpl.name + "<" + typeName + ">"
+      end
+
+      return typeName.strip
+    end
+
+    # Return the language type based on the generic type
+    def getBaseTypeName(var)
+      nsPrefix = ""
+      langType = @langProfile.getTypeName(var.getUType())
+
+      if (var.utype != nil) # Only unformatted name needs styling
+        baseTypeName = CodeNameStyling.getStyled(langType, @langProfile.classNameStyle)
+      else
+        baseTypeName = langType
+      end
+
+      if var.namespace.hasItems?()
+        nsPrefix = var.namespace.get("::") + "::"
+        baseTypeName = nsPrefix + baseTypeName
+      end
+
+      return baseTypeName
     end
 
     # Return the language type based on the generic type

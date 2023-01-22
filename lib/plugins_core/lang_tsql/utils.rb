@@ -27,8 +27,13 @@ module XCTETSql
       else
         vPrevix = varPrefix
       end
-
-      vDec << "[" << CodeNameStyling.getStyled(vPrevix + var.name, @langProfile.variableNameStyle) << "]"
+      if var.hasOneToOneRelation()
+        vDec << "[" << CodeNameStyling.getStyled(vPrevix + var.name + " id", @langProfile.variableNameStyle) << "]"
+      elsif var.hasManyToManyRelation()
+        return ""
+      else
+        vDec << "[" << CodeNameStyling.getStyled(vPrevix + var.name, @langProfile.variableNameStyle) << "]"
+      end
 
       tName = getTypeName(var)
 
@@ -46,22 +51,31 @@ module XCTETSql
 
     # Get a parameter declaration for a method parameter
     def getTypeName(var)
-      if (var.vtype == "String")
-        if (var.arrayElemCount > 9999)
-          return("VARCHAR(MAX)")
-        else
-          if (var.arrayElemCount > 0)
-            return("VARCHAR(" + var.arrayElemCount.to_s + ")")
-          else
+      if isPrimitive(var)
+        if (var.vtype == "String")
+          if (var.arrayElemCount > 9999)
             return("VARCHAR(MAX)")
+          else
+            if (var.arrayElemCount > 0)
+              return("VARCHAR(" + var.arrayElemCount.to_s + ")")
+            else
+              return("VARCHAR(MAX)")
+            end
+          end
+        else
+          if (var.vtype == "StringUNC16")
+            if (var.arrayElemCount > 9999)
+              return("NTEXT")
+            else
+              return("NVARCHAR(" + var.arrayElemCount + ")")
+            end
           end
         end
       else
-        if (var.vtype == "StringUNC16")
-          if (var.arrayElemCount > 9999)
-            return("NTEXT")
-          else
-            return("NVARCHAR(" + var.arrayElemCount + ")")
+        if var.hasOneToOneRelation()
+          refClass = Classes.findVarClass(var)
+          if refClass != nil
+            return @langProfile.getTypeName(refClass.model.getIdentityVar().vtype)
           end
         end
       end

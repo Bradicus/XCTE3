@@ -22,27 +22,26 @@ module XCTETSql
     def getUnformattedClassName(cls)
       return cls.getUName()
     end
-    
+
     def genSourceFiles(cls)
       srcFiles = Array.new
-      
+
       bld = SourceRendererTSql.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
-      
+      bld.lfExtension = Utils.instance.getExtension("body")
+
       genFileComment(cls, bld)
       genFileContent(cls, bld)
-      
+
       srcFiles << bld
-      
+
       return srcFiles
     end
-    
+
     # Returns the code for the comment for this class
     def genFileComment(cls, bld)
-      
     end
-    
+
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       sqlCDef = Array.new
@@ -52,25 +51,30 @@ module XCTETSql
       bld.indent
 
       # Generate code for class variables
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|        
+      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !var.hasManyToManyRelation()
           if !first
             bld.sameLine(", ")
           end
           first = false
 
-          bld.add(XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix))
+          varDec = XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix)
+          if varDec != nil && varDec.strip().length > 0
+            bld.add(varDec)
+          end
 
           if var.defaultValue != nil
             bld.sameLine(" default '" << var.defaultValue << "'")
-          end        
+          end
+        end
       }))
 
       primKeys = Array.new
-    
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|           
+
+      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isPrimary == true
-           primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) + "]"
-        end        
+          primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) + "]"
+        end
       }))
 
       if primKeys.length > 0

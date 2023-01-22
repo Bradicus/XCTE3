@@ -43,11 +43,11 @@ module XCTEJava
       conDef = String.new
       engineName = Utils.instance.getStyledClassName(cls.getUName() + " data store")
 
-      pkeys = Array.new
-      cls.model.getPrimaryKeyVars(pkeys)
       params = Array.new
-      for pkey in pkeys
-        params << Utils.instance.getParamDec(pkey)
+      idVar = cls.model.getIdentityVar()
+
+      if idVar != nil
+        params << '@PathVariable("' + Utils.instance.getStyledVariableName(idVar) + '") ' + Utils.instance.getParamDec(idVar)
       end
 
       bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '")')

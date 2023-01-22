@@ -18,7 +18,6 @@ module CodeStructure
     attr_accessor :functions, :namespace, :ctype, :interfaceNamespace, :interfacePath,
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
-                  :dontModifyCode,
                   :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className, :genCfg, :injections
     attr_reader :name
 
@@ -44,7 +43,6 @@ module CodeStructure
       @preDefs = Array.new
       @path = nil
       @model = model
-      @dontModifyCode = isStatic
       @genCfg
 
       # Used by per lang instance of class

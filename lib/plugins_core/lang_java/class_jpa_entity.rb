@@ -113,11 +113,19 @@ module XCTEJava
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (var.name == "id")
           bld.add("@Id")
-          bld.add("@GeneratedValue(strategy=GenerationType.AUTO)")
+          bld.add("@GeneratedValue(strategy=GenerationType.SEQUENCE)")
           bld.add(Utils.instance.getVarDec(var))
         else
-          for attrib in var.attribs
-            bld.add("@" + attrib.name)
+          if var.relation != nil
+            if var.relation == "many-to-many"
+              bld.add("@ManyToMany")
+            elsif var.relation.start_with? "many-to-one"
+              bld.add("@ManyToOne")
+            elsif var.relation.start_with? "one-to-many"
+              bld.add("@OneToMany")
+            elsif var.relation.start_with? "one-to-one"
+              bld.add("@OneToOne")
+            end
           end
           bld.add(Utils.instance.getVarDec(var))
         end
