@@ -51,6 +51,7 @@ module XCTEJava
         params << '@PathVariable("' + Utils.instance.getStyledVariableName(idVar) + '") ' + Utils.instance.getParamDec(idVar)
       end
 
+      bld.add "@CrossOrigin"
       bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '/{id}")')
 
       bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) +

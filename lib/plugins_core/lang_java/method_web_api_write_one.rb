@@ -12,9 +12,9 @@ require "code_name_styling.rb"
 require "plugins_core/lang_java/utils.rb"
 
 module XCTEJava
-  class MethodWebApiReadMany < XCTEPlugin
+  class MethodWebApiWrite < XCTEPlugin
     def initialize
-      @name = "method_web_api_read_many"
+      @name = "method_web_api_write_one"
       @language = "java"
       @category = XCTEPlugin::CAT_METHOD
     end
@@ -30,32 +30,44 @@ module XCTEJava
 
     def get_declairation(cls, bld, fun)
       bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-              " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
+              " Post" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
     def process_dependencies(cls, bld, fun)
       Utils.instance.requires_class_type(cls, "class_jpa_entity")
       Utils.instance.requires_class_type(cls, "tsql_data_store")
+      cls.addUse("org.springframework.http.*")
       Utils.instance.addClassInjection(cls, "tsql_data_store")
-      cls.addUse("java.util.*")
     end
 
     def get_body(cls, bld, fun)
       conDef = String.new
       dataStoreName =
         CodeNameStyling.getStyled(cls.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
+      className = Utils.instance.getStyledClassName(cls.getUName())
 
       params = Array.new
+      idVar = cls.model.getIdentityVar()
+
+      if idVar != nil
+        params << "@RequestBody " + className + " item"
+      end
 
       bld.add "@CrossOrigin"
-      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '")')
+      bld.add '@PostMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '",'
+      bld.iadd "consumes = MediaType.APPLICATION_JSON_VALUE, "
+      bld.iadd "produces = MediaType.APPLICATION_JSON_VALUE)"
 
-      bld.startFunction("public List<" + Utils.instance.getStyledClassName(cls.getUName()) +
-                        "> Get" + Utils.instance.getStyledClassName(cls.getUName()) +
-                        "s(" + params.join(", ") + ")")
+      bld.startFunction("public ResponseEntity<" + className +
+                        "> Post" + className +
+                        "(" + params.join(", ") + ")")
 
-      bld.add("var items = " + dataStoreName + ".findAll();")
-      bld.add("return items;")
+      bld.add(Utils.instance.getStyledClassName(cls.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")
+      # bld.startBlock "if (savedItem == null)"
+      # bld.add 'throw new Exception("");'
+      # bld.endBlock
+
+      bld.add "return new ResponseEntity<" + className + ">(savedItem, HttpStatus.CREATED);"
 
       bld.endFunction
     end
@@ -63,4 +75,4 @@ module XCTEJava
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiReadMany.new)
+XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiWrite.new)

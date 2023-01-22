@@ -151,11 +151,17 @@ module XCTETypescript
       if (idVar[0].getUType().downcase() == "string" || idVar[0].getUType().downcase() == "guid")
         bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
       else
-        bld.startBlock("if (this." + clsVar + ".controls['id'].value === null || this." + clsVar + ".controls['id'].value > 0)")
+        bld.startBlock("if (this." + clsVar + ".controls['id'].value === null || !(this." + clsVar + ".controls['id'].value > 0))")
       end
-      bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".create(this." + clsVar + ".value);")
+      bld.startBlock("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".create(this." + clsVar + ".value).subscribe(newItem => ")
+      bld.add "this.item = newItem;"
+      #bld.add "this.populate();"
+      bld.endBlock ");"
       bld.midBlock("else")
-      bld.add("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".update(this." + clsVar + ".value);")
+      bld.startBlock("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".update(this." + clsVar + ".value).subscribe(newItem => ")
+      bld.add "this.item = newItem;"
+      #Sbld.add "this.populate();"
+      bld.endBlock ");"
       bld.endBlock
       bld.endBlock
       bld.endBlock

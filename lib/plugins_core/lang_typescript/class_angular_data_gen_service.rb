@@ -82,7 +82,7 @@ module XCTETypescript
       bld.endBlock(")")
       bld.startClass("export class " + getClassName(cls))
 
-      bld.add("private apiUrl='';")
+      bld.add("private apiUrl=environment.apiUrl;")
       # bld.add("private dataExpires: Number = 600; // Seconds")
       # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
 

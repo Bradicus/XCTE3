@@ -192,7 +192,7 @@ module XCTETypescript
               bld.sameLine("new FormControl(''),")
             end
           else
-            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+            #bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         end
       }))

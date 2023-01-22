@@ -104,14 +104,27 @@ module XCTEHtml
               formNode.add_child(tableNode)
               # Not an options list, just a reglar array of data
             elsif !var.isOptionsList
-              varCls = Classes.findVarClass(var)
-              if (varCls == nil)
-                puts "Unable to find variable call " + var.getUType()
-              end
+              if var.relation != nil
+                optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+                varCls = Classes.findVarClass(optVar)
+                if (varCls == nil)
+                  puts "Unable to find variable call " + var.getUType()
+                end
 
-              rowContainer.add_child(HtmlNode.new("h2").add_text(cls.model.name))
-              tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", "async")
-              rowContainer.add_child(tableNode)
+                vName = Utils.instance.getStyledVariableName(optVar)
+                rowContainer.add_child(HtmlNode.new("h2").add_text(varCls.model.name.capitalize))
+                tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", "async")
+                rowContainer.add_child(tableNode)
+              else
+                varCls = Classes.findVarClass(var)
+                if (varCls == nil)
+                  puts "Unable to find variable call " + var.getUType()
+                end
+
+                rowContainer.add_child(HtmlNode.new("h2").add_text(cls.model.name.capitalize))
+                tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", "async")
+                rowContainer.add_child(tableNode)
+              end
             end
           end
         end
