@@ -31,7 +31,7 @@ module XCTEHtml
       tHeadRow = HtmlNode.new("tr")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
+        if Utils.instance.isPrimitive(var) && !var.isList()
           tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
         end
       }))
@@ -45,7 +45,7 @@ module XCTEHtml
         add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + asyncStr)
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.hasMultipleItems()
+        if Utils.instance.isPrimitive(var) && !var.isList()
           tBodyRow.add_child(HtmlNode.new("td").
             add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end

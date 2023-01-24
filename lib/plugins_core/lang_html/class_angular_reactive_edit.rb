@@ -66,13 +66,11 @@ module XCTEHtml
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).
         wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.isList()
-          if var.selectFrom == nil || !var.isList()
-            fldNode = make_field(cls, var, nil)
-            rowNode.add_child(fldNode)
-          end
+        if !var.isList() && (Utils.instance.isPrimitive(var) || var.selectFrom != nil)
+          fldNode = make_field(cls, var, nil)
+          rowNode.add_child(fldNode)
         else
-          if (!var.isList())
+          if (!var.isList() && var.selectFrom == nil)
             vName = Utils.instance.getStyledVariableName(var)
             fieldsetNode = Utils.instance.make_node(cls.genCfg, "fieldset").
               add_attribute("formGroupName", vName)
@@ -95,7 +93,7 @@ module XCTEHtml
             formNode.add_child(fieldsetNode)
 
             rowContainer = formNode
-          else
+          elsif var.isList()
             vName = Utils.instance.getStyledVariableName(var)
             # List of primitive "ids" linked to an options list
             if Utils.instance.isPrimitive(var) && var.selectFrom != nil
@@ -103,7 +101,7 @@ module XCTEHtml
               tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
               formNode.add_child(tableNode)
               # Not an options list, just a reglar array of data
-            elsif !var.isOptionsList
+            else
               if var.relation != nil
                 optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
                 varCls = Classes.findVarClass(optVar)
@@ -223,7 +221,11 @@ module XCTEHtml
 
       # Display validation messages
       if var.needsValidation()
-        formVarRef = formVar + ".get('" + varName + "')"
+        if varPrefix != nil
+          formVarRef = formVar + ".get('" + varPrefix + "')?" + ".get('" + varName + "')"
+        else
+          formVarRef = formVar + ".get('" + varName + "')"
+        end
         validationNode = HtmlNode.new("div").
           add_attribute("*ngIf", formVarRef + "?.invalid && (" + formVarRef + "?.dirty || " + formVarRef + "?.touched)").
           add_class("alert alert-danger")
@@ -236,8 +238,8 @@ module XCTEHtml
 
         if var.arrayElemCount > 0
           validationNode.add_child(HtmlNode.new("div").
-            add_attribute("*ngIf", formVarRef + "?.errors?.['maxLength']").
-            add_text(var.getDisplayName() + " is required"))
+            add_attribute("*ngIf", formVarRef + "?.errors?.['maxlength']").
+            add_text(var.getDisplayName() + " must be " + var.arrayElemCount.to_s() + " characters or less"))
         end
 
         fldNode.add_child(validationNode)

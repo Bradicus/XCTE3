@@ -103,19 +103,19 @@ class SourceRenderer
     startDelimedChunk(functionDeclairation, @hangingFunctionStart)
   end
 
-  def startFunctionParamed(functionName, paramList)    
+  def startFunctionParamed(functionName, paramList)
     oneLiner = paramList.join(", ")
     if oneLiner.length > 100
-      paramStr = ''
-      
+      paramStr = "\n"
+
       (0..paramList.length - 1).each do |i|
         if (i < paramList.length - 1)
-          paramStr += (paramList[i] + getIndent(1) + ",")
+          paramStr += getIndent(1) + paramList[i] + "," + "\n"
         else
-          paramStr += (paramList[i] + getIndent(1))
+          paramStr += getIndent(1) + paramList[i]
         end
       end
-      
+
       startDelimedChunk(functionName + "(" + paramStr + ")")
     else
       startDelimedChunk(functionName + "(" + oneLiner + ")")
