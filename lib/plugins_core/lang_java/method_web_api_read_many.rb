@@ -47,7 +47,7 @@ module XCTEJava
 
       params = Array.new
 
-      bld.add "@CrossOrigin"
+      #bld.add "@CrossOrigin"
       bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '")')
 
       bld.startFunction("public List<" + Utils.instance.getStyledClassName(cls.getUName()) +

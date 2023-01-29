@@ -30,7 +30,7 @@
 		 	<function name="method_service_datagen_random" />
 			<function name="method_angular_reactive_call_datamap" />
 		</gen_class>
-		
+
 
 		<gen_class type="empty_file" name="role view" path="role/role-view" ></gen_class>
 		<gen_class type="empty_file" name="role listing" path="role/role-listing" ></gen_class>
@@ -44,6 +44,7 @@
 		<function name="method_web_api_read_one" />
 		<function name="method_web_api_read_many" />
 		<function name="method_web_api_write_one" />
+		<function name="method_web_api_update_one" />
 	</gen_class>
 
 	<gen_class type="class_angular_data_store_service" path="shared/services" >

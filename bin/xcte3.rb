@@ -16,6 +16,9 @@ require "pathname"
 require "find"
 require "fileutils"
 
+require "data_processing/project_loader"
+require "data_processing/model_loader"
+
 require "code_elem_model.rb"
 require "code_elem_project.rb"
 require "x_c_t_e_plugin.rb"
@@ -55,7 +58,7 @@ def processProjectComponentGroup(project, pcGroup)
         pn = Pathname.new(path)
 
         dataModel = CodeStructure::CodeElemModel.new
-        DataLoader.loadXMLClassFile(dataModel, path, pComponent)
+        DataProcessing::ModelLoader.loadModelFile(dataModel, path, pComponent)
 
         language = XCTEPlugin::getLanguages()[pComponent.language]
 
@@ -237,7 +240,7 @@ if (!FileTest.file?(currentDir + "/xcte.project.xml"))
   exit 0
 end
 
-prj.loadProject(currentDir + "/xcte.project.xml")
+DataProcessing::ProjectLoader.loadProject(prj, currentDir + "/xcte.project.xml")
 
 XCTEPlugin::loadPLugins
 

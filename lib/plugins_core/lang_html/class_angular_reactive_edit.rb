@@ -1,4 +1,5 @@
 require "plugins_core/lang_typescript/utils.rb"
+require "derived_class_generator"
 
 ##
 # Class:: ClassAngularReactiveEdit
@@ -18,11 +19,13 @@ module XCTEHtml
     def genSourceFiles(cls)
       srcFiles = Array.new
 
+      editClass = DerivedClassGenerator.getEditClassRepresentation(cls)
+
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view.component")
+      bld.lfName = Utils.instance.getStyledFileName(editClass.getUName() + " view.component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, bld)
-      genFileContent(cls, bld)
+      genFileContent(editClass, bld)
 
       srcFiles << bld
 
@@ -182,9 +185,7 @@ module XCTEHtml
 
       if (var.readonly)
         inputNode.add_attribute("[readonly]", "true")
-        inputNode.add_attribute("[disabled]", "true")
         selectNode.add_attribute("[readonly]", "true")
-        selectNode.add_attribute("[disabled]", "true")
       end
 
       fldNode.add_child(labelNode)
@@ -204,7 +205,7 @@ module XCTEHtml
       if var.selectFrom != nil
         itemName = varName + "Item"
         selectNode.add_attribute("id", varId)
-        selectNode.add_attribute("formControlName", varName)
+        selectNode.add_attribute("formControlName", Utils.instance.getStyledVariableName(var, "", " id"))
         selectNode.add_child(HtmlNode.new("option").
           add_attribute("*ngFor", "let " + itemName + " of " + varName + "Options | async").
           add_attribute("value", itemName + ".id").

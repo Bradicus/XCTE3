@@ -32,16 +32,21 @@ module XCTETypescript
           else
             bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
           end
-        elsif (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          varCls = Classes.findVarClass(var, "class_angular_data_map_service")
-          if varCls != nil
-            vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
+        elsif (!var.hasMultipleItems())
+          if (var.selectFrom != nil)
+            vName = Utils.instance.getStyledVariableName(var, "", " id")
+            bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
+          else
+            varCls = Classes.findVarClass(var, "class_angular_data_map_service")
+            if varCls != nil
+              vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
 
-            if vService != nil
-              fgName = "formGroup.get('" + Utils.instance.getStyledVariableName(var) + "') as FormGroup"
-              srcName = "src." + Utils.instance.getStyledVariableName(var)
-              bld.add("this." + Utils.instance.getStyledVariableName(vService) +
-                      ".populate(" + fgName + ", " + srcName + ");")
+              if vService != nil
+                fgName = "formGroup.get('" + Utils.instance.getStyledVariableName(var) + "') as FormGroup"
+                srcName = "src." + Utils.instance.getStyledVariableName(var)
+                bld.add("this." + Utils.instance.getStyledVariableName(vService) +
+                        ".populate(" + fgName + ", " + srcName + ");")
+              end
             end
           end
         end

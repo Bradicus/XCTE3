@@ -2,6 +2,11 @@
 <!--  <generate language="csharp" tpl_path="templates" dest="./csharp_razor" /> -->
   <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app">
     <xdep name="angular" version="14"  />
+        <build_vars>
+          <build_var name="DataModelType" value="ts_interface" />
+          <build_var name="DataModelPath" value="shared/interfaces" />
+          <build_var name="ServicesPath" value="shared/interfaces" />
+        </build_vars>
   </generate>
   <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
     <xdep name="bootstrap" version="5" />
@@ -10,6 +15,13 @@
   <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
   <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" >
     <xdep name="spring-boot" version="3" />
+        <build_vars>
+          <build_var name="ControllerNs" value="com.example.demo.api" />
+          <build_var name="ControllerPath" value="api" />
+          <build_var name="DataModelNs" value="com.example.demo.model" />
+          <build_var name="DataModelType" value="class_jpa_entity" />
+          <build_var name="DataModelPath" value="model" />
+        </build_vars>
   </generate>
   <generate language="tsql" tpl_path="templates" dest="./SqlScripts" />
 

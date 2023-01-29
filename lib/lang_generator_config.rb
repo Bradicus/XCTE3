@@ -5,7 +5,7 @@ require "code_elem_namespace.rb"
 #
 
 class LangGeneratorConfig
-  attr_accessor :language, :tplPath, :dest, :namespace, :xDeps
+  attr_accessor :language, :tplPath, :dest, :namespace, :xDeps, :buildVars
 
   def initialize
     @language
@@ -13,6 +13,7 @@ class LangGeneratorConfig
     @dest
     @namespace = CodeStructure::CodeElemNamespace.new
     @xDeps = Array.new
+    @buildVars = Array.new
   end
 
   def usesExternalDependency(xdep)

@@ -22,7 +22,7 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def get_definition(cls, bld, fun)
       bld.add("/*")
-      bld.add("* Web API get single " + cls.getUName())
+      bld.add("* Web API create single " + cls.getUName())
       bld.add("*/")
 
       get_body(cls, bld, fun)
@@ -53,7 +53,7 @@ module XCTEJava
         params << "@RequestBody " + className + " item"
       end
 
-      bld.add "@CrossOrigin"
+      #bld.add "@CrossOrigin"
       bld.add '@PostMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '",'
       bld.iadd "consumes = MediaType.APPLICATION_JSON_VALUE, "
       bld.iadd "produces = MediaType.APPLICATION_JSON_VALUE)"

@@ -41,7 +41,7 @@ module CodeStructure
       @templateParams = Array.new
       @varPrefix = ""
       @preDefs = Array.new
-      @path = nil
+      @path = ""
       @model = model
       @genCfg
 

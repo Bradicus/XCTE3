@@ -11,6 +11,8 @@ require "lang_profile.rb"
 require "utils_base"
 require "types"
 require "code_elem_variable"
+require "code_elem_model"
+require "code_elem_var_group"
 
 module XCTETypescript
   class Utils < UtilsBase
@@ -185,10 +187,17 @@ module XCTETypescript
           otherClass = Classes.findVarClass(var, "ts_interface")
 
           if !var.isList()
-            bld.add(getStyledVariableName(var) + ": ")
             if otherClass != nil
-              getFormgroup(otherClass, bld, otherClass.model.varGroup, ",")
+              if var.selectFrom != nil
+                bld.add(getStyledVariableName(var, "", " id") + ": ")
+                idVar = cls.model.getIdentityVar()
+                bld.sameLine(getFormcontrolType(idVar, idVar.getUType(), "") + ",")
+              else
+                bld.add(getStyledVariableName(var) + ": ")
+                getFormgroup(otherClass, bld, otherClass.model.varGroup, ",")
+              end
             else
+              bld.add(getStyledVariableName(var) + ": ")
               bld.sameLine("new FormControl(''),")
             end
           else
@@ -215,15 +224,20 @@ module XCTETypescript
         vdString = ", [" + validators.join(", ") + "]"
       end
 
-      if var.getUType().downcase().start_with?("date")
-        return getStyledVariableName(var) + ": new FormControl<Date>(new Date()" + vdString + ")"
+      return getStyledVariableName(var) + ": " + getFormcontrolType(var, var.getUType(), vdString)
+    end
+
+    def getFormcontrolType(var, utype, vdString)
+      utype = utype.downcase
+      if utype.start_with?("date")
+        return "new FormControl<Date>(new Date()" + vdString + ")"
       else
-        if Types.instance.inCategory(var, "text") || var.getUType().downcase == "guid"
-          return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(''" + vdString + ")"
-        elsif var.getUType().downcase == "boolean"
-          return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(false)"
+        if Types.instance.inCategory(var, "text") || utype == "guid"
+          return "new FormControl<" + getBaseTypeName(var) + ">(''" + vdString + ")"
+        elsif utype == "boolean"
+          return "new FormControl<" + getBaseTypeName(var) + ">(false)"
         end
-        return getStyledVariableName(var) + ": new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
+        return "new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
       end
     end
 
