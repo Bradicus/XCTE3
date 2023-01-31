@@ -11,6 +11,7 @@ require "code_elem_project.rb"
 require "data_processing/attribute_util"
 require "data_processing/namespace_util"
 require "data_processing/variable_loader"
+require "data_processing/class_loader"
 require "rexml/document"
 
 module DataProcessing

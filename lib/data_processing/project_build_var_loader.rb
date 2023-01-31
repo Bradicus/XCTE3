@@ -20,6 +20,10 @@ module DataProcessing
         bVar = CodeElemBuildVar.new(bv.attributes["name"], bv.attributes["value"])
         gen.buildVars.push(bVar)
       }
+
+      # Sort with longest first so loops searching for names get longer names first,
+      # in case a smaller variable is contained within a larger
+      gen.buildVars.sort_by { |bv| -bv.name.length }
     end
   end
 end

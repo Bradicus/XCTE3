@@ -21,13 +21,13 @@ module DataProcessing
 
       curVar.vtype = varXML.attributes["type"]
       curVar.utype = varXML.attributes["utype"]
-      curVar.visibility = AttributeUtil.loadInheritableAttribute(varXML, "visibility", pComponent.language, curVar.visibility)
+      curVar.visibility = AttributeUtil.loadInheritableAttribute(varXML, "visibility", pComponent, curVar.visibility)
       curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
       if AttributeUtil.hasAttribute(varXML, "set")
-        AttributeUtil.loadTemplateAttribute(curVar, varXML, "set", pComponent.language)
+        AttributeUtil.loadTemplateAttribute(curVar, varXML, "set", pComponent)
       end
       if AttributeUtil.hasAttribute(varXML, "tpl")
-        AttributeUtil.loadTemplateAttribute(curVar, varXML, "tpl", pComponent.language)
+        AttributeUtil.loadTemplateAttribute(curVar, varXML, "tpl", pComponent)
       end
       curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
       curVar.isConst = varXML.attributes.get_attribute("const") != nil
@@ -44,18 +44,18 @@ module DataProcessing
       curVar.displayName = varXML.attributes["display"]
       curVar.selectFrom = varXML.attributes["select_from"]
       curVar.isOptionsList = (varXML.attributes["options"] == "true")
-      curVar.relation = AttributeUtil.loadAttribute(varXML, "rel", pComponent.language)
-      curVar.storeIn = AttributeUtil.loadAttribute(varXML, "store_in", pComponent.language)
+      curVar.relation = AttributeUtil.loadAttribute(varXML, "rel", pComponent)
+      curVar.storeIn = AttributeUtil.loadAttribute(varXML, "store_in", pComponent)
 
-      curVar.required = AttributeUtil.loadInheritableAttribute(varXML, "required", pComponent.language, "false") == "true"
-      curVar.readonly = AttributeUtil.loadInheritableAttribute(varXML, "readonly", pComponent.language, "false") == "true"
+      curVar.required = AttributeUtil.loadInheritableAttribute(varXML, "required", pComponent, "false") == "true"
+      curVar.readonly = AttributeUtil.loadInheritableAttribute(varXML, "readonly", pComponent, "false") == "true"
 
       if (varXML.attributes.get_attribute("attribs"))
         AttributeUtil.loadAttribNode(curVar, varXML.attributes["attribs"])
       end
 
-      curVar.genGet = AttributeUtil.loadInheritableAttribute(varXML, "genGet", pComponent.language, curVar.genGet) == "true"
-      curVar.genSet = AttributeUtil.loadInheritableAttribute(varXML, "genSet", pComponent.language, curVar.genSet) == "true"
+      curVar.genGet = AttributeUtil.loadInheritableAttribute(varXML, "genGet", pComponent, curVar.genGet) == "true"
+      curVar.genSet = AttributeUtil.loadInheritableAttribute(varXML, "genSet", pComponent, curVar.genSet) == "true"
 
       curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = varXML.attributes["default"]

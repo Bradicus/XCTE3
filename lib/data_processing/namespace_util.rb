@@ -14,7 +14,7 @@ module DataProcessing
   class NamespaceUtil
     # Load a list of namespaces on a node
     def self.loadNamespaces(xml, pComponent)
-      return CodeStructure::CodeElemNamespace.new(AttributeUtil.loadAttribute(xml, Array["ns", "namespace"], pComponent.language, "."))
+      return CodeStructure::CodeElemNamespace.new(AttributeUtil.loadAttribute(xml, Array["ns", "namespace"], pComponent, "."))
     end
   end
 end

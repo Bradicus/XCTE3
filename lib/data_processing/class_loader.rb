@@ -10,6 +10,8 @@
 require "code_elem_project.rb"
 require "code_elem_build_var.rb"
 require "data_processing/variable_loader"
+require "data_processing/attribute_util"
+require "data_processing/namespace_util"
 require "rexml/document"
 
 module DataProcessing
@@ -17,16 +19,16 @@ module DataProcessing
 
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml)
-      genC.ctype = loadInheritableAttribute(genCXml, "type", pComponent.language)
+      genC.ctype = AttributeUtil.loadInheritableAttribute(genCXml, "type", pComponent)
       genC.className = genCXml.attributes["name"]
-      genC.namespace = loadNamespaces(genCXml, pComponent)
+      genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)
       genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["interface_namespace"])
       genC.interfacePath = genCXml.attributes["interface_path"]
       genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["test_namespace"])
-      genC.testPath = loadAttribute(genCXml, "test_path", pComponent.language)
+      genC.testPath = AttributeUtil.loadAttribute(genCXml, "test_path", pComponent)
       genC.language = genCXml.attributes["language"]
-      genC.path = loadAttribute(genCXml, "path", pComponent.language)
-      genC.varPrefix = loadAttribute(genCXml, "var_prefix", pComponent.language)
+      genC.path = AttributeUtil.loadAttribute(genCXml, "path", pComponent)
+      genC.varPrefix = AttributeUtil.loadAttribute(genCXml, "var_prefix", pComponent)
 
       # Add base namespace to class namespace lists
       if (pComponent.namespace.nsList.size() > 0)
@@ -38,7 +40,7 @@ module DataProcessing
       genCXml.elements.each("base_class") { |bcXml|
         baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
         baseClass.name = bcXml.attributes["name"]
-        baseClass.namespace = loadNamespaces(bcXml, pComponent)
+        baseClass.namespace = NamespaceUtil.loadNamespaces(bcXml, pComponent)
 
         bcXml.elements.each("tpl_param") { |tplXml|
           tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
@@ -56,7 +58,7 @@ module DataProcessing
       genCXml.elements.each("interface") { |ifXml|
         intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
         intf.name = ifXml.attributes["name"]
-        intf.namespace = loadNamespaces(ifXml, pComponent)
+        intf.namespace = NamespaceUtil.loadNamespaces(ifXml, pComponent)
         genC.interfaces << intf
       }
 
@@ -180,7 +182,7 @@ module DataProcessing
     end
 
     def self.loadTemplateAttribute(var, varXml, attribName, language)
-      tpls = loadAttribute(varXml, attribName, language)
+      tpls = AttributeUtil.loadAttribute(varXml, attribName, language)
 
       tplItems = tpls.split(",")
       for tplItem in tplItems
@@ -192,76 +194,14 @@ module DataProcessing
     # Loads a comment from an XML comment node
     def self.loadCommentNode(parXML, section)
       comNode = CodeElemComment.new(parXML.attributes["text"])
-      comNode.loadAttributes(parXML)
+      comNode.AttributeUtil.loadAttributes(parXML)
       section << comNode
-    end
-
-    # Load a list of namespaces on a node
-    def self.loadNamespaces(xml, pComponent)
-      return CodeStructure::CodeElemNamespace.new(loadAttribute(xml, Array["ns", "namespace"], pComponent.language, "."))
-    end
-
-    # Load an attribute
-    def self.loadAttribute(xml, atrNames, language, default = nil)
-      if !atrNames.kind_of?(Array)
-        atrNames = Array[atrNames]
-      end
-
-      for atrName in atrNames
-        atr = xml.attributes[atrName + "-" + language]
-        if atr != nil
-          return atr
-        end
-        atr = xml.attributes[atrName]
-        if atr != nil
-          return atr
-        end
-      end
-
-      return default
-    end
-
-    # Load an attribute
-    def self.loadInheritableAttribute(xml, atrNames, language, default = nil)
-      if !atrNames.kind_of?(Array)
-        atrNames = Array[atrNames]
-      end
-
-      for atrName in atrNames
-        atr = xml.attributes[atrName + "-" + language]
-        if atr != nil
-          return atr
-        end
-        atr = xml.attributes[atrName]
-        if atr != nil
-          return atr
-        end
-      end
-
-      # Parent if we didn't find it
-      if (xml.parent != nil && xml.parent.name == "var_group")
-        pLoad = loadInheritableAttribute(xml.parent, atrNames, language, nil)
-        if (pLoad != nil)
-          return pLoad
-        end
-      end
-
-      return default
-    end
-
-    def self.loadAttributeArray(xml, atrNames, language, separator)
-      atr = loadAttribute(xml, atrNames, language)
-      if atr != nil
-        return atr.split(separator)
-      end
-
-      return Array.new
     end
 
     # Loads a br format element from an XML br node
     def self.loadBRNode(brXML, section)
       brk = CodeElemFormat.new("\n")
-      brk.loadAttributes(brXML)
+      brk.AttributeUtil.loadAttributes(brXML)
       section << brk
     end
 

@@ -29,7 +29,6 @@ require "run_settings"
 require "project_plans"
 require "project_plan"
 require "lang_profiles"
-require "data_loader"
 require "classes"
 
 def isModelFile(filePath)
