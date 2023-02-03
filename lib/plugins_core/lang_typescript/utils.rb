@@ -276,7 +276,7 @@ module XCTETypescript
 
     def getOptionsVarFor(var)
       optVar = var.clone
-      optVar.name = optVar.name + " options"
+      optVar.name = var.selectFrom + " options"
       optVar.utype = var.selectFrom
       optVar.vtype = nil
       optVar.defaultValue = "of([])"

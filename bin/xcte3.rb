@@ -18,6 +18,7 @@ require "fileutils"
 
 require "data_processing/project_loader"
 require "data_processing/model_loader"
+require "derived_model_generator"
 
 require "code_elem_model.rb"
 require "code_elem_project.rb"
@@ -94,6 +95,17 @@ def processProjectComponentGroup(project, pcGroup)
             if (cls.language == nil || cls.language == pComponent.language)
               projectPlan.classes << lClass
             end
+          end
+        end
+      end
+    end
+
+    # Load any derived classes
+    for model in projectPlan.models
+      if (model.derivedFrom != nil)
+        for dFromModel in projectPlan.models
+          if model.derivedFrom.downcase == dFromModel.name.downcase
+            DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.derivedFor)
           end
         end
       end

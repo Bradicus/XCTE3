@@ -16,8 +16,11 @@ class DerivedClassGenerator
     editCls.xmlElement = cls.xmlElement
     editCls.genCfg = cls.genCfg
     editCls.path = cls.path
+    editCls.uses = cls.uses
+    editCls.includes = cls.includes
     editCls.namespace = cls.namespace
     editCls.interfaceNamespace = cls.interfaceNamespace
+    editCls.functions = cls.functions
 
     return editCls
   end
@@ -34,6 +37,7 @@ class DerivedClassGenerator
           selectVar.utype = selectIdVar.utype
           selectVar.vtype = selectIdVar.vtype
           selectVar.name = var.name + " id"
+          selectVar.selectFrom = var.selectFrom
 
           editGroup.vars.push(selectVar)
         else

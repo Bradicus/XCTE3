@@ -25,6 +25,12 @@ module DataProcessing
       depthStack = Array.new
       model.name = xmlDoc.root.attributes["name"]
       model.xmlElement = xmlDoc.root
+
+      xmlDoc.root.elements.each("derived") { |derived|
+        model.derivedFrom = AttributeUtil.loadAttribute(derived, "from", pComponent)
+        model.derivedFor = AttributeUtil.loadAttribute(derived, "for", pComponent)
+      }
+
       xmlDoc.root.elements.each("description") { |desc|
         model.description = desc.text
       }

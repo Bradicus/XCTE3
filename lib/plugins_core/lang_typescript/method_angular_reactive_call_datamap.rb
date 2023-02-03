@@ -18,11 +18,13 @@ module XCTETypescript
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       populateServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_map_service")
 
-      bld.startFunction("populate(): void")
-      bld.add("this." + Utils.instance.getStyledVariableName(populateServiceVar) +
-              ".populate(this." + clsVar + " as FormGroup, this.item);")
+      if clsVar != nil && populateServiceVar != nil
+        bld.startFunction("populate(): void")
+        bld.add("this." + Utils.instance.getStyledVariableName(populateServiceVar) +
+                ".populate(this." + clsVar + " as FormGroup, this.item);")
 
-      bld.endFunction()
+        bld.endFunction()
+      end
     end
   end
 end

@@ -147,7 +147,7 @@ class UtilsBase
     clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
     clsGen = cls.model.findClassModel(plugName)
 
-    if clsPlug != nil
+    if clsPlug != nil && clsGen != nil
       cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(cls))
     end
   end
