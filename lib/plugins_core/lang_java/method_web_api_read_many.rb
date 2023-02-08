@@ -34,9 +34,15 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld, fun)
-      Utils.instance.requires_class_type(cls, "class_jpa_entity")
-      Utils.instance.requires_class_type(cls, "tsql_data_store")
-      Utils.instance.addClassInjection(cls, "tsql_data_store")
+      if (cls.model.derivedFrom != nil)
+        dataClass = Classes.findClass("class_jpa_entity", cls.model.derivedFrom)
+      else
+        dataClass = cls
+      end
+
+      Utils.instance.requires_class_type(dataClass, "class_jpa_entity")
+      Utils.instance.requires_class_type(dataClass, "tsql_data_store")
+      Utils.instance.addClassInjection(dataClass, "tsql_data_store")
       cls.addUse("java.util.*")
     end
 

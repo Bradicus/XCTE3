@@ -1,31 +1,17 @@
-class DerivedClassGenerator
-  def self.getEditClassRepresentation(cls)
-    editModel = CodeStructure::CodeElemModel.new()
-    editModel.name = cls.model.name
-    editModel.description = cls.model.description
-    editModel.classes = cls.model.classes
+class DerivedModelGenerator
+  def self.getEditModelRepresentation(editModel, derivedFrom, derivedFor)
+    editModel.xmlElement = derivedFrom.xmlElement
+    editModel.description = derivedFrom.description
+
     editModel.varGroup = CodeStructure::CodeElemVarGroup.new
     editModel.xmlFileName = ""
 
-    getEditClassRepresentationGrp(cls, cls.model.varGroup, editModel.varGroup)
+    getEditModelRepresentationGrp(derivedFrom.varGroup, editModel.varGroup)
 
-    editCls = CodeStructure::CodeElemClassGen.new(
-      cls.parentElem, editModel, false
-    )
-
-    editCls.xmlElement = cls.xmlElement
-    editCls.genCfg = cls.genCfg
-    editCls.path = cls.path
-    editCls.uses = cls.uses
-    editCls.includes = cls.includes
-    editCls.namespace = cls.namespace
-    editCls.interfaceNamespace = cls.interfaceNamespace
-    editCls.functions = cls.functions
-
-    return editCls
+    return editModel
   end
 
-  def self.getEditClassRepresentationGrp(cls, vGroup, editGroup)
+  def self.getEditModelRepresentationGrp(vGroup, editGroup)
     for var in vGroup.vars
       if (var.selectFrom == nil)
         editGroup.vars.push(var)
@@ -38,6 +24,7 @@ class DerivedClassGenerator
           selectVar.vtype = selectIdVar.vtype
           selectVar.name = var.name + " id"
           selectVar.selectFrom = var.selectFrom
+          selectVar.visibility = var.visibility
 
           editGroup.vars.push(selectVar)
         else
@@ -48,7 +35,7 @@ class DerivedClassGenerator
 
     for grp in vGroup.varGroups
       newEditGroup = CodeStructure::CodeElemVarGroup.new
-      getEditClassRepresentationGrp(cls, grp, newEditGroup)
+      getEditModelRepresentationGrp(grp, newEditGroup)
       editGroup.varGroups.push(newEditGroup)
     end
   end

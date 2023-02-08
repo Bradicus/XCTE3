@@ -14,12 +14,11 @@
 		<var name="zip code"		type="String" maxlen="20" required="true" />
 	</var_group>
 
-	<gen_class type="standard"
-		type-typescript="ts_interface" path-typescript="shared/interfaces"
-		ns-csharp="XCTE.Base.Data.Model" path-csharp="XCTE.Base/Data/Model"
-		type-java="class_jpa_entity"
-		ns-java="com.example.demo.model"
-		path-java="model" ></gen_class>
+	<gen_class type="$DataModelType" path="$DataModelPath" ns="$DataModelNs">
+		<use-csharp name="System.Collections.Generic" />
+		<use-java name='java.time.*' />
+		<use-java name='java.util.*' />
+	</gen_class>
 
 	<gen_class type="class_angular_data_gen_service" path="shared/services" >
 		<function name="method_service_datagen_faker_get" />

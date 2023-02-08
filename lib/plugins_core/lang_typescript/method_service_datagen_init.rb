@@ -15,7 +15,7 @@ module XCTETypescript
     def get_definition(cls, bld)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       clsName = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      clsIntf = Utils.instance.createVarFor(cls, "class_interface")
+      clsIntf = Utils.instance.createVarFor(cls, "ts_interface")
 
       bld.startFunction("initData(item: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")
 

@@ -199,6 +199,11 @@ module XCTEJava
 
     def requires_class_type(cls, ctype)
       ctypeClass = cls.model.findClassByType(ctype)
+
+      if (ctypeClass == nil)
+        puts "unable to find class by type " + ctype
+      end
+
       cls.addUse(ctypeClass.namespace.get(".") + ".*")
     end
 

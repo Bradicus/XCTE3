@@ -71,7 +71,12 @@ class UtilsBase
     plugClass = cls.model.findClassModel(plugName)
     plug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
 
-    if (plugClass == nil || plug == nil)
+    if (plugClass == nil)
+      puts "Class not found for " + plugName
+      return nil
+    end
+    if (plug == nil)
+      puts "Plugin not found for " + plugName
       return nil
     end
 

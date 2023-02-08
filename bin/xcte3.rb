@@ -100,16 +100,20 @@ def processProjectComponentGroup(project, pcGroup)
       end
     end
 
+    derviedModels = Array.new
+
     # Load any derived classes
     for model in projectPlan.models
       if (model.derivedFrom != nil)
         for dFromModel in projectPlan.models
           if model.derivedFrom.downcase == dFromModel.name.downcase
-            DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.derivedFor)
+            derviedModels.push(DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.derivedFor))
           end
         end
       end
     end
+
+    projectPlan.models += derviedModels
 
     for plan in projectPlan.classes
       language = XCTEPlugin::getLanguages()[plan.language]

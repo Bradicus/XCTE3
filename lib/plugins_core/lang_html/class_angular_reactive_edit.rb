@@ -1,5 +1,4 @@
 require "plugins_core/lang_typescript/utils.rb"
-require "derived_class_generator"
 
 ##
 # Class:: ClassAngularReactiveEdit
@@ -19,13 +18,11 @@ module XCTEHtml
     def genSourceFiles(cls)
       srcFiles = Array.new
 
-      editClass = DerivedClassGenerator.getEditClassRepresentation(cls)
-
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(editClass.getUName() + " view.component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view.component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, bld)
-      genFileContent(editClass, bld)
+      genFileContent(cls, bld)
 
       srcFiles << bld
 
