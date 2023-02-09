@@ -34,7 +34,7 @@ class XCTEClassBase < XCTEPlugin
 
   def hasList(cls)
     eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-      if (var.listType != nil)
+      if (var.isList())
         return true
       end
     }))

@@ -17,6 +17,7 @@ require "code_elem.rb"
 require "code_elem_parent.rb"
 require "lang_file.rb"
 require "x_c_t_e_plugin.rb"
+require "log"
 
 module XCTECpp
   class ClassStandard < ClassBase
@@ -282,7 +283,7 @@ module XCTECpp
           if fun.isTemplate
             templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
 
-            puts "processing template for function " + fun.name
+            Log.debug("processing template for function " + fun.name)
             if templ != nil
               if (!fun.isInline)
                 templ.get_definition(cls, bld, fun)

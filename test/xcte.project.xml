@@ -21,6 +21,7 @@
       <build_var name="DataModelNs" value="com.example.demo.model" />
       <build_var name="DataModelType" value="class_jpa_entity" />
       <build_var name="DataModelPath" value="model" />
+      <build_var name="DtoModelPath" value="dto" />
     </build_vars>
   </generate>
   <generate language="tsql" tpl_path="templates" dest="./SqlScripts" />

@@ -15,6 +15,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 require "pathname"
 require "find"
 require "fileutils"
+require "log"
 
 require "data_processing/project_loader"
 require "data_processing/model_loader"
@@ -44,15 +45,16 @@ def processProjectComponentGroup(project, pcGroup)
 
   # preload an extra set of data models, so they can be referenced if needed
   for pComponent in pcGroup.components
-    #puts "Processing component: " + pComponent.tplPath
+    Log.info("Processing component with language: " + pComponent.language)
     projectPlan = ProjectPlan.new
     ProjectPlans.instance.plans[pComponent.language] = projectPlan
     Classes.reset()
 
-    puts "Processing component path: " + pComponent.tplPath
+    Log.debug("Processing component path: " + pComponent.tplPath)
+
     Find.find(currentDir + "/" + pComponent.tplPath) do |path|
       if isModelFile(path)
-        puts "Processing model: " + path
+        Log.debug("Processing model: " + path)
 
         basepn = Pathname.new(currentDir + "/" + pComponent.tplPath)
         pn = Pathname.new(path)
@@ -63,7 +65,7 @@ def processProjectComponentGroup(project, pcGroup)
         language = XCTEPlugin::getLanguages()[pComponent.language]
 
         if (language == nil)
-          puts "No language found for: " + pComponent.language
+          Log.debug("No language found for: " + pComponent.language)
         end
 
         projectPlan.models << dataModel
@@ -118,8 +120,8 @@ def processProjectComponentGroup(project, pcGroup)
     for plan in projectPlan.classes
       language = XCTEPlugin::getLanguages()[plan.language]
 
-      puts "generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language +
-             "  namespace: " + plan.namespace.get(".")
+      Log.debug("generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language +
+                "  namespace: " + plan.namespace.get("."))
 
       #project.singleFile = "map gen settings"
 
@@ -156,10 +158,10 @@ def processProjectComponentGroup(project, pcGroup)
         end
 
         if (overwriteFile)
-          puts "writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension)
+          Log.debug("writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension))
           if !File.directory?(plan.filePath)
             FileUtils.mkdir_p(plan.filePath)
-            #   puts "Creating folder: " + newPath
+            #   Log.debug("Creating folder: " + newPath
           end
           sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
           sFile << srcFile.getContents
@@ -251,7 +253,7 @@ LangProfiles.instance.load(prj)
 currentDir = Dir.pwd
 
 if (!FileTest.file?(currentDir + "/xcte.project.xml"))
-  puts "Unable to find project config file " + currentDir + "/xcte.project.xml"
+  Log.debug("Unable to find project config file " + currentDir + "/xcte.project.xml")
   exit 0
 end
 

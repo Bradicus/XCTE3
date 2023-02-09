@@ -7,6 +7,7 @@
 
 require "lang_profile.rb"
 require "params/process_dependencies_params"
+require "log"
 
 class UtilsBase
   attr_accessor :langProfile
@@ -15,7 +16,7 @@ class UtilsBase
     @langProfile = LangProfiles.instance.profiles[langName]
 
     if (@langProfile == nil)
-      puts("Profile " + langName + " not found")
+      Log.debug("Profile " + langName + " not found")
     end
   end
 
@@ -72,11 +73,11 @@ class UtilsBase
     plug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
 
     if (plugClass == nil)
-      puts "Class not found for " + plugName
+      Log.debug("Class not found for " + plugName)
       return nil
     end
     if (plug == nil)
-      puts "Plugin not found for " + plugName
+      Log.debug("Plugin not found for " + plugName)
       return nil
     end
 

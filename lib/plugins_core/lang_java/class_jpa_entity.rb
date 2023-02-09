@@ -33,7 +33,7 @@ module XCTEJava
     def genSourceFiles(cls)
       srcFiles = Array.new
 
-      bld = SourceRendererCSharp.new
+      bld = SourceRendererJava.new
       bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
       bld.lfExtension = Utils.instance.getExtension("body")
 

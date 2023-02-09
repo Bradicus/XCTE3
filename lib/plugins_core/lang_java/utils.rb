@@ -9,6 +9,7 @@
 
 require "lang_profile.rb"
 require "utils_base"
+require "log"
 
 module XCTEJava
   class Utils < UtilsBase
@@ -201,20 +202,24 @@ module XCTEJava
       ctypeClass = cls.model.findClassByType(ctype)
 
       if (ctypeClass == nil)
-        puts "unable to find class by type " + ctype
+        Log.error("unable to find class by type " + ctype)
+      else
+        cls.addUse(ctypeClass.namespace.get(".") + ".*")
       end
-
-      cls.addUse(ctypeClass.namespace.get(".") + ".*")
     end
 
     def addClassInjection(cls, ctype)
       varClass = cls.model.findClassByType(ctype)
-      var = createVarFor(varClass, ctype)
-      var.visibility = "private"
+      if varClass != nil
+        var = createVarFor(varClass, ctype)
+        var.visibility = "private"
 
-      if varClass != nil && var != nil
-        cls.addInjection(var)
-        requires_var(cls, varClass, ctype)
+        if var != nil
+          cls.addInjection(var)
+          requires_var(cls, varClass, ctype)
+        end
+      else
+        Log.error("Unable to find class type " + ctype + " for model " + cls.model.name)
       end
     end
   end
