@@ -52,7 +52,7 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, "class_jpa_entity")
+      Utils.instance.requires_class_type(cls, cls, "standard")
       cls.addUse("org.springframework.web.bind.annotation.*")
       cls.addUse("org.springframework.beans.factory.annotation.Autowired")
       super

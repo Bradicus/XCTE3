@@ -34,16 +34,20 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld, fun)
-      Utils.instance.requires_class_type(cls, "class_jpa_entity")
-      Utils.instance.requires_class_type(cls, "tsql_data_store")
+      dataClass = Utils.instance.get_data_class(cls)
+
+      Utils.instance.requires_class_type(cls, dataClass, "class_jpa_entity")
+      Utils.instance.requires_class_type(cls, dataClass, "tsql_data_store")
+      Utils.instance.add_class_injection(cls, dataClass, "tsql_data_store")
+
       cls.addUse("org.springframework.http.*")
-      Utils.instance.addClassInjection(cls, "tsql_data_store")
     end
 
     def get_body(cls, bld, fun)
       conDef = String.new
+      dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(cls.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
+        CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
       className = Utils.instance.getStyledClassName(cls.getUName())
 
       params = Array.new

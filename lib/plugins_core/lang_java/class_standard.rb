@@ -54,7 +54,7 @@ module XCTEJava
       # Generate class variables
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !isPrimitive(var)
-          Utils.instance.requires_var(cls, var, "standard")
+          Utils.instance.requires_var(cls, var)
         end
       }))
 

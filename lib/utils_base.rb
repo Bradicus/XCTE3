@@ -53,6 +53,11 @@ class UtilsBase
     return CodeNameStyling.getStyled(className, @langProfile.classNameStyle)
   end
 
+  # Returns the version of this class name styled for this language
+  def getStyledNamespaceName(nsName)
+    return CodeNameStyling.getStyled(nsName, @langProfile.classNameStyle)
+  end
+
   def getStyledEnumName(enumName)
     return CodeNameStyling.getStyled(enumName, @langProfile.enumNameStyle)
   end

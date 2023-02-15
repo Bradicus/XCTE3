@@ -118,7 +118,7 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
-          optCls = Classes.findClass("ts_interface", var.selectFrom)
+          optCls = Classes.findClass(var.selectFrom, "ts_interface")
           dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
           Utils.instance.addParamIfAvailable(constructorParams, dataStoreOptServiceVar)
         end
@@ -159,7 +159,7 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
-          optCls = Classes.findClass("ts_interface", var.selectFrom)
+          optCls = Classes.findClass(var.selectFrom, "ts_interface")
           dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
           bld.add("this." + Utils.instance.getStyledVariableName(optVar) + " = this." + Utils.instance.getStyledVariableName(dataStoreOptServiceVar) + ".listing();")
         end

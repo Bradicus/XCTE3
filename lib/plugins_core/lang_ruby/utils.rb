@@ -52,6 +52,15 @@ module XCTERuby
         vDec << " = Array.new(" << getSizeConst(var) << ")"
       end
 
+      if (var.defaultValue != nil)
+        vDec << " = "
+        if var.vtype == "String"
+          vDec << "\"" << var.defaultValue << "\";"
+        else
+          vDec << var.defaultValue << ";"
+        end
+      end
+
       if var.comment != nil
         vDec << "\t# " << var.comment
       end
@@ -73,6 +82,33 @@ module XCTERuby
     # not the comment atribute of a variable
     def getComment(var)
       return "# " << var.text << " \n"
+    end
+
+    # Get type for a class
+    def getClassTypeName(cls)
+      nsPrefix = ""
+      if cls.namespace.hasItems?()
+        nsPrefix = cls.namespace.get("::") + "::"
+      end
+
+      baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
+      baseTypeName = nsPrefix + baseTypeName
+
+      return baseTypeName
+    end
+
+    def render_block_comment(str, bld)
+      firstLine = true
+
+      if str != nil && str.strip().length > 0
+        bld.add "##"
+        str.each_line do |line|
+          if (!firstLine || line.strip().length > 0)
+            bld.add("# " + line.delete("\n"))
+            firstLine = false
+          end
+        end
+      end
     end
   end
 end

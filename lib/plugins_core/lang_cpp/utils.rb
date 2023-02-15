@@ -231,7 +231,7 @@ module XCTECpp
 
       cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.getUName())
 
-      if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
+      if (cls.standardClass != nil && cls.standardClass.plugName != "enum")
         cls.addInclude(cls.standardClass.namespace.get("/"), Utils.instance.getStyledClassName(cls.getUName()))
       end
 

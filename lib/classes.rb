@@ -9,10 +9,11 @@ class Classes
     @@list = Array.new
   end
 
-  def self.findClass(classType, classPlugName)
+  def self.findClass(className, classPlugName)
     for c in @@list
-      #puts c.ctype + " " + c.model.name
-      if (c.ctype == classType && nameMatches(c.model.name, classPlugName))
+      # puts c.plugName + " " + classPlugName
+      # puts c.model.name + " " + className
+      if (c.plugName == classPlugName && nameMatches(c.model.name, className))
         return c
       end
     end
@@ -27,9 +28,9 @@ class Classes
         #puts c.model.name + " " + var.getUType()
         if (nameMatches(c.model.name, var.getUType()))
           # puts c.model.name + " " + var.getUType()
-          # puts c.ctype + " " + plugName
+          # puts c.plugName + " " + plugName
           if (nameMatches(c.model.name, var.getUType()) &&
-              (plugName == nil || nameMatches(c.ctype, plugName)))
+              (plugName == nil || nameMatches(c.plugName, plugName)))
             if (c.namespace.same?(var.namespace))
               return c
             end
@@ -48,7 +49,7 @@ class Classes
   def self.findClassFunction(classPlugName, funPlugName)
     cs = @@list # for debugging
     for c in @@list
-      if (c.ctype == classPlugName)
+      if (c.plugName == classPlugName)
         for fun in c.functions
           if fun.name == funPlugName
             return fun

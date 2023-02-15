@@ -54,9 +54,9 @@ module XCTETypescript
       end
 
       for otherCls in cls.model.classes
-        if (otherCls.ctype.start_with?("class_angular_reactive_edit") ||
-            otherCls.ctype.start_with?("class_angular_listing"))
-          plug = XCTEPlugin::findClassPlugin("typescript", otherCls.ctype)
+        if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
+            otherCls.plugName.start_with?("class_angular_listing"))
+          plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
           cls.addInclude(otherCls.path + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
         end
       end
@@ -79,7 +79,7 @@ module XCTETypescript
     def genFileContent(cls, bld)
       # bld.add("const routes: Routes = [")
       # for otherCls in cls.model.classes
-      #   if otherCls.ctype.start_with? "class_angular_reactive_edit"
+      #   if otherCls.plugName.start_with? "class_angular_reactive_edit"
       #     viewPath = getStyledFileName(otherCls.model.name + "/view")
       #     editPath = getStyledFileName(otherCls.model.name + "/edit")
 
@@ -88,7 +88,7 @@ module XCTETypescript
       #     #compName = getClassName(cls)
       #     bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
       #     bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
-      #   elsif otherCls.ctype == "class_angular_listing"
+      #   elsif otherCls.plugName == "class_angular_listing"
       #     listPath = getStyledFileName(otherCls.model.name + "/listing")
       #     plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
       #     compName = plug.getClassName(otherCls)
@@ -114,7 +114,7 @@ module XCTETypescript
       importList = ["CommonModule", "RouterModule"]
 
       for otherCls in cls.model.classes
-        if otherCls.ctype.start_with? "class_angular_reactive_edit"
+        if otherCls.plugName.start_with? "class_angular_reactive_edit"
           importList.push("ReactiveFormsModule")
         end
       end

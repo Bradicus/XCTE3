@@ -3,7 +3,7 @@
   <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app">
     <xdep name="angular" version="14"  />
     <build_vars>
-      <build_var name="DataModelType" value="ts_interface" />
+      <build_var name="DataModelPlugin" value="ts_interface" />
       <build_var name="DataModelPath" value="shared/interfaces" />
       <build_var name="ServicesPath" value="shared/services" />
     </build_vars>
@@ -19,7 +19,8 @@
       <build_var name="ControllerNs" value="com.example.demo.api" />
       <build_var name="ControllerPath" value="api" />
       <build_var name="DataModelNs" value="com.example.demo.model" />
-      <build_var name="DataModelType" value="class_jpa_entity" />
+      <build_var name="DtoModelNs" value="com.example.demo.dto" />
+      <build_var name="DataModelPlugin" value="class_jpa_entity" />
       <build_var name="DataModelPath" value="model" />
       <build_var name="DtoModelPath" value="dto" />
     </build_vars>

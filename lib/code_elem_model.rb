@@ -44,7 +44,7 @@ module CodeStructure
     #
     def findClassByType(classType)
       for cls in @classes
-        if cls.ctype == classType
+        if cls.plugName == classType
           return cls
         end
       end
@@ -147,7 +147,7 @@ module CodeStructure
     # Find class
     def findClassModel(classPlugName)
       for c in @classes
-        if (c.ctype == classPlugName)
+        if (c.plugName == classPlugName)
           return c
         end
       end

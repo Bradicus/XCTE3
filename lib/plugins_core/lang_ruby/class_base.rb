@@ -7,21 +7,20 @@ module XCTERuby
     def get_default_utils
       return Utils.instance
     end
-    
+
     def render_namespace_starts(cls, bld)
       for ns in cls.namespace.nsList
+        styledNs = get_default_utils().getStyledNamespaceName(ns)
         bld.startBlock("module " + ns)
       end
     end
 
-    def renderGlobalComment(bld)
-      bld.add("##")
+    def renderGlobalComment(pComponent, bld)
+      get_default_utils().render_block_comment(pComponent.headerComment, bld)
 
-      for line in UserSettings.instance.codeLicense.split /[\r\n]+/
-        if line.strip.length > 0
-          bld.add("# " + line)
-        end
-      end
+      bld.separate
+
+      #bld.add("##")
     end
 
     def render_namespace_ends(cls, bld)

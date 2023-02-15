@@ -7,7 +7,7 @@ class Log
 
   def initialize
     @logger = Logger.new(STDOUT)
-    #@logger.level = Logger::INFO
+    @logger.level = Logger::INFO
   end
 
   def self.info(msg)

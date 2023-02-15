@@ -73,7 +73,7 @@ module XCTECpp
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
           curVarClass = Classes.findVarClass(var)
-          isEnum = curVarClass != nil && curVarClass.ctype == "enum"
+          isEnum = curVarClass != nil && curVarClass.plugName == "enum"
 
           if (Utils.instance.isPrimitive(var) || isEnum)
             if !var.isList()

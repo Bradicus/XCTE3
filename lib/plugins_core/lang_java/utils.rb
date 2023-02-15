@@ -10,6 +10,7 @@
 require "lang_profile.rb"
 require "utils_base"
 require "log"
+require "ref_finder"
 
 module XCTEJava
   class Utils < UtilsBase
@@ -186,40 +187,85 @@ module XCTEJava
       return CodeNameStyling.getStyled(name, "DASH_LOWER")
     end
 
-    def requires_var(cls, var, ctype)
-      varClass = cls.model.findClassByType(ctype)
-      requires_other_class_type(cls, varClass, ctype)
-    end
+    def process_var_dependencies(cls, bld, vGroup)
+      for var in vGroup.vars
+        if var.elementId == CodeElem::ELEM_VARIABLE
+          if !isPrimitive(var)
+            varCls = Classes.findVarClass(var)
+            fPath = getStyledFileName(var.getUType() + "")
+            cls.addInclude(varCls.path + "/" + fPath + ".module", getStyledClassName(var.getUType() + " module"))
+          end
+        end
+      end
 
-    def requires_other_class_type(cls, otherCls, ctype)
-      ctypeClass = cls.model.findClassByType(ctype)
-      if !cls.namespace.same?(ctypeClass.namespace)
-        cls.addUse(ctypeClass.namespace.get(".") + ".*")
+      for grp in vGroup.varGroups
+        process_var_dependencies(cls, bld, grp)
       end
     end
 
-    def requires_class_type(cls, ctype)
-      ctypeClass = cls.model.findClassByType(ctype)
+    def requires_var(cls, var)
+      #varClass = Classes.findVarClass(var)
+      varClassAndPlug = RefFinder.find_class_by_type(cls.genCfg.language, var.getUType())
+      #requires_other_class_type(cls, varClass, varClass.plug.name)
 
-      if (ctypeClass == nil)
-        Log.error("unable to find class by type " + ctype)
+      if varClassAndPlug != nil && !cls.namespace.same?(varClassAndPlug.cls.namespace)
+        cls.addUse(varClassAndPlug.cls.namespace.get(".") + ".*")
+      end
+    end
+
+    def requires_other_class_type(cls, otherCls, plugName)
+      plugNameClass = cls.model.findClassByType(plugName)
+      if !cls.namespace.same?(plugNameClass.namespace)
+        cls.addUse(plugNameClass.namespace.get(".") + ".*")
+      end
+    end
+
+    def requires_class_type(cls, fromCls, plugName)
+      plugNameClass = fromCls.model.findClassByType(plugName)
+
+      if (plugNameClass == nil)
+        Log.error("unable to find class by type " + plugName)
       else
-        cls.addUse(ctypeClass.namespace.get(".") + ".*")
+        cls.addUse(plugNameClass.namespace.get(".") + ".*")
       end
     end
 
-    def addClassInjection(cls, ctype)
-      varClass = cls.model.findClassByType(ctype)
+    def requires_class_ref(cls, classRef)
+      plugNameClass = Classes.findClass(classRef.className, classRef.pluginName)
+
+      if (plugNameClass == nil)
+        Log.error("unable to find class by type " + classRef.pluginName)
+      else
+        cls.addUse(plugNameClass.namespace.get(".") + ".*")
+      end
+    end
+
+    def get_data_class(cls)
+      if (cls.model.derivedFrom != nil)
+        derived = Classes.findClass(cls.model.derivedFrom, "class_jpa_entity")
+
+        if (derived != nil)
+          return derived
+        else
+          Log.error("Derived class not found for class " + cls.model.derivedFrom + "  plugin: class_jpa_entity")
+        end
+      end
+
+      return cls
+    end
+
+    def add_class_injection(toCls, fromCls, plugName)
+      varClass = fromCls.model.findClassByType(plugName)
       if varClass != nil
-        var = createVarFor(varClass, ctype)
+        var = createVarFor(varClass, plugName)
         var.visibility = "private"
 
         if var != nil
-          cls.addInjection(var)
-          requires_var(cls, varClass, ctype)
+          toCls.addInjection(var)
+          requires_var(toCls, var)
         end
       else
-        Log.error("Unable to find class type " + ctype + " for model " + cls.model.name)
+        Log.error("Unable to find class type " + plugName + " for model " + cls.model.name)
       end
     end
   end

@@ -253,7 +253,7 @@ module XCTETypescript
 
     def addClassnamesFor(clsList, cls, language, classType)
       for otherCls in cls.model.classes
-        if otherCls.ctype == classType
+        if otherCls.plugName == classType
           plug = XCTEPlugin::findClassPlugin(language, classType)
           clsList.push(plug.getClassName(otherCls))
         end

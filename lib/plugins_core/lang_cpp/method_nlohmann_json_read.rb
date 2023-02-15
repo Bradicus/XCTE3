@@ -79,7 +79,7 @@ module XCTECpp
       bld.startBlock("if (json.is_null() == false)")
 
       for bc in cls.standardClass.baseClasses
-        bClass = Classes.findClass("standard", bc.name)
+        bClass = Classes.findClass(bc.name, "standard")
         bld.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::read(json, item);")
       end
 
@@ -90,7 +90,7 @@ module XCTECpp
           curVarType = Utils.instance.getTypeName(var)
           curVarClass = Classes.findVarClass(var)
 
-          isEnum = curVarClass != nil && curVarClass.ctype == "enum"
+          isEnum = curVarClass != nil && curVarClass.plugName == "enum"
 
           if (Utils.instance.isPrimitive(var) || isEnum)
             if !var.isList()

@@ -78,7 +78,7 @@ def processProjectComponentGroup(project, pcGroup)
             language = XCTEPlugin::getLanguages()[pComponent.language]
           end
 
-          if language.has_key?(cls.ctype)
+          if language.has_key?(cls.plugName)
             if cls.path != nil
               newPath = pComponent.dest + "/" + cls.path
             else
@@ -87,7 +87,7 @@ def processProjectComponentGroup(project, pcGroup)
 
             lClass = cls.clone()
             lClass.filePath = newPath
-            lClass.name = language[lClass.ctype].getClassName(lClass)
+            lClass.name = language[lClass.plugName].getClassName(lClass)
             lClass.genCfg = pComponent
 
             if (lClass.language == nil)
@@ -109,24 +109,26 @@ def processProjectComponentGroup(project, pcGroup)
       if (model.derivedFrom != nil)
         for dFromModel in projectPlan.models
           if model.derivedFrom.downcase == dFromModel.name.downcase
-            derviedModels.push(DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.derivedFor))
+            #derviedModels.push(
+            DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.derivedFor)
+            #)
           end
         end
       end
     end
 
-    projectPlan.models += derviedModels
+    #    projectPlan.models += derviedModels
 
     for plan in projectPlan.classes
       language = XCTEPlugin::getLanguages()[plan.language]
 
-      Log.debug("generating model " + plan.model.name + " class " + plan.ctype + " language: " + plan.language +
+      Log.debug("generating model " + plan.model.name + " class " + plan.plugName + " language: " + plan.language +
                 "  namespace: " + plan.namespace.get("."))
 
       #project.singleFile = "map gen settings"
 
       if (project.singleFile == nil || project.singleFile == plan.model.name)
-        srcFiles = language[plan.ctype].genSourceFiles(plan)
+        srcFiles = language[plan.plugName].genSourceFiles(plan)
 
         for srcFile in srcFiles
           foundStart = false

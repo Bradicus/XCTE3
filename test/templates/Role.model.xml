@@ -10,7 +10,7 @@
 		<var name="description" type="String" />
 	</var_group>
 
-	<gen_class type="$DataModelType" path="$DataModelPath" ns="$DataModelNs">
+	<gen_class type="$DataModelPlugin" path="$DataModelPath" ns="$DataModelNs">
 		<use-csharp name="System.Collections.Generic" />
 		<use-java name='java.time.*' />
 		<use-java name='java.util.*' />

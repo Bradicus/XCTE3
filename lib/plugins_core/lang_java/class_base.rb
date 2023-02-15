@@ -13,6 +13,11 @@ module XCTEJava
       for fun in cls.functions
         process_fuction_dependencies(cls, bld, fun)
       end
+
+      if (cls.dataClass != nil)
+        Utils.instance.requires_class_ref(cls, cls.dataClass)
+        #  Utils.instance.requires_class_type(cls, cls.dataClass, "standard")
+      end
     end
 
     def process_fuction_dependencies(cls, bld, fun)

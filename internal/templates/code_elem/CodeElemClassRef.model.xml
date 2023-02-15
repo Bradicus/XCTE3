@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem class ref">
+
+	<description>
+	Code Element - Class Reference
+	</description>
+				
+	<gen_class type="standard" ns="code element">
+	  <base_class name="CodeElem"/>
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" >
+	  <var name="namespaces"	type="CodeElemNamespace"	default="Array.new()" />
+	  <var name="plugName"	type="string"	default="nil" />
+	  <var name="pluginName"	type="string"	default="nil" />
+	</var_group>		
+	
+</model>

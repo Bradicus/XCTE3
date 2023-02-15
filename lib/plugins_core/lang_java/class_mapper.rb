@@ -1,16 +1,16 @@
 ##
-# Class:: ClassTsqlDataStore
+# Class:: ClassMapper
 #
 module XCTEJava
-  class ClassTsqlDataStore < ClassBase
+  class ClassMapper < ClassBase
     def initialize
-      @name = "tsql_data_store"
+      @name = "class_mapper"
       @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " data store"
+      return cls.getUName() + " mapper"
     end
 
     def genSourceFiles(cls)
@@ -34,9 +34,6 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, cls, "class_jpa_entity")
-      cls.addUse("org.springframework.data.jpa.repository.*")
-
       super
     end
 
@@ -64,4 +61,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassTsqlDataStore.new)
+XCTEPlugin::registerPlugin(XCTEJava::ClassMapper.new)

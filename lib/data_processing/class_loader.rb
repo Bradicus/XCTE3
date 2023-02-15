@@ -12,6 +12,7 @@ require "code_elem_build_var.rb"
 require "data_processing/variable_loader"
 require "data_processing/attribute_util"
 require "data_processing/namespace_util"
+require "data_processing/class_ref_loader"
 require "rexml/document"
 
 module DataProcessing
@@ -19,7 +20,7 @@ module DataProcessing
 
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml)
-      genC.ctype = AttributeUtil.loadInheritableAttribute(genCXml, "type", pComponent)
+      genC.plugName = AttributeUtil.loadInheritableAttribute(genCXml, "type", pComponent)
       genC.className = genCXml.attributes["name"]
       genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)
       genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["interface_namespace"])
@@ -38,12 +39,12 @@ module DataProcessing
       #genC.name
 
       genCXml.elements.each("base_class") { |bcXml|
-        baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
+        baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
         baseClass.name = bcXml.attributes["name"]
         baseClass.namespace = NamespaceUtil.loadNamespaces(bcXml, pComponent)
 
         bcXml.elements.each("tpl_param") { |tplXml|
-          tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
+          tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
           tplParam.name = tplXml.attributes["name"]
           baseClass.templateParams << tplParam
         }
@@ -55,8 +56,12 @@ module DataProcessing
         genC.preDefs << pdXml.attributes["name"]
       }
 
+      genCXml.elements.each("data_class") { |dcXml|
+        genC.dataClass = ClassRefLoader.loadClassRef(dcXml, genCXml, pComponent)
+      }
+
       genCXml.elements.each("interface") { |ifXml|
-        intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, false)
+        intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
         intf.name = ifXml.attributes["name"]
         intf.namespace = NamespaceUtil.loadNamespaces(ifXml, pComponent)
         genC.interfaces << intf

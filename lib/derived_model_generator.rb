@@ -23,6 +23,8 @@ class DerivedModelGenerator
           selectVar.utype = selectIdVar.utype
           selectVar.vtype = selectIdVar.vtype
           selectVar.name = var.name + " id"
+          selectVar.genGet = var.genGet
+          selectVar.genSet = var.genSet
           selectVar.selectFrom = var.selectFrom
           selectVar.visibility = var.visibility
 

@@ -21,7 +21,7 @@ module XCTEJava
 
     # Returns declairation string for this class's get method
     def get_definition(var, bld)
-      if var.genGet == true && !var.isPointer && var.storeIn == nil
+      if var.genGet == true && !var.isPointer
         varName = Utils.instance.getStyledVariableName(var)
         bld.add("public " + Utils.instance.getTypeName(var) + " " + Utils.instance.getStyledFunctionName("get " + var.name))
         bld.sameLine("()\t{ return(" + varName + "); }")

@@ -15,13 +15,14 @@ require "code_elem_namespace.rb"
 
 module CodeStructure
   class CodeElemClassGen < CodeElem
-    attr_accessor :functions, :namespace, :ctype, :interfaceNamespace, :interfacePath,
+    attr_accessor :functions, :namespace, :plugName, :interfaceNamespace, :interfacePath,
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
-                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className, :genCfg, :injections
+                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
+                  :genCfg, :injections, :dataClass
     attr_reader :name
 
-    def initialize(parentElem, model, isStatic)
+    def initialize(parentElem, model, pComp, isStatic)
       super(parentElem)
 
       @elementId = CodeElem::ELEM_CLASS_GEN
@@ -43,7 +44,7 @@ module CodeStructure
       @preDefs = Array.new
       @path = ""
       @model = model
-      @genCfg
+      @genCfg = pComp
 
       # Used by per lang instance of class
       @name = nil
@@ -51,6 +52,7 @@ module CodeStructure
       @standardClass = nil
       @standardClassType = nil
       @customCode = nil
+      @dataClass = nil
     end
 
     def addInclude(iPath, iName, iType = nil)

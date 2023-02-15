@@ -86,8 +86,8 @@ module XCTECSharp
       return vDec
     end
 
-    def addClassInclude(cls, ctype)
-      cls.addUse(cls.model.findClassByType(ctype).namespace.get("."))
+    def addClassInclude(cls, plugName)
+      cls.addUse(cls.model.findClassByType(plugName).namespace.get("."))
     end
 
     # Returns a size constant for the specified variable
@@ -316,7 +316,7 @@ module XCTECSharp
 
       cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.getUName())
 
-      if (cls.standardClass != nil && cls.standardClass.ctype != "enum")
+      if (cls.standardClass != nil && cls.standardClass.plugName != "enum")
         cls.addInclude(cls.standardClass.namespace.get("/"), Utils.instance.getStyledClassName(cls.getUName()))
       end
 

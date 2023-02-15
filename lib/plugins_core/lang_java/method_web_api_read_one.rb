@@ -34,21 +34,18 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld, fun)
-      if (cls.model.derivedFrom != nil)
-        dataClass = Classes.findClass("class_jpa_entity", cls.model.derivedFrom)
-      else
-        dataClass = cls
-      end
+      dataClass = Utils.instance.get_data_class(cls)
 
-      Utils.instance.requires_class_type(dataClass, "class_jpa_entity")
-      Utils.instance.requires_class_type(dataClass, "tsql_data_store")
-      Utils.instance.addClassInjection(dataClass, "tsql_data_store")
+      Utils.instance.requires_class_type(cls, dataClass, "class_jpa_entity")
+      Utils.instance.requires_class_type(cls, dataClass, "tsql_data_store")
+      Utils.instance.add_class_injection(cls, dataClass, "tsql_data_store")
     end
 
     def get_body(cls, bld, fun)
       conDef = String.new
+      dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(cls.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
+        CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
 
       params = Array.new
       idVar = cls.model.getIdentityVar()

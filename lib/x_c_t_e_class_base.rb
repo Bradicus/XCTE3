@@ -61,4 +61,10 @@ class XCTEClassBase < XCTEPlugin
       end
     }))
   end
+
+  def render_head_comment(bld, pComponent)
+    utils = get_default_utils()
+
+    utils.render_block_comment()
+  end
 end

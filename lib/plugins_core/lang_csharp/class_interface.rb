@@ -20,7 +20,7 @@ module XCTECSharp
 
     def getClassName(cls)
       if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
-        parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.ctype)
+        parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.plugName)
         return "i " + parentPlug.getUnformattedClassName(cls.parentElem)
       else
         return "i " + cls.getUName()
@@ -31,7 +31,7 @@ module XCTECSharp
       srcFiles = Array.new
 
       if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
-        parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.ctype)
+        parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.plugName)
         cls.setName("i " + parentPlug.getUnformattedClassName(cls.parentElem))
       else
         cls.setName("i " + cls.getUName())

@@ -157,6 +157,10 @@ module DataProcessing
       tNode.tplPath = tNodeXml.attributes["tpl_path"]
       tNode.dest = tNodeXml.attributes["dest"]
 
+      tNodeXml.elements.each("head_comment") { |fwNode|
+        tNode.headerComment = fwNode.text.strip!()
+      }
+
       if tNode.dest == nil
         tNode.dest = "."
       end

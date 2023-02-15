@@ -18,6 +18,7 @@ require "code_elem.rb"
 require "code_elem_parent.rb"
 require "code_elem_model.rb"
 require "lang_file.rb"
+require "log"
 
 module XCTERuby
   class ClassStandard < ClassBase
@@ -46,7 +47,9 @@ module XCTERuby
     end
 
     def genFileComment(cls, bld)
-      renderGlobalComment(bld)
+      renderGlobalComment(cls.genCfg, bld)
+
+      bld.separate
 
       bld.add("#")
 
@@ -70,7 +73,18 @@ module XCTERuby
       bld.separate
 
       render_namespace_starts(cls, bld)
-      bld.startClass("class " << getClassName(cls))
+
+      inheritFrom = ""
+
+      if cls.baseClasses.length > 0
+        inheritFrom = " < " + Utils.instance.getClassTypeName(cls.baseClasses[0])
+      end
+
+      if cls.baseClasses.length > 1
+        Log.error("Ruby doesn't support multiple inheritance")
+      end
+
+      bld.startClass("class " + getClassName(cls) + inheritFrom)
 
       accessors = Accessors.new
       # Do automatic static array size declairations at top of class

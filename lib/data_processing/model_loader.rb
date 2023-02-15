@@ -43,7 +43,7 @@ module DataProcessing
         model.varGroup = newVGroup
       }
       xmlDoc.root.elements.each("gen_class") { |genCXML|
-        cls = CodeStructure::CodeElemClassGen.new(model, model, true)
+        cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
         ClassLoader.loadClass(pComponent, cls, genCXML)
         cls.model = model
         cls.xmlElement = genCXML
@@ -51,12 +51,12 @@ module DataProcessing
         model.classes << cls
 
         if cls.interfaceNamespace.hasItems?()
-          intf = CodeStructure::CodeElemClassGen.new(cls, model, true)
+          intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
           intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interfaceNamespace.get("."))
           intf.path = cls.interfacePath
           intf.functions = cls.functions
           intf.language = cls.language
-          intf.ctype = "interface"
+          intf.plugName = "interface"
           intf.parentElem = cls
           intf.model = model
           Classes.list << intf
@@ -64,11 +64,11 @@ module DataProcessing
         end
 
         if cls.testNamespace.hasItems?()
-          intf = CodeStructure::CodeElemClassGen.new(cls, model, true)
+          intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
           intf.namespace = CodeStructure::CodeElemNamespace.new(cls.testNamespace.get("."))
           intf.path = cls.testPath
           intf.language = cls.language
-          intf.ctype = "test_engine"
+          intf.plugName = "test_engine"
           intf.parentElem = cls
           intf.model = model
           Classes.list << intf
