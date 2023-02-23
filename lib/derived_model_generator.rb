@@ -20,17 +20,20 @@ class DerivedModelGenerator
           selectVar = CodeStructure::CodeElemVariable.new(var.parentElem)
           selectClass = Classes.findVarClass(var)
           selectIdVar = selectClass.model.getIdentityVar()
-          selectVar.utype = selectIdVar.utype
-          selectVar.vtype = selectIdVar.vtype
-          selectVar.name = var.name + " id"
-          selectVar.genGet = var.genGet
-          selectVar.genSet = var.genSet
-          selectVar.selectFrom = var.selectFrom
-          selectVar.visibility = var.visibility
 
-          editGroup.vars.push(selectVar)
-        else
-          editGroup.vars.push(var)
+          if var.modelGroup != nil
+            selectVar.utype = selectIdVar.utype
+            selectVar.vtype = selectIdVar.vtype
+            selectVar.name = var.name + " id"
+            selectVar.genGet = var.genGet
+            selectVar.genSet = var.genSet
+            selectVar.selectFrom = var.selectFrom
+            selectVar.visibility = var.visibility
+
+            editGroup.vars.push(selectVar)
+          else
+            editGroup.vars.push(var)
+          end
         end
       end
     end

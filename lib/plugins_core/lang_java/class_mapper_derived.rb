@@ -4,7 +4,7 @@
 module XCTEJava
   class ClassMapper < ClassBase
     def initialize
-      @name = "class_mapper"
+      @name = "class_mapper_derived"
       @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -44,9 +44,7 @@ module XCTEJava
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
-      bld.startClass("public interface " + getClassName(cls) + " extends JpaRepository<" +
-                     Utils.instance.getStyledClassName(cls.model.name) + ", " +
-                     Utils.instance.getObjTypeName(idVar[0]) + ">")
+      bld.startClass("public class " + getClassName(cls))
 
       bld.separate
       # Generate class variables

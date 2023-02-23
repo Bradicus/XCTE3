@@ -8,10 +8,10 @@
 # This class loads project information form an XML file
 
 require "code_elem_project"
-require "data_processing/project_build_var_loader"
+require "data_loading/project_build_var_loader"
 require "rexml/document"
 
-module DataProcessing
+module DataLoading
   class ProjectLoader
 
     # Load project from a file

@@ -14,61 +14,22 @@
 		<var name="zip code"		type="String" maxlen="20" required="true" />
 	</var_group>
 
-	<gen_class type="$DataModelPlugin" path="$DataModelPath" ns="$DataModelNs">
-		<use-csharp name="System.Collections.Generic" />
-		<use-java name='java.time.*' />
-		<use-java name='java.util.*' />
-	</gen_class>
+	<class_group name="data store">
+	</class_group>
 
-	<gen_class type="class_angular_data_gen_service" path="shared/services" >
-		<function name="method_service_datagen_faker_get" />
-		<function name="method_service_datagen_init" />
-	</gen_class>
+	<derived model_set="admin edit">
+		<class_group name="edit">
+		</class_group>
+	</derived>
 
-	<gen_class type="class_angular_data_store_service" path="shared/services" >
-		<function name="method_angular_service_detail" />
-		<function name="method_angular_service_listing" />
-		<function name="method_angular_service_create" />
-		<function name="method_angular_service_update" />
-	</gen_class>
+	<derived model_set="admin listing">
+		<class_group name="edit">
+		</class_group>
+	</derived>
 
-	<gen_class type="class_angular_data_map_service" path="shared/services" >
-		<function name="method_datamap_model_to_reactive_form" />
-	</gen_class>
+	<gen_class type="class_mapper_derived">
+		<derived_class name="admin edit" plugin="standard" />
+		<data_class name="admin" plugin="$DataModelPlugin" />
+	</gen_class
 
-	<gen_class language="razor" type="razor_edit" namespace="XCTE.Web.View" path="XCTE.Web/View" ></gen_class>
-	<gen_class language="tsql" type="statement_create" namespace="auth" var_prefix = "a "></gen_class>
-
-	<gen_class type="web_api_controller"
-		ns-csharp="XCTE.API.Controllers"
-		path-csharp="XCTE.API/Controllers"
-		ns-java="com.example.demo.api"
-		path-java="api" >
-		<function name="method_web_api_read_one" />
-	</gen_class>
-
-	<gen_class type="tsql_data_store"
-				namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io"
-					ns-java="com.example.demo.data"
-					path-java="data"
-			   interface_namespace="XCTE.Base.Data.Io"
-			   interface_path="XCTE.Base/Data/Io"
-			   test_namespace="Test"
-			   test_path="Test" >
-		<function name="method_tsql_create" interface="true" />
-		<function name="method_tsql_update" interface="true" />
-		<function name="method_tsql_retrieve_all" interface="true" />
-		<function name="method_tsql_retrieve_one_by" interface="true" >
-			<var_ref name="id" />
-		</function>
-		<function name="method_tsql_retrieve_set_by" interface="true" >
-			<var_ref name="city" />
-			<var_ref name="zip code" />
-		</function>
-
-	<!--	<function name="method_tsql_delete" interface="true" />-->
-		<!--<function name="update" interface="true" />
-		<function name="delete" interface="true" />
-		<function name="deleteBy" interface="true" />-->
-	</gen_class>
 </model>

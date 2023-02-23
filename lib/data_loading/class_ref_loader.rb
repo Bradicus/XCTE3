@@ -9,9 +9,9 @@
 
 require "rexml/document"
 require "code_elem_class_ref"
-require "data_processing/attribute_util"
+require "data_loading/attribute_util"
 
-module DataProcessing
+module DataLoading
   class ClassRefLoader
     def self.loadClassRef(xmlNode, parentElem, pComponent)
       cRef = CodeStructure::CodeElemClassRef.new(parentElem, pComponent)

@@ -11,7 +11,7 @@ require "code_elem_project.rb"
 require "code_elem_build_var.rb"
 require "rexml/document"
 
-module DataProcessing
+module DataLoading
   class ProjectBuildVarLoader
 
     # Loads the set of build variables for a generator

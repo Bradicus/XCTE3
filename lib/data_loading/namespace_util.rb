@@ -8,9 +8,9 @@
 # This class loads class information form an XML node
 
 require "rexml/document"
-require "data_processing/attribute_util"
+require "data_loading/attribute_util"
 
-module DataProcessing
+module DataLoading
   class NamespaceUtil
     # Load a list of namespaces on a node
     def self.loadNamespaces(xml, pComponent)

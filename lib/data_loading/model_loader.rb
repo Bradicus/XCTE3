@@ -8,13 +8,13 @@
 # This class loads class information form an XML node
 
 require "code_elem_project.rb"
-require "data_processing/attribute_util"
-require "data_processing/namespace_util"
-require "data_processing/variable_loader"
-require "data_processing/class_loader"
+require "data_loading/attribute_util"
+require "data_loading/namespace_util"
+require "data_loading/variable_loader"
+require "data_loading/class_loader"
 require "rexml/document"
 
-module DataProcessing
+module DataLoading
   class ModelLoader
     def self.loadModelFile(model, fName, pComponent)
       file = File.new(fName)
@@ -29,6 +29,7 @@ module DataProcessing
       xmlDoc.root.elements.each("derived") { |derived|
         model.derivedFrom = AttributeUtil.loadAttribute(derived, "from", pComponent)
         model.derivedFor = AttributeUtil.loadAttribute(derived, "for", pComponent)
+        model.modelSet = AttributeUtil.loadAttribute(derived, "model_set", pComponent)
       }
 
       xmlDoc.root.elements.each("description") { |desc|

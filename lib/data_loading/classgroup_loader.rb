@@ -5,21 +5,21 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class loads class information form an XML node
+# This class loads class group information from an XML node
 
 require "code_elem_project.rb"
 require "code_elem_build_var.rb"
-require "data_processing/variable_loader"
-require "data_processing/attribute_util"
-require "data_processing/namespace_util"
-require "data_processing/class_ref_loader"
+require "data_loading/variable_loader"
+require "data_loading/attribute_util"
+require "data_loading/namespace_util"
+require "data_loading/class_ref_loader"
 require "rexml/document"
 
-module DataProcessing
-  class ClassLoader
+module DataLoading
+  class ClassGroupLoader
 
     # Loads a class from an xml node
-    def self.loadClass(pComponent, genC, genCXml)
+    def self.loadClassGroup(pComponent, genC, genCXml)
       genC.plugName = AttributeUtil.loadInheritableAttribute(genCXml, "type", pComponent)
       genC.className = genCXml.attributes["name"]
       genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)

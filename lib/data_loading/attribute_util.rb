@@ -9,7 +9,7 @@
 
 require "rexml/document"
 
-module DataProcessing
+module DataLoading
   class AttributeUtil
     def self.hasAttribute(xmlNode, attName)
       return xmlNode.attributes.get_attribute(attName) != nil

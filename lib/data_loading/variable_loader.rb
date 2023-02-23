@@ -11,7 +11,7 @@ require "code_elem_variable.rb"
 require "code_elem_build_var.rb"
 require "rexml/document"
 
-module DataProcessing
+module DataLoading
   class VariableLoader
 
     # Loads a variable from an XML variable node
