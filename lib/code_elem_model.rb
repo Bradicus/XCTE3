@@ -22,7 +22,7 @@ require "rexml/document"
 module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :classes, :name, :description,
-                  :case, :varGroup, :xmlFileName, :lastModified, :derivedFrom, :derivedFor
+                  :case, :varGroup, :xmlFileName, :lastModified, :derivedFrom, :derivedFromName, :modelSet, :derivedModels
 
     def initialize
       super()
@@ -34,8 +34,10 @@ module CodeStructure
       @classes = Array.new
       @varGroup = CodeElemVarGroup.new
       @derivedFrom = nil
-      @derivedFor = nil
+      @derivedFromName = nil
+      @derivedModels = Array.new
       @xmlFileName = ""
+      @modelSet = nil
       @lastModified
     end
 

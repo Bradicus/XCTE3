@@ -42,8 +42,36 @@ class Classes
     return nil
   end
 
+  def self.findVarClassByName(model, var)
+    dList = @@list
+    for c in @@list
+      if c.model.name != nil
+        #puts c.model.name + " " + var.getUType()
+        if model.modelSet != nil
+          if (nameMatches(c.model.name, var.getUType() + " " + model.modelSet))
+            if (c.namespace.same?(var.namespace))
+              return c
+            end
+          end
+        else
+          if (nameMatches(c.model.name, var.getUType()))
+            if (c.namespace.same?(var.namespace))
+              return c
+            end
+          end
+        end
+      end
+    end
+
+    return nil
+  end
+
   def self.nameMatches(n1, n2)
-    return n1.tr(" ", "").downcase == n2.tr(" ", "").downcase
+    if (n1 != nil && n2 != nil)
+      return n1.tr(" ", "").downcase == n2.tr(" ", "").downcase
+    end
+
+    return true
   end
 
   def self.findClassFunction(classPlugName, funPlugName)

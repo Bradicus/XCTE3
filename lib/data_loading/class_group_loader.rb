@@ -17,6 +17,13 @@ require "rexml/document"
 
 module DataLoading
   class ClassGroupLoader
+    def self.loadClassGroupFile(classGroup, path, pComponent)
+      file = File.new(path)
+      xmlString = file.read
+      xmlDoc = REXML::Document.new xmlString
+      classGroup.name = xmlDoc.root.attributes["name"]
+      classGroup.xmlElement = xmlDoc.root
+    end
 
     # Loads a class from an xml node
     def self.loadClassGroup(pComponent, genC, genCXml)

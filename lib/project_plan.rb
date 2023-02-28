@@ -2,11 +2,27 @@ require "singleton"
 require "classes"
 
 class ProjectPlan
-  attr_accessor :classes, :models
+  attr_reader :classes, :models
 
   def initialize
     @classes = Array.new
     @models = Array.new
+  end
+
+  def addClass(cls)
+    if (cls == nil)
+      Log.error("attempting to add null class to project plan")
+    else
+      @classes.push(cls)
+    end
+  end
+
+  def addModel(mdl)
+    if (mdl == nil)
+      Log.error("attempting to add null model to project plan")
+    else
+      @models.push(mdl)
+    end
   end
 
   def findClassPlan(unformattedName)

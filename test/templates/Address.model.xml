@@ -17,19 +17,17 @@
 	<class_group name="data store">
 	</class_group>
 
-	<derived model_set="admin edit">
-		<class_group name="edit">
-		</class_group>
-	</derived>
+	<derive model_set="edit">
+		<class_group name="edit" />
+	</derive>
 
-	<derived model_set="admin listing">
-		<class_group name="edit">
-		</class_group>
-	</derived>
+	<derive model_set="listing">
+		<class_group name="listing" />
+	</derive>
 
 	<gen_class type="class_mapper_derived">
 		<derived_class name="admin edit" plugin="standard" />
 		<data_class name="admin" plugin="$DataModelPlugin" />
-	</gen_class
+	</gen_class>
 
 </model>

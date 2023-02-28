@@ -1,4 +1,9 @@
 require "data_processing/process_custom_code"
+require "data_processing/process_project_class_gen"
+require "data_loading/class_group_loader"
+require "code_elem_classgroup"
+require "class_groups"
+require "debug"
 
 module DataProcessing
   class ProcessComponent
@@ -9,9 +14,26 @@ module DataProcessing
       projectPlan = ProjectPlan.new
       ProjectPlans.instance.plans[pComponent.language] = projectPlan
       Classes.reset()
+      ClassGroups.reset()
 
       Log.debug("Processing component path: " + pComponent.tplPath)
 
+      # Load class groups
+      Find.find(currentDir + "/" + pComponent.tplPath) do |path|
+        if isClassgroupFile(path)
+          Log.debug("Processing model: " + path)
+
+          basepn = Pathname.new(currentDir + "/" + pComponent.tplPath)
+          pn = Pathname.new(path)
+
+          classGroup = CodeStructure::CodeElemClassgroup.new(nil)
+          DataLoading::ClassGroupLoader.loadClassGroupFile(classGroup, path, pComponent)
+
+          ClassGroups.add(classGroup)
+        end
+      end
+
+      # Load models
       Find.find(currentDir + "/" + pComponent.tplPath) do |path|
         if isModelFile(path)
           Log.debug("Processing model: " + path)
@@ -28,56 +50,37 @@ module DataProcessing
             Log.debug("No language found for: " + pComponent.language)
           end
 
-          projectPlan.models << dataModel
-
-          for cls in dataModel.classes
-            cls.model = dataModel
-            if (cls.language != nil)
-              language = XCTEPlugin::getLanguages()[cls.language]
-            else
-              language = XCTEPlugin::getLanguages()[pComponent.language]
-            end
-
-            if language.has_key?(cls.plugName)
-              if cls.path != nil
-                newPath = pComponent.dest + "/" + cls.path
-              else
-                newPath = pComponent.dest + "/" + cls.namespace.get("/")
-              end
-
-              lClass = cls.clone()
-              lClass.filePath = newPath
-              lClass.name = language[lClass.plugName].getClassName(lClass)
-              lClass.genCfg = pComponent
-
-              if (lClass.language == nil)
-                lClass.language = pComponent.language
-              end
-
-              if (cls.language == nil || cls.language == pComponent.language)
-                projectPlan.classes << lClass
-              end
-            end
-          end
+          projectPlan.addModel(dataModel)
+          ProcessProjectClassGen.process(dataModel, pComponent, projectPlan)
         end
       end
 
       derviedModels = Array.new
 
-      # Load any derived classes
+      # Load any derived classes defined in their own files
       for model in projectPlan.models
         if (model.derivedFrom != nil)
           for dFromModel in projectPlan.models
             if model.derivedFrom.downcase == dFromModel.name.downcase
               #derviedModels.push(
-              DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.derivedFor)
+              DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.modelSet)
               #)
             end
           end
         end
       end
 
-      #    projectPlan.models += derviedModels
+      # Load any derived classes defined inside the file they are derived from
+      for model in projectPlan.models
+        if (model.derivedModels.length > 0)
+          for dFromModel in model.derivedModels
+            projectPlan.addModel(dFromModel)
+            ProcessProjectClassGen.process(dFromModel, pComponent, projectPlan)
+          end
+        end
+      end
+
+      Debug.logModels(projectPlan.models)
 
       for plan in projectPlan.classes
         language = XCTEPlugin::getLanguages()[plan.language]
@@ -148,7 +151,7 @@ module DataProcessing
       return FileTest.file?(filePath) &&
                filePath.include?(".xml") &&
                !filePath.include?(".svn") &&
-               (filePath.include?(".model.xml") || filePath.include?(".class.xml"))
+               (filePath.include?(".classgroup.xml"))
     end
   end
 end
