@@ -90,7 +90,6 @@ module DataLoading
     def self.loadClassGenNode(model, genCXML, pComponent)
       cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
       ClassLoader.loadClass(pComponent, cls, genCXML)
-      cls.model = model
       cls.xmlElement = genCXML
       Classes.list << cls
       model.classes << cls

@@ -10,24 +10,27 @@
 require "code_elem_variable.rb"
 require "code_elem_build_var.rb"
 require "rexml/document"
+require "data_loading/attribute_loader"
 
 module DataLoading
   class VariableLoader
 
     # Loads a variable from an XML variable node
-    def self.loadVariableNode(varXML, parentElem, pComponent)
+    def self.loadVariableNode(varXML, parentElem, pComp)
       curVar = CodeStructure::CodeElemVariable.new(parentElem)
       curVar.xmlElement = varXML
 
-      curVar.vtype = varXML.attributes["type"]
-      curVar.utype = varXML.attributes["utype"]
-      curVar.visibility = AttributeUtil.loadInheritableAttribute(varXML, "visibility", pComponent, curVar.visibility)
-      curVar.passBy = curVar.attribOrDefault("passby", curVar.passBy)
+      AttributeLoader.setActiveComp(pComp)
+
+      curVar.vtype = AttributeLoader.init().xml(varXML).names("type").get()
+      curVar.utype = AttributeLoader.init().xml(varXML).names("utype").get()
+      curVar.visibility = AttributeLoader.init().xml(varXML).names("visibility").default(curVar.visibility).get()
+      curVar.passBy = AttributeLoader.init().xml(varXML).names("passby").default(curVar.passBy).get()
       if AttributeUtil.hasAttribute(varXML, "set")
-        AttributeUtil.loadTemplateAttribute(curVar, varXML, "set", pComponent)
+        AttributeLoader.init().xml(varXML).names("set").isTplAttrib().get(curVar)
       end
       if AttributeUtil.hasAttribute(varXML, "tpl")
-        AttributeUtil.loadTemplateAttribute(curVar, varXML, "tpl", pComponent)
+        AttributeLoader.init().xml(varXML).names("tpl").isTplAttrib().get(curVar)
       end
       curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
       curVar.isConst = varXML.attributes.get_attribute("const") != nil
@@ -35,7 +38,7 @@ module DataLoading
       #curVar.isPointer = varXML.attributes.get_attribute("pointer") != nil || varXML.attributes.get_attribute("ptr") != nil
       curVar.isSharedPointer = varXML.attributes.get_attribute("sharedptr") != nil
       curVar.init = varXML.attributes["init"]
-      curVar.namespace = NamespaceUtil.loadNamespaces(varXML, pComponent)
+      curVar.namespace = NamespaceUtil.loadNamespaces(varXML, pComp)
       curVar.isVirtual = curVar.findAttributeExists("virtual")
       curVar.nullable = curVar.findAttributeExists("nullable")
       curVar.identity = varXML.attributes["identity"]
@@ -44,18 +47,18 @@ module DataLoading
       curVar.displayName = varXML.attributes["display"]
       curVar.selectFrom = varXML.attributes["select_from"]
       curVar.isOptionsList = (varXML.attributes["options"] == "true")
-      curVar.relation = AttributeUtil.loadAttribute(varXML, "rel", pComponent)
-      curVar.storeIn = AttributeUtil.loadAttribute(varXML, "store_in", pComponent)
+      curVar.relation = AttributeUtil.loadAttribute(varXML, "rel", pComp)
+      curVar.storeIn = AttributeUtil.loadAttribute(varXML, "store_in", pComp)
 
-      curVar.required = AttributeUtil.loadInheritableAttribute(varXML, "required", pComponent, "false") == "true"
-      curVar.readonly = AttributeUtil.loadInheritableAttribute(varXML, "readonly", pComponent, "false") == "true"
+      curVar.required = AttributeUtil.loadInheritableAttribute(varXML, "required", pComp, "false") == "true"
+      curVar.readonly = AttributeUtil.loadInheritableAttribute(varXML, "readonly", pComp, "false") == "true"
 
       if (varXML.attributes.get_attribute("attribs"))
         AttributeUtil.loadAttribNode(curVar, varXML.attributes["attribs"])
       end
 
-      curVar.genGet = AttributeUtil.loadInheritableAttribute(varXML, "genGet", pComponent, curVar.genGet) == "true"
-      curVar.genSet = AttributeUtil.loadInheritableAttribute(varXML, "genSet", pComponent, curVar.genSet) == "true"
+      curVar.genGet = AttributeUtil.loadInheritableAttribute(varXML, "genGet", pComp, curVar.genGet) == "true"
+      curVar.genSet = AttributeUtil.loadInheritableAttribute(varXML, "genSet", pComp, curVar.genSet) == "true"
 
       curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = varXML.attributes["default"]

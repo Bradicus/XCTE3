@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="method load" >
+
+	<description>
+	Method for loading xml data
+	</description>
+				
+	<gen_class type="xcte_method_plugin" ns="XCTERuby" path="XCTERuby" lang="ruby" >
+	</gen_class>	
+	
+</model>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem class gen" >
+
+	<description>
+	Code Element
+	</description>
+
+	<gen_class type="class_data_loader" ns="CodeStructure" >
+		<base_class name="CodeElem" />
+		<function name="method_load" />
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="elementId"		type="String" default="CodeElem::ELEM_CLASS_GEN" />
+		<var name="model"			type="String" default="model" />
+		<var name="path"			type="String" default="" />
+		<var name="genCfg"			type="project component" default="pComp" />		
+		<var name="language"		type="String" default="nil" />
+		<var name="includes"		type="code elem include" set="List" />
+		<var name="uses"			type="code elem use" set="List" />
+		<var name="functions"		type="code elem function" set="List" />
+		<var name="baseClasses"		type="code elem class gen" set="List" />
+		<var name="interfaces"		type="code elem interface" set="List" />
+		<var name="injections"		type="code elem variable" set="List" />
+		<var name="namespace"		type="code elem namespace" default="CodeElemNamespace.new" />
+		<var name="interfaceNamespace"	type="code elem namespace" default="CodeElemNamespace.new" />
+		<var name="testNamespace"	type="code elem namespace" default="CodeElemNamespace.new" />
+		<var name="templateParams"	type="code elem class gen" set="List" />
+		<var name="varPrefix"		type="String" default="" />
+		<var name="preDefs"			type="String" set="List" />
+		<var name="path"			type="String" default="" />
+		<var name="filePath"			type="String" default="" />
+		<var name="standardClass"			type="String" default="" />
+		<var name="standardClassType"			type="String" default="" />
+		<var name="customCode"			type="String" default="" />
+		<var name="dataClass"			type="String" default="" />
+	</var_group>
+
+</model>

@@ -15,8 +15,44 @@ module DataLoading
       return xmlNode.attributes.get_attribute(attName) != nil
     end
 
+    def self.loadAttrib()
+      return AttributeUtil.new()
+    end
+
+    def wXml(xml)
+      @xml = xml
+
+      return self
+    end
+
+    def wModel(model)
+      @model = model
+      return self
+    end
+
+    def wCls(cls)
+      @clsGen = cls
+
+      return self
+    end
+
+    def wVar(var)
+      @var = var
+      return self
+    end
+
+    def wComp(pComp)
+      @pComp = pComp
+      return self
+    end
+
+    def wValue(value)
+      @value = value
+      return self
+    end
+
     # Load an attribute
-    def self.loadAttribute(xml, atrNames, pComponent, default = nil)
+    def self.loadAttribute(xml, atrNames, pComponent, default = nil, model = nil)
       if !atrNames.kind_of?(Array)
         atrNames = Array[atrNames]
       end
@@ -24,11 +60,11 @@ module DataLoading
       for atrName in atrNames
         atr = xml.attributes[atrName + "-" + pComponent.language]
         if atr != nil
-          return processBuildVars(atr, pComponent)
+          return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent).wModel(model))
         end
         atr = xml.attributes[atrName]
         if atr != nil
-          return processBuildVars(atr, pComponent)
+          return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent).wModel(model))
         end
       end
 
@@ -44,11 +80,11 @@ module DataLoading
       for atrName in atrNames
         atr = xml.attributes[atrName + "-" + pComponent.language]
         if atr != nil
-          return processBuildVars(atr, pComponent)
+          return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent))
         end
         atr = xml.attributes[atrName]
         if atr != nil
-          return processBuildVars(atr, pComponent)
+          return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent))
         end
       end
 
@@ -82,17 +118,20 @@ module DataLoading
       end
     end
 
-    def self.processBuildVars(atr, pComponent)
-      newVal = atr
+    def self.processBuildVars(buildVarParams)
+      newVal = buildVarParams.value
 
-      for bv in pComponent.buildVars
+      for bv in buildVarParams.pComp.buildVars
         newVal.gsub!("$" + bv.name, bv.value)
+        newVal.gsub!("{" + bv.name + "}", bv.value)
       end
 
-      # If it's a variable that wasn't defined for this language
-      # return blank
-      if newVal.start_with? "$"
-        return ""
+      if buildVarParams.model != nil
+        newVal.gsub!("{ModelName}", buildVarParams.model.name)
+      end
+
+      if buildVarParams.featureGroup != nil
+        newVal.gsub!("{FeatureGroup}", buildVarParams.featureGroup)
       end
 
       return newVal

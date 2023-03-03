@@ -18,11 +18,11 @@
 	</class_group>
 
 	<derive model_set="edit">
-		<class_group name="edit" />
+		<class_group name="edit" feature_group="address" />
 	</derive>
 
 	<derive model_set="listing">
-		<class_group name="listing" />
+		<class_group name="listing" feature_group="address" />
 	</derive>
 
 	<gen_class type="class_mapper_derived">

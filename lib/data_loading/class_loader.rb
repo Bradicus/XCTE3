@@ -21,22 +21,20 @@ module DataLoading
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml)
       genC.plugName = AttributeUtil.loadInheritableAttribute(genCXml, "type", pComponent)
-      genC.className = genCXml.attributes["name"]
+      genC.className = AttributeUtil.loadAttribute(genCXml, "name", pComponent, nil, genC.model)
       genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)
       genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["interface_namespace"])
       genC.interfacePath = genCXml.attributes["interface_path"]
       genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["test_namespace"])
       genC.testPath = AttributeUtil.loadAttribute(genCXml, "test_path", pComponent)
       genC.language = genCXml.attributes["language"]
-      genC.path = AttributeUtil.loadAttribute(genCXml, "path", pComponent)
+      genC.path = AttributeUtil.loadAttribute(genCXml, "path", pComponent, nil, genC.model)
       genC.varPrefix = AttributeUtil.loadAttribute(genCXml, "var_prefix", pComponent)
 
       # Add base namespace to class namespace lists
       if (pComponent.namespace.nsList.size() > 0)
         genC.namespace.nsList = pComponent.namespace.nsList + genC.namespace.nsList
       end
-
-      #genC.name
 
       genCXml.elements.each("base_class") { |bcXml|
         baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
