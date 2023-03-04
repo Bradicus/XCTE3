@@ -31,6 +31,7 @@ require "types.rb"
 require "run_settings"
 require "project_plans"
 require "project_plan"
+require "active_component"
 require "lang_profiles"
 require "classes"
 
@@ -39,6 +40,7 @@ def processProjectComponentGroup(project, pcGroup)
 
   # preload an extra set of data models, so they can be referenced if needed
   for pComponent in pcGroup.components
+    ActiveComponent.set(pComponent)
     DataProcessing::ProcessComponent.process(project, pComponent, pcGroup)
   end
 end

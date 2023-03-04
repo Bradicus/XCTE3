@@ -20,8 +20,6 @@ module DataLoading
       curVar = CodeStructure::CodeElemVariable.new(parentElem)
       curVar.xmlElement = varXML
 
-      AttributeLoader.setActiveComp(pComp)
-
       curVar.vtype = AttributeLoader.init().xml(varXML).names("type").get()
       curVar.utype = AttributeLoader.init().xml(varXML).names("utype").get()
       curVar.visibility = AttributeLoader.init().xml(varXML).names("visibility").default(curVar.visibility).get()

@@ -19,7 +19,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
-                  :genCfg, :injections, :dataClass
+                  :genCfg, :injections, :dataClass, :featureGroup
     attr_reader :name
 
     def initialize(parentElem, model, pComp, isStatic)
@@ -53,6 +53,7 @@ module CodeStructure
       @standardClassType = nil
       @customCode = nil
       @dataClass = nil
+      @featureGroup = nil
     end
 
     def addInclude(iPath, iName, iType = nil)

@@ -10,6 +10,7 @@
 require "code_elem_project.rb"
 require "code_elem_build_var.rb"
 require "data_loading/variable_loader"
+require "data_loading/attribute_loader"
 require "data_loading/attribute_util"
 require "data_loading/namespace_util"
 require "data_loading/class_ref_loader"
@@ -20,15 +21,18 @@ module DataLoading
 
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml)
-      genC.plugName = AttributeUtil.loadInheritableAttribute(genCXml, "type", pComponent)
-      genC.className = AttributeUtil.loadAttribute(genCXml, "name", pComponent, nil, genC.model)
+      genC.featureGroup = AttributeLoader.init().
+        xml(genCXml).names("feature_group").model(genC.model).default(genC.featureGroup).get()
+
+      genC.plugName = AttributeLoader.init().xml(genCXml).names("type").cls(genC).get()
+      genC.className = AttributeLoader.init().xml(genCXml).names("name").model(genC.model).cls(genC).get()
       genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)
       genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["interface_namespace"])
       genC.interfacePath = genCXml.attributes["interface_path"]
       genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes["test_namespace"])
       genC.testPath = AttributeUtil.loadAttribute(genCXml, "test_path", pComponent)
       genC.language = genCXml.attributes["language"]
-      genC.path = AttributeUtil.loadAttribute(genCXml, "path", pComponent, nil, genC.model)
+      genC.path = AttributeLoader.init().xml(genCXml).names("path").model(genC.model).cls(genC).get()
       genC.varPrefix = AttributeUtil.loadAttribute(genCXml, "var_prefix", pComponent)
 
       # Add base namespace to class namespace lists

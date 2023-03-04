@@ -9,7 +9,7 @@
 
 require "rexml/document"
 require "code_elem_class_ref"
-require "data_loading/attribute_util"
+require "data_loading/attribute_loader"
 
 module DataLoading
   class ClassRefLoader
@@ -17,8 +17,9 @@ module DataLoading
       cRef = CodeStructure::CodeElemClassRef.new(parentElem, pComponent)
 
       cRef.namespaces = NamespaceUtil.loadNamespaces(xmlNode, pComponent)
-      cRef.className = AttributeUtil.loadAttribute(xmlNode, ["cname"], pComponent)
-      cRef.pluginName = AttributeUtil.loadAttribute(xmlNode, ["plug"], pComponent)
+
+      cRef.className = AttributeLoader.init().xml(xmlNode).names("cname").get()
+      cRef.pluginName = AttributeLoader.init().xml(xmlNode).names("plug").get()
 
       return cRef
     end

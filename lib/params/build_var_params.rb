@@ -2,14 +2,13 @@
 #
 
 class BuildVarParams
-  attr_accessor :value, :pComp, :model, :clsGen, :featureGroup
+  attr_accessor :value, :pComp, :model, :clsGen
 
   @value = nil
   @pComp = nil
   @model = nil
   @clsGen = nil
   @xml = nil
-  @featureGroup = nil
 
   def wXml(xml)
     @xml = xml
@@ -35,11 +34,6 @@ class BuildVarParams
 
   def wValue(value)
     @value = value
-    return self
-  end
-
-  def wFeature(featureGroup)
-    @featureGroup = featureGroup
     return self
   end
 end

@@ -25,9 +25,9 @@
 		<class_group name="listing" feature_group="address" />
 	</derive>
 
-	<gen_class type="class_mapper_derived">
+	<gen_class type="class_mapper_derived" path="mapper">
 		<derived_class name="admin edit" plugin="standard" />
-		<data_class name="admin" plugin="$DataModelPlugin" />
+		<data_class name="admin" plugin="{DataModelPlugin}" />
 	</gen_class>
 
 </model>

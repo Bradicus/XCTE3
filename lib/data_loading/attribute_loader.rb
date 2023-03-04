@@ -7,12 +7,11 @@
 
 require "rexml/document"
 require "params/build_var_params"
+require "active_component"
 
 module DataLoading
   class AttributeLoader
     attr_accessor :value, :model, :clsGen
-
-    @@activeComp = nil
 
     @names = Array.new
     @model = nil
@@ -22,10 +21,6 @@ module DataLoading
     @inheritable = false
     @arrayDelim = nil
     @isTemplateAttrib = false
-
-    def self.setActiveComp(pComp)
-      @@activeComp = pComp
-    end
 
     def self.init()
       return AttributeLoader.new
@@ -65,8 +60,8 @@ module DataLoading
       return self
     end
 
-    def cls(cls)
-      @clsGen = cls
+    def cls(clsGen)
+      @clsGen = clsGen
       return self
     end
 
@@ -87,13 +82,13 @@ module DataLoading
     def loadAttrib(xml, var = nil)
       for atrName in @names
         # Check for language specific version of attrib
-        atr = xml.attributes[atrName + "-" + @@activeComp.language]
+        atr = xml.attributes[atrName + "-" + ActiveComponent.get().language]
         if (atr == nil)
           # Check for regular version of attrib
           atr = xml.attributes[atrName]
         end
         if atr != nil
-          value = processBuildVars(BuildVarParams.new().wValue(atr).wComp(@@activeComp).wModel(@model).wCls(@cls))
+          value = processBuildVars(atr)
           if @arrayDelim != nil
             value = value.split(@arrayDelim)
           end
@@ -113,7 +108,7 @@ module DataLoading
       if (@inheritable)
         # Cheeck parent if we didn't find it
         if (xml.parent != nil && xml.parent.name == "var_group")
-          pLoad = loadAttrib(xml.parent)
+          pLoad = loadAttrib(xml.parent, var)
           if (pLoad != nil)
             return pLoad
           end
@@ -127,20 +122,20 @@ module DataLoading
       end
     end
 
-    def processBuildVars(buildVarParams)
-      newVal = buildVarParams.value
+    def processBuildVars(value)
+      newVal = value
 
-      for bv in buildVarParams.pComp.buildVars
-        newVal.gsub!("$" + bv.name, bv.value)
-        newVal.gsub!("{" + bv.name + "}", bv.value)
+      for bv in ActiveComponent.get().buildVars
+        newVal = newVal.gsub("$" + bv.name, bv.value)
+        newVal = newVal.gsub("{" + bv.name + "}", bv.value)
       end
 
-      if buildVarParams.model != nil
-        newVal.gsub!("{ModelName}", buildVarParams.model.name)
+      if @model != nil
+        newVal = newVal.gsub("{ModelName}", @model.name)
       end
 
-      if buildVarParams.featureGroup != nil
-        newVal.gsub!("{FeatureGroup}", buildVarParams.featureGroup)
+      if @clsGen != nil && @clsGen.featureGroup != nil
+        newVal = newVal.gsub("{FeatureGroup}", @clsGen.featureGroup)
       end
 
       return newVal

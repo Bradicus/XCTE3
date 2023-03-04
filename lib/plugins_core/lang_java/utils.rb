@@ -234,7 +234,7 @@ module XCTEJava
       plugNameClass = Classes.findClass(classRef.className, classRef.pluginName)
 
       if (plugNameClass == nil)
-        Log.error("unable to find class by ref ") #+ classRef.pluginName)
+        Log.error("unable to find class by ref ")
       else
         cls.addUse(plugNameClass.namespace.get(".") + ".*")
       end

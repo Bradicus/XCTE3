@@ -10,65 +10,20 @@
 		<var name="description" type="String" />
 	</var_group>
 
-	<gen_class type="$DataModelPlugin" path="$DataModelPath" ns="$DataModelNs">
-		<use-csharp name="System.Collections.Generic" />
-		<use-java name='java.time.*' />
-		<use-java name='java.util.*' />
-	</gen_class>
+		<class_group name="data store">
+		</class_group>
 
-	<gen_class type="class_angular_shared_data_store_service" path-typescript="shared/services">
-	</gen_class>
+		<derive model_set="edit">
+			<class_group name="edit" feature_group="role" />
+		</derive>
 
-	<gen_class type="class_angular_module" path="role"></gen_class>
-	<gen_class type="class_angular_module_routing" path="role"></gen_class>
+		<derive model_set="listing">
+			<class_group name="listing" feature_group="role" />
+		</derive>
 
-	<gen_class type="class_angular_listing" path="role/role-listing"></gen_class>
-	<gen_class type="class_angular_reactive_edit" path="role/role-view">
-		<function name="method_service_datagen_random" />
-		<function name="method_angular_reactive_call_datamap" />
-	</gen_class>
+		<gen_class type="class_mapper_derived" path="mapper">
+			<derived_class name="admin edit" plugin="standard" />
+			<data_class name="admin" plugin="{DataModelPlugin}" />
+		</gen_class>
 
-	<gen_class type="empty_file" name="role view" path="role/role-view"></gen_class>
-	<gen_class type="empty_file" name="role listing" path="role/role-listing"></gen_class>
-
-	<gen_class type="web_api_controller" base_class="ApiController" ns-csharp="XCTE.API.Controllers" path-csharp="XCTE.API/Controllers" ns-java="com.example.demo.api" path-java="api">
-		<function name="method_web_api_read_one" />
-		<function name="method_web_api_read_many" />
-		<function name="method_web_api_write_one" />
-		<function name="method_web_api_update_one" />
-	</gen_class>
-
-	<gen_class type="class_angular_data_store_service" path="shared/services">
-		<function name="method_angular_service_detail" />
-		<function name="method_angular_service_listing" />
-		<function name="method_angular_service_create" />
-		<function name="method_angular_service_update" />
-	</gen_class>
-
-	<gen_class type="class_angular_data_gen_service" path="shared/services">
-		<function name="method_service_datagen_faker_get" />
-		<function name="method_service_datagen_init" />
-	</gen_class>
-
-	<gen_class type="class_angular_data_map_service" path="shared/services">
-		<function name="method_datamap_model_to_reactive_form" />
-	</gen_class>
-
-	<gen_class language="tsql" type="statement_create" namespace="Database"></gen_class>
-
-	<gen_class type="tsql_data_store" namespace-csharp="XCTE.Base.Data.Io" path-csharp="XCTE.Base/Data/Io" ns-java="com.example.demo.data" path-java="data" interface_namespace="XCTE.Base.Data.Io" interface_path="XCTE.Base/Data/Io" test_namespace="Test" test_path="Test">
-		<function name="method_tsql_create" interface="true" />
-		<function name="method_tsql_update" interface="true" />
-		<function name="method_tsql_retrieve_all" interface="true" />
-		<function name="method_tsql_retrieve_one_by" interface="true">
-			<var_ref name="id" />
-		</function>
-
-
-
-		<!--	<function name="method_tsql_delete" interface="true" />-->
-		<!--<function name="update" interface="true" />
-				<function name="delete" interface="true" />
-				<function name="deleteBy" interface="true" />-->
-	</gen_class>
 </model>

@@ -26,17 +26,21 @@ class DerivedModelGenerator
             selectClass = Classes.findVarClass(var)
           end
 
-          selectIdVar = selectClass.model.getIdentityVar()
+          if (selectClass == nil)
+            Log.error("Unable to find edit model for var " + var.name)
+          else
+            selectIdVar = selectClass.model.getIdentityVar()
 
-          selectVar.utype = selectIdVar.utype
-          selectVar.vtype = selectIdVar.vtype
-          selectVar.name = var.name + " id"
-          selectVar.genGet = var.genGet
-          selectVar.genSet = var.genSet
-          selectVar.selectFrom = var.selectFrom
-          selectVar.visibility = var.visibility
+            selectVar.utype = selectIdVar.utype
+            selectVar.vtype = selectIdVar.vtype
+            selectVar.name = var.name + " id"
+            selectVar.genGet = var.genGet
+            selectVar.genSet = var.genSet
+            selectVar.selectFrom = var.selectFrom
+            selectVar.visibility = var.visibility
 
-          editGroup.vars.push(selectVar)
+            editGroup.vars.push(selectVar)
+          end
         end
       end
     end

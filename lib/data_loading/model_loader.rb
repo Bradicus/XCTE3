@@ -47,16 +47,17 @@ module DataLoading
         model.varGroup = newVGroup
       }
       xmlDoc.root.elements.each("gen_class") { |genCXML|
-        loadClassGenNode(model, genCXML, pComponent)
+        loadClassGenNode(model, genCXML, pComponent, nil)
       }
 
       # Load class groups
       xmlDoc.root.elements.each("class_group") { |nodeXml|
         cGroup = ClassGroups.get(nodeXml.attributes["name"])
+        fGroup = nodeXml.attributes["feature_group"]
 
         if cGroup != nil
-          nodeXml.elements.each("gen_class") { |genCXML|
-            loadClassGenNode(model, genCXML, pComponent)
+          cGroup.xmlElement.elements.each("gen_class") { |genCXML|
+            loadClassGenNode(model, genCXML, pComponent, fGroup)
           }
         end
       }
@@ -68,11 +69,12 @@ module DataLoading
 
         deriveXml.elements.each("class_group") { |xmlNode|
           cgName = xmlNode.attributes["name"]
+          fGroup = xmlNode.attributes["feature_group"]
           cg = ClassGroups.get(cgName)
 
           if cg != nil
             cg.xmlElement.elements.each("gen_class") { |genCXML|
-              loadClassGenNode(dm, genCXML, pComponent)
+              loadClassGenNode(dm, genCXML, pComponent, fGroup)
             }
           else
             Log.error("Could not find requested class group " + cgName)
@@ -80,15 +82,16 @@ module DataLoading
         }
 
         deriveXml.elements.each("gen_class") { |genCXML|
-          loadClassGenNode(dm, genCXML, pComponent)
+          loadClassGenNode(dm, genCXML, pComponent, nil)
         }
 
         model.derivedModels.push(dm)
       }
     end
 
-    def self.loadClassGenNode(model, genCXML, pComponent)
+    def self.loadClassGenNode(model, genCXML, pComponent, featureGroup)
       cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
+      cls.featureGroup = featureGroup
       ClassLoader.loadClass(pComponent, cls, genCXML)
       cls.xmlElement = genCXML
       Classes.list << cls

@@ -130,9 +130,9 @@ module DataLoading
         newVal.gsub!("{ModelName}", buildVarParams.model.name)
       end
 
-      if buildVarParams.featureGroup != nil
-        newVal.gsub!("{FeatureGroup}", buildVarParams.featureGroup)
-      end
+      # if buildVarParams.featureGroup != nil
+      #   newVal.gsub!("{FeatureGroup}", buildVarParams.featureGroup)
+      # end
 
       return newVal
     end

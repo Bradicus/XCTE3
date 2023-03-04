@@ -23,7 +23,6 @@ module DataLoading
 
       xmlDoc = REXML::Document.new xmlString
       classGroup.name = xmlDoc.root.attributes["name"]
-      classGroup.featureGroup = xmlDoc.root.attributes["feature_group"]
       classGroup.xmlElement = xmlDoc.root
     end
   end

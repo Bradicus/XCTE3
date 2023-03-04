@@ -6,6 +6,7 @@
       <build_var name="DataModelPlugin" value="ts_interface" />
       <build_var name="DataModelPath" value="shared/interfaces" />
       <build_var name="ServicesPath" value="shared/services" />
+      <build_var name="EditModelPath" value="shared/interfaces" />
     </build_vars>
   </generate>
   <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
@@ -23,6 +24,8 @@
       <build_var name="DataModelPlugin" value="class_jpa_entity" />
       <build_var name="DataModelPath" value="model" />
       <build_var name="DtoModelPath" value="dto" />
+      <build_var name="EditModelPath" value="dto" />
+      <build_var name="EditModelNs" value="com.example.demo.dto" />
     </build_vars>
   </generate>
   <generate language="tsql" tpl_path="templates" dest="./SqlScripts" />
