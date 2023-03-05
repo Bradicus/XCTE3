@@ -12,9 +12,11 @@ class XCTEPlugin
   attr_accessor :pluginRegistry, :languagePlugins, :name, :language, :category, :author
   # @@pluginRegistry = Hash.new
   @@languagePlugins = Hash.new
+  @@modelPlugins = Hash.new
 
   CAT_METHOD = "method"
   CAT_CLASS = "class"
+  CAT_DERIVE = "derive"
   CAT_PROJECT = "project"
 
   def initialize
@@ -30,6 +32,12 @@ class XCTEPlugin
   def self.loadPLugins
     codeRootDir = File.dirname(File.realpath(__FILE__))
     workingDir = Dir.pwd
+
+    Find.find(codeRootDir + "/plugins_core/derive_models") do |path|
+      if path.include?(".rb")
+        require path
+      end
+    end
 
     Dir.foreach(codeRootDir + "/plugins_core") do |langDir|
       next if !langDir.include?("lang_")
@@ -69,6 +77,11 @@ class XCTEPlugin
   # Register a plugin in the plugin repository
   def self.registerPlugin(plug)
     @@languagePlugins[plug.language][plug.name] = plug
+  end
+
+  # Register a plugin in the plugin repository
+  def self.registerModelPlugin(plug)
+    @@modelPlugins[plug.name] = plug
   end
 
   #  # Attempts to find the desired class plugin for the desired language
@@ -127,6 +140,17 @@ class XCTEPlugin
   def self.findProjectPlugin(lang, prjType)
     @@languagePlugins[lang].each do |plugKey, plug|
       if plug.category == "project" && plug.name == prjType
+        return plug
+      end
+    end
+
+    return nil
+  end
+
+  # Attempts to find the desired derived model plugin for the desired language
+  def self.findDerivePlugin(prjType)
+    @@modelPlugins.each do |plugKey, plug|
+      if plug.category == "derive" && plug.name == prjType
         return plug
       end
     end

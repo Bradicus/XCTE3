@@ -17,11 +17,11 @@
 	<class_group name="data store">
 	</class_group>
 
-	<derive model_set="edit">
+	<derive model_set="edit" model_type="derive_edit">
 		<class_group name="edit" feature_group="address" />
 	</derive>
 
-	<derive model_set="listing">
+	<derive model_set="listing" model_type="derive_listing">
 		<class_group name="listing" feature_group="address" />
 	</derive>
 

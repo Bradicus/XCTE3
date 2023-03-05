@@ -20,7 +20,6 @@ require "log"
 require "data_loading/project_loader"
 require "data_loading/model_loader"
 require "data_processing/process_component"
-require "derived_model_generator"
 
 require "code_elem_model.rb"
 require "code_elem_project.rb"

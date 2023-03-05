@@ -65,27 +65,35 @@ module DataLoading
       # Create any derived models
       xmlDoc.root.elements.each("derive") { |deriveXml|
         dm = CodeStructure::CodeElemModel.new
-        DerivedModelGenerator.getEditModelRepresentation(dm, model, deriveXml.attributes["model_set"])
+        modelType = deriveXml.attributes["model_type"]
 
-        deriveXml.elements.each("class_group") { |xmlNode|
-          cgName = xmlNode.attributes["name"]
-          fGroup = xmlNode.attributes["feature_group"]
-          cg = ClassGroups.get(cgName)
+        dPlug = XCTEPlugin::findDerivePlugin(modelType)
 
-          if cg != nil
-            cg.xmlElement.elements.each("gen_class") { |genCXML|
-              loadClassGenNode(dm, genCXML, pComponent, fGroup)
-            }
-          else
-            Log.error("Could not find requested class group " + cgName)
-          end
-        }
+        if dPlug == nil
+          Log.error("Unable to find plugin model type: " + modelType)
+        else
+          dPlug.get(dm, model, deriveXml.attributes["model_set"])
 
-        deriveXml.elements.each("gen_class") { |genCXML|
-          loadClassGenNode(dm, genCXML, pComponent, nil)
-        }
+          deriveXml.elements.each("class_group") { |xmlNode|
+            cgName = xmlNode.attributes["name"]
+            fGroup = xmlNode.attributes["feature_group"]
+            cg = ClassGroups.get(cgName)
 
-        model.derivedModels.push(dm)
+            if cg != nil
+              cg.xmlElement.elements.each("gen_class") { |genCXML|
+                loadClassGenNode(dm, genCXML, pComponent, fGroup)
+              }
+            else
+              Log.error("Could not find requested class group " + cgName)
+            end
+          }
+
+          deriveXml.elements.each("gen_class") { |genCXML|
+            loadClassGenNode(dm, genCXML, pComponent, nil)
+          }
+
+          model.derivedModels.push(dm)
+        end
       }
     end
 
