@@ -12,7 +12,7 @@ module XCTEHtml
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " listing"
+      return cls.getUName()
     end
 
     def genSourceFiles(cls)
