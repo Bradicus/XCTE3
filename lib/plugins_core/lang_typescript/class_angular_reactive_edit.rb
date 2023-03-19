@@ -119,8 +119,18 @@ module XCTETypescript
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
           optCls = Classes.findClass(var.selectFrom, "ts_interface")
-          dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
-          Utils.instance.addParamIfAvailable(constructorParams, dataStoreOptServiceVar)
+          if optVar == nil
+            Log.error("No options var for var: " + var.name)
+          elsif optCls == nil
+            Log.error("No ts_interface class for var: " + var.name)
+          else
+            dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
+            if dataStoreOptServiceVar != nil
+              Utils.instance.addParamIfAvailable(constructorParams, dataStoreOptServiceVar)
+            else
+              Log.error("couldn't find data store service for: " + var.name)
+            end
+          end
         end
       }))
 
@@ -160,8 +170,18 @@ module XCTETypescript
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
           optCls = Classes.findClass(var.selectFrom, "ts_interface")
-          dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
-          bld.add("this." + Utils.instance.getStyledVariableName(optVar) + " = this." + Utils.instance.getStyledVariableName(dataStoreOptServiceVar) + ".listing();")
+          if optVar == nil
+            Log.error("No options var for var: " + var.name)
+          elsif optCls == nil
+            Log.error("No ts_interface class for var: " + var.name)
+          else
+            dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
+            if dataStoreOptServiceVar != nil
+              bld.add("this." + Utils.instance.getStyledVariableName(optVar) + " = this." + Utils.instance.getStyledVariableName(dataStoreOptServiceVar) + ".listing();")
+            else
+              Log.error("No class_angular_data_store_service variable for class: " + var.name)
+            end
+          end
         end
       }))
 

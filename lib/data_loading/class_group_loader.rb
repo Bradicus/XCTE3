@@ -10,7 +10,7 @@
 require "code_elem_project.rb"
 require "code_elem_build_var.rb"
 require "data_loading/variable_loader"
-require "data_loading/attribute_util"
+require "data_loading/attribute_loader"
 require "data_loading/namespace_util"
 require "data_loading/class_ref_loader"
 require "rexml/document"
@@ -22,7 +22,8 @@ module DataLoading
       xmlString = file.read
 
       xmlDoc = REXML::Document.new xmlString
-      classGroup.name = xmlDoc.root.attributes["name"]
+      classGroup.name = AttributeLoader.init(xmlDoc.root).names("name").get()
+      classGroup.cFor = AttributeLoader.init(xmlDoc.root).names("for").get()
       classGroup.xmlElement = xmlDoc.root
     end
   end

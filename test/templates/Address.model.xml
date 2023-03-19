@@ -14,16 +14,12 @@
 		<var name="zip code"		type="String" maxlen="20" required="true" />
 	</var_group>
 
-	<class_group name="data store">
-	</class_group>
+	<class_group_ref name="data store server" />
+	<class_group_ref name="data store client" />
+	<class_group_ref name="edit" feature_group="address" />
 
-	<derive model_set="edit" model_type="derive_edit">
-		<class_group name="edit" feature_group="address" />
-	</derive>
-
-	<derive model_set="listing" model_type="derive_listing">
-		<class_group name="listing" feature_group="address" />
-	</derive>
+	<gen_class type="class_angular_module" path="address" />
+	<gen_class type="class_angular_module_routing" path="address" />
 
 	<gen_class type="class_mapper_derived" path="mapper">
 		<derived_class name="admin edit" plugin="standard" />

@@ -11,7 +11,7 @@ require "active_component"
 
 module DataLoading
   class AttributeLoader
-    attr_accessor :value, :model, :clsGen
+    attr_accessor :value, :model, :clsGen, :xml
 
     @names = Array.new
     @model = nil
@@ -22,12 +22,21 @@ module DataLoading
     @arrayDelim = nil
     @isTemplateAttrib = false
 
-    def self.init()
-      return AttributeLoader.new
+    def self.init(xmlNode = nil)
+      al = AttributeLoader.new
+      if xmlNode != nil
+        al.xml(xmlNode)
+      end
+
+      return al
     end
 
-    def xml(xml)
-      @xml = xml
+    def xml(xmlNode)
+      if xmlNode.is_a?(REXML::Element)
+        @xml = xmlNode
+      else
+        throw "INVALID xml element"
+      end
       return self
     end
 
@@ -131,11 +140,25 @@ module DataLoading
       end
 
       if @model != nil
-        newVal = newVal.gsub("{ModelName}", @model.name)
+        newVal = newVal.gsub("!{ModelName}", @model.name)
       end
 
       if @clsGen != nil && @clsGen.featureGroup != nil
-        newVal = newVal.gsub("{FeatureGroup}", @clsGen.featureGroup)
+        newVal = newVal.gsub("!{FeatureGroup}", @clsGen.featureGroup)
+      else
+        newVal = newVal.gsub("!{FeatureGroup}", "")
+      end
+
+      if @clsGen != nil && @clsGen.for != nil
+        newVal = newVal.gsub("!{ClassGroupFor}", @clsGen.for)
+      else
+        newVal = newVal.gsub("!{ClassGroupFor}", "")
+      end
+
+      if @clsGen != nil && @clsGen.classGroupRef != nil && @clsGen.classGroupRef.name != nil
+        newVal = newVal.gsub("!{ClassGroupName}", @clsGen.classGroupRef.name)
+      else
+        newVal = newVal.gsub("!{ClassGroupName}", "")
       end
 
       return newVal

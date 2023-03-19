@@ -9,9 +9,10 @@
 
 module CodeStructure
   class CodeElemClassgroup < CodeElem
-    attr_accessor :featureGroup
+    attr_accessor :featureGroup, :cFor
 
     @featureGroup = nil
+    @cFor = nil
 
     def initialize(parentElem)
       super(parentElem)

@@ -12,12 +12,16 @@ require "data_loading/attribute_util"
 require "data_loading/namespace_util"
 require "data_loading/variable_loader"
 require "data_loading/class_loader"
+require "data_loading/class_group_ref_loader"
+require "code_elem_class_group_ref"
 require "rexml/document"
 require "class_groups"
+require "utils_base"
 
 module DataLoading
   class ModelLoader
     def self.loadModelFile(model, fName, pComponent)
+      #BUtils = UtilsBase.new(nil)
       file = File.new(fName)
       model.xmlFileName = fName
       model.lastModified = file.mtime
@@ -47,85 +51,43 @@ module DataLoading
         model.varGroup = newVGroup
       }
       xmlDoc.root.elements.each("gen_class") { |genCXML|
-        loadClassGenNode(model, genCXML, pComponent, nil)
+        cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
+        ClassLoader.loadClass(pComponent, cls, genCXML)
       }
 
       # Load class groups
-      xmlDoc.root.elements.each("class_group") { |nodeXml|
+      xmlDoc.root.elements.each("class_group_ref") { |nodeXml|
         cGroup = ClassGroups.get(nodeXml.attributes["name"])
-        fGroup = nodeXml.attributes["feature_group"]
+        cgRef = CodeStructure::CodeElemClassGroupRef.new()
+        ClassGroupRefLoader.loadClassGroupRef(cgRef, nodeXml)
 
         if cGroup != nil
           cGroup.xmlElement.elements.each("gen_class") { |genCXML|
-            loadClassGenNode(model, genCXML, pComponent, fGroup)
+            cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
+            cls.classGroupRef = cgRef
+            ClassLoader.loadClass(pComponent, cls, genCXML)
           }
-        end
-      }
-
-      # Create any derived models
-      xmlDoc.root.elements.each("derive") { |deriveXml|
-        dm = CodeStructure::CodeElemModel.new
-        modelType = deriveXml.attributes["model_type"]
-
-        dPlug = XCTEPlugin::findDerivePlugin(modelType)
-
-        if dPlug == nil
-          Log.error("Unable to find plugin model type: " + modelType)
-        else
-          dPlug.get(dm, model, deriveXml.attributes["model_set"])
-
-          deriveXml.elements.each("class_group") { |xmlNode|
-            cgName = xmlNode.attributes["name"]
-            fGroup = xmlNode.attributes["feature_group"]
-            cg = ClassGroups.get(cgName)
-
-            if cg != nil
-              cg.xmlElement.elements.each("gen_class") { |genCXML|
-                loadClassGenNode(dm, genCXML, pComponent, fGroup)
-              }
-            else
-              Log.error("Could not find requested class group " + cgName)
-            end
-          }
-
-          deriveXml.elements.each("gen_class") { |genCXML|
-            loadClassGenNode(dm, genCXML, pComponent, nil)
-          }
-
-          model.derivedModels.push(dm)
         end
       }
     end
 
-    def self.loadClassGenNode(model, genCXML, pComponent, featureGroup)
+    def self.loadClassGenNode(model, genCXML, pComponent, cgRefXml)
       cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
-      cls.featureGroup = featureGroup
+      cgRef = CodeStructure::CodeElemClassGroupRef.new()
+      ClassGroupRefLoader::loadClassGroupRef(cgRef, cgRefXml)
+
       ClassLoader.loadClass(pComponent, cls, genCXML)
-      cls.xmlElement = genCXML
       Classes.list << cls
       model.classes << cls
 
       if cls.interfaceNamespace.hasItems?()
-        intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
-        intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interfaceNamespace.get("."))
-        intf.path = cls.interfacePath
-        intf.functions = cls.functions
-        intf.language = cls.language
-        intf.plugName = "interface"
-        intf.parentElem = cls
-        intf.model = model
+        intf = processInterface(cls, model, pComponent)
         Classes.list << intf
         model.classes << intf
       end
 
       if cls.testNamespace.hasItems?()
-        intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
-        intf.namespace = CodeStructure::CodeElemNamespace.new(cls.testNamespace.get("."))
-        intf.path = cls.testPath
-        intf.language = cls.language
-        intf.plugName = "test_engine"
-        intf.parentElem = cls
-        intf.model = model
+        intf = ClassLoader.processTests(cls, model, pComponent)
         Classes.list << intf
         model.classes << cls
       end

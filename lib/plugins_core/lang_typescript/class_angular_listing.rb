@@ -12,11 +12,19 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " component"
+      if cls.featureGroup != nil
+        return cls.featureGroup + " listing component"
+      else
+        return cls.getUName() + " component"
+      end
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName() + ".component")
+      if cls.featureGroup != nil
+        Utils.instance.getStyledFileName(cls.getUName() + " listing.component")
+      else
+        Utils.instance.getStyledFileName(cls.getUName() + ".component")
+      end
     end
 
     def genSourceFiles(cls)

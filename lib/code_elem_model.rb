@@ -41,6 +41,12 @@ module CodeStructure
       @lastModified
     end
 
+    def copy()
+      ret = clone
+      ret.classes = @classes.map(&:clone)
+      ret.derivedModels = Array.new
+    end
+
     #
     # Finds a class that this model has by type name
     #

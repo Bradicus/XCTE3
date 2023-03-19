@@ -19,7 +19,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
-                  :genCfg, :injections, :dataClass, :featureGroup
+                  :genCfg, :injections, :dataClass, :featureGroup, :for, :classGroupRef
     attr_reader :name
 
     def initialize(parentElem, model, pComp, isStatic)
@@ -53,6 +53,9 @@ module CodeStructure
       @standardClassType = nil
       @customCode = nil
       @dataClass = nil
+      @classGroupRef = nil
+      @cgName = nil
+      @for = nil
       @featureGroup = nil
     end
 

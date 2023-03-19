@@ -21,8 +21,17 @@ module DataLoading
 
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml)
+      if (genC.classGroupRef != nil)
+        genC.featureGroup = genC.classGroupRef.featureGroup
+        genC.for = genC.classGroupRef.for
+      end
+
+      genC.xmlElement = genCXml
+
       genC.featureGroup = AttributeLoader.init().
         xml(genCXml).names("feature_group").model(genC.model).default(genC.featureGroup).get()
+      genC.for = AttributeLoader.init().
+        xml(genCXml).names("for").model(genC.model).default(genC.for).get()
 
       genC.plugName = AttributeLoader.init().xml(genCXml).names("type").cls(genC).get()
       genC.className = AttributeLoader.init().xml(genCXml).names("name").model(genC.model).cls(genC).get()
@@ -96,24 +105,6 @@ module DataLoading
         end
       }
 
-      #   # Also include higher level includes from model
-      #   model.xmlElement.elements.each("include") { |gIncXml|
-      #     iName = gIncXml.attributes["name"]
-      #     iLName = gIncXml.attributes["lname"]
-
-      #     if gIncXml.attributes["path"] != nil
-      #       iPath = gIncXml.attributes["path"]
-      #     else
-      #       iPath = String.new
-      #     end
-
-      #     if (gIncXml.attributes["name"] != nil)
-      #       genC.addInclude(iPath, iName, '"')
-      #     else
-      #       genC.addInclude(iPath, iLName, "<")
-      #     end
-      #   }
-
       # Load uses
       genCXml.elements.each("use") { |useXml|
         if (useXml.attributes["name"] != nil)
@@ -127,13 +118,20 @@ module DataLoading
         end
       }
 
-      # Load uses from higher level
-      #   model.xmlElement.elements.each("use") { |gUseXml|
-      #     genC.addUse(gUseXml.attributes["name"])
-      #   }
+      Classes.list << genC
+      genC.model.classes << genC
 
-      # Load any auto includes for this class...
-      # Load any auto uses for this class...
+      if genC.interfaceNamespace.hasItems?()
+        intf = processInterface(genC, model, pComponent)
+        Classes.list << intf
+        genC.model.classes << intf
+      end
+
+      if genC.testNamespace.hasItems?()
+        intf = ClassLoader.processTests(genC, model, pComponent)
+        Classes.list << intf
+        genC.model.classes << genC
+      end
 
       #puts "Loaded clss note with function count " + genC.functions.length.to_s
     end
@@ -214,6 +212,29 @@ module DataLoading
 
     def self.loadList(str, separator)
       return str.split(separator).map!(&:trim)
+    end
+
+    def self.processInterface(cls, model, pComponent)
+      intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
+      intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interfaceNamespace.get("."))
+      intf.path = cls.interfacePath
+      intf.functions = cls.functions
+      intf.language = cls.language
+      intf.plugName = "interface"
+      intf.parentElem = cls
+      intf.model = model
+    end
+
+    def self.processTests(cls, model, pComponent)
+      intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
+      intf.namespace = CodeStructure::CodeElemNamespace.new(cls.testNamespace.get("."))
+      intf.path = cls.testPath
+      intf.language = cls.language
+      intf.plugName = "test_engine"
+      intf.parentElem = cls
+      intf.model = model
+
+      return intf
     end
   end
 end

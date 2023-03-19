@@ -84,10 +84,14 @@ module XCTEHtml
 
             varCls = Classes.findVarClass(var)
 
-            eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).
-              wVarCb(lambda { |innerVar|
-              rowNode.add_child(make_field(cls, innerVar, vName))
-            }))
+            if varCls != nil
+              eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).
+                wVarCb(lambda { |innerVar|
+                rowNode.add_child(make_field(cls, innerVar, vName))
+              }))
+            else
+              Log.error("Unable to find varible class for var: " + var.name + "  type: " + var.getUType())
+            end
 
             rowNode = new_row(cls, rowContainer, rowNode)
             formNode.add_child(fieldsetNode)

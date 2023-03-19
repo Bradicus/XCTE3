@@ -10,20 +10,12 @@
 		<var name="description" type="String" />
 	</var_group>
 
-		<class_group name="data store">
-		</class_group>
+	<class_group_ref name="data store server" />
+	<class_group_ref name="data store client" />
+	<class_group_ref name="edit" feature_group="role" />
+	<class_group_ref name="listing" feature_group="role" />
 
-		<derive model_set="edit" model_type="derive_edit">
-			<class_group name="edit" feature_group="role" />
-		</derive>
-
-		<derive model_set="listing" model_type="derive_listing">
-			<class_group name="listing" feature_group="role" />
-		</derive>
-
-		<gen_class type="class_mapper_derived" path="mapper">
-			<derived_class name="admin edit" plugin="standard" />
-			<data_class name="admin" plugin="{DataModelPlugin}" />
-		</gen_class>
+	<gen_class type="class_angular_module" path="role" />
+	<gen_class type="class_angular_module_routing" path="role" />
 
 </model>
