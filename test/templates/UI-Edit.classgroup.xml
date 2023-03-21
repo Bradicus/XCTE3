@@ -1,0 +1,26 @@
+<class_group name="ui-edit">
+  	<gen_class type="class_angular_data_store_service" path="$ServicesPath" >
+  		<function name="method_angular_service_detail" />
+  		<function name="method_angular_service_listing" />
+  		<function name="method_angular_service_create" />
+  		<function name="method_angular_service_update" />
+  	</gen_class>
+
+  	<gen_class type="class_angular_data_gen_service" path="$ServicesPath" >
+  		<function name="method_service_datagen_faker_get" />
+  		<function name="method_service_datagen_init" />
+  	</gen_class>
+
+  	<gen_class type="class_angular_data_map_service" path="$ServicesPath" >
+  		<function name="method_datamap_model_to_reactive_form" />
+  	</gen_class>
+
+    <gen_class type="web_api_controller"
+    		base_class="ApiController" path="$ControllerPath" ns="$ControllerNs">
+      <function name="method_web_api_read_one" />
+    	<function name="method_web_api_read_many" />
+    	<function name="method_web_api_write_one" />
+    	<function name="method_web_api_update_one" />
+    </gen_class>
+
+</class_group>

@@ -1,0 +1,24 @@
+<class_group name="listing">
+
+  	<!-- Angular -->
+  	<gen_class type="standard" path="{EditModelPath}" ns="{EditModelNs}">
+  	</gen_class>
+
+  	<gen_class type="class_angular_data_store_service" path="{ServicesPath}">
+  		<function name="method_angular_service_listing" />
+  	</gen_class>
+
+  	<gen_class type="class_angular_data_map_service" path="{ServicesPath}">
+  		<function name="method_datamap_model_to_reactive_form" />
+  	</gen_class>
+
+    <gen_class type="class_angular_listing"
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}">
+    </gen_class>
+
+  	<gen_class type="empty_file"
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"></gen_class>
+
+</class_group>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="theme" >
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id"	identity="(1,1)"	type="Int64" pkey="true" />
+		<var name="name"		type="String" maxlen="50" />
+		<var name="description"		type="String" />
+	</var_group>
+
+	<class_group_ref name="data store server" />
+	<class_group_ref name="data store client" />
+	<class_group_ref name="edit" feature_group="theme" />
+	<class_group_ref name="listing" feature_group="theme" />
+
+	<gen_class type="class_angular_module" path="theme" />
+	<gen_class type="class_angular_module_routing" path="theme" />
+
+</model>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="nav bar" >
+
+	<description>
+	</description>
+
+	<var_group>
+		<var name="Profile"		type="Profile" />
+		<var name="Role"		type="Role" />
+	</var_group>
+
+</model>

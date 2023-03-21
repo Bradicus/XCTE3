@@ -161,7 +161,7 @@ module DataLoading
         newVal = newVal.gsub("!{ClassGroupName}", "")
       end
 
-      return newVal
+      return newVal.strip
     end
   end
 end

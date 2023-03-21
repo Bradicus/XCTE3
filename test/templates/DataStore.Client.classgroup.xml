@@ -1,0 +1,8 @@
+<class_group name="data store client">
+
+    <gen_class type="ts_interface" path="shared/interfaces">
+    	<use-csharp name="System.Collections.Generic" />
+    	<use-java name='java.time.*' />
+    	<use-java name='java.util.*' />
+    </gen_class>
+</class_group>

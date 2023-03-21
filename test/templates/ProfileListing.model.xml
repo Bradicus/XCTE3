@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="profile listing">
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id" identity="(1,1)" type="Int64" pkey="true" />
+		<var_group>
+			<var name="first name" type="String" maxlen="255" required="true" />
+			<var name="last name" type="String" maxlen="255" required="true" />
+			<var name="pusername" type="String" maxlen="255" readonly="true"/>
+			<var name="email" type="String" maxlen="255" required="true" />
+		</var_group>
+		<var_group>
+			<var name="created date" type="DateTime" readonly="true" />
+			<var name="last login date" type="DateTime" readonly="true" />
+			<!--<var name="theme options" type="Theme" set="List" options="true" />-->
+			<var name="active" type="Boolean" />
+		</var_group>
+	</var_group>
+
+	<class_group_ref name="data store client" />
+	<class_group_ref name="listing" feature_group="profile" />
+
+	<gen_class type="class_mapper_derived" path="mapper">
+		<derived_class name="profile admin edit" plugin="standard" />
+		<data_class name="admin" plugin="{DataModelPlugin}" />
+	</gen_class>
+</model>

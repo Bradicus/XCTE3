@@ -12,11 +12,11 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName() + " view component"
+      return cls.getUName() + " component"
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName() + "-view.component")
+      Utils.instance.getStyledFileName(cls.getUName() + ".component")
     end
 
     def getFilePath(cls)
@@ -27,7 +27,7 @@ module XCTETypescript
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + " view" + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, bld)
       process_dependencies(cls, bld)
