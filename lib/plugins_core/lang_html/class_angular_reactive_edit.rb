@@ -34,13 +34,13 @@ module XCTEHtml
       nested = (cls.xmlElement.attributes["nested"] == "true")
       contentNode = Utils.instance.make_node(cls.genCfg, "div")
 
-      formName = CodeNameStyling.getStyled(getUnformattedClassName(cls) + " form", Utils.instance.langProfile.variableNameStyle)
+      @formName = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       formNode = nil
 
       if (!nested)
         contentNode.add_child(Utils.instance.make_node(cls.genCfg, "h2").add_text(cls.model.name.capitalize))
         formNode = Utils.instance.make_node(cls.genCfg, "form").
-          add_attribute("[formGroup]", formName).
+          add_attribute("[formGroup]", @formName).
           add_attribute("(ngSubmit)", "onSubmit()")
 
         populateButton = Utils.instance.make_primary_button(cls.genCfg, "Populate").
@@ -54,7 +54,7 @@ module XCTEHtml
         contentNode.add_child(submitButton)
       else
         formNode = formNode = Utils.instance.make_node(cls.genCfg, "div").
-          add_attribute("[formGroup]", formName)
+          add_attribute("[formGroup]", @formName)
       end
 
       contentNode.add_child(formNode)
@@ -163,7 +163,7 @@ module XCTEHtml
 
     def make_field(cls, var, varPrefix)
       varName = Utils.instance.getStyledVariableName(var)
-      formVar = CodeNameStyling.getStyled(cls.model.name + " form", Utils.instance.langProfile.variableNameStyle)
+      formVar = CodeNameStyling.getStyled(@formName, Utils.instance.langProfile.variableNameStyle)
       fldNode = HtmlNode.new("div")
 
       if (cls.genCfg.usesExternalDependency("bootstrap"))

@@ -9,11 +9,11 @@ class Classes
     @@list = Array.new
   end
 
-  def self.findClass(className, classPlugName)
+  def self.findClass(modelName, classPlugName)
     for c in @@list
       # puts c.plugName + " " + classPlugName
       # puts c.model.name + " " + className
-      if (c.plugName == classPlugName && nameMatches(c.model.name, className))
+      if (c.plugName == classPlugName && nameMatches(c.model.name, modelName))
         return c
       end
     end

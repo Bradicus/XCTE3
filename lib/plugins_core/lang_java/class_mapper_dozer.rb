@@ -1,10 +1,10 @@
 ##
-# Class:: ClassMapper
+# Class:: ClassMapperDozer
 #
 module XCTEJava
-  class ClassMapper < ClassBase
+  class ClassMapperDozer < ClassBase
     def initialize
-      @name = "class_mapper_derived"
+      @name = "class_mapper_dozer"
       @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -46,6 +46,7 @@ module XCTEJava
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
       bld.startClass("public class " + getClassName(cls))
 
+      bld.add("DozerBeanMapper mapper = new DozerBeanMapper();")
       bld.separate
       # Generate class variables
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var| }))
@@ -59,4 +60,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassMapper.new)
+XCTEPlugin::registerPlugin(XCTEJava::ClassMapperDozer.new)

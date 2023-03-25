@@ -57,7 +57,7 @@ module XCTETypescript
         if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
             otherCls.plugName.start_with?("class_angular_listing"))
           plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
-          cls.addInclude(otherCls.path + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
+          cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
         end
       end
 

@@ -1,4 +1,5 @@
 require "plugins_core/lang_typescript/class_base.rb"
+require "include_util"
 
 ##
 # Class:: ClassAngularReactiveEdit
@@ -48,9 +49,9 @@ module XCTETypescript
 
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
-      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_store_service")
-      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_gen_service")
-      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_map_service")
+      IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
+      IncludeUtil.init("class_angular_data_gen_service").wModel(cls.model).addTo(cls)
+      IncludeUtil.init("class_angular_data_map_service").wModel(cls.model).addTo(cls)
 
       eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
@@ -61,8 +62,9 @@ module XCTETypescript
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(optVar.getUType()),
                          Utils.instance.getStyledClassName(optVar.getUType()))
 
-          optStoreVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
-          Utils.instance.tryAddIncludeForVar(cls, optVar, "class_angular_data_store_service")
+          bCls = Classes.findClass(cls.model.name, "ts_interface")
+          optStoreVar = Utils.instance.createVarFor(bCls, "class_angular_data_store_service")
+          Utils.instance.tryAddIncludeForVar(bCls, optVar, "class_angular_data_store_service")
         end
       }))
 
@@ -73,8 +75,8 @@ module XCTETypescript
     def genFileContent(cls, bld)
       bld.add
 
-      selectorName = Utils.instance.getStyledFileName(cls.getUName() + " view")
-      filePart = Utils.instance.getStyledFileName(cls.getUName() + " view")
+      selectorName = Utils.instance.getStyledFileName(cls.getUName())
+      filePart = Utils.instance.getStyledFileName(cls.getUName())
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       userServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")

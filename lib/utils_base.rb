@@ -67,6 +67,11 @@ class UtilsBase
     return CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
   end
 
+  # Returns the version of this file name styled for this language
+  def getStyledPathName(pathName)
+    return CodeNameStyling.getStyled(pathName, @langProfile.fileNameStyle)
+  end
+
   # Get the extension for a file type
   def getExtension(eType)
     return @langProfile.getExtension(eType)
@@ -87,7 +92,7 @@ class UtilsBase
     end
 
     newVar = CodeStructure::CodeElemVariable.new(nil)
-    newVar.utype = plug.getUnformattedClassName(cls)
+    newVar.utype = plug.getUnformattedClassName(plugClass)
     newVar.name = newVar.utype
 
     return newVar

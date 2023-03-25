@@ -25,12 +25,9 @@
 		</var_group>
 	</var_group>
 
+	<gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" />
+
 	<class_group_ref name="data store client" />
 	<class_group_ref name="edit" feature_group="profile" for="user" />
 	<class_group_ref name="edit" feature_group="profile" for="admin" />
-
-	<gen_class type="class_mapper_derived" path="mapper">
-		<derived_class name="profile admin edit" plugin="standard" />
-		<data_class name="admin" plugin="{DataModelPlugin}" />
-	</gen_class>
 </model>

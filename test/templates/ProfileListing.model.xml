@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="profile listing">
+<model name="profile listing item">
 
 	<description>
 	</description>
@@ -20,11 +20,9 @@
 		</var_group>
 	</var_group>
 
+	<gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" />
+
 	<class_group_ref name="data store client" />
 	<class_group_ref name="listing" feature_group="profile" />
 
-	<gen_class type="class_mapper_derived" path="mapper">
-		<derived_class name="profile admin edit" plugin="standard" />
-		<data_class name="admin" plugin="{DataModelPlugin}" />
-	</gen_class>
 </model>

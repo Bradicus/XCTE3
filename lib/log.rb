@@ -26,4 +26,8 @@ class Log
   def self.error(msg)
     instance.logger.error(msg)
   end
+
+  def self.missingClassRef(clsRef)
+    instance.logger.error("Missing class ref cname: " + clsRef.className + "  plugin: " + clsRef.pluginName)
+  end
 end

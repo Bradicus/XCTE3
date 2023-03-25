@@ -1,20 +1,6 @@
 <class_group name="edit">
 
   	<!-- Angular -->
-  	<gen_class type="class_angular_data_store_service" path="{ServicesPath}">
-  		<function name="method_angular_service_detail" />
-  		<function name="method_angular_service_create" />
-  		<function name="method_angular_service_update" />
-  	</gen_class>
-
-  	<gen_class type="class_angular_data_gen_service" path="{ServicesPath}">
-  		<function name="method_service_datagen_faker_get" />
-  		<function name="method_service_datagen_init" />
-  	</gen_class>
-
-  	<gen_class type="class_angular_data_map_service" path="{ServicesPath}">
-  		<function name="method_datamap_model_to_reactive_form" />
-  	</gen_class>
 
     <gen_class type="class_angular_reactive_edit"
       name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"

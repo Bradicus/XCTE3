@@ -1,4 +1,5 @@
 require "plugins_core/lang_typescript/class_base.rb"
+require "include_util"
 
 ##
 # Class:: ClassAngularListing
@@ -12,11 +13,7 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      if cls.featureGroup != nil
-        return cls.featureGroup + " component"
-      else
-        return cls.getUName() + " component"
-      end
+      return cls.getUName() + " component"
     end
 
     def getFileName(cls)
@@ -50,7 +47,7 @@ module XCTETypescript
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
-      Utils.instance.tryAddIncludeFor(cls, "class_angular_data_store_service")
+      IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
 
       super
       # Generate class variables
@@ -69,10 +66,11 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.getStyledFileName(cls.getUName() + " listing")
+      filePart = Utils.instance.getStyledFileName(cls.getUName())
 
       clsVar = CodeNameStyling.getStyled(getUnformattedClassName(cls), Utils.instance.langProfile.variableNameStyle)
-      standardClassName = Utils.instance.getStyledClassName(cls.getUName())
+
+      standardClassName = Utils.instance.getStyledClassName(cls.model.name)
       routeName = Utils.instance.getStyledFileName(cls.getUName())
 
       bld.add("@Component({")

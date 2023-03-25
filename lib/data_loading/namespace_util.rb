@@ -8,13 +8,15 @@
 # This class loads class information form an XML node
 
 require "rexml/document"
-require "data_loading/attribute_util"
+require "data_loading/attribute_loader"
 
 module DataLoading
   class NamespaceUtil
     # Load a list of namespaces on a node
     def self.loadNamespaces(xml, pComponent)
-      return CodeStructure::CodeElemNamespace.new(AttributeUtil.loadAttribute(xml, Array["ns", "namespace"], pComponent, "."))
+      return CodeStructure::CodeElemNamespace.new(
+               AttributeLoader.init(xml).names(Array["ns", "namespace"]).get()
+             )
     end
   end
 end
