@@ -18,4 +18,11 @@
 	<gen_class type="class_angular_module" path="theme" />
 	<gen_class type="class_angular_module_routing" path="theme" />
 
+		<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
+			<function name="method_web_api_read_one" />
+			<function name="method_web_api_read_many" />
+			<function name="method_web_api_write_one" />
+			<function name="method_web_api_update_one" />
+		</gen_class>
+
 </model>

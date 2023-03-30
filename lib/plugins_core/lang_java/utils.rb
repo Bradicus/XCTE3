@@ -241,13 +241,10 @@ module XCTEJava
     end
 
     def get_data_class(cls)
-      if (cls.model.derivedFrom != nil)
-        derived = Classes.findClass(cls.model.derivedFrom, "class_jpa_entity")
-
-        if (derived != nil)
-          return derived
-        else
-          Log.error("Derived class not found for class " + cls.model.derivedFrom + "  plugin: class_jpa_entity")
+      if cls.dataClass != nil
+        dataClass = Classes.findClass(cls.dataClass.className, cls.dataClass.pluginName)
+        if dataClass != nil
+          return dataClass
         end
       end
 
@@ -265,7 +262,7 @@ module XCTEJava
           requires_var(toCls, var)
         end
       else
-        Log.error("Unable to find class type " + plugName + " for model " + cls.model.name)
+        Log.error("Unable to find class type " + plugName + " for model " + fromCls.model.name)
       end
     end
   end

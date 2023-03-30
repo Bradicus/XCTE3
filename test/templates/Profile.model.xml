@@ -30,12 +30,12 @@
 	<gen_class type="class_angular_module" path="profile" />
 	<gen_class type="class_angular_module_routing" path="profile" />
 
-	<gen_class type="class_mapper_dozer" path="mapper">
-		<function name="method_map" gen_reverse="true">
+	<gen_class type="class_mapper_dozer" path="mapper" ns="com.example.demo.mapper">
+		<function name="method_map" gen_reverse="true" gen_list_map="true">
 			<fromClass cname="profile edit" plugin="standard" />
 			<toClass cname="profile" plugin="{DataModelPlugin}" />
 		</function>
-		<function name="method_map" gen_reverse="true">
+		<function name="method_map" gen_reverse="true" gen_list_map="true">
 			<fromClass cname="profile listing item" plugin="standard" />
 			<toClass cname="profile" plugin="{DataModelPlugin}" />
 		</function>

@@ -18,8 +18,8 @@ module DataLoading
 
       cRef.namespaces = NamespaceUtil.loadNamespaces(xmlNode, pComponent)
 
-      cRef.className = AttributeLoader.init().xml(xmlNode).names("cname").get()
-      cRef.pluginName = AttributeLoader.init().xml(xmlNode).names("plugin").get()
+      cRef.className = AttributeLoader.init().xml(xmlNode).names("cname").required().get()
+      cRef.pluginName = AttributeLoader.init().xml(xmlNode).names("plugin").required().get()
 
       return cRef
     end

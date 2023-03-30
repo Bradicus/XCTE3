@@ -34,6 +34,8 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
+      cls.addUse("com.github.dozermapper.core.DozerBeanMapper")
+      cls.addUse("org.springframework.beans.factory.annotation.Autowired")
       super
     end
 
@@ -45,8 +47,8 @@ module XCTEJava
     def genFileContent(cls, bld)
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
       bld.startClass("public class " + getClassName(cls))
-
-      bld.add("DozerBeanMapper mapper = new DozerBeanMapper();")
+      bld.add "@Autowired"
+      bld.add("DozerBeanMapper mapper;")
       bld.separate
       # Generate class variables
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var| }))

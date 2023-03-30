@@ -55,6 +55,11 @@ module XCTEJava
       Utils.instance.requires_class_type(cls, cls, "standard")
       cls.addUse("org.springframework.web.bind.annotation.*")
       cls.addUse("org.springframework.beans.factory.annotation.Autowired")
+
+      cls.addUse("org.springframework.http.HttpStatus")
+      cls.addUse("org.springframework.http.MediaType")
+      cls.addUse("org.springframework.http.ResponseEntity")
+
       super
     end
 

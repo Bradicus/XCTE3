@@ -7,12 +7,12 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
 require "code_name_styling.rb"
 require "plugins_core/lang_java/utils.rb"
+require "plugins_core/lang_java/method_web_api_base"
 
 module XCTEJava
-  class MethodWebApiReadMany < XCTEPlugin
+  class MethodWebApiReadMany < MethodWebApiBase
     def initialize
       @name = "method_web_api_read_many"
       @language = "java"
@@ -33,24 +33,13 @@ module XCTEJava
               " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
     end
 
-    def process_dependencies(cls, bld, fun)
-      if (cls.model.derivedFrom != nil)
-        dataClass = Classes.findClass(cls.model.derivedFrom, "class_jpa_entity")
-      else
-        dataClass = cls
-      end
-
-      Utils.instance.requires_class_type(cls, dataClass, "class_jpa_entity")
-      Utils.instance.requires_class_type(cls, dataClass, "tsql_data_store")
-      Utils.instance.add_class_injection(cls, dataClass, "tsql_data_store")
-      cls.addUse("java.util.*")
-    end
-
     def get_body(cls, bld, fun)
       conDef = String.new
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
         CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
+      mapperName =
+        CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.variableNameStyle)
 
       params = Array.new
 
@@ -62,7 +51,14 @@ module XCTEJava
                         "s(" + params.join(", ") + ")")
 
       bld.add("var items = " + dataStoreName + ".findAll();")
-      bld.add("return items;")
+
+      if cls.dataClass != nil
+        bld.add "var mappedItems = new List<" + Utils.instance.getStyledClassName(cls.getUName()) + ">();"
+        bld.add mapperName + ".map(items, mappedItems);"
+        bld.add("return mappedItems;")
+      else
+        bld.add("return items;")
+      end
 
       bld.endFunction
     end

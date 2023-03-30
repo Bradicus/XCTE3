@@ -6,14 +6,7 @@
     	<use-java name='java.util.*' />
     </gen_class>
 
-    <gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
-    	<data_class cname="!{ModelName}" ns="{DataModelNs}" plug="{DataModelPlugin}" />
-    	<function name="method_web_api_read_one" />
-    	<function name="method_web_api_write_one" />
-    	<function name="method_web_api_update_one" />
-    </gen_class>
-
-    <gen_class type="tsql_data_store" path="data" ns="data" >
+    <gen_class type="tsql_data_store" path="data" ns="com.example.demo.data" >
     	<function name="method_tsql_create" interface="true" />
     	<function name="method_tsql_update" interface="true" />
     	<function name="method_tsql_retrieve_all" interface="true" />

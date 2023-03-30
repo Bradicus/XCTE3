@@ -7,12 +7,12 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_java/method_web_api_base"
 require "code_name_styling.rb"
 require "plugins_core/lang_java/utils.rb"
 
 module XCTEJava
-  class MethodWebApiUpdate < XCTEPlugin
+  class MethodWebApiUpdate < MethodWebApiBase
     def initialize
       @name = "method_web_api_update_one"
       @language = "java"
@@ -31,16 +31,6 @@ module XCTEJava
     def get_declairation(cls, bld, fun)
       bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
               " Put" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
-    end
-
-    def process_dependencies(cls, bld, fun)
-      dataClass = Utils.instance.get_data_class(cls)
-
-      Utils.instance.requires_class_type(cls, dataClass, "class_jpa_entity")
-      Utils.instance.requires_class_type(cls, dataClass, "tsql_data_store")
-      Utils.instance.add_class_injection(cls, dataClass, "tsql_data_store")
-
-      cls.addUse("org.springframework.http.*")
     end
 
     def get_body(cls, bld, fun)

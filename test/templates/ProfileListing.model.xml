@@ -25,4 +25,8 @@
 	<class_group_ref name="data store client" />
 	<class_group_ref name="listing" feature_group="profile" />
 
+	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
+		<data_class cname="profile" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
+		<function name="method_web_api_read_many" />>
+	</gen_class>
 </model>

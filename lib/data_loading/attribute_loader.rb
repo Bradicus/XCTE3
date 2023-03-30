@@ -8,6 +8,7 @@
 require "rexml/document"
 require "params/build_var_params"
 require "active_component"
+require "log"
 
 module DataLoading
   class AttributeLoader
@@ -21,6 +22,7 @@ module DataLoading
     @inheritable = false
     @arrayDelim = nil
     @isTemplateAttrib = false
+    @required = false
 
     def self.init(xmlNode = nil)
       al = AttributeLoader.new
@@ -61,6 +63,11 @@ module DataLoading
 
     def isTplAttrib()
       @isTemplateAttrib = true
+      return self
+    end
+
+    def required()
+      @required = true
       return self
     end
 
@@ -127,6 +134,10 @@ module DataLoading
       if @arrayDelim != nil
         return Array.new
       else
+        if @required
+          Log.error("Failed to load required attribute: " + @names.join(","))
+        end
+
         return @default
       end
     end

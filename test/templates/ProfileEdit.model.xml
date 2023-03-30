@@ -30,4 +30,11 @@
 	<class_group_ref name="data store client" />
 	<class_group_ref name="edit" feature_group="profile" for="user" />
 	<class_group_ref name="edit" feature_group="profile" for="admin" />
+
+	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
+		<data_class cname="profile" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
+		<function name="method_web_api_read_one" />
+		<function name="method_web_api_write_one" />
+		<function name="method_web_api_update_one" />
+	</gen_class>
 </model>

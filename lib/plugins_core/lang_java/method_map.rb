@@ -68,11 +68,27 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, fun)
-      bld.add("public " + @funName + "(" + mapParams.join(", ") + ");")
+      bld.add("public void " + @funName + "(" + mapParams.join(", ") + ");")
     end
 
     def process_dependencies(cls, bld, fun)
-      dataClass = Utils.instance.get_data_class(cls)
+      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
+      @fromClass = Classes.findClass(@fromRef.className, @fromRef.pluginName)
+
+      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
+      @toClass = Classes.findClass(@toRef.className, @toRef.pluginName)
+
+      if @fromClass == nil || @toClass == nil
+        if @fromClass == nil
+          Log.missingClassRef(@fromRef)
+        end
+        if @toClass == nil
+          Log.missingClassRef(@toRef)
+        end
+      else
+        Utils.instance.requires_class_type(cls, @toClass, "class_jpa_entity")
+        Utils.instance.requires_class_type(cls, @fromClass, "standard")
+      end
     end
 
     def get_body(cls, bld, fun)
@@ -80,8 +96,8 @@ module XCTEJava
       params = Array.new
       idVar = cls.model.getIdentityVar()
 
-      bld.startFunction("public " + @funName + "(" + @mapParams.join(", ") + ")")
-      bld.add "mapper.map(src,dst);"
+      bld.startFunction("public void map(" + @mapParams.join(", ") + ")")
+      bld.add "mapper.map(src, dst);"
       bld.endFunction
     end
   end
