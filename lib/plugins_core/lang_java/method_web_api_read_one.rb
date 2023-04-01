@@ -38,6 +38,8 @@ module XCTEJava
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
         CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
+      mapperName =
+        CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.variableNameStyle)
 
       params = Array.new
       idVar = cls.model.getIdentityVar()
@@ -46,7 +48,6 @@ module XCTEJava
         params << '@PathVariable("' + Utils.instance.getStyledVariableName(idVar) + '") ' + Utils.instance.getParamDec(idVar)
       end
 
-      #bld.add "@CrossOrigin"
       bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '/{id}")')
 
       bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) +
@@ -54,7 +55,19 @@ module XCTEJava
                         "(" + params.join(", ") + ")")
 
       bld.add("var item = " + dataStoreName + ".findById(id);")
-      bld.add("return item.get();")
+      bld.separate
+
+      if cls.dataClass != nil
+        bld.startBlock "if (item.isPresent())"
+        bld.add "var mappedItem = new " + Utils.instance.getStyledClassName(cls.getUName()) + "();"
+        bld.add(mapperName + ".map(item.get(), mappedItem);")
+        bld.add("return mappedItem;")
+        bld.endBlock
+
+        bld.add "return null;"
+      else
+        bld.add("return item.get();")
+      end
 
       bld.endFunction
     end

@@ -31,7 +31,7 @@
 	<gen_class type="class_angular_module_routing" path="profile" />
 
 	<gen_class type="class_mapper_dozer" path="mapper" ns="com.example.demo.mapper">
-		<function name="method_map" gen_reverse="true" gen_list_map="true">
+		<function name="method_map" gen_reverse="true" >
 			<fromClass cname="profile edit" plugin="standard" />
 			<toClass cname="profile" plugin="{DataModelPlugin}" />
 		</function>

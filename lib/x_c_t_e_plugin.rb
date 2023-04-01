@@ -33,11 +33,11 @@ class XCTEPlugin
     codeRootDir = File.dirname(File.realpath(__FILE__))
     workingDir = Dir.pwd
 
-    Find.find(codeRootDir + "/plugins_core/derive_models") do |path|
-      if path.include?(".rb")
-        require path
-      end
-    end
+    # Find.find(codeRootDir + "/plugins_core/derive_models") do |path|
+    #   if path.include?(".rb")
+    #     require path
+    #   end
+    # end
 
     Dir.foreach(codeRootDir + "/plugins_core") do |langDir|
       next if !langDir.include?("lang_")
@@ -148,15 +148,15 @@ class XCTEPlugin
   end
 
   # Attempts to find the desired derived model plugin for the desired language
-  def self.findDerivePlugin(prjType)
-    @@modelPlugins.each do |plugKey, plug|
-      if plug.category == "derive" && plug.name == prjType
-        return plug
-      end
-    end
+  # def self.findDerivePlugin(prjType)
+  #   @@modelPlugins.each do |plugKey, plug|
+  #     if plug.category == "derive" && plug.name == prjType
+  #       return plug
+  #     end
+  #   end
 
-    return nil
-  end
+  #   return nil
+  # end
 
   def self.getLanguages()
     return @@languagePlugins

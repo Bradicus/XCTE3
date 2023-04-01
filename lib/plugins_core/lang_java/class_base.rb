@@ -14,6 +14,14 @@ module XCTEJava
         process_fuction_dependencies(cls, bld, fun)
       end
 
+      if (cls.model.hasVariableType("datetime"))
+        cls.addUse("java.time.LocalDateTime")
+      end
+
+      if hasList(cls)
+        cls.addUse("import java.util.List")
+      end
+
       if (cls.dataClass != nil)
         Utils.instance.requires_class_ref(cls, cls.dataClass)
         #  Utils.instance.requires_class_type(cls, cls.dataClass, "standard")

@@ -53,8 +53,8 @@ module XCTEJava
       bld.add("var items = " + dataStoreName + ".findAll();")
 
       if cls.dataClass != nil
-        bld.add "var mappedItems = new List<" + Utils.instance.getStyledClassName(cls.getUName()) + ">();"
-        bld.add mapperName + ".map(items, mappedItems);"
+        bld.add "var mappedItems = new ArrayList<" + Utils.instance.getStyledClassName(cls.getUName()) + ">();"
+        bld.add mapperName + ".mapList(items, mappedItems);"
         bld.add("return mappedItems;")
       else
         bld.add("return items;")

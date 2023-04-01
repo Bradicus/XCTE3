@@ -39,6 +39,8 @@ module XCTEJava
       dataStoreName =
         CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
       className = Utils.instance.getStyledClassName(cls.getUName())
+      mapperName =
+        CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.variableNameStyle)
 
       params = Array.new
       idVar = cls.model.getIdentityVar()
@@ -56,12 +58,25 @@ module XCTEJava
                         "> Put" + className +
                         "(" + params.join(", ") + ")")
 
-      bld.add(Utils.instance.getStyledClassName(cls.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")
-      # bld.startBlock "if (savedItem == null)"
-      # bld.add 'throw new Exception("");'
-      # bld.endBlock
+      bld.add "var dataItem = " + dataStoreName + ".findById(item.id);"
+      bld.separate
 
-      bld.add "return new ResponseEntity<" + className + ">(savedItem, HttpStatus.CREATED);"
+      bld.startBlock "if (dataItem.isPresent())"
+      if cls.dataClass != nil
+        bld.add mapperName + ".map(item, dataItem.get());"
+        bld.add(Utils.instance.getStyledClassName(dataClass.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(dataItem.get());")
+        bld.add "var returnItem = new " + className + "();"
+        bld.add mapperName + ".map(savedItem, returnItem);"
+
+        bld.add "return new ResponseEntity<" + className + ">(returnItem, HttpStatus.CREATED);"
+      else
+        bld.add(Utils.instance.getStyledClassName(dataClass.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")
+        bld.add "return new ResponseEntity<" + className + ">(savedItem, HttpStatus.CREATED);"
+      end
+
+      bld.midBlock("else")
+      bld.add "return null;"
+      bld.endBlock
 
       bld.endFunction
     end

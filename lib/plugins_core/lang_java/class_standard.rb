@@ -58,9 +58,9 @@ module XCTEJava
         end
       }))
 
-      if hasList(cls) == true
-        cls.addUse("java.util.*")
-      end
+      #if hasList(cls)
+      cls.addUse("java.util.*")
+      #end
 
       super
     end

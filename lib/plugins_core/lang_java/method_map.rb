@@ -28,6 +28,7 @@ module XCTEJava
       @toClass = Classes.findClass(@toRef.className, @toRef.pluginName)
 
       @genReverse = (fun.xmlElement.attributes["gen_reverse"] == "true")
+      @genListMap = (fun.xmlElement.attributes["gen_list_map"] == "true")
 
       if @fromClass == nil || @toClass == nil
         if @fromClass == nil
@@ -52,7 +53,7 @@ module XCTEJava
         if @genReverse
           @mapParams = Array.new
 
-          bld.add
+          bld.separate
 
           @mapParams.push(Utils.instance.getStyledClassName(@toClass.getUName()) + " src")
           @mapParams.push(Utils.instance.getStyledClassName(@fromClass.getUName()) + " dst")
@@ -64,7 +65,42 @@ module XCTEJava
           @funName = Utils.instance.getStyledFunctionName(@toClass.getUName() + " to " + @fromClass.getUName())
           get_body(cls, bld, fun)
         end
+
+        if (@genListMap)
+          genListMapper(cls, bld, fun)
+        end
       end
+    end
+
+    def genListMapper(cls, bld, fun)
+      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
+      @fromClass = Classes.findClass(@fromRef.className, @fromRef.pluginName)
+
+      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
+      @toClass = Classes.findClass(@toRef.className, @toRef.pluginName)
+
+      @mapParams = Array.new
+
+      @mapParams.push("List<" + Utils.instance.getStyledClassName(@fromClass.getUName()) + "> srcList")
+      @mapParams.push("List<" + Utils.instance.getStyledClassName(@toClass.getUName()) + "> dstList")
+
+      bld.separate
+
+      bld.add("/*")
+      bld.add("* Map -List<" + @fromClass.getUName() + ">- to -List<" + @toClass.getUName() + ">-")
+      bld.add("*/")
+
+      bld.startFunction("public void mapList(" + @mapParams.join(", ") + ")")
+      bld.add "int i = 0;"
+      bld.add "while (dstList.size() < srcList.size())"
+      bld.iadd "dstList.add(new " + Utils.instance.getStyledClassName(@toClass.getUName()) + "());"
+      bld.separate
+      bld.startBlock("for (var src: srcList)")
+      bld.add "var dst = dstList.get(i);"
+      bld.add "mapper.map(src, dst);"
+      bld.add "i++;"
+      bld.endBlock
+      bld.endFunction
     end
 
     def get_declairation(cls, bld, fun)
@@ -77,6 +113,8 @@ module XCTEJava
 
       @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
       @toClass = Classes.findClass(@toRef.className, @toRef.pluginName)
+
+      cls.addUse("java.util.List")
 
       if @fromClass == nil || @toClass == nil
         if @fromClass == nil

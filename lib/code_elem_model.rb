@@ -22,7 +22,7 @@ require "rexml/document"
 module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :classes, :name, :description,
-                  :case, :varGroup, :xmlFileName, :lastModified, :derivedFrom, :derivedFromName, :modelSet, :derivedModels
+                  :case, :varGroup, :xmlFileName, :lastModified, :modelSet
 
     def initialize
       super()
@@ -33,9 +33,6 @@ module CodeStructure
       @description
       @classes = Array.new
       @varGroup = CodeElemVarGroup.new
-      @derivedFrom = nil
-      @derivedFromName = nil
-      @derivedModels = Array.new
       @xmlFileName = ""
       @modelSet = nil
       @lastModified
@@ -44,7 +41,6 @@ module CodeStructure
     def copy()
       ret = clone
       ret.classes = @classes.map(&:clone)
-      ret.derivedModels = Array.new
     end
 
     #
@@ -62,10 +58,19 @@ module CodeStructure
 
     # Returns whether or not this class has an variable of this type
     def hasVariableType(vt)
-      variableSection = Array.new
-      getAllVarsFor(nil, variableSection)
-      for var in variableSection
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.vtype == vt
+      return hasVariableTypeinGroup(@varGroup, vt)
+    end
+
+    # Returns whether or not this class has an variable of this type
+    def hasVariableTypeinGroup(vGroup, vt)
+      for var in vGroup.vars
+        if var.getUType().downcase == vt.downcase
+          return true
+        end
+      end
+
+      for grp in vGroup.varGroups
+        if hasVariableTypeinGroup(grp, vt)
           return true
         end
       end

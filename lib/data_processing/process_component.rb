@@ -55,32 +55,32 @@ module DataProcessing
         end
       end
 
-      derviedModels = Array.new
+      # derviedModels = Array.new
 
-      # Load any derived classes defined in their own files
-      for model in projectPlan.models
-        if (model.derivedFrom != nil)
-          for dFromModel in projectPlan.models
-            if model.derivedFrom.downcase == dFromModel.name.downcase
-              #derviedModels.push(
-              DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.modelSet)
-              #)
-            end
-          end
-        end
-      end
+      # # Load any derived classes defined in their own files
+      # for model in projectPlan.models
+      #   if (model.derivedFrom != nil)
+      #     for dFromModel in projectPlan.models
+      #       if model.derivedFrom.downcase == dFromModel.name.downcase
+      #         #derviedModels.push(
+      #         DerivedModelGenerator.getEditModelRepresentation(model, dFromModel, model.modelSet)
+      #         #)
+      #       end
+      #     end
+      #   end
+      # end
 
       # Load any derived classes defined inside the file they are derived from
-      for model in projectPlan.models
-        if (model.derivedModels.length > 0)
-          for dFromModel in model.derivedModels
-            projectPlan.addModel(dFromModel)
-            ProcessProjectClassGen.process(dFromModel, pComponent, projectPlan)
-          end
-        end
-      end
+      # for model in projectPlan.models
+      #   if (model.derivedModels.length > 0)
+      #     for dFromModel in model.derivedModels
+      #       projectPlan.addModel(dFromModel)
+      #       ProcessProjectClassGen.process(dFromModel, pComponent, projectPlan)
+      #     end
+      #   end
+      # end
 
-      Debug.logModels(projectPlan.models)
+      # Debug.logModels(projectPlan.models)
 
       for plan in projectPlan.classes
         language = XCTEPlugin::getLanguages()[plan.language]
