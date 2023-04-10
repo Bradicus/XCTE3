@@ -23,7 +23,12 @@
 
 	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
 		<function name="method_web_api_read_one" />
-		<function name="method_web_api_read_many" />
+		<function name="method_web_api_read_many">
+			 <sort />
+			 <column_filter />
+			 <page_filter sizes="10, 25, 50, 100" />
+			 <search_filter />
+		</function>
 		<function name="method_web_api_write_one" />
 		<function name="method_web_api_update_one" />
 	</gen_class>

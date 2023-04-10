@@ -110,15 +110,15 @@ class SourceRenderer
 
       (0..paramList.length - 1).each do |i|
         if (i < paramList.length - 1)
-          paramStr += getIndent(1) + paramList[i] + "," + "\n"
+          paramStr += getIndent(2) + paramList[i] + "," + "\n"
         else
-          paramStr += getIndent(1) + paramList[i]
+          paramStr += getIndent(2) + paramList[i]
         end
       end
 
-      startDelimedChunk(functionName + "(" + paramStr + ")")
+      startDelimedChunk(functionName + "(" + paramStr + ")", @hangingFunctionStart)
     else
-      startDelimedChunk(functionName + "(" + oneLiner + ")")
+      startDelimedChunk(functionName + "(" + oneLiner + ")", @hangingFunctionStart)
     end
   end
 

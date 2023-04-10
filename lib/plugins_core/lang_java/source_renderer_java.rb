@@ -13,7 +13,9 @@ class SourceRendererJava < SourceRendererBraceDelim
   def initialize()
     super
 
-    @hangingBlockStart = false
+    @hangingBlockStart = true
+    @hangingFunctionBraces = true
+    @hangingFunctionStart = true
   end
 
   def endClass(afterClose = "")

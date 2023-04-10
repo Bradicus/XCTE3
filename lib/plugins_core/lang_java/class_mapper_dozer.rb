@@ -36,6 +36,8 @@ module XCTEJava
     def process_dependencies(cls, bld)
       cls.addUse("com.github.dozermapper.core.DozerBeanMapper")
       cls.addUse("org.springframework.beans.factory.annotation.Autowired")
+      cls.addUse("org.springframework.data.domain.Page")
+      cls.addUse("java.util.function.Function")
       super
     end
 

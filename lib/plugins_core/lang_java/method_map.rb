@@ -68,6 +68,7 @@ module XCTEJava
 
         if (@genListMap)
           genListMapper(cls, bld, fun)
+          genPageMapper(cls, bld, fun)
         end
       end
     end
@@ -100,6 +101,39 @@ module XCTEJava
       bld.add "mapper.map(src, dst);"
       bld.add "i++;"
       bld.endBlock
+      bld.endFunction
+    end
+
+    def genPageMapper(cls, bld, fun)
+      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
+      @fromClass = Classes.findClass(@fromRef.className, @fromRef.pluginName)
+      @fromClassName = Utils.instance.getStyledClassName(@fromClass.getUName())
+
+      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
+      @toClass = Classes.findClass(@toRef.className, @toRef.pluginName)
+      @toClassName = Utils.instance.getStyledClassName(@toClass.getUName())
+
+      @mapParams = Array.new
+
+      @mapParams.push("Page<" + @fromClassName + "> srcPage")
+      #@mapParams.push("Page<" + Utils.instance.getStyledClassName(@toClass.getUName()) + "> dstPage")
+
+      bld.separate
+
+      bld.add("/*")
+      bld.add("* Map -Page<" + @fromClass.getUName() + ">- to -Page<" + @toClass.getUName() + ">-")
+      bld.add("*/")
+
+      bld.startFunction("public Page<" + @toClassName + "> mapPage(" + @mapParams.join(", ") + ")")
+      bld.startBlock "Page<" + @toClassName + "> dstPage = srcPage.map(new Function<" + @fromClassName + ", " + @toClassName + ">()"
+      bld.add "@Override"
+      bld.startBlock "public " + @toClassName + " apply(" + @fromClassName + " entity)"
+      bld.add "var dto = new " + @toClassName + "();"
+      bld.add "mapper.map(entity, dto);"
+      bld.add "return dto;"
+      bld.endBlock
+      bld.endBlock ");"
+      bld.add "return dstPage;"
       bld.endFunction
     end
 

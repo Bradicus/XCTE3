@@ -25,12 +25,35 @@ module XCTEJava
       bld.add("* Web API get single " + cls.getUName())
       bld.add("*/")
 
+      @dsClass = cls.model.findClassByType("class_data_set")
+
+      if @dsClass != nil
+        @returnType = Utils.instance.getStyledClassName(@dsClass.getUName())
+      else
+        @returnType = "Page<" + Utils.instance.getStyledClassName(cls.getUName()) + ">"
+      end
+
       get_body(cls, bld, fun)
     end
 
+    def process_dependencies(cls, bld, fun)
+      cls.addUse("org.springframework.data.domain.PageRequest")
+      cls.addUse("org.springframework.data.domain.Sort")
+      cls.addUse("org.springframework.data.domain.Page")
+
+      @dsClass = cls.model.findClassByType("class_data_set")
+
+      if @dsClass != nil
+        Utils.instance.requires_class_type(cls, cls, "class_data_set")
+      end
+
+      Utils.instance.requires_class_type(cls, cls, "class_filter_util")
+
+      super
+    end
+
     def get_declairation(cls, bld, fun)
-      bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-              " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
+      bld.add("public " + @returnType + " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "s(" + params.join(", ") + ");")
     end
 
     def get_body(cls, bld, fun)
@@ -41,21 +64,44 @@ module XCTEJava
       mapperName =
         CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.variableNameStyle)
 
+      pageNumStr = fun.xmlElement.attributes["page_filter"]
+
+      if pageNumStr != nil
+        pageNums = pageNumStr.split(",")
+      else
+        pageNums = Array.new
+      end
+
       params = Array.new
 
-      #bld.add "@CrossOrigin"
-      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '")')
+      params.push('@RequestParam("pageNum") Long pageNum')
+      params.push('@RequestParam("pageSize") Long pageSize')
+      params.push('@RequestParam("sortBy") String sortBy')
+      params.push('@RequestParam("sortAsc") String sortOrder')
+      params.push('@RequestParam("search") String search')
 
-      bld.startFunction("public List<" + Utils.instance.getStyledClassName(cls.getUName()) +
-                        "> Get" + Utils.instance.getStyledClassName(cls.getUName()) +
-                        "s(" + params.join(", ") + ")")
+      bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
-      bld.add("var items = " + dataStoreName + ".findAll();")
+      bld.startFunctionParamed("public " + @returnType + " Get" +
+                               Utils.instance.getStyledClassName(cls.getUName()) + "s", params)
 
-      if cls.dataClass != nil
-        bld.add "var mappedItems = new ArrayList<" + Utils.instance.getStyledClassName(cls.getUName()) + ">();"
-        bld.add mapperName + ".mapList(items, mappedItems);"
+      bld.add "Sort sort = Filter.getSort(sortBy, sortOrder);"
+      bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
+
+      bld.separate
+
+      bld.add("var items = " + dataStoreName + ".findAll(pageRequest);")
+
+      if @dsClass != nil
+        bld.add "var dataSet = new " + @returnType + "();"
+        bld.add "var mappedItems = " + mapperName + ".mapPage(items);"
+        bld.add "dataSet.items = mappedItems;"
+        bld.separate
+        bld.add("return dataSet;")
+      elsif cls.dataClass != nil
+        bld.add "var mappedItems = " + mapperName + ".mapPage(items);"
         bld.add("return mappedItems;")
+        bld.separate
       else
         bld.add("return items;")
       end

@@ -21,4 +21,9 @@
       		  <function name="method_service_datagen_faker_get" />
       		  <function name="method_service_datagen_init" />
       	</gen_class>
+
+      	<gen_class type="class_filter_util" name="filter" path="util" ns="com.example.demo.util">
+      		  <function name="method_pagerequest_filter" />
+      		  <function name="method_sort_filter" />
+      	</gen_class>
 </class_group>
