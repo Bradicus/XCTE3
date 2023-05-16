@@ -42,7 +42,7 @@ module XCTETypescript
             bld.add(name + varName + ".push(" + getFakerAssignment(var) + ");")
           end
         elsif (!var.isList())
-          varCls = Classes.findVarClass(var, "ts_interface")
+          varCls = ClassPluginManager.findVarClass(var, "ts_interface")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
 
@@ -59,7 +59,9 @@ module XCTETypescript
     def getFakerAssignment(var)
       varType = var.getUType().downcase()
 
-      if Utils.instance.isNumericPrimitive(var)
+      if var.selectFrom != nil
+        return "1"
+      elsif Utils.instance.isNumericPrimitive(var)
         return "faker.random.numeric(8)"
       elsif (varType.start_with?("datetime"))
         return "faker.date.recent()"

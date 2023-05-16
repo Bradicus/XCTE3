@@ -1,4 +1,4 @@
-class Classes
+class ClassPluginManager
   @@list = Array.new
 
   def self.list
@@ -11,14 +11,28 @@ class Classes
 
   def self.findClass(modelName, classPlugName)
     for c in @@list
-      # puts c.plugName + " " + classPlugName
-      # puts c.model.name + " " + className
+      # puts classPlugName + " " + c.plugName
+      # puts modelName + " " + c.model.name
       if (c.plugName == classPlugName && nameMatches(c.model.name, modelName))
         return c
       end
     end
 
     return nil
+  end
+
+  def self.findFeatureClasses(featureGroup)
+    classes = Array.new
+
+    for c in @@list
+      # puts c.plugName + " " + classPlugName
+      # puts c.model.name + " " + className
+      if (c.model.featureGroup == featureGroup)
+        classes.push c
+      end
+    end
+
+    return classes
   end
 
   def self.findVarClass(var, plugName = nil)

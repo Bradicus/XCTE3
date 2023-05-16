@@ -1,5 +1,5 @@
 require "singleton"
-require "classes"
+require "managers/class_plugin_manager"
 
 class ProjectPlans
   attr_accessor :plans

@@ -13,7 +13,7 @@ require "plugins_core/lang_php/method_data_list_display_edit.rb"
 require "code_elem.rb"
 require "code_elem_parent.rb"
 require "lang_file.rb"
-require "classes"
+require "managers/class_plugin_manager"
 
 module XCTEPhp
   class ClassDataListValidate < XCTEPlugin
@@ -81,7 +81,7 @@ module XCTEPhp
       listInfo = XCTEPhp::Utils::getDataListInfo(codeClassValidator.xmlElement)
       listPath = File.dirname(codeClassValidator.path)
 
-      codeClass = Classes.findClass(codeClassValidator.coreClass)
+      codeClass = ClassPluginManager.findClass(codeClassValidator.coreClass)
 
       outCode.add
 

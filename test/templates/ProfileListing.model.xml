@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="profile listing">
+<model name="profile listing" feature_group="profile">
 
 	<description>
 	</description>

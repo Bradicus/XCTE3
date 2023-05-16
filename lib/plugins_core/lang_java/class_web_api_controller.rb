@@ -80,7 +80,7 @@ module XCTEJava
 
       classDec = cls.model.visibility + " class " + getClassName(cls)
 
-      for par in (0..cls.baseClasses.size)
+      for par in (0..cls.baseClassPluginManager.size)
         if cls.baseClasses[par] != nil
           classDec << ", " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         end

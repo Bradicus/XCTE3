@@ -127,7 +127,7 @@ module XCTECpp
 
       classDec = "class " + cls.name
 
-      for par in (0..cls.baseClasses.size)
+      for par in (0..cls.baseClassPluginManager.size)
         nameSp = ""
         if par == 0 && cls.baseClasses[par] != nil
           classDec << " : "

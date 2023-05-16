@@ -37,7 +37,7 @@ module XCTETypescript
       # Generate class variables
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
-          varCls = Classes.findVarClass(var, "ts_interface")
+          varCls = ClassPluginManager.findVarClass(var, "ts_interface")
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
         end
       }))

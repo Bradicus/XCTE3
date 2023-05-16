@@ -37,7 +37,7 @@ module XCTETypescript
             vName = Utils.instance.getStyledVariableName(var, "", " id")
             bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
           else
-            varCls = Classes.findVarClass(var, "class_angular_data_map_service")
+            varCls = ClassPluginManager.findVarClass(var, "class_angular_data_map_service")
             if varCls != nil
               vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
 

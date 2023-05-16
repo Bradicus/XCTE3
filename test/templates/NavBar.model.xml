@@ -5,8 +5,8 @@
 	</description>
 
 	<var_group>
-		<var name="Profile"		type="Profile" />
-		<var name="Role"		type="Role" />
 	</var_group>
+
+	<gen_class type="class_angular_navbar" path="navbar" />
 
 </model>

@@ -15,7 +15,7 @@ module XCTEJava
   class MethodWebApiBase < XCTEPlugin
     def get_data_class(cls)
       if cls.dataClass != nil
-        dataClass = Classes.findClass(cls.dataClass.className, cls.dataClass.pluginName)
+        dataClass = ClassPluginManager.findClass(cls.dataClass.className, cls.dataClass.pluginName)
         if dataClass != nil
           return dataClass
         end

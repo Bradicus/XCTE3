@@ -150,7 +150,7 @@ module XCTECss
               bld.add(Utils.instance.getStyledVariableName(var) + ": this.fb.array(),")
             end
           else
-            otherClass = Classes.findVarClass(var)
+            otherClass = ClassPluginManager.findVarClass(var)
 
             if var.isList()
               bld.add(Utils.instance.getStyledVariableName(var) + ": ")

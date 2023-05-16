@@ -94,7 +94,7 @@ module XCTETypescript
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          varCls = Classes.findVarClass(var, "class_angular_data_map_service")
+          varCls = ClassPluginManager.findVarClass(var, "class_angular_data_map_service")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_map_service")
             Utils.instance.addParamIfAvailable(constructorParams, vService)

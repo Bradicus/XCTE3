@@ -32,7 +32,7 @@ require "project_plans"
 require "project_plan"
 require "active_component"
 require "lang_profiles"
-require "classes"
+require "managers/class_plugin_manager"
 
 def processProjectComponentGroup(project, pcGroup)
   currentDir = Dir.pwd

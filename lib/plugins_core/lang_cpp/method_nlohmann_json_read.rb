@@ -9,7 +9,7 @@
 
 require "x_c_t_e_plugin.rb"
 require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
-require "classes"
+require "managers/class_plugin_manager"
 
 module XCTECpp
   class MethodNlohmannJsonRead < XCTEPlugin
@@ -79,7 +79,7 @@ module XCTECpp
       bld.startBlock("if (json.is_null() == false)")
 
       for bc in cls.standardClass.baseClasses
-        bClass = Classes.findClass(bc.name, "standard")
+        bClass = ClassPluginManager.findClass(bc.name, "standard")
         bld.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::read(json, item);")
       end
 
@@ -88,7 +88,7 @@ module XCTECpp
         if !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
-          curVarClass = Classes.findVarClass(var)
+          curVarClass = ClassPluginManager.findVarClass(var)
 
           isEnum = curVarClass != nil && curVarClass.plugName == "enum"
 

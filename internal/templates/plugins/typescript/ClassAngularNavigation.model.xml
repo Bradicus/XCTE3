@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="class angular navigation" >
+
+	<description>
+	Angular navigation class
+	</description>
+				
+	<gen_class type="xcte_class_plugin" ns="XCTETypescript" path="XCTETypescript" lang="typescript" >
+	</gen_class>	
+	
+</model>

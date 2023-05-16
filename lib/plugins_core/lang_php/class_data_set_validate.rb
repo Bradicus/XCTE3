@@ -80,7 +80,7 @@ module XCTEPhp
       listInfo = XCTEPhp::Utils::getDataListInfo(codeClassValidator.xmlElement)
       listPath = File.dirname(codeClassValidator.path)
 
-      codeClass = Classes.findClass(codeClassValidator.coreClass)
+      codeClass = ClassPluginManager.findClass(codeClassValidator.coreClass)
 
       outCode.add
 

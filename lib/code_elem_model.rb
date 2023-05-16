@@ -22,7 +22,7 @@ require "rexml/document"
 module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :classes, :name, :description,
-                  :case, :varGroup, :xmlFileName, :lastModified, :modelSet
+                  :case, :varGroup, :xmlFileName, :lastModified, :modelSet, :featureGroup
 
     def initialize
       super()
@@ -36,6 +36,7 @@ module CodeStructure
       @xmlFileName = ""
       @modelSet = nil
       @lastModified
+      @featureGroup = nil
     end
 
     def copy()

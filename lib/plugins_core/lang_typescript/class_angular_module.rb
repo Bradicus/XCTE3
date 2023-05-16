@@ -53,7 +53,9 @@ module XCTETypescript
                        getStyledClassName(cls.getUName() + " routing module"))
       end
 
-      for otherCls in cls.model.classes
+      relClasses = Utils.instance.getRelatedClasses(cls)
+
+      for otherCls in relClasses
         if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
             otherCls.plugName.start_with?("class_angular_listing"))
           plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
@@ -77,35 +79,15 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      # bld.add("const routes: Routes = [")
-      # for otherCls in cls.model.classes
-      #   if otherCls.plugName.start_with? "class_angular_reactive_edit"
-      #     viewPath = getStyledFileName(otherCls.model.name + "/view")
-      #     editPath = getStyledFileName(otherCls.model.name + "/edit")
-
-      #     plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-      #     compName = plug.getClassName(otherCls)
-      #     #compName = getClassName(cls)
-      #     bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
-      #     bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
-      #   elsif otherCls.plugName == "class_angular_listing"
-      #     listPath = getStyledFileName(otherCls.model.name + "/listing")
-      #     plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
-      #     compName = plug.getClassName(otherCls)
-      #     bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
-      #   end
-      # end
-      # bld.add("];")
-
-      #bld.separate
+      relClasses = Utils.instance.getRelatedClasses(cls)
 
       bld.add("@NgModule({")
       bld.indent
       bld.add "declarations: ["
 
       decList = Array.new
-      Utils.instance.addClassnamesFor(decList, cls, "typescript", "class_angular_reactive_edit")
-      Utils.instance.addClassnamesFor(decList, cls, "typescript", "class_angular_listing")
+      Utils.instance.addClassnamesFor(decList, relClasses, "typescript", "class_angular_reactive_edit")
+      Utils.instance.addClassnamesFor(decList, relClasses, "typescript", "class_angular_listing")
 
       Utils.instance.renderClassList(decList, bld)
 
@@ -113,13 +95,13 @@ module XCTETypescript
 
       importList = ["CommonModule", "RouterModule"]
 
-      for otherCls in cls.model.classes
-        if otherCls.plugName.start_with? "class_angular_reactive_edit"
+      for otherCls in relClasses
+        if otherCls.plugName.start_with?("class_angular_reactive_edit")
           importList.push("ReactiveFormsModule")
         end
       end
 
-      Utils.instance.addClassnamesFor(importList, cls, "typescript", "class_angular_module_routing")
+      Utils.instance.addClassnamesFor(importList, relClasses, "typescript", "class_angular_module_routing")
 
       process_var_group_imports(cls, bld, cls.model.varGroup, importList)
 
@@ -129,8 +111,8 @@ module XCTETypescript
 
       exportList = ["RouterModule"]
 
-      Utils.instance.addClassnamesFor(exportList, cls, "typescript", "class_angular_reactive_edit")
-      Utils.instance.addClassnamesFor(exportList, cls, "typescript", "class_angular_listing")
+      Utils.instance.addClassnamesFor(exportList, relClasses, "typescript", "class_angular_reactive_edit")
+      Utils.instance.addClassnamesFor(exportList, relClasses, "typescript", "class_angular_listing")
 
       bld.add "exports:["
       Utils.instance.renderClassList(exportList, bld)
@@ -155,7 +137,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = Classes.findVarClass(var, "class_angular_reactive_edit")
+            varCls = ClassPluginManager.findVarClass(var, "class_angular_reactive_edit")
             editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               importList.push(getStyledClassName(editClass.model.name + " module"))

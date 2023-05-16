@@ -66,7 +66,7 @@ module XCTECSharp
 
       classDec = cls.model.visibility + " class " + getClassName(cls) + " : IEntityTypeConfiguration<" + Utils.instance.getStyledClassName(cls.getUName()) + ">"
 
-      for par in (0..cls.baseClasses.size)
+      for par in (0..cls.baseClassPluginManager.size)
         if par == 0 && cls.baseClasses[par] != nil
           classDec << " < " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         elsif cls.baseClasses[par] != nil

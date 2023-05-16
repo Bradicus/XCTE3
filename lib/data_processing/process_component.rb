@@ -13,7 +13,7 @@ module DataProcessing
       currentDir = Dir.pwd
       projectPlan = ProjectPlan.new
       ProjectPlans.instance.plans[pComponent.language] = projectPlan
-      Classes.reset()
+      ClassPluginManager.reset()
       ClassGroups.reset()
 
       Log.debug("Processing component path: " + pComponent.tplPath)

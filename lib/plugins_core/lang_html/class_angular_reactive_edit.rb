@@ -82,7 +82,7 @@ module XCTEHtml
             rowNode = new_row(cls, rowContainer, rowNode)
             rowContainer = fieldsetNode
 
-            varCls = Classes.findVarClass(var)
+            varCls = ClassPluginManager.findVarClass(var)
 
             if varCls != nil
               eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).
@@ -108,7 +108,7 @@ module XCTEHtml
             else
               if var.relation != nil
                 optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
-                varCls = Classes.findVarClass(optVar)
+                varCls = ClassPluginManager.findVarClass(optVar)
                 if (varCls == nil)
                   puts "Unable to find variable call " + var.getUType()
                 end
@@ -118,7 +118,7 @@ module XCTEHtml
                 tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", "async")
                 rowContainer.add_child(tableNode)
               else
-                varCls = Classes.findVarClass(var)
+                varCls = ClassPluginManager.findVarClass(var)
                 if (varCls == nil)
                   puts "Unable to find variable call " + var.getUType()
                 end

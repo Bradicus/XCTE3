@@ -47,6 +47,18 @@ module XCTETypescript
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/router", "RouterModule, Routes")
 
+      if cls.model.featureGroup != nil
+        fClasses = ClassPluginManager.findFeatureClasses(cls.model.featureGroup)
+
+        for otherCls in fClasses
+          if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
+              otherCls.plugName.start_with?("class_angular_listing"))
+            plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
+            cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
+          end
+        end
+      end
+
       for otherCls in cls.model.classes
         if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
             otherCls.plugName.start_with?("class_angular_listing"))
@@ -71,23 +83,26 @@ module XCTETypescript
       bld.add("path: '" + getStyledFileName(cls.getUName()) + "', ")
       bld.add("children: [ ")
 
-      for otherCls in cls.model.classes
-        if otherCls.plugName.start_with? "class_angular_reactive_edit"
-          viewPath = getStyledFileName("view")
-          editPath = getStyledFileName("edit")
+      pathLines = Array.new
 
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-          compName = plug.getClassName(otherCls)
-          #compName = getClassName(cls)
-          bld.iadd("{ path: '" + viewPath + "/:id', component: " + compName + " },")
-          bld.iadd("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
-        elsif otherCls.plugName == "class_angular_listing"
-          listPath = getStyledFileName("listing")
-          plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
-          compName = plug.getClassName(otherCls)
-          bld.iadd("{ path: '" + listPath + "', component: " + compName + " },")
+      if cls.model.featureGroup != nil
+        fClasses = ClassPluginManager.findFeatureClasses(cls.model.featureGroup)
+
+        for otherCls in fClasses
+          addPathsForClass(cls, bld, otherCls, pathLines)
         end
       end
+
+      for otherCls in cls.model.classes
+        addPathsForClass(cls, bld, otherCls, pathLines)
+      end
+
+      uniqLines = pathLines.uniq
+
+      for pline in uniqLines
+        bld.iadd pline
+      end
+
       bld.add("]")
       bld.unindent
       bld.add("}")
@@ -112,6 +127,24 @@ module XCTETypescript
       bld.endClass
     end
 
+    def addPathsForClass(cls, bld, otherCls, pathLines)
+      if otherCls.plugName.start_with? "class_angular_reactive_edit"
+        viewPath = getStyledFileName("view")
+        editPath = getStyledFileName("edit")
+
+        plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
+        compName = plug.getClassName(otherCls)
+        #compName = getClassName(cls)
+        pathLines.push("{ path: '" + viewPath + "/:id', component: " + compName + " },")
+        pathLines.push("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
+      elsif otherCls.plugName == "class_angular_listing"
+        listPath = getStyledFileName("listing")
+        plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
+        compName = plug.getClassName(otherCls)
+        pathLines.push("{ path: '" + listPath + "', component: " + compName + " },")
+      end
+    end
+
     # process variable group
     def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
@@ -133,7 +166,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = Classes.findVarClass(var)
+            varCls = ClassPluginManager.findVarClass(var)
             editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               bld.iadd(getStyledClassName(editClass.model.name + " module") + ",")
@@ -169,7 +202,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = Classes.findVarClass(var)
+            varCls = ClassPluginManager.findVarClass(var)
             fPath = getStyledFileName(var.getUType() + "")
             cls.addInclude(varCls.path + "/" + fPath + ".module", getStyledClassName(var.getUType() + " module"))
           end

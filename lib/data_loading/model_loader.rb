@@ -28,7 +28,8 @@ module DataLoading
       xmlString = file.read
       xmlDoc = REXML::Document.new xmlString
       depthStack = Array.new
-      model.name = xmlDoc.root.attributes["name"]
+      model.name = AttributeLoader.init(xmlDoc.root).names("name").get()
+      model.featureGroup = AttributeLoader.init(xmlDoc.root).names("feature_group").get()
       model.xmlElement = xmlDoc.root
 
       xmlDoc.root.elements.each("derived") { |derived|
@@ -77,18 +78,18 @@ module DataLoading
       ClassGroupRefLoader::loadClassGroupRef(cgRef, cgRefXml)
 
       ClassLoader.loadClass(pComponent, cls, genCXML)
-      Classes.list << cls
+      ClassPluginManager.list << cls
       model.classes << cls
 
       if cls.interfaceNamespace.hasItems?()
         intf = processInterface(cls, model, pComponent)
-        Classes.list << intf
+        ClassPluginManager.list << intf
         model.classes << intf
       end
 
       if cls.testNamespace.hasItems?()
         intf = ClassLoader.processTests(cls, model, pComponent)
-        Classes.list << intf
+        ClassPluginManager.list << intf
         model.classes << cls
       end
     end

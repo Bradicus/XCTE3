@@ -118,18 +118,18 @@ module DataLoading
         end
       }
 
-      Classes.list << genC
+      ClassPluginManager.list << genC
       genC.model.classes << genC
 
       if genC.interfaceNamespace.hasItems?()
         intf = processInterface(genC, model, pComponent)
-        Classes.list << intf
+        ClassPluginManager.list << intf
         genC.model.classes << intf
       end
 
       if genC.testNamespace.hasItems?()
         intf = ClassLoader.processTests(genC, model, pComponent)
-        Classes.list << intf
+        ClassPluginManager.list << intf
         genC.model.classes << genC
       end
 

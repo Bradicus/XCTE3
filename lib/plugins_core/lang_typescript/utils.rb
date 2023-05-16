@@ -184,7 +184,7 @@ module XCTETypescript
             bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         else
-          otherClass = Classes.findVarClass(var, "ts_interface")
+          otherClass = ClassPluginManager.findVarClass(var, "ts_interface")
 
           if !var.isList()
             if otherClass != nil
@@ -251,8 +251,8 @@ module XCTETypescript
       return isPrim && isNum
     end
 
-    def addClassnamesFor(clsList, cls, language, classType)
-      for otherCls in cls.model.classes
+    def addClassnamesFor(clsList, otherClasses, language, classType)
+      for otherCls in otherClasses
         if otherCls.plugName == classType
           plug = XCTEPlugin::findClassPlugin(language, classType)
           clsList.push(plug.getClassName(otherCls))
@@ -272,6 +272,24 @@ module XCTETypescript
         bld.iadd(c)
         firstLine = false
       end
+    end
+
+    def getRelatedClasses(cls)
+      relClasses = Array.new
+
+      if cls.model.featureGroup != nil
+        fClasses = ClassPluginManager.findFeatureClasses(cls.model.featureGroup)
+
+        for otherCls in fClasses
+          relClasses.push(otherCls)
+        end
+      end
+
+      for otherCls in cls.model.classes
+        relClasses.push(otherCls)
+      end
+
+      return relClasses.uniq
     end
 
     def getOptionsVarFor(var)
