@@ -78,18 +78,18 @@ module DataLoading
       ClassGroupRefLoader::loadClassGroupRef(cgRef, cgRefXml)
 
       ClassLoader.loadClass(pComponent, cls, genCXML)
-      ClassPluginManager.list << cls
+      ClassModelManager.list << cls
       model.classes << cls
 
       if cls.interfaceNamespace.hasItems?()
         intf = processInterface(cls, model, pComponent)
-        ClassPluginManager.list << intf
+        ClassModelManager.list << intf
         model.classes << intf
       end
 
       if cls.testNamespace.hasItems?()
         intf = ClassLoader.processTests(cls, model, pComponent)
-        ClassPluginManager.list << intf
+        ClassModelManager.list << intf
         model.classes << cls
       end
     end

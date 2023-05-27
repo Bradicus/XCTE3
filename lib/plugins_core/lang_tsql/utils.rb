@@ -73,7 +73,7 @@ module XCTETSql
         end
       else
         if var.hasOneToOneRelation()
-          refClass = ClassPluginManager.findVarClass(var)
+          refClass = ClassModelManager.findVarClass(var)
           if refClass != nil
             return @langProfile.getTypeName(refClass.model.getIdentityVar().vtype)
           end

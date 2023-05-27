@@ -17,6 +17,34 @@ module XCTETypescript
       return Utils.instance.getStyledClassName(uName)
     end
 
+    def get_relative_route(cls, actionName)
+      route = Array.new
+
+      if cls.for != nil
+        route.push(cls.for)
+      end
+
+      if (!cls.model.name.include?(actionName))
+        route.push(Utils.instance.getStyledUrlName(cls.model.name) + "-" + actionName)
+      else
+        route.push(Utils.instance.getStyledUrlName(cls.model.name))
+      end
+
+      return route
+    end
+
+    def get_full_route(cls, actionName)
+      route = Array.new
+
+      if cls.featureGroup != nil
+        route.push(cls.featureGroup)
+      else
+        route.push(cls.model.name)
+      end
+
+      return route + get_relative_route(cls, actionName)
+    end
+
     def process_dependencies(cls, bld)
       # Generate dependency code for functions
       for fun in cls.functions

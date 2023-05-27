@@ -47,9 +47,9 @@ module CodeStructure
     #
     # Finds a class that this model has by type name
     #
-    def findClassByType(classType)
+    def findClassModelByPluginName(plugName)
       for cls in @classes
-        if cls.plugName == classType
+        if cls.plugName == plugName
           return cls
         end
       end

@@ -28,11 +28,11 @@ require "user_settings.rb"
 require "types.rb"
 
 require "run_settings"
-require "project_plans"
 require "project_plan"
 require "active_component"
 require "lang_profiles"
-require "managers/class_plugin_manager"
+require "managers/class_model_manager"
+require "managers/project_plan_manager"
 
 def processProjectComponentGroup(project, pcGroup)
   currentDir = Dir.pwd

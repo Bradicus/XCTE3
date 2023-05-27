@@ -64,7 +64,7 @@ module XCTECSharp
 
       classDec << " : ApiController"
 
-      for par in (0..cls.baseClassPluginManager.size)
+      for par in (0..cls.baseClassModelManager.size)
         if cls.baseClasses[par] != nil
           classDec << ", " << cls.baseClasses[par].visibility << " " << cls.baseClasses[par].name
         end

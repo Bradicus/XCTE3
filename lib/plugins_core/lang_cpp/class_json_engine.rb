@@ -105,7 +105,7 @@ module XCTECpp
 
       classDec = "class " + Utils.instance.getDerivedClassPrefix(cls)
 
-      for par in (0..cls.baseClassPluginManager.size)
+      for par in (0..cls.baseClassModelManager.size)
         nameSp = ""
         if par == 0 && cls.baseClasses[par] != nil
           classDec << " : "

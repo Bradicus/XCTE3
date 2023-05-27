@@ -191,7 +191,7 @@ module XCTEJava
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = ClassPluginManager.findVarClass(var)
+            varCls = ClassModelManager.findVarClass(var)
             fPath = getStyledFileName(var.getUType() + "")
             cls.addInclude(varCls.path + "/" + fPath + ".module", getStyledClassName(var.getUType() + " module"))
           end
@@ -204,7 +204,7 @@ module XCTEJava
     end
 
     def requires_var(cls, var)
-      #varClass = ClassPluginManager.findVarClass(var)
+      #varClass = ClassModelManager.findVarClass(var)
       varClassAndPlug = RefFinder.find_class_by_type(cls.genCfg.language, var.getUType())
       #requires_other_class_type(cls, varClass, varClass.plug.name)
 
@@ -214,14 +214,14 @@ module XCTEJava
     end
 
     def requires_other_class_type(cls, otherCls, plugName)
-      plugNameClass = cls.model.findClassByType(plugName)
+      plugNameClass = cls.model.findClassModelByPluginName(plugName)
       if !cls.namespace.same?(plugNameClass.namespace)
         cls.addUse(plugNameClass.namespace.get(".") + ".*")
       end
     end
 
     def requires_class_type(cls, fromCls, plugName)
-      plugNameClass = fromCls.model.findClassByType(plugName)
+      plugNameClass = fromCls.model.findClassModelByPluginName(plugName)
 
       if (plugNameClass == nil)
         Log.error("unable to find class by type " + plugName)
@@ -231,7 +231,7 @@ module XCTEJava
     end
 
     def requires_class_ref(cls, classRef)
-      plugNameClass = ClassPluginManager.findClass(classRef.className, classRef.pluginName)
+      plugNameClass = ClassModelManager.findClass(classRef.className, classRef.pluginName)
 
       if (plugNameClass == nil)
         Log.error("unable to find class by ref ")
@@ -242,7 +242,7 @@ module XCTEJava
 
     def get_data_class(cls)
       if cls.dataClass != nil
-        dataClass = ClassPluginManager.findClass(cls.dataClass.className, cls.dataClass.pluginName)
+        dataClass = ClassModelManager.findClass(cls.dataClass.className, cls.dataClass.pluginName)
         if dataClass != nil
           return dataClass
         end
@@ -252,7 +252,7 @@ module XCTEJava
     end
 
     def add_class_injection(toCls, fromCls, plugName)
-      varClass = fromCls.model.findClassByType(plugName)
+      varClass = fromCls.model.findClassModelByPluginName(plugName)
       if varClass != nil
         var = createVarFor(varClass, plugName)
         var.visibility = "private"

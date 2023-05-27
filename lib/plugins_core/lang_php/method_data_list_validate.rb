@@ -23,7 +23,7 @@ module XCTEPhp
       listInfo = XCTEPhp::Utils::getDataListInfo(listCodeClass.xmlElement)
       listPath = File.dirname(listCodeClass.path)
 
-      codeClass = ClassPluginManager.findClass(codeClass.coreClass)
+      codeClass = ClassModelManager.findClass(codeClass.coreClass)
 
       # First get info for child class
 

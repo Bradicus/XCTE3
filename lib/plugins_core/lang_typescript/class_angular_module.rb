@@ -137,7 +137,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = ClassPluginManager.findVarClass(var, "class_angular_reactive_edit")
+            varCls = ClassModelManager.findVarClass(var, "class_angular_reactive_edit")
             editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               importList.push(getStyledClassName(editClass.model.name + " module"))

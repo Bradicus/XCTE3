@@ -171,7 +171,7 @@ class UtilsBase
   # Add an include if there's a class model defined for it
   def tryAddIncludeForVar(cls, var, plugName)
     clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
-    clsGen = ClassPluginManager.findClass(var.getUType(), plugName)
+    clsGen = ClassModelManager.findClass(var.getUType(), plugName)
 
     if clsPlug != nil && clsGen != nil
       cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))

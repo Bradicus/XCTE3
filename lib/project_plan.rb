@@ -1,5 +1,5 @@
 require "singleton"
-require "managers/class_plugin_manager"
+require "managers/class_model_manager"
 
 class ProjectPlan
   attr_reader :classes, :models
@@ -43,7 +43,7 @@ class ProjectPlan
   def findClassFunction(languageName, modelName, classPlugName, funPlugName)
     for model in @models
       if model.name == modelName
-        return ClassPluginManager.findClassFunction(classPlugName, funPlugName)
+        return ClassModelManager.findClassFunction(classPlugName, funPlugName)
       end
     end
 

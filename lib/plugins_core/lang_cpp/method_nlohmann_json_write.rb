@@ -72,7 +72,7 @@ module XCTECpp
         if !var.isStatic
           curVarName = Utils.instance.getStyledVariableName(var)
           curVarType = Utils.instance.getTypeName(var)
-          curVarClass = ClassPluginManager.findVarClass(var)
+          curVarClass = ClassModelManager.findVarClass(var)
           isEnum = curVarClass != nil && curVarClass.plugName == "enum"
 
           if (Utils.instance.isPrimitive(var) || isEnum)

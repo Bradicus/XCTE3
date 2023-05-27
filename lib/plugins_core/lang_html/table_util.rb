@@ -77,7 +77,7 @@ module XCTEHtml
       tHead = HtmlNode.new("thead")
       tHeadRow = HtmlNode.new("tr")
 
-      optClass = ClassPluginManager.findVarClass(optionsVar)
+      optClass = ClassModelManager.findVarClass(optionsVar)
       listVarName = Utils.instance.getStyledVariableName(optionsVar)
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|

@@ -2,6 +2,8 @@
 # Class:: ClassAngularNavbar
 #
 require "active_component"
+require "navigation_node"
+require "managers/project_plan_manager"
 
 module XCTETypescript
   class ClassAngularNavbar < ClassBase
@@ -12,14 +14,14 @@ module XCTETypescript
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName()
+      return cls.getUName() + " component"
     end
 
     def genSourceFiles(cls)
       srcFiles = Array.new
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
 
       process_dependencies(cls, bld)
@@ -33,6 +35,10 @@ module XCTETypescript
       return srcFiles
     end
 
+    def process_dependencies(cls, bld)
+      cls.addInclude("@angular/core", "Component")
+    end
+
     # Returns the code for the comment for this class
     def genFileComment(cls, bld)
     end
@@ -43,15 +49,16 @@ module XCTETypescript
 
       bld.startClass("class NavNode")
       bld.add("name: string;")
-      bld.add("url?: string;")
+      bld.add("url: string | null;")
       bld.add("children: NavNode[] = [];")
 
-      bld.startFunction("constructor(name: string, url?: string)")
+      bld.startFunction("constructor(name: string, url: string | null)")
 
       bld.add("this.name = name;")
       bld.add("this.url = url;")
       bld.endFunction
       bld.endBlock
+      bld.separate
 
       bld.add("@Component({")
       bld.indent
@@ -61,24 +68,101 @@ module XCTETypescript
       bld.unindent
       bld.add("})")
 
-      bld.startClass("class " + getClassName(cls))
+      bld.startClass("export class " + getClassName(cls))
 
-      bld.add('public navNode:NavNode = new NavNode("");')
+      bld.add('public navNode:NavNode = new NavNode("", null);')
+      bld.add "collapsed = true;"
+      bld.separate
 
-      bld.startFunction("constructor(aRoute: ActivatedRoute)")
+      bld.startFunction("constructor()")
 
-      for otherCls in ActiveComponent.get().models
+      features = Hash.new
+      rootNode = NavigationNode.new("", "/")
+
+      for mdl in ProjectPlanManager.current().models
+        for otherCls in mdl.classes
+          if (otherCls.plugName.start_with?("class_angular_listing"))
+            plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
+
+            featureName = otherCls.featureGroup
+            if featureName == nil
+              featureName = cls.model.name
+            end
+
+            formattedFeatureName = featureName.capitalize
+            curNode = findChildNode(rootNode, formattedFeatureName)
+
+            if curNode == nil
+              curNode = NavigationNode.new(formattedFeatureName, nil)
+              rootNode.children.push(curNode)
+            end
+
+            editPath = plug.get_full_route(otherCls, "listing")
+            curNode.children.push(NavigationNode.new(formattedFeatureName + " listing", editPath))
+          elsif otherCls.plugName.start_with?("class_angular_reactive_edit")
+            plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
+
+            featureName = otherCls.featureGroup
+            if featureName == nil
+              featureName = cls.model.name
+            end
+
+            formattedFeatureName = featureName.capitalize
+            curNode = findChildNode(rootNode, formattedFeatureName)
+
+            if curNode == nil
+              curNode = NavigationNode.new(formattedFeatureName, nil)
+              rootNode.children.push(curNode)
+            end
+
+            editPath = plug.get_full_route(otherCls, "edit")
+            curNode.children.push(NavigationNode.new(featureName.capitalize + " create", editPath))
+          end
+        end
       end
 
-      # constructor(aRoute: ActivatedRoute) {
-      #   var roleNode = new NavNode("Role");
-      #   var roleEdit = new NavNode("Edit", "/role/edit");
-      #   roleNode.children.push(roleEdit);
-      #   this.navNode.children.push(roleNode);
+      bld.add "var newNode: NavNode;"
+      bld.add "var cNode: NavNode;"
+
+      for nd in rootNode.children
+        renderAddNodeLine(bld, nd, "newNode", "this.navNode")
+
+        for cnd in nd.children
+          renderAddNodeLine(bld, cnd, "cNode", "newNode")
+        end
+      end
 
       bld.endFunction
 
+      bld.separate
+
+      bld.startFunction "addNode(toNode: NavNode, name: string, link: string | null)"
+      bld.add "var newNode = new NavNode(name, link);"
+      bld.add "toNode.children.push(newNode);"
+      bld.add "return newNode;"
+      bld.endFunction
+
       bld.endClass
+    end
+
+    def findChildNode(rootNode, formattedFeatureName)
+      if rootNode.children != nil
+        for node in rootNode.children
+          if node.name == formattedFeatureName
+            return node
+          end
+        end
+      end
+
+      return nil
+    end
+
+    def renderAddNodeLine(bld, nd, assignTo, addToNode)
+      if nd.link != nil
+        bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", "' + nd.link.join("/") + '");')
+      else
+        bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", null);')
+      end
     end
   end
 end

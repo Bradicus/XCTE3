@@ -48,7 +48,7 @@ module XCTETypescript
       cls.addInclude("@angular/router", "RouterModule, Routes")
 
       if cls.model.featureGroup != nil
-        fClasses = ClassPluginManager.findFeatureClasses(cls.model.featureGroup)
+        fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
 
         for otherCls in fClasses
           if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
@@ -86,7 +86,7 @@ module XCTETypescript
       pathLines = Array.new
 
       if cls.model.featureGroup != nil
-        fClasses = ClassPluginManager.findFeatureClasses(cls.model.featureGroup)
+        fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
 
         for otherCls in fClasses
           addPathsForClass(cls, bld, otherCls, pathLines)
@@ -129,19 +129,21 @@ module XCTETypescript
 
     def addPathsForClass(cls, bld, otherCls, pathLines)
       if otherCls.plugName.start_with? "class_angular_reactive_edit"
-        viewPath = getStyledFileName("view")
-        editPath = getStyledFileName("edit")
-
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
+
+        viewPath = plug.get_relative_route(otherCls, "view")
+        editPath = plug.get_relative_route(otherCls, "edit")
+
         compName = plug.getClassName(otherCls)
         #compName = getClassName(cls)
-        pathLines.push("{ path: '" + viewPath + "/:id', component: " + compName + " },")
-        pathLines.push("{ path: '" + editPath + "/:id', component: " + compName + ", data: {enableEdit: true} },")
+        pathLines.push("{ path: '" + viewPath.join("/") + "/:id', component: " + compName + " },")
+        pathLines.push("{ path: '" + editPath.join("/") + "/:id', component: " + compName + ", data: {enableEdit: true} },")
       elsif otherCls.plugName == "class_angular_listing"
-        listPath = getStyledFileName("listing")
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
+
+        listPath = plug.get_relative_route(otherCls, "listing")
         compName = plug.getClassName(otherCls)
-        pathLines.push("{ path: '" + listPath + "', component: " + compName + " },")
+        pathLines.push("{ path: '" + listPath.join("/") + "', component: " + compName + " },")
       end
     end
 
@@ -166,7 +168,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = ClassPluginManager.findVarClass(var)
+            varCls = ClassModelManager.findVarClass(var)
             editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               bld.iadd(getStyledClassName(editClass.model.name + " module") + ",")
@@ -202,7 +204,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !isPrimitive(var)
-            varCls = ClassPluginManager.findVarClass(var)
+            varCls = ClassModelManager.findVarClass(var)
             fPath = getStyledFileName(var.getUType() + "")
             cls.addInclude(varCls.path + "/" + fPath + ".module", getStyledClassName(var.getUType() + " module"))
           end

@@ -76,11 +76,11 @@ module XCTERuby
 
       inheritFrom = ""
 
-      if cls.baseClassPluginManager.length > 0
+      if cls.baseClassModelManager.length > 0
         inheritFrom = " < " + Utils.instance.getClassTypeName(cls.baseClasses[0])
       end
 
-      if cls.baseClassPluginManager.length > 1
+      if cls.baseClassModelManager.length > 1
         Log.error("Ruby doesn't support multiple inheritance")
       end
 

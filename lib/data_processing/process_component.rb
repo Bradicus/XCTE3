@@ -12,8 +12,8 @@ module DataProcessing
       Log.info("Processing component with language: " + pComponent.language)
       currentDir = Dir.pwd
       projectPlan = ProjectPlan.new
-      ProjectPlans.instance.plans[pComponent.language] = projectPlan
-      ClassPluginManager.reset()
+      ProjectPlanManager.plans[pComponent.language] = projectPlan
+      ClassModelManager.reset()
       ClassGroups.reset()
 
       Log.debug("Processing component path: " + pComponent.tplPath)

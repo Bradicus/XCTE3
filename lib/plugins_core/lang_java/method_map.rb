@@ -22,10 +22,10 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def get_definition(cls, bld, fun)
       @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @fromClass = ClassPluginManager.findClass(@fromRef.className, @fromRef.pluginName)
+      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
 
       @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @toClass = ClassPluginManager.findClass(@toRef.className, @toRef.pluginName)
+      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
 
       @genReverse = (fun.xmlElement.attributes["gen_reverse"] == "true")
       @genListMap = (fun.xmlElement.attributes["gen_list_map"] == "true")
@@ -75,10 +75,10 @@ module XCTEJava
 
     def genListMapper(cls, bld, fun)
       @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @fromClass = ClassPluginManager.findClass(@fromRef.className, @fromRef.pluginName)
+      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
 
       @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @toClass = ClassPluginManager.findClass(@toRef.className, @toRef.pluginName)
+      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
 
       @mapParams = Array.new
 
@@ -106,11 +106,11 @@ module XCTEJava
 
     def genPageMapper(cls, bld, fun)
       @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @fromClass = ClassPluginManager.findClass(@fromRef.className, @fromRef.pluginName)
+      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
       @fromClassName = Utils.instance.getStyledClassName(@fromClass.getUName())
 
       @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @toClass = ClassPluginManager.findClass(@toRef.className, @toRef.pluginName)
+      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
       @toClassName = Utils.instance.getStyledClassName(@toClass.getUName())
 
       @mapParams = Array.new
@@ -143,10 +143,10 @@ module XCTEJava
 
     def process_dependencies(cls, bld, fun)
       @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @fromClass = ClassPluginManager.findClass(@fromRef.className, @fromRef.pluginName)
+      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
 
       @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @toClass = ClassPluginManager.findClass(@toRef.className, @toRef.pluginName)
+      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
 
       cls.addUse("java.util.List")
 

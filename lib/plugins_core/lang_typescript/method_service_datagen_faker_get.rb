@@ -42,7 +42,7 @@ module XCTETypescript
             bld.add(name + varName + ".push(" + getFakerAssignment(var) + ");")
           end
         elsif (!var.isList())
-          varCls = ClassPluginManager.findVarClass(var, "ts_interface")
+          varCls = ClassModelManager.findVarClass(var, "ts_interface")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
 

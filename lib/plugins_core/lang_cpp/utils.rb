@@ -221,7 +221,7 @@ module XCTECpp
 
     # Retrieve the standard version of this model's class
     def getStandardClassInfo(cls)
-      cls.standardClass = cls.model.findClassByType("standard")
+      cls.standardClass = cls.model.findClassModelByPluginName("standard")
 
       if (cls.standardClass.namespace.hasItems?)
         ns = cls.standardClass.namespace.get("::") + "::"

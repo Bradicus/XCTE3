@@ -59,7 +59,7 @@ module XCTETypescript
       # Include variable interfaces
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
-          varCls = ClassPluginManager.findVarClass(var, "ts_interface")
+          varCls = ClassModelManager.findVarClass(var, "ts_interface")
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
         end
       }))
@@ -90,7 +90,7 @@ module XCTETypescript
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (!Utils.instance.isPrimitive(var) && !var.hasMultipleItems())
-          varCls = ClassPluginManager.findVarClass(var, "class_angular_data_gen_service")
+          varCls = ClassModelManager.findVarClass(var, "class_angular_data_gen_service")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
             Utils.instance.addParamIfAvailable(constructorParams, vService)

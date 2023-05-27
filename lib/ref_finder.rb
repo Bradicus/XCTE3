@@ -5,7 +5,7 @@ class RefFinder
   def self.find_class_by_type(lang, uType)
     cap = ClassAndPlug.new
 
-    for cls in ClassPluginManager.list
+    for cls in ClassModelManager.list
       XCTEPlugin::getLanguages()[lang].each do |plugKey, plug|
         if NameCompare.same(plug.name, cls.plugName) && NameCompare.same(plug.getUnformattedClassName(cls), uType)
           cap.cls = cls

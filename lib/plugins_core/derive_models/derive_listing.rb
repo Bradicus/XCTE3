@@ -28,11 +28,11 @@ module XCTEDerived
         else
           if (!var.isList())
             selectVar = CodeStructure::CodeElemVariable.new(var.parentElem)
-            selectClass = ClassPluginManager.findVarClassByName(editModel, var)
+            selectClass = ClassModelManager.findVarClassByName(editModel, var)
 
             # If no model set class was found, use regular class
             if selectClass == nil
-              selectClass = ClassPluginManager.findVarClass(var)
+              selectClass = ClassModelManager.findVarClass(var)
             end
 
             if (selectClass == nil)

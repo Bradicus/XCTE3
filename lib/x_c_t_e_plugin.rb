@@ -1,4 +1,5 @@
 require "params/utils_each_var_params"
+require "managers/class_plugin_manager"
 
 #
 # Copyright XCTE Contributors
@@ -11,7 +12,6 @@ require "params/utils_each_var_params"
 class XCTEPlugin
   attr_accessor :pluginRegistry, :languagePlugins, :name, :language, :category, :author
   # @@pluginRegistry = Hash.new
-  @@languagePlugins = Hash.new
   @@modelPlugins = Hash.new
 
   CAT_METHOD = "method"
@@ -41,10 +41,10 @@ class XCTEPlugin
 
     Dir.foreach(codeRootDir + "/plugins_core") do |langDir|
       next if !langDir.include?("lang_")
-      @@languagePlugins[langDir[5..100]] = Hash.new()
+      ClassPluginManager.plugins[langDir[5..100]] = Hash.new()
     end
 
-    @@languagePlugins.each do |langName, langMethods|
+    ClassPluginManager.plugins.each do |langName, langMethods|
       langDir = codeRootDir + "/plugins_core/lang_" + langName
       if Dir.exist?(langDir)
         Find.find(langDir) do |path|
@@ -69,14 +69,14 @@ class XCTEPlugin
       end
     end
 
-    #    @@languagePlugins.each do |langName, langMethods|
+    #    ClassPluginManager.plugins.each do |langName, langMethods|
     #      langMethods = findLangPlugins(langName)
     #    end
   end
 
   # Register a plugin in the plugin repository
   def self.registerPlugin(plug)
-    @@languagePlugins[plug.language][plug.name] = plug
+    ClassPluginManager.plugins[plug.language][plug.name] = plug
   end
 
   # Register a plugin in the plugin repository
@@ -105,7 +105,7 @@ class XCTEPlugin
 
   # Attempts to find the desired class plugin for the desired language
   def self.findMethodPlugin(lang, method)
-    @@languagePlugins[lang].each do |plugKey, plug|
+    ClassPluginManager.plugins[lang].each do |plugKey, plug|
       if plug.name == method && plug.category == "method"
         return plug
       end
@@ -116,7 +116,7 @@ class XCTEPlugin
 
   # Attempts to find the desired method plugin for the desired language
   def self.findClassPlugin(lang, pluginName, ns = nil)
-    @@languagePlugins[lang].each do |plugKey, plug|
+    ClassPluginManager.plugins[lang].each do |plugKey, plug|
       if plug.name == pluginName
         return plug
       end
@@ -127,7 +127,7 @@ class XCTEPlugin
 
   # Attempts to find the desired method plugin for the desired language
   def self.findClassPluginByType(lang, classType, ns = nil)
-    @@languagePlugins[lang].each do |plugKey, plug|
+    ClassPluginManager.plugins[lang].each do |plugKey, plug|
       if plug.getUnformattedClassName() == classType
         return plug
       end
@@ -138,7 +138,7 @@ class XCTEPlugin
 
   # Attempts to find the desired project plugin for the desired language
   def self.findProjectPlugin(lang, prjType)
-    @@languagePlugins[lang].each do |plugKey, plug|
+    ClassPluginManager.plugins[lang].each do |plugKey, plug|
       if plug.category == "project" && plug.name == prjType
         return plug
       end
@@ -159,7 +159,7 @@ class XCTEPlugin
   # end
 
   def self.getLanguages()
-    return @@languagePlugins
+    return ClassPluginManager.plugins
   end
 
   def self.getPlugins()

@@ -62,7 +62,7 @@ module XCTETypescript
           cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(optVar.getUType()),
                          Utils.instance.getStyledClassName(optVar.getUType()))
 
-          bCls = ClassPluginManager.findClass(cls.model.name, "ts_interface")
+          bCls = ClassModelManager.findClass(cls.model.name, "ts_interface")
           optStoreVar = Utils.instance.createVarFor(bCls, "class_angular_data_store_service")
           Utils.instance.tryAddIncludeForVar(bCls, optVar, "class_angular_data_store_service")
           Utils.instance.tryAddIncludeForVar(cls, optVar, "class_angular_data_store_service")
@@ -121,7 +121,7 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
-          optCls = ClassPluginManager.findClass(var.selectFrom, "ts_interface")
+          optCls = ClassModelManager.findClass(var.selectFrom, "ts_interface")
           if optVar == nil
             Log.error("No options var for var: " + var.name)
           elsif optCls == nil
@@ -172,7 +172,7 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
-          optCls = ClassPluginManager.findClass(var.selectFrom, "ts_interface")
+          optCls = ClassModelManager.findClass(var.selectFrom, "ts_interface")
           if optVar == nil
             Log.error("No options var for var: " + var.name)
           elsif optCls == nil

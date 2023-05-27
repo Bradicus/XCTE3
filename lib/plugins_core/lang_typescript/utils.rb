@@ -184,7 +184,7 @@ module XCTETypescript
             bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         else
-          otherClass = ClassPluginManager.findVarClass(var, "ts_interface")
+          otherClass = ClassModelManager.findVarClass(var, "ts_interface")
 
           if !var.isList()
             if otherClass != nil
@@ -278,7 +278,7 @@ module XCTETypescript
       relClasses = Array.new
 
       if cls.model.featureGroup != nil
-        fClasses = ClassPluginManager.findFeatureClasses(cls.model.featureGroup)
+        fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
 
         for otherCls in fClasses
           relClasses.push(otherCls)

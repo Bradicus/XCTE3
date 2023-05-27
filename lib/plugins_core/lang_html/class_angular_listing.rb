@@ -32,8 +32,10 @@ module XCTEHtml
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       if (cls.model.findClassModel("class_angular_reactive_edit"))
+        plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
+
         bld.add('<button type="button" class="btn btn-primary" routerLink="/' +
-                Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/0">New ' + cls.getUName() + "</button>")
+                plug.get_full_route(cls, "edit").join("/") + '/0">New ' + cls.getUName() + "</button>")
       end
 
       tbl = TableUtil.instance.make_table(cls, "items", "item", "async")

@@ -87,7 +87,7 @@ module XCTECSharp
     end
 
     def addClassInclude(cls, plugName)
-      cls.addUse(cls.model.findClassByType(plugName).namespace.get("."))
+      cls.addUse(cls.model.findClassModelByPluginName(plugName).namespace.get("."))
     end
 
     # Returns a size constant for the specified variable
@@ -306,7 +306,7 @@ module XCTECSharp
 
     # Retrieve the standard version of this model's class
     def getStandardClassInfo(cls)
-      cls.standardClass = cls.model.findClassByType("standard")
+      cls.standardClass = cls.model.findClassModelByPluginName("standard")
 
       if (cls.standardClass.namespace.hasItems?())
         ns = cls.standardClass.namespace.get(".") + "."
