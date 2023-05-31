@@ -17,6 +17,7 @@
 	<class_group_ref name="data store server" />
 	<class_group_ref name="data store client" />
 	<class_group_ref name="edit" feature_group="address" />
+	<class_group_ref name="listing" feature_group="address" />
 
 	<gen_class type="class_angular_module" path="address" />
 	<gen_class type="class_angular_module_routing" path="address" />

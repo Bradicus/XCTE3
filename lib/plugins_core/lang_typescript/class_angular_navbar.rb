@@ -107,6 +107,10 @@ module XCTETypescript
               featureName = cls.model.name
             end
 
+            if cls.for != nil
+              featureName = cls.for + " " + featureName
+            end
+
             formattedFeatureName = featureName.capitalize
             curNode = findChildNode(rootNode, formattedFeatureName)
 

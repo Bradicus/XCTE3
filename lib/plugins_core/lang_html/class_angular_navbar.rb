@@ -39,7 +39,13 @@ module XCTEHtml
 
             featureName = otherCls.featureGroup
             if featureName == nil
-              featureName = cls.model.name
+              featureName = otherCls.model.name
+            end
+
+            nodeName = featureName
+
+            if otherCls.for != nil
+              nodeName = otherCls.for + " " + nodeName
             end
 
             formattedFeatureName = featureName.capitalize
@@ -51,13 +57,19 @@ module XCTEHtml
             end
 
             editPath = plug.get_full_route(otherCls, "listing")
-            curNode.children.push(NavigationNode.new(formattedFeatureName + " listing", editPath))
+            curNode.children.push(NavigationNode.new(nodeName.capitalize + " listing", editPath))
           elsif otherCls.plugName.start_with?("class_angular_reactive_edit")
             plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
 
             featureName = otherCls.featureGroup
             if featureName == nil
               featureName = cls.model.name
+            end
+
+            nodeName = featureName
+
+            if otherCls.for != nil
+              nodeName = otherCls.for + " " + nodeName
             end
 
             formattedFeatureName = featureName.capitalize
@@ -70,7 +82,7 @@ module XCTEHtml
 
             editPath = plug.get_full_route(otherCls, "edit")
             editPath.push("0")
-            curNode.children.push(NavigationNode.new(featureName.capitalize + " create", editPath))
+            curNode.children.push(NavigationNode.new(nodeName.capitalize + " create", editPath))
           end
         end
       end

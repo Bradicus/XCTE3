@@ -35,9 +35,5 @@
 			<fromClass cname="profile edit" plugin="standard" />
 			<toClass cname="profile" plugin="{DataModelPlugin}" />
 		</function>
-		<function name="method_map" gen_reverse="true" gen_list_map="true">
-			<fromClass cname="profile listing item" plugin="standard" />
-			<toClass cname="profile" plugin="{DataModelPlugin}" />
-		</function>
 	</gen_class>
 </model>

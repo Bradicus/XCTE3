@@ -39,6 +39,30 @@ module XCTEHtml
       tHead.add_child(tHeadRow)
       tableElem.add_child(tHead)
 
+      # Generate search fields
+      names = load_search_names(cls)
+
+      tHead = HtmlNode.new("thead")
+      tHeadRow = HtmlNode.new("tr")
+
+      if (names.length > 0)
+        Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
+          if names.include?(var.name)
+            searchInput = HtmlNode.new("input")
+            searchInput.add_class("form-control")
+            searchInput.add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " " + var.name))
+            th = HtmlNode.new("th")
+            th.add_child(searchInput)
+            tHeadRow.children.push(th)
+          else
+            tHeadRow.children.push(HtmlNode.new("th").add_text(""))
+          end
+        }))
+
+        tHead.add_child(tHeadRow)
+        tableElem.add_child(tHead)
+      end
+
       # Generate table body
       tBody = HtmlNode.new("tbody")
       tBodyRow = HtmlNode.new("tr").
@@ -62,6 +86,16 @@ module XCTEHtml
       # bld.endBlock("</tbody>")
 
       # bld.endBlock("</table>")
+    end
+
+    def load_search_names(cls)
+      names = Array.new
+
+      cls.xmlElement.elements.each("search_by") { |xmlNode|
+        names.push(xmlNode.attributes["name"])
+      }
+
+      return names
     end
 
     def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")
