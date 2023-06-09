@@ -33,7 +33,6 @@ module XCTEJava
 
       if cls.dataClass != nil
         Utils.instance.requires_class_type(cls, dataClass, "class_mapper_dozer")
-        Utils.instance.add_class_injection(cls, dataClass, "class_mapper_dozer")
       end
 
       cls.addUse("java.util.*")

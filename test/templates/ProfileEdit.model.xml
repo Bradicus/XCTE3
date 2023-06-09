@@ -29,8 +29,8 @@
 
 	<class_group_ref name="data store client" />
 
-	<class_group_ref name="edit" feature_group="profile" for="user" roles="user" />
-	<class_group_ref name="edit" feature_group="profile" for="admin" roles="admin" />
+	<class_group_ref name="edit" feature_group="profile" variant="user" roles="user" />
+	<class_group_ref name="edit" feature_group="profile" variant="admin" roles="admin" />
 
 	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
 		<data_class cname="profile" ns="{DataModelNs}" plugin="{DataModelPlugin}" />

@@ -7,10 +7,10 @@
 
 module CodeStructure
   class CodeElemClassGroupRef < CodeElem
-    attr_accessor :name, :for, :featureGroup
+    attr_accessor :name, :variant, :featureGroup
 
     @name = nil
-    @for = nil
+    @variant = nil
     @featureGroup = nil
   end
 end

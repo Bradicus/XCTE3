@@ -160,10 +160,10 @@ module DataLoading
         newVal = newVal.gsub("!{FeatureGroup}", "")
       end
 
-      if @clsGen != nil && @clsGen.for != nil
-        newVal = newVal.gsub("!{ClassGroupFor}", @clsGen.for)
+      if @clsGen != nil && @clsGen.variant != nil
+        newVal = newVal.gsub("!{ClassGroupVariant}", @clsGen.variant)
       else
-        newVal = newVal.gsub("!{ClassGroupFor}", "")
+        newVal = newVal.gsub("!{ClassGroupVariant}", "")
       end
 
       if @clsGen != nil && @clsGen.classGroupRef != nil && @clsGen.classGroupRef.name != nil

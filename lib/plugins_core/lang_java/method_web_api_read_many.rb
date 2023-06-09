@@ -62,7 +62,9 @@ module XCTEJava
       dataStoreName =
         CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
       mapperName =
-        CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.variableNameStyle)
+        "mapper"
+      mapperClassName =
+        CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.classNameStyle)
 
       pageNumStr = fun.xmlElement.attributes["page_filter"]
 
@@ -85,6 +87,10 @@ module XCTEJava
       bld.startFunctionParamed("public " + @returnType + " Get" +
                                Utils.instance.getStyledClassName(cls.getUName()) + "s", params)
 
+      cls.xmlElement.elements.each("paging") { |paging|
+        pager = paging.attributes["pager"]
+      }
+
       bld.add "Sort sort = Filter.getSort(sortBy, sortOrder);"
       bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
 
@@ -94,12 +100,12 @@ module XCTEJava
 
       if @dsClass != nil
         bld.add "var dataSet = new " + @returnType + "();"
-        bld.add "var mappedItems = " + mapperName + ".mapPage(items);"
+        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.getStyledClassName(cls.getUName()) + "(item));"
         bld.add "dataSet.items = mappedItems;"
         bld.separate
         bld.add("return dataSet;")
       elsif cls.dataClass != nil
-        bld.add "var mappedItems = " + mapperName + ".mapPage(items);"
+        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.getStyledClassName(cls.getUName()) + "(item));"
         bld.add("return mappedItems;")
         bld.separate
       else

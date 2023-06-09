@@ -44,8 +44,8 @@ module XCTEHtml
 
             nodeName = featureName
 
-            if otherCls.for != nil
-              nodeName = otherCls.for + " " + nodeName
+            if otherCls.variant != nil
+              nodeName = otherCls.variant + " " + nodeName
             end
 
             formattedFeatureName = featureName.capitalize
@@ -68,8 +68,8 @@ module XCTEHtml
 
             nodeName = featureName
 
-            if otherCls.for != nil
-              nodeName = otherCls.for + " " + nodeName
+            if otherCls.variant != nil
+              nodeName = otherCls.variant + " " + nodeName
             end
 
             formattedFeatureName = featureName.capitalize

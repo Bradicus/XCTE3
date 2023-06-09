@@ -20,8 +20,8 @@ module XCTETypescript
     def get_relative_route(cls, actionName)
       route = Array.new
 
-      if cls.for != nil
-        route.push(cls.for)
+      if cls.variant != nil
+        route.push(cls.variant)
       end
 
       if (!cls.model.name.include?(actionName))

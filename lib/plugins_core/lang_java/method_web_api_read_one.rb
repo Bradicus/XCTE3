@@ -38,8 +38,7 @@ module XCTEJava
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
         CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
-      mapperName =
-        CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.variableNameStyle)
+      mapperName = "mapper"
 
       params = Array.new
       idVar = cls.model.getIdentityVar()

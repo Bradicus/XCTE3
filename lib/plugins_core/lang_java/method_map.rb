@@ -21,156 +21,88 @@ module XCTEJava
 
     # Returns definition string for this class's constructor
     def get_definition(cls, bld, fun)
-      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
-
-      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
+      @fromParam = load_param(cls, fun, "fromClass")
+      @toParam = load_param(cls, fun, "toClass")
 
       @genReverse = (fun.xmlElement.attributes["gen_reverse"] == "true")
       @genListMap = (fun.xmlElement.attributes["gen_list_map"] == "true")
 
-      if @fromClass == nil || @toClass == nil
-        if @fromClass == nil
-          Log.missingClassRef(@fromRef)
+      if @fromParam.cls == nil || @toParam.cls == nil
+        if @fromParam.cls == nil
+          Log.missingClassRef(@fromParam.ref)
         end
-        if @toClass == nil
-          Log.missingClassRef(@toRef)
+        if @toParam.cls == nil
+          Log.missingClassRef(@toParam.ref)
         end
       else
-        @mapParams = Array.new
-
-        @mapParams.push(Utils.instance.getStyledClassName(@fromClass.getUName()) + " src")
-        @mapParams.push(Utils.instance.getStyledClassName(@toClass.getUName()) + " dst")
-
-        bld.add("/*")
-        bld.add("* Map -" + @fromClass.getUName() + "- to -" + @toClass.getUName() + "-")
-        bld.add("*/")
-
-        @funName = Utils.instance.getStyledFunctionName(@fromClass.getUName() + " to " + @toClass.getUName())
-        get_body(cls, bld, fun)
+        gen_single_mapper(cls, bld, @fromParam, @toParam)
 
         if @genReverse
-          @mapParams = Array.new
-
-          bld.separate
-
-          @mapParams.push(Utils.instance.getStyledClassName(@toClass.getUName()) + " src")
-          @mapParams.push(Utils.instance.getStyledClassName(@fromClass.getUName()) + " dst")
-
-          bld.add("/*")
-          bld.add("* Map -" + @toClass.getUName() + "- to -" + @fromClass.getUName() + "-")
-          bld.add("*/")
-
-          @funName = Utils.instance.getStyledFunctionName(@toClass.getUName() + " to " + @fromClass.getUName())
-          get_body(cls, bld, fun)
+          gen_single_mapper(cls, bld, @toParam, @fromParam)
         end
 
         if (@genListMap)
           genListMapper(cls, bld, fun)
-          genPageMapper(cls, bld, fun)
         end
       end
+    end
+
+    def load_param(cls, fun, elemName)
+      param = MapParam.new
+
+      param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements[elemName], nil, cls.genCfg)
+      param.cls = ClassModelManager.findClass(param.ref.className, param.ref.pluginName)
+      param.name = Utils.instance.getStyledClassName(param.cls.getUName())
+
+      return param
+    end
+
+    def gen_single_mapper(cls, bld, fParam, tParam)
+      @mapParams = Array.new
+
+      @mapParams.push(fParam.name + " src")
+      @mapParams.push("@MappingTarget " + tParam.name + " dst")
+
+      bld.add("/*")
+      bld.add("* Map -" + fParam.cls.getUName() + "- to -" + tParam.cls.getUName() + "-")
+      bld.add("*/")
+
+      bld.add("public void map(" + @mapParams.join(", ") + ");")
+      bld.add("public " + tParam.name + " mapTo" + tParam.name + "(" + fParam.name + " src);")
     end
 
     def genListMapper(cls, bld, fun)
-      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
-
-      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
-
       @mapParams = Array.new
 
-      @mapParams.push("List<" + Utils.instance.getStyledClassName(@fromClass.getUName()) + "> srcList")
-      @mapParams.push("List<" + Utils.instance.getStyledClassName(@toClass.getUName()) + "> dstList")
+      @mapParams.push("List<" + Utils.instance.getStyledClassName(@fromParam.cls.getUName()) + "> srcList")
+      @mapParams.push("@MappingTarget List<" + Utils.instance.getStyledClassName(@toParam.cls.getUName()) + "> dstList")
 
       bld.separate
 
       bld.add("/*")
-      bld.add("* Map -List<" + @fromClass.getUName() + ">- to -List<" + @toClass.getUName() + ">-")
+      bld.add("* Map -List<" + @fromParam.name + ">- to -List<" + @toParam.cls.getUName() + ">-")
       bld.add("*/")
 
-      bld.startFunction("public void mapList(" + @mapParams.join(", ") + ")")
-      bld.add "int i = 0;"
-      bld.add "while (dstList.size() < srcList.size())"
-      bld.iadd "dstList.add(new " + Utils.instance.getStyledClassName(@toClass.getUName()) + "());"
-      bld.separate
-      bld.startBlock("for (var src: srcList)")
-      bld.add "var dst = dstList.get(i);"
-      bld.add "mapper.map(src, dst);"
-      bld.add "i++;"
-      bld.endBlock
-      bld.endFunction
-    end
-
-    def genPageMapper(cls, bld, fun)
-      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
-      @fromClassName = Utils.instance.getStyledClassName(@fromClass.getUName())
-
-      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
-      @toClassName = Utils.instance.getStyledClassName(@toClass.getUName())
-
-      @mapParams = Array.new
-
-      @mapParams.push("Page<" + @fromClassName + "> srcPage")
-      #@mapParams.push("Page<" + Utils.instance.getStyledClassName(@toClass.getUName()) + "> dstPage")
-
-      bld.separate
-
-      bld.add("/*")
-      bld.add("* Map -Page<" + @fromClass.getUName() + ">- to -Page<" + @toClass.getUName() + ">-")
-      bld.add("*/")
-
-      bld.startFunction("public Page<" + @toClassName + "> mapPage(" + @mapParams.join(", ") + ")")
-      bld.startBlock "Page<" + @toClassName + "> dstPage = srcPage.map(new Function<" + @fromClassName + ", " + @toClassName + ">()"
-      bld.add "@Override"
-      bld.startBlock "public " + @toClassName + " apply(" + @fromClassName + " entity)"
-      bld.add "var dto = new " + @toClassName + "();"
-      bld.add "mapper.map(entity, dto);"
-      bld.add "return dto;"
-      bld.endBlock
-      bld.endBlock ");"
-      bld.add "return dstPage;"
-      bld.endFunction
-    end
-
-    def get_declairation(cls, bld, fun)
-      bld.add("public void " + @funName + "(" + mapParams.join(", ") + ");")
+      bld.add("public void updateList(" + @mapParams.join(", ") + ");")
     end
 
     def process_dependencies(cls, bld, fun)
-      @fromRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["fromClass"], nil, cls.genCfg)
-      @fromClass = ClassModelManager.findClass(@fromRef.className, @fromRef.pluginName)
-
-      @toRef = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements["toClass"], nil, cls.genCfg)
-      @toClass = ClassModelManager.findClass(@toRef.className, @toRef.pluginName)
+      @fromParam = load_param(cls, fun, "fromClass")
+      @toParam = load_param(cls, fun, "toClass")
 
       cls.addUse("java.util.List")
 
-      if @fromClass == nil || @toClass == nil
-        if @fromClass == nil
+      if @fromParam.cls == nil || @toParam.cls == nil
+        if @fromParam.cls == nil
           Log.missingClassRef(@fromRef)
         end
-        if @toClass == nil
+        if @toParam.cls == nil
           Log.missingClassRef(@toRef)
         end
       else
-        Utils.instance.requires_class_type(cls, @toClass, "class_jpa_entity")
-        Utils.instance.requires_class_type(cls, @fromClass, "standard")
+        Utils.instance.requires_class_type(cls, @toParam.cls, "class_jpa_entity")
+        Utils.instance.requires_class_type(cls, @fromParam.cls, "standard")
       end
-    end
-
-    def get_body(cls, bld, fun)
-      conDef = String.new
-      params = Array.new
-      idVar = cls.model.getIdentityVar()
-
-      bld.startFunction("public void map(" + @mapParams.join(", ") + ")")
-      bld.add "mapper.map(src, dst);"
-      bld.endFunction
     end
   end
 end

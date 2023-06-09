@@ -18,7 +18,7 @@ module DataLoading
     def self.loadClassGroupRef(cgRef, xmlNode)
       if xmlNode != nil
         cgRef.name = AttributeLoader.init(xmlNode).names("name").get()
-        cgRef.for = AttributeLoader.init(xmlNode).names("for").get()
+        cgRef.variant = AttributeLoader.init(xmlNode).names("variant").get()
         cgRef.featureGroup = AttributeLoader.init(xmlNode).names("feature_group").get()
         cgRef.xmlElement = xmlNode
       end

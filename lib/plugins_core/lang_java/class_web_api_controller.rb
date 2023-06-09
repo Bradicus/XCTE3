@@ -59,6 +59,7 @@ module XCTEJava
       cls.addUse("org.springframework.http.HttpStatus")
       cls.addUse("org.springframework.http.MediaType")
       cls.addUse("org.springframework.http.ResponseEntity")
+      cls.addUse("org.mapstruct.factory.Mappers")
 
       super
     end
@@ -92,6 +93,15 @@ module XCTEJava
       for inj in cls.injections
         bld.add("@Autowired")
         bld.add(Utils.instance.getVarDec(inj))
+      end
+
+      mapperName = "mapper"
+
+      if cls.dataClass != nil
+        mapperClassName = Utils.instance.getStyledClassName(cls.dataClass.className + " mapper")
+        bld.separate
+        bld.add(mapperClassName + " " + mapperName + " = Mappers.getMapper( " + mapperClassName + ".class );")
+        bld.separate
       end
 
       # Generate code for functions

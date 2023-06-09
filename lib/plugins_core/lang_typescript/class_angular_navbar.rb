@@ -107,8 +107,8 @@ module XCTETypescript
               featureName = cls.model.name
             end
 
-            if cls.for != nil
-              featureName = cls.for + " " + featureName
+            if cls.variant != nil
+              featureName = cls.variant + " " + featureName
             end
 
             formattedFeatureName = featureName.capitalize

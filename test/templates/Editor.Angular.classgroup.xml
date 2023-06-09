@@ -3,15 +3,15 @@
   	<!-- Angular -->
 
     <gen_class type="class_angular_reactive_edit"
-      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
-      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
-      route="!{ClassGroupFor}/!{FeatureGroup}/!{ClassGroupName}">
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"
+      route="!{ClassGroupVariant}/!{FeatureGroup}/!{ClassGroupName}">
     	<function name="method_service_datagen_random" />
     	<function name="method_angular_reactive_call_datamap" />s
     </gen_class>
 
   	<gen_class type="empty_file"
-      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
-      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"></gen_class>
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"></gen_class>
 
 </class_group>

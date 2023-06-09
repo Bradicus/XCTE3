@@ -5,12 +5,12 @@
 
 
     <gen_class type="class_angular_listing"
-      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
-      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}">
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}">
     </gen_class>
 
   	<gen_class type="empty_file"
-      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"
-      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupFor}"></gen_class>
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"></gen_class>
 
 </class_group>

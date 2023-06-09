@@ -19,10 +19,10 @@
       <build_vars>
       <build_var name="ControllerNs" value="com.example.demo.api" />
       <build_var name="ControllerPath" value="api" />
-      <build_var name="DataModelNs" value="com.example.demo.model" />
+      <build_var name="DataModelNs" value="com.example.demo.db_model" />
       <build_var name="DtoModelNs" value="com.example.demo.dto" />
       <build_var name="DataModelPlugin" value="class_jpa_entity" />
-      <build_var name="DataModelPath" value="model" />
+      <build_var name="DataModelPath" value="db_model" />
       <build_var name="DtoModelPath" value="dto" />
       <build_var name="EditModelPath" value="dto" />
       <build_var name="EditModelNs" value="com.example.demo.dto" />

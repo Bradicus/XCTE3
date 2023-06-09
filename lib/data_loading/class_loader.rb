@@ -23,15 +23,15 @@ module DataLoading
     def self.loadClass(pComponent, genC, genCXml)
       if (genC.classGroupRef != nil)
         genC.featureGroup = genC.classGroupRef.featureGroup
-        genC.for = genC.classGroupRef.for
+        genC.variant = genC.classGroupRef.variant
       end
 
       genC.xmlElement = genCXml
 
       genC.featureGroup = AttributeLoader.init().
         xml(genCXml).names("feature_group").model(genC.model).default(genC.featureGroup).get()
-      genC.for = AttributeLoader.init().
-        xml(genCXml).names("for").model(genC.model).default(genC.for).get()
+      genC.variant = AttributeLoader.init().
+        xml(genCXml).names("variant").model(genC.model).default(genC.variant).get()
 
       genC.plugName = AttributeLoader.init().xml(genCXml).names("type").cls(genC).get()
       genC.className = AttributeLoader.init().xml(genCXml).names("name").model(genC.model).cls(genC).get()

@@ -47,6 +47,11 @@ module XCTEJava
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
+
+      if idVar == nil
+        Log.error("Missing id var")
+      end
+
       bld.startClass("public interface " + getClassName(cls) + " extends JpaRepository<" +
                      Utils.instance.getStyledClassName(cls.model.name) + ", " +
                      Utils.instance.getObjTypeName(idVar[0]) + ">")
