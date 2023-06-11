@@ -69,6 +69,8 @@ module XCTETypescript
         end
       }))
 
+      cls.addInclude("shared/class/filtered-page-tpl", "FilteredPageTpl")
+
       super
     end
 

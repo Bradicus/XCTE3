@@ -68,28 +68,28 @@ module XCTETypescript
       elsif (varType.start_with?("boolean"))
         return "faker.datatype.boolean()"
       elsif (var.name.include?("street") && var.name.include?("2"))
-        return "faker.address.secondaryAddress()"
+        return "faker.location.secondaryAddress()"
       elsif (var.name.include?("street"))
-        return "faker.address.street()"
+        return "faker.location.street()"
       elsif (var.name.include?("zip"))
-        return "faker.address.zipCode()"
+        return "faker.location.zipCode()"
       elsif (var.name.include?("state"))
-        return "faker.address.stateAbbr()"
+        return "faker.location.state({ abbreviated: true })"
       elsif var.name.include? "first name"
-        return "faker.name.firstName()"
+        return "faker.person.firstName()"
       elsif var.name.include? "last name"
-        return "faker.name.lastName()"
+        return "faker.person.lastName()"
       elsif var.name.include? "city"
-        return "faker.address.city()"
+        return "faker.location.city()"
       elsif var.name.include? "country"
-        return "faker.address.country()"
+        return "faker.location.country()"
       elsif var.name.include? "county"
-        return "faker.address.county()"
+        return "faker.location.county()"
       elsif var.name.include? "email"
-        return 'faker.name.firstName() + "." + faker.name.lastName() + "@example.com"'
+        return 'faker.person.firstName() + "." + faker.person.lastName() + "@example.com"'
       end
 
-      return "faker.random.alpha(11)"
+      return "faker.string.alpha(11)"
     end
   end
 end

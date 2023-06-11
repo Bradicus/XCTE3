@@ -209,7 +209,7 @@ module XCTEHtml
         selectNode.add_attribute("id", varId)
         selectNode.add_attribute("formControlName", Utils.instance.getStyledVariableName(var, "", " id"))
         selectNode.add_child(HtmlNode.new("option").
-          add_attribute("*ngFor", "let " + itemName + " of " + optVarName + " | async").
+          add_attribute("*ngFor", "let " + itemName + " of (" + optVarName + " | async)?.content").
           add_attribute("value", itemName + ".id").
           add_text("{{" + itemName + ".name}}"))
 

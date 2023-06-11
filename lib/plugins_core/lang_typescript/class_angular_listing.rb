@@ -46,6 +46,7 @@ module XCTETypescript
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+      cls.addInclude("shared/class/filtered-page-tpl", "FilteredPageTpl")
 
       IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
 
@@ -85,7 +86,8 @@ module XCTETypescript
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
 
-      bld.add("public items: Observable<" + standardClassName + "[]> = new Observable<" + standardClassName + "[]>;")
+      bld.add("public pageObv: Observable<FilteredPageTpl<" + standardClassName + ">> = new Observable<FilteredPageTpl<" + standardClassName + ">>;")
+      bld.add("public page: FilteredPageTpl<" + standardClassName + "> = new FilteredPageTpl<" + standardClassName + ">;")
 
       bld.separate
 
@@ -100,7 +102,8 @@ module XCTETypescript
       bld.separate
       bld.startBlock("ngOnInit()")
 
-      bld.add("this.items = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing();")
+      bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing();")
+      bld.add("this.pageObv.subscribe((p) =>  { this.page = p });")
 
       bld.endBlock
 

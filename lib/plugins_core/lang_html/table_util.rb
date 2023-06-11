@@ -66,7 +66,7 @@ module XCTEHtml
       # Generate table body
       tBody = HtmlNode.new("tbody")
       tBodyRow = HtmlNode.new("tr").
-        add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + asyncStr)
+        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.content")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && !var.isList()
@@ -126,7 +126,7 @@ module XCTEHtml
       # Generate table body
       tBody = HtmlNode.new("tbody")
       tBodyRow = HtmlNode.new("tr").
-        add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + asyncStr)
+        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.content")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)

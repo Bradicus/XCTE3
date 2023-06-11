@@ -76,11 +76,11 @@ module XCTEJava
 
       params = Array.new
 
-      params.push('@RequestParam("pageNum") Long pageNum')
-      params.push('@RequestParam("pageSize") Long pageSize')
-      params.push('@RequestParam("sortBy") String sortBy')
-      params.push('@RequestParam("sortAsc") String sortOrder')
-      params.push('@RequestParam("search") String search')
+      params.push('@RequestParam(defaultValue="0") Long pageNum')
+      params.push('@RequestParam(defaultValue="1000000") Long pageSize')
+      params.push('@RequestParam(defaultValue="") String sortBy')
+      params.push('@RequestParam(defaultValue="") String sortOrder')
+      params.push('@RequestParam(defaultValue="") String search')
 
       bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
@@ -91,13 +91,16 @@ module XCTEJava
         pager = paging.attributes["pager"]
       }
 
-      bld.add "Sort sort = Filter.getSort(sortBy, sortOrder);"
-      bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
+      bld.add "Sort sort = null;"
+      bld.startBlock "if (sortBy.length() > 0 && sortOrder.length() > 0)"
+      bld.add "sort = Filter.getSort(sortBy, sortOrder);"
+      bld.endBlock
 
       bld.separate
-
+      bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
       bld.add("var items = " + dataStoreName + ".findAll(pageRequest);")
 
+      bld.separate
       if @dsClass != nil
         bld.add "var dataSet = new " + @returnType + "();"
         bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.getStyledClassName(cls.getUName()) + "(item));"

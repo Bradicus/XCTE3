@@ -22,5 +22,6 @@
 		<function name="method_web_api_read_one" />
 		<function name="method_web_api_write_one" />
 		<function name="method_web_api_update_one" />
+		<function name="method_web_api_read_many" />
 	</gen_class>
 </model>
