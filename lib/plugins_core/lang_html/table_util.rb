@@ -29,10 +29,12 @@ module XCTEHtml
       # Generate table header
       tHead = HtmlNode.new("thead")
       tHeadRow = HtmlNode.new("tr")
+      colCount = 0
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && !var.isList()
           tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
+          colCount = colCount + 1
         end
       }))
 
@@ -77,6 +79,58 @@ module XCTEHtml
 
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
+
+      tFoot = HtmlNode.new("tfoot")
+      tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageSize ?? 0 > 0")
+      tFootRow = HtmlNode.new("tr")
+
+      tFootTd = HtmlNode.new("td")
+      tFootTd.add_class("list-group-horizontal")
+      tFootTd.add_attribute("colspan", colCount.to_s)
+
+      firstPage = HtmlNode.new("button")
+        .add_class("page-item disabled")
+        .add_text("&lt;&lt;")
+      prevPage = HtmlNode.new("button")
+        .add_class("page-item disabled")
+        .add_text("&lt;")
+
+      pageList = HtmlNode.new("ul")
+        .add_class("pagination")
+        .add_class("list-group")
+        .add_class("list-group-horizontal")
+
+      li = HtmlNode.new("li")
+        .add_child(firstPage)
+        .add_child(prevPage)
+
+      pageList.add_child(li)
+
+      li = HtmlNode.new("li")
+        .add_attribute("*ngFor", "let i of [].constructor((" + listVarName + asyncStr + ")?.totalPages)")
+        .add_class("page-item disabled")
+      #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.totalPages > 10)")
+      pageList.add_child(li)
+
+      nextPage = HtmlNode.new("button")
+        .add_class("page-item disabled")
+        .add_text("&gt;")
+
+      lastPage = HtmlNode.new("button")
+        .add_class("page-item disabled")
+        .add_text("&gt;&gt;")
+
+      li = HtmlNode.new("li")
+        .add_child(nextPage)
+        .add_child(lastPage)
+
+      pageList.add_child(li)
+
+      tFootTd.add_child(pageList)
+
+      tFootRow.add_child(tFootTd)
+      tFoot.add_child(tFootRow)
+      tableElem.add_child(tFoot)
 
       return tableElem
 

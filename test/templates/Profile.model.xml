@@ -37,7 +37,7 @@
 		</function>
 			<function name="method_map" gen_list_map="true">
 				<fromClass cname="profile" plugin="{DataModelPlugin}" />
-				<toClass cname="profile listing item" plugin="standard" />
+				<toClass cname="profile listing" plugin="standard" />
 			</function>
 	</gen_class>
 </model>

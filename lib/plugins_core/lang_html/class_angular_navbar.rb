@@ -90,10 +90,8 @@ module XCTEHtml
       bld.startBlock('<nav class="navbar navbar-expand-lg navbar-light bg-light">')
       bld.startBlock('<div class="container-fluid">')
 
-      bld.startBlock '<div class="navbar-collapse" [class.collapse]="collapsed" id="navbarContent">'
-
-      bld.startBlock('<div class="collapse navbar-collapse">')
-      bld.startBlock('<ul class="navbar-nav ms-auto">')
+      bld.startBlock '<div class="collapse navbar-collapse" id="navbarContent">'
+      bld.startBlock('<ul class="navbar-nav">')
 
       for fNode in rootNode.children
         bld.startBlock '<li class="nav-item" ngbDropdown>'
@@ -110,7 +108,6 @@ module XCTEHtml
       #        process_var_group_menu(cls, bld, group)
       #      end
       bld.endBlock("</ul>")
-      bld.endBlock("</div>")
       bld.endBlock("</div>")
       bld.endBlock("</div>")
 

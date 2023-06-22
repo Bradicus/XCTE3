@@ -109,9 +109,9 @@ module XCTETypescript
 
       bld.separate
 
-      # bld.startBlock("onView()")
-      # bld.add("this.router.navigate(['/" + routeName + "/" + routeName + "-view']);")
-      # bld.endBlock
+      bld.startBlock("getVisiblePageCount()")
+      bld.add("return Math.min((this.page?.totalPages ?? 0, 10));")
+      bld.endBlock
 
       bld.separate
 

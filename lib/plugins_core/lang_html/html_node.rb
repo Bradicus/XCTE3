@@ -4,39 +4,39 @@
 module XCTEHtml
   class HtmlNode
     attr_accessor :name, :classAttrib, :attribs, :children, :text, :selfClose
-    
+
     @name
     @classAttrib = Array.new
     @attribs = Hash.new
-    @text = ''
+    @text = ""
     @children = Array.new
     @selfClose = false
 
     def initialize(name)
       @name = name
-        
+
       @classAttrib = Array.new
       @attribs = Hash.new
-      @text = ''
+      @text = ""
       @children = Array.new
 
-      if (name == 'area' ||
-        name == 'base' ||
-        name == 'br' ||
-        name == 'col' ||
-        name == 'meta' ||
-        name == 'embed' ||
-        name == 'hr' ||
-        name == 'img' ||
-        name == 'input' ||
-        name == 'source' ||
-        name == 'link' ||
-        name == 'wbr' ||
-        name == 'param' ||
-        name == 'track' ||
-        name == 'command' ||
-        name == 'keygen' ||
-        name == 'menuitem')
+      if (name == "area" ||
+          name == "base" ||
+          name == "br" ||
+          name == "col" ||
+          name == "meta" ||
+          name == "embed" ||
+          name == "hr" ||
+          name == "img" ||
+          name == "input" ||
+          name == "source" ||
+          name == "link" ||
+          name == "wbr" ||
+          name == "param" ||
+          name == "track" ||
+          name == "command" ||
+          name == "keygen" ||
+          name == "menuitem")
         @selfClose = true
       end
     end
@@ -48,13 +48,13 @@ module XCTEHtml
         @classAttrib.push(cl2Name)
       end
       return self
-    end  
+    end
 
     def add_attribute(attName, attValue)
       @attribs[attName] = attValue
       return self
-    end  
-    
+    end
+
     def add_text(txt)
       @text += txt
 
@@ -66,6 +66,8 @@ module XCTEHtml
         throw "Invalid node"
       end
       @children.push(node)
+
+      return self
     end
   end
 end
