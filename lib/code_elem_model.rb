@@ -18,11 +18,13 @@ require "code_elem_parent.rb"
 require "code_elem_variable.rb"
 require "code_elem_var_group.rb"
 require "rexml/document"
+require "pages/paging"
 
 module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :classes, :name, :description,
-                  :case, :varGroup, :xmlFileName, :lastModified, :modelSet, :featureGroup
+                  :case, :varGroup, :xmlFileName, :lastModified,
+                  :modelSet, :featureGroup, :paging
 
     def initialize
       super()
@@ -37,6 +39,7 @@ module CodeStructure
       @modelSet = nil
       @lastModified
       @featureGroup = nil
+      @paging = Pages::Paging.new
     end
 
     def copy()

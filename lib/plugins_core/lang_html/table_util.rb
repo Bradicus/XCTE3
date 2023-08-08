@@ -81,55 +81,9 @@ module XCTEHtml
       tableElem.add_child(tBody)
 
       tFoot = HtmlNode.new("tfoot")
-      tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageSize ?? 0 > 0")
-      tFootRow = HtmlNode.new("tr")
+      tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.totalPages ?? 0 > 1")
 
-      tFootTd = HtmlNode.new("td")
-      tFootTd.add_class("list-group-horizontal")
-      tFootTd.add_attribute("colspan", colCount.to_s)
-
-      firstPage = HtmlNode.new("button")
-        .add_class("page-item disabled")
-        .add_text("&lt;&lt;")
-      prevPage = HtmlNode.new("button")
-        .add_class("page-item disabled")
-        .add_text("&lt;")
-
-      pageList = HtmlNode.new("ul")
-        .add_class("pagination")
-        .add_class("list-group")
-        .add_class("list-group-horizontal")
-
-      li = HtmlNode.new("li")
-        .add_child(firstPage)
-        .add_child(prevPage)
-
-      pageList.add_child(li)
-
-      li = HtmlNode.new("li")
-        .add_attribute("*ngFor", "let i of [].constructor((" + listVarName + asyncStr + ")?.totalPages)")
-        .add_class("page-item disabled")
-      #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.totalPages > 10)")
-      pageList.add_child(li)
-
-      nextPage = HtmlNode.new("button")
-        .add_class("page-item disabled")
-        .add_text("&gt;")
-
-      lastPage = HtmlNode.new("button")
-        .add_class("page-item disabled")
-        .add_text("&gt;&gt;")
-
-      li = HtmlNode.new("li")
-        .add_child(nextPage)
-        .add_child(lastPage)
-
-      pageList.add_child(li)
-
-      tFootTd.add_child(pageList)
-
-      tFootRow.add_child(tFootTd)
-      tFoot.add_child(tFootRow)
+      tFoot.add_child(make_paging_control(colCount, listVarName, asyncStr))
       tableElem.add_child(tFoot)
 
       return tableElem
@@ -150,6 +104,60 @@ module XCTEHtml
       }
 
       return names
+    end
+
+    def make_paging_control(colCount, listVarName, asyncStr)
+      tFootRow = HtmlNode.new("tr")
+
+      tFootTd = HtmlNode.new("td")
+      tFootTd.add_class("list-group-horizontal")
+      tFootTd.add_attribute("colspan", colCount.to_s)
+
+      firstPage = make_paging_button("&lt;&lt;", "this.page.currentPage = 0")
+      prevPage = make_paging_button("&lt;", "this.page.currentPage--")
+
+      pageList = HtmlNode.new("ul")
+        .add_class("pagination")
+        .add_class("list-group")
+        .add_class("list-group-horizontal")
+
+      li = HtmlNode.new("li")
+        .add_child(firstPage)
+        .add_child(prevPage)
+
+      pageList.add_child(li)
+
+      li = HtmlNode.new("li")
+        .add_attribute("*ngFor", "let item of [].constructor((" + listVarName + asyncStr + ")?.totalPages ?? 0);let i = index")
+        .add_class("page-item disabled")
+        .add_child(HtmlNode.new("button")
+          .add_class("page-item btn btn-primary mr-2")
+          .add_text("{{i}}"))
+
+      #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.totalPages > 10)")
+      pageList.add_child(li)
+
+      nextPage = make_paging_button("&gt;&gt;", "this.page.currentPage = this.page.totalPages")
+      lastPage = make_paging_button("&gt;", "this.page.currentPage++")
+
+      li = HtmlNode.new("li")
+        .add_child(nextPage)
+        .add_child(lastPage)
+
+      pageList.add_child(li)
+
+      tFootTd.add_child(pageList)
+
+      tFootRow.add_child(tFootTd)
+
+      return tFootRow
+    end
+
+    def make_paging_button(text, onClick)
+      return HtmlNode.new("button")
+               .add_class("page-item btn btn-primary")
+             #.add_attribute("(click)", onClick)
+               .add_text(text)
     end
 
     def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")
@@ -184,8 +192,12 @@ module XCTEHtml
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tBodyRow.add_child(HtmlNode.new("td").
-            add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+          td = HtmlNode.new("td")
+          ##            .add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}")
+          td.add_child(HtmlNode.new("button")
+            .add_class("page-item btn btn-primary")
+            .add_text("{{i}}}"))
+          tBodyRow.add_child(td)
         end
       }))
 

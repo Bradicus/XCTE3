@@ -10,9 +10,14 @@
 		<var name="street 2"	type="String" maxlen="50" />
 		<var name="city"	type="String" maxlen="50" required="true" />
 		<var name="state"	type="String" maxlen="2" required="true" />
-		<var name="country"	type="String" maxlen="2" required="true" />
+		<var name="country"	type="String" maxlen="50" required="true" />
 		<var name="zip code"		type="String" maxlen="20" required="true" />
 	</var_group>
+
+	<paging pager="server">
+		<sort defaultVar="id" defaultOrder="" />
+		<page_filter sizes="5, 25, 50, 100" default="5" />
+	</paging>
 
 	<class_group_ref name="data store server" />
 	<class_group_ref name="data store client" />
@@ -27,7 +32,7 @@
 		<function name="method_web_api_read_many">
 			 <sort />
 			 <column_filter />
-			 <page_filter sizes="10, 25, 50, 100" />
+			 <page_filter sizes="5, 25, 50, 100" default="25" />
 			 <search_filter />
 		</function>
 		<function name="method_web_api_write_one" />

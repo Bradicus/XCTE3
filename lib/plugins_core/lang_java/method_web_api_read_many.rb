@@ -66,20 +66,34 @@ module XCTEJava
       mapperClassName =
         CodeNameStyling.getStyled(dataClass.getUName() + " mapper", Utils.instance.langProfile.classNameStyle)
 
-      pageNumStr = fun.xmlElement.attributes["page_filter"]
-
-      if pageNumStr != nil
-        pageNums = pageNumStr.split(",")
-      else
-        pageNums = Array.new
-      end
-
       params = Array.new
 
+      if (cls.model.paging.pageSizeDefault != nil)
+        pageSize = cls.model.paging.pageSizeDefault
+      elsif cls.model.paging.pageSizes.length > 0
+        pageSize = cls.model.paging.pageSizeDefault
+      else
+        pageSize = 1000000
+      end
+
+      if cls.model.paging.sort.defaultSortColumn != nil
+        sortCol = cls.model.paging.sort.defaultSortColumn
+      elsif (cls.model.paging.sort.sortableColumns.length > 0)
+        sortCol = cls.model.paging.sort.sortableColumns[0]
+      else
+        sortCol = ""
+      end
+
+      if cls.model.paging.sort.defaultSortDirection != nil
+        defaultSortDir = cls.model.paging.sort.defaultSortDirection
+      else
+        defaultSortDir = "asc"
+      end
+
       params.push('@RequestParam(defaultValue="0") Long pageNum')
-      params.push('@RequestParam(defaultValue="1000000") Long pageSize')
-      params.push('@RequestParam(defaultValue="") String sortBy')
-      params.push('@RequestParam(defaultValue="") String sortOrder')
+      params.push('@RequestParam(defaultValue="' + pageSize.to_s + '") Long pageSize')
+      params.push('@RequestParam(defaultValue="' + sortCol + '") String sortBy')
+      params.push('@RequestParam(defaultValue="' + defaultSortDir + '") String sortOrder')
       params.push('@RequestParam(defaultValue="") String search')
 
       bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
@@ -87,14 +101,17 @@ module XCTEJava
       bld.startFunctionParamed("public " + @returnType + " Get" +
                                Utils.instance.getStyledClassName(cls.getUName()) + "s", params)
 
-      cls.xmlElement.elements.each("paging") { |paging|
-        pager = paging.attributes["pager"]
-      }
-
       bld.add "Sort sort = null;"
       bld.startBlock "if (sortBy.length() > 0 && sortOrder.length() > 0)"
       bld.add "sort = Filter.getSort(sortBy, sortOrder);"
       bld.endBlock
+
+      bld.separate
+
+      if cls.model.paging.pageSizes.length > 0
+        bld.add "if (pageSizes.size() > 0 && !pageSizes.contains(pageSize))"
+        bld.iadd "pageSize = pageSizes.get(0).longValue();"
+      end
 
       bld.separate
       bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"

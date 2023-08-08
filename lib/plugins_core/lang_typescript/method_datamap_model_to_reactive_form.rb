@@ -27,6 +27,7 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if (Utils.instance.isPrimitive(var))
           vName = Utils.instance.getStyledVariableName(var)
+          bld.add('formGroup.get("' + vName + '")?.markAsTouched()')
           if (var.getUType().downcase == "datetime")
             bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ".toISOString().slice(0, -1))")
           else
@@ -35,6 +36,7 @@ module XCTETypescript
         elsif (!var.hasMultipleItems())
           if (var.selectFrom != nil)
             vName = Utils.instance.getStyledVariableName(var, "", " id")
+            bld.add('formGroup.get("' + vName + '")?.markAsTouched()')
             bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
           else
             varCls = ClassModelManager.findVarClass(var, "class_angular_data_map_service")

@@ -51,6 +51,11 @@ module DataLoading
         loadVarGroupNode(newVGroup, vargXML, pComponent)
         model.varGroup = newVGroup
       }
+
+      xmlDoc.root.elements.each("paging") { |pXml|
+        PagingLoader.loadPaging(model.paging, pXml)
+      }
+
       xmlDoc.root.elements.each("gen_class") { |genCXML|
         cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
         ClassLoader.loadClass(pComponent, cls, genCXML)

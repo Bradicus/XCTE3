@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="paging sort">
+
+	<description>
+	Page size settings
+	</description>
+				
+	<gen_class type="standard" ns="pages" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">	
+	  <var name="default var"	    type="String" />
+	  <var name="default sort"	    type="String" />
+	  <var name="sortable columns"  type="String"	set="List" />
+	</var_group>
+
+</model>

@@ -103,7 +103,9 @@ module XCTETypescript
       bld.startBlock("ngOnInit()")
 
       bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing();")
-      bld.add("this.pageObv.subscribe((p) =>  { this.page = p });")
+      bld.startBlock "this.pageObv.subscribe((p) =>  { "
+      bld.add "this.page = p;"
+      bld.endBlock "});"
 
       bld.endBlock
 

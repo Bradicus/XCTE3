@@ -94,7 +94,8 @@ module XCTETypescript
       bld.add("public content: T[] = [];")
       bld.add("public pageSize: Number = 1000000;")
       bld.add("public totalPages: Number = 0;")
-      bld.add("public totalItems: Number = 0;")
+      bld.add("public totalElements: Number = 0;")
+      bld.add("public currentPage: Number = 0;")
 
       # Generate class variables
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

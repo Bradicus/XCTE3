@@ -107,6 +107,10 @@ module DataLoading
           value = processBuildVars(atr)
           if @arrayDelim != nil
             value = value.split(@arrayDelim)
+
+            for val in value
+              val = val.strip()
+            end
           end
 
           if (@isTemplateAttrib)

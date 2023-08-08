@@ -90,6 +90,12 @@ module XCTEJava
       bld.add("@RestController")
       bld.startClass(classDec)
 
+      if cls.model.paging.pageSizes.length > 0
+        bld.add("final List<Integer> pageSizes = List.of(" + cls.model.paging.pageSizes.join(",") + ");")
+
+        bld.separate
+      end
+
       for inj in cls.injections
         bld.add("@Autowired")
         bld.add(Utils.instance.getVarDec(inj))

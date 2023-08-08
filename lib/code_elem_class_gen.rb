@@ -12,6 +12,7 @@ require "code_elem.rb"
 require "code_elem_include.rb"
 require "code_elem_use.rb"
 require "code_elem_namespace.rb"
+require "pages/paging"
 
 module CodeStructure
   class CodeElemClassGen < CodeElem

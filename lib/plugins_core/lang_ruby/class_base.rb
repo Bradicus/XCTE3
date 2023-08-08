@@ -11,7 +11,7 @@ module XCTERuby
     def render_namespace_starts(cls, bld)
       for ns in cls.namespace.nsList
         styledNs = get_default_utils().getStyledNamespaceName(ns)
-        bld.startBlock("module " + ns)
+        bld.startBlock("module " + styledNs)
       end
     end
 
