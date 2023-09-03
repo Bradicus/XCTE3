@@ -16,15 +16,15 @@ require "code_elem_model.rb"
 require "lang_file.rb"
 
 module XCTETypescript
-  class ClassFilteredDatasetTpl < ClassBase
+  class ClassFilteredDatasetRespTpl < ClassBase
     def initialize
-      @name = "class_filtered_dataset_tpl"
+      @name = "class_filtered_dataset_resp_tpl"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def getUnformattedClassName(cls)
-      return cls.getUName()
+      return cls.getUName() + " resp tpl"
     end
 
     def genSourceFiles(cls)
@@ -91,24 +91,16 @@ module XCTETypescript
       bld.separate
       bld.startClass("export class " + getClassName(cls) + "<T>")
 
-      bld.add("public content: T[] = [];")
-      bld.add("public pageSize: Number = 1000000;")
-      bld.add("public totalPages: Number = 0;")
-      bld.add("public totalElements: Number = 0;")
-      bld.add("public currentPage: Number = 0;")
+      model = InternalClassModelManager.findModel("page response")
 
       # Generate class variables
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      eachVar(uevParams().wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
-
-      bld.separate
-      # Generate code for functions
-      render_functions(cls, bld)
 
       bld.endClass
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassFilteredDatasetTpl.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassFilteredDatasetRespTpl.new)

@@ -21,7 +21,7 @@ module DataLoading
   class ClassLoader
 
     # Loads a class from an xml node
-    def self.loadClass(pComponent, genC, genCXml)
+    def self.loadClass(pComponent, genC, genCXml, modelManager)
       if (genC.classGroupRef != nil)
         genC.featureGroup = genC.classGroupRef.featureGroup
         genC.variant = genC.classGroupRef.variant
@@ -46,7 +46,7 @@ module DataLoading
       genC.varPrefix = AttributeUtil.loadAttribute(genCXml, "var_prefix", pComponent)
 
       # Add base namespace to class namespace lists
-      if (pComponent.namespace.nsList.size() > 0)
+      if (pComponent != nil && pComponent.namespace.nsList.size() > 0)
         genC.namespace.nsList = pComponent.namespace.nsList + genC.namespace.nsList
       end
 
@@ -113,24 +113,26 @@ module DataLoading
         end
       }
 
-      genCXml.elements.each("use-" + pComponent.language) { |useXml|
-        if (useXml.attributes["name"] != nil)
-          genC.addUse(useXml.attributes["name"])
-        end
-      }
+      if (pComponent != nil)
+        genCXml.elements.each("use-" + pComponent.language) { |useXml|
+          if (useXml.attributes["name"] != nil)
+            genC.addUse(useXml.attributes["name"])
+          end
+        }
+      end
 
-      ClassModelManager.list << genC
+      modelManager.list << genC
       genC.model.classes << genC
 
       if genC.interfaceNamespace.hasItems?()
         intf = processInterface(genC, model, pComponent)
-        ClassModelManager.list << intf
+        modelManager.list << intf
         genC.model.classes << intf
       end
 
       if genC.testNamespace.hasItems?()
         intf = ClassLoader.processTests(genC, model, pComponent)
-        ClassModelManager.list << intf
+        modelManager.list << intf
         genC.model.classes << genC
       end
 

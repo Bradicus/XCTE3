@@ -4,6 +4,7 @@ require "data_loading/class_group_loader"
 require "code_elem_classgroup"
 require "class_groups"
 require "debug"
+require "env"
 
 module DataProcessing
   class ProcessComponent
@@ -17,6 +18,18 @@ module DataProcessing
       ClassGroups.reset()
 
       Log.debug("Processing component path: " + pComponent.tplPath)
+
+      # Load internal models
+      Find.find(Env.getCodeRootDir() + "/../internal/clibs_templates") do |path|
+        if isModelFile(path)
+          Log.debug("Processing model: " + path)
+
+          pn = Pathname.new(path)
+
+          dataModel = CodeStructure::CodeElemModel.new
+          DataLoading::ModelLoader.loadModelFile(dataModel, path, pComponent, InternalClassModelManager)
+        end
+      end
 
       # Load class groups
       Find.find(currentDir + "/" + pComponent.tplPath) do |path|
@@ -42,7 +55,7 @@ module DataProcessing
           pn = Pathname.new(path)
 
           dataModel = CodeStructure::CodeElemModel.new
-          DataLoading::ModelLoader.loadModelFile(dataModel, path, pComponent)
+          DataLoading::ModelLoader.loadModelFile(dataModel, path, pComponent, ClassModelManager)
 
           language = XCTEPlugin::getLanguages()[pComponent.language]
 

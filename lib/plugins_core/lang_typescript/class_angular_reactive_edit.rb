@@ -69,7 +69,8 @@ module XCTETypescript
         end
       }))
 
-      cls.addInclude("shared/class/filtered-page-tpl", "FilteredPageTpl")
+      cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
+      cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
 
       super
     end
@@ -109,6 +110,8 @@ module XCTETypescript
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
           bld.add(Utils.instance.getVarDec(optVar))
+          reqVar = Utils.instance.getOptionsReqVarFor(var)
+          bld.add(Utils.instance.getVarDec(reqVar))
         end
       }))
 
@@ -174,6 +177,7 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
+          reqVar = Utils.instance.getOptionsReqVarFor(var)
           optCls = ClassModelManager.findClass(var.selectFrom, "ts_interface")
           if optVar == nil
             Log.error("No options var for var: " + var.name)
@@ -182,7 +186,8 @@ module XCTETypescript
           else
             dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
             if dataStoreOptServiceVar != nil
-              bld.add("this." + Utils.instance.getStyledVariableName(optVar) + " = this." + Utils.instance.getStyledVariableName(dataStoreOptServiceVar) + ".listing();")
+              bld.add("this." + Utils.instance.getStyledVariableName(optVar) + " = this." +
+                      Utils.instance.getStyledVariableName(dataStoreOptServiceVar) + ".listing(this." + Utils.instance.getStyledVariableName(reqVar) + ");")
             else
               Log.error("No class_angular_data_store_service variable for class: " + var.name)
             end

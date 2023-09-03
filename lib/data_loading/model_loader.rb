@@ -20,7 +20,7 @@ require "utils_base"
 
 module DataLoading
   class ModelLoader
-    def self.loadModelFile(model, fName, pComponent)
+    def self.loadModelFile(model, fName, pComponent, modelManager)
       #BUtils = UtilsBase.new(nil)
       file = File.new(fName)
       model.xmlFileName = fName
@@ -43,6 +43,7 @@ module DataLoading
       xmlDoc.root.elements.each("description") { |desc|
         model.description = desc.text
       }
+
       xmlDoc.root.elements.each("var_group") { |vargXML|
         #puts "loading var group"
         newVGroup = CodeStructure::CodeElemVarGroup.new
@@ -58,7 +59,7 @@ module DataLoading
 
       xmlDoc.root.elements.each("gen_class") { |genCXML|
         cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
-        ClassLoader.loadClass(pComponent, cls, genCXML)
+        ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
       }
 
       # Load class groups
@@ -71,7 +72,7 @@ module DataLoading
           cGroup.xmlElement.elements.each("gen_class") { |genCXML|
             cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
             cls.classGroupRef = cgRef
-            ClassLoader.loadClass(pComponent, cls, genCXML)
+            ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
           }
         end
       }

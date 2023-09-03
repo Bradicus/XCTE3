@@ -17,6 +17,8 @@ require "find"
 require "fileutils"
 require "log"
 
+require "env"
+
 require "data_loading/project_loader"
 require "data_loading/model_loader"
 require "data_processing/process_component"
@@ -32,6 +34,7 @@ require "project_plan"
 require "active_component"
 require "lang_profiles"
 require "managers/class_model_manager"
+require "managers/internal_class_model_manager"
 require "managers/project_plan_manager"
 
 def processProjectComponentGroup(project, pcGroup)
@@ -54,13 +57,13 @@ prj = CodeStructure::ElemProject.new
   end
 end
 
-codeRootDir = File.dirname(File.realpath(__FILE__))
+Env.setCodeRootDir(File.dirname(File.realpath(__FILE__)))
 
-UserSettings.instance.load(codeRootDir + "/../default_settings.xml")
+UserSettings.instance.load(Env.getCodeRootDir() + "/../default_settings.xml")
 #RunSettings.setUserSettings(cfg)
 
 # Load variable types
-Types.instance.load(codeRootDir + "/../types_basic.xml")
+Types.instance.load(Env.getCodeRootDir() + "/../types_basic.xml")
 
 # Load language profiles
 LangProfiles.instance.load(prj)

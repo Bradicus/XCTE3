@@ -46,7 +46,9 @@ module XCTETypescript
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
-      cls.addInclude("shared/class/filtered-page-tpl", "FilteredPageTpl")
+
+      cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
+      cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
 
       IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
 
@@ -86,8 +88,9 @@ module XCTETypescript
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")
 
-      bld.add("public pageObv: Observable<FilteredPageTpl<" + standardClassName + ">> = new Observable<FilteredPageTpl<" + standardClassName + ">>;")
-      bld.add("public page: FilteredPageTpl<" + standardClassName + "> = new FilteredPageTpl<" + standardClassName + ">;")
+      bld.add("public pageObv: Observable<FilteredPageRespTpl<" + standardClassName + ">> = new Observable<FilteredPageRespTpl<" + standardClassName + ">>;")
+      bld.add("public page: FilteredPageRespTpl<" + standardClassName + "> = new FilteredPageRespTpl<" + standardClassName + ">;")
+      bld.add("public pageReq: FilteredPageReqTpl<" + standardClassName + "> = new FilteredPageReqTpl<" + standardClassName + ">;")
 
       bld.separate
 
@@ -102,7 +105,7 @@ module XCTETypescript
       bld.separate
       bld.startBlock("ngOnInit()")
 
-      bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing();")
+      bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing(this.pageReq);")
       bld.startBlock "this.pageObv.subscribe((p) =>  { "
       bld.add "this.page = p;"
       bld.endBlock "});"
@@ -112,7 +115,11 @@ module XCTETypescript
       bld.separate
 
       bld.startBlock("getVisiblePageCount()")
-      bld.add("return Math.min((this.page?.totalPages ?? 0, 10));")
+      bld.add("return Math.min((this.page?.pageCount ?? 0, 10));")
+      bld.endBlock
+
+      bld.startBlock("goToPage(pageNum: number)")
+      bld.add("this.page.pageNum = pageNum;")
       bld.endBlock
 
       bld.separate

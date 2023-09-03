@@ -8,7 +8,8 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, bld)
-      cls.addInclude("shared/class/filtered-page-tpl", "FilteredPageTpl")
+      cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
+      cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
     end
 
     # Returns the code for the content for this function
@@ -17,9 +18,9 @@ module XCTETypescript
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
       dataServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
 
-      bld.startFunction("listing(): Observable<FilteredPageTpl<" + className + ">>")
+      bld.startFunction("listing(req: FilteredPageReqTpl<" + className + ">): Observable<FilteredPageRespTpl<" + className + ">>")
       bld.startBlock("if ((this.lastUpdate + this.expireMinutes * 60000) < new Date())")
-      bld.add("this.item = " + Utils.instance.getStyledVariableName(dataServiceVar) + ".listing();")
+      bld.add("this.item = " + Utils.instance.getStyledVariableName(dataServiceVar) + ".listing(req);")
       bld.endBlock
       bld.separate
       bld.add("return this.item;")

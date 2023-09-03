@@ -8,7 +8,8 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, bld)
-      cls.addInclude("shared/class/filtered-page-tpl", "FilteredPageTpl")
+      cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
+      cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
     end
 
     # Returns the code for the content for this function
@@ -16,8 +17,8 @@ module XCTETypescript
       className = Utils.instance.getStyledClassName(cls.getUName())
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
 
-      bld.startFunction("listing(): Observable<FilteredPageTpl<" + className + ">>")
-      bld.add("return this.httpClient.get<FilteredPageTpl<" + className + ">>(`${this.apiUrl}/" + urlName + "`);")
+      bld.startFunction("listing(req: FilteredPageReqTpl<" + className + ">): Observable<FilteredPageRespTpl<" + className + ">>")
+      bld.add("return this.httpClient.get<FilteredPageRespTpl<" + className + ">>(`${this.apiUrl}/" + urlName + "`);")
       bld.endFunction()
     end
   end

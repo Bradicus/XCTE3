@@ -58,10 +58,11 @@ module DataLoading
       end
 
       for atrName in atrNames
-        atr = xml.attributes[atrName + "-" + pComponent.language]
+        atr = tryLoadLangAtrrib(xml, atrName, pComponent)
         if atr != nil
           return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent).wModel(model))
         end
+
         atr = xml.attributes[atrName]
         if atr != nil
           return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent).wModel(model))
@@ -78,7 +79,7 @@ module DataLoading
       end
 
       for atrName in atrNames
-        atr = xml.attributes[atrName + "-" + pComponent.language]
+        atr = tryLoadLangAtrrib(xml, atrName, pComponent)
         if atr != nil
           return processBuildVars(BuildVarParams.new().wValue(atr).wComp(pComponent))
         end
@@ -97,6 +98,14 @@ module DataLoading
       end
 
       return default
+    end
+
+    def self.tryLoadLangAtrrib(xml, atrName, pComponent)
+      if pComponent != nil
+        atr = xml.attributes[atrName + "-" + pComponent.language]
+      else
+        atr = nil
+      end
     end
 
     def self.loadAttributeArray(xml, atrNames, pComponent, separator)
@@ -121,13 +130,15 @@ module DataLoading
     def self.processBuildVars(buildVarParams)
       newVal = buildVarParams.value
 
-      for bv in buildVarParams.pComp.buildVars
-        newVal.gsub!("$" + bv.name, bv.value)
-        newVal.gsub!("{" + bv.name + "}", bv.value)
-      end
+      if buildVarParams.pComp != nil
+        for bv in buildVarParams.pComp.buildVars
+          newVal.gsub!("$" + bv.name, bv.value)
+          newVal.gsub!("{" + bv.name + "}", bv.value)
+        end
 
-      if buildVarParams.model != nil
-        newVal.gsub!("{ModelName}", buildVarParams.model.name)
+        if buildVarParams.model != nil
+          newVal.gsub!("{ModelName}", buildVarParams.model.name)
+        end
       end
 
       # if buildVarParams.featureGroup != nil

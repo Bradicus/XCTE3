@@ -98,22 +98,30 @@ module DataLoading
     def loadAttrib(xml, var = nil)
       for atrName in @names
         # Check for language specific version of attrib
-        atr = xml.attributes[atrName + "-" + ActiveComponent.get().language]
+
+        if ActiveComponent.get() != nil
+          atr = xml.attributes[atrName + "-" + ActiveComponent.get().language]
+        else
+          atr = nil
+        end
+
         if (atr == nil)
           # Check for regular version of attrib
           atr = xml.attributes[atrName]
         end
         if atr != nil
-          value = processBuildVars(atr)
-          if @arrayDelim != nil
-            value = value.split(@arrayDelim)
+          if ActiveComponent.get() != nil
+            value = processBuildVars(atr)
+            if @arrayDelim != nil
+              value = value.split(@arrayDelim)
 
-            for val in value
-              val = val.strip()
+              for val in value
+                val = val.strip()
+              end
             end
           end
 
-          if (@isTemplateAttrib)
+          if (@isTemplateAttrib && value != nil)
             tplItems = value.split(",")
             for tplItem in tplItems
               tplC = CodeStructure::CodeElemTemplate.new(tplItem.strip())

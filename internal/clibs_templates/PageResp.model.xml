@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="page response" >
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+			<var name="data"	type="T" set="List" default="[]" />
+			<var name="pageNum"	type="Int32" default="1" />
+			<var name="pageSize"	type="Int32" default="10" />			
+			<var name="pageCount"	type="Int32" default="0" />		
+			<var name="sortBy"	type="String" default = ""/>
+			<var name="sortOrder"	type="String" default = ""/>
+			<var name="searchCols"	type="String" default = ""/>
+			<var name="searchValue"	type="String" default = "" />
+	</var_group>
+
+	<gen_class type="class_filtered_dataset_tpl" path="shared/class" />
+
+</model>

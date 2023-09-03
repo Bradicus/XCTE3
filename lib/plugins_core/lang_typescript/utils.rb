@@ -73,7 +73,11 @@ module XCTETypescript
       vDec << ": " + getTypeName(var)
 
       if (var.defaultValue != nil)
-        vDec << " = " << var.defaultValue
+        if (var.getUType().downcase == "string")
+          vDec << ' = "' << var.defaultValue << '"'
+        else
+          vDec << " = " << var.defaultValue << ""
+        end
       end
 
       vDec << ";"
@@ -297,10 +301,22 @@ module XCTETypescript
       optVar.name = var.selectFrom + " options"
       optVar.utype = var.selectFrom
       optVar.vtype = nil
-      optVar.defaultValue = "new Observable<FilteredPageTpl<" + getStyledClassName(optVar.utype) + ">>"
+      optVar.defaultValue = "new Observable<FilteredPageRespTpl<" + getStyledClassName(optVar.utype) + ">>"
       optVar.templates = Array.new
       optVar.addTpl("Observable")
-      optVar.addTpl("FilteredPageTpl", true)
+      optVar.addTpl("FilteredPageRespTpl", true)
+
+      return optVar
+    end
+
+    def getOptionsReqVarFor(var)
+      optVar = var.clone
+      optVar.name = var.selectFrom + " options req"
+      optVar.utype = var.selectFrom
+      optVar.vtype = nil
+      optVar.defaultValue = "new FilteredPageReqTpl<" + getStyledClassName(optVar.utype) + ">"
+      optVar.templates = Array.new
+      optVar.addTpl("FilteredPageReqTpl", true)
 
       return optVar
     end

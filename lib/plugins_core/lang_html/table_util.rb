@@ -68,7 +68,7 @@ module XCTEHtml
       # Generate table body
       tBody = HtmlNode.new("tbody")
       tBodyRow = HtmlNode.new("tr").
-        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.content")
+        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.data")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && !var.isList()
@@ -81,7 +81,7 @@ module XCTEHtml
       tableElem.add_child(tBody)
 
       tFoot = HtmlNode.new("tfoot")
-      tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.totalPages ?? 0 > 1")
+      tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount ?? 0 > 1")
 
       tFoot.add_child(make_paging_control(colCount, listVarName, asyncStr))
       tableElem.add_child(tFoot)
@@ -113,8 +113,8 @@ module XCTEHtml
       tFootTd.add_class("list-group-horizontal")
       tFootTd.add_attribute("colspan", colCount.to_s)
 
-      firstPage = make_paging_button("&lt;&lt;", "this.page.currentPage = 0")
-      prevPage = make_paging_button("&lt;", "this.page.currentPage--")
+      firstPage = make_paging_button("&lt;&lt;", "this.page.pageNum = 0")
+      prevPage = make_paging_button("&lt;", "this.page.pageNum--")
 
       pageList = HtmlNode.new("ul")
         .add_class("pagination")
@@ -128,17 +128,15 @@ module XCTEHtml
       pageList.add_child(li)
 
       li = HtmlNode.new("li")
-        .add_attribute("*ngFor", "let item of [].constructor((" + listVarName + asyncStr + ")?.totalPages ?? 0);let i = index")
+        .add_attribute("*ngFor", "let item of [].constructor((" + listVarName + asyncStr + ")?.pageCount ?? 0);let i = index")
         .add_class("page-item disabled")
-        .add_child(HtmlNode.new("button")
-          .add_class("page-item btn btn-primary mr-2")
-          .add_text("{{i}}"))
+        .add_child(make_paging_button("{{i}}", "this.page.pageNum = {{i}}"))
 
-      #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.totalPages > 10)")
+      #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
       pageList.add_child(li)
 
-      nextPage = make_paging_button("&gt;&gt;", "this.page.currentPage = this.page.totalPages")
-      lastPage = make_paging_button("&gt;", "this.page.currentPage++")
+      nextPage = make_paging_button("&gt;", "this.page.pageNum = this.page.pageCount")
+      lastPage = make_paging_button("&gt;&gt;", "this.page.pageNum++")
 
       li = HtmlNode.new("li")
         .add_child(nextPage)
@@ -188,7 +186,7 @@ module XCTEHtml
       # Generate table body
       tBody = HtmlNode.new("tbody")
       tBodyRow = HtmlNode.new("tr").
-        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.content")
+        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.data")
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
