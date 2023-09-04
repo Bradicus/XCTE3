@@ -123,14 +123,16 @@ module XCTEHtml
 
       li = HtmlNode.new("li")
         .add_child(firstPage)
-        .add_child(prevPage)
+      pageList.add_child(li)
 
+      li = HtmlNode.new("li")
+        .add_child(prevPage)
       pageList.add_child(li)
 
       li = HtmlNode.new("li")
         .add_attribute("*ngFor", "let item of [].constructor((" + listVarName + asyncStr + ")?.pageCount ?? 0);let i = index")
-        .add_class("page-item disabled")
-        .add_child(make_paging_button("{{i}}", "this.page.pageNum = {{i}}"))
+        .add_class("page-item")
+        .add_child(make_paging_button("{{i + 1}}", "this.page.pageNum = {{i}}"))
 
       #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
       pageList.add_child(li)
@@ -140,11 +142,16 @@ module XCTEHtml
 
       li = HtmlNode.new("li")
         .add_child(nextPage)
+      pageList.add_child(li)
+
+      li = HtmlNode.new("li")
         .add_child(lastPage)
 
       pageList.add_child(li)
 
       tFootTd.add_child(pageList)
+
+      tFootTd.add_child(HtmlNode.new("span").add_class("justify-content-end").add_text("Page "))
 
       tFootRow.add_child(tFootTd)
 
@@ -152,9 +159,9 @@ module XCTEHtml
     end
 
     def make_paging_button(text, onClick)
-      return HtmlNode.new("button")
-               .add_class("page-item btn btn-primary")
-             #.add_attribute("(click)", onClick)
+      return HtmlNode.new("a")
+               .add_class("page-link")
+               .add_attribute("(click)", onClick)
                .add_text(text)
     end
 
@@ -192,8 +199,8 @@ module XCTEHtml
         if Utils.instance.isPrimitive(var)
           td = HtmlNode.new("td")
           ##            .add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}")
-          td.add_child(HtmlNode.new("button")
-            .add_class("page-item btn btn-primary")
+          td.add_child(HtmlNode.new("a")
+            .add_class("page-link")
             .add_text("{{i}}}"))
           tBodyRow.add_child(td)
         end

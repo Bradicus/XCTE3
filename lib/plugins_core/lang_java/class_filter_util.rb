@@ -57,37 +57,6 @@ module XCTEJava
       super
     end
 
-    def genFileComment(cls, bld)
-      cfg = UserSettings.instance
-
-      bld.add("/**")
-      bld.add("* @class " + cls.name)
-
-      if (cfg.codeAuthor != nil)
-        bld.add("* @author " + cfg.codeAuthor)
-      end
-
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        bld.add("* " + cfg.codeCompany)
-      end
-
-      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
-        bld.add("*\n* " + cfg.codeLicense)
-      end
-
-      bld.add("*")
-
-      if (cls.description != nil)
-        cls.description.each_line { |descLine|
-          if descLine.strip.size > 0
-            bld.add("* " << descLine.chomp)
-          end
-        }
-      end
-
-      bld.add("*/")
-    end
-
     # Returns the code for the header for this class
     def genFileContent(cls, bld)
       cfg = UserSettings.instance

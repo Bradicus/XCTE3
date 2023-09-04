@@ -25,19 +25,19 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, fun)
-      bld.add("PageRequest getPageRequest(Long pageNum, Long pageSize, Sort sort)")
+      bld.add("PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)")
     end
 
     def process_dependencies(cls, bld, fun)
     end
 
     def get_body(cls, bld, fun)
-      bld.startFunction("public static PageRequest getPageRequest(Long pageNum, Long pageSize, Sort sort)")
+      bld.startFunction("public static PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)")
 
       bld.add "PageRequest pageRequest = null;"
 
       bld.startBlock("if (pageNum != null && pageSize > 0)")
-      bld.add "pageRequest = PageRequest.of(pageNum.intValue(), pageSize.intValue());"
+      bld.add "pageRequest = PageRequest.of(pageNum, pageSize);"
       bld.midBlock "else"
       bld.add "pageRequest = PageRequest.of(0, Integer.MAX_VALUE);"
       bld.endBlock

@@ -30,7 +30,7 @@ module XCTEJava
       if @dsClass != nil
         @returnType = Utils.instance.getStyledClassName(@dsClass.getUName())
       else
-        @returnType = "Page<" + Utils.instance.getStyledClassName(cls.getUName()) + ">"
+        @returnType = "FilteredPageRespTpl<" + Utils.instance.getStyledClassName(cls.getUName()) + ">"
       end
 
       get_body(cls, bld, fun)
@@ -40,6 +40,7 @@ module XCTEJava
       cls.addUse("org.springframework.data.domain.PageRequest")
       cls.addUse("org.springframework.data.domain.Sort")
       cls.addUse("org.springframework.data.domain.Page")
+      cls.addUse("com.example.demo.dto.FilteredPageRespTpl")
 
       @dsClass = cls.model.findClassModelByPluginName("class_data_set")
 
@@ -90,11 +91,11 @@ module XCTEJava
         defaultSortDir = "asc"
       end
 
-      params.push('@RequestParam(defaultValue="0") Long pageNum')
-      params.push('@RequestParam(defaultValue="' + pageSize.to_s + '") Long pageSize')
+      params.push('@RequestParam(defaultValue="0") Integer pageNum')
+      params.push('@RequestParam(defaultValue="' + pageSize.to_s + '") Integer pageSize')
       params.push('@RequestParam(defaultValue="' + sortCol + '") String sortBy')
       params.push('@RequestParam(defaultValue="' + defaultSortDir + '") String sortOrder')
-      params.push('@RequestParam(defaultValue="") String search')
+      params.push('@RequestParam(defaultValue="") String searchValue')
 
       bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
@@ -110,7 +111,7 @@ module XCTEJava
 
       if cls.model.paging.pageSizes.length > 0
         bld.add "if (pageSizes.size() > 0 && !pageSizes.contains(pageSize))"
-        bld.iadd "pageSize = pageSizes.get(0).longValue();"
+        bld.iadd "pageSize = pageSizes.get(0);"
       end
 
       bld.separate
@@ -126,11 +127,22 @@ module XCTEJava
         bld.add("return dataSet;")
       elsif cls.dataClass != nil
         bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.getStyledClassName(cls.getUName()) + "(item));"
-        bld.add("return mappedItems;")
-        bld.separate
+        bld.add "var response = new " + @returnType + "();"
+        bld.add "response.pageCount = mappedItems.getTotalPages();"
+        bld.add "response.data = mappedItems.getContent();"
       else
-        bld.add("return items;")
+        bld.add "var response = new " + @returnType + "();"
+        bld.add "response.data = items.getContent();"
+        bld.add "response.pageCount = 1;"
       end
+
+      bld.add "response.pageNum = pageNum.intValue();"
+      bld.add "response.pageSize = pageSize;"
+      bld.add "response.sortBy = sortBy;"
+      bld.add "response.searchValue = searchValue;"
+
+      bld.separate
+      bld.add("return response;")
 
       bld.endFunction
     end

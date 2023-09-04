@@ -8,6 +8,26 @@ module XCTEJava
       return Utils.instance
     end
 
+    def genSourceFiles(cls)
+      srcFiles = Array.new
+
+      bld = SourceRendererJava.new
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
+      bld.lfExtension = Utils.instance.getExtension("body")
+
+      process_dependencies(cls, bld)
+
+      render_package_start(cls, bld)
+      render_dependencies(cls, bld)
+
+      genFileComment(cls, bld)
+      genFileContent(cls, bld)
+
+      srcFiles << bld
+
+      return srcFiles
+    end
+
     def process_dependencies(cls, bld)
       # Generate dependency code for functions
       for fun in cls.functions
@@ -80,6 +100,40 @@ module XCTEJava
           end
         end
       }))
+    end
+
+    def genFileComment(cls, bld)
+      cfg = UserSettings.instance
+      headerString = String.new
+
+      bld.add("/**")
+      bld.add("* @class " + getClassName(cls))
+
+      if (cfg.codeAuthor != nil)
+        bld.add("* @author " + cfg.codeAuthor)
+      end
+
+      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
+        bld.add("* " + cfg.codeCompany)
+      end
+
+      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
+        bld.add("*\n* " + cfg.codeLicense)
+      end
+
+      bld.add("* ")
+
+      if (cls.description != nil)
+        cls.description.each_line { |descLine|
+          if descLine.strip.size > 0
+            bld.add("* " << descLine.chomp)
+          end
+        }
+      end
+
+      bld.add("*/")
+
+      return(headerString)
     end
   end
 end

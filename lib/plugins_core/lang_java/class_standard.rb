@@ -100,7 +100,7 @@ module XCTEJava
     def genFileContent(cls, bld)
       cfg = UserSettings.instance
 
-      bld.startClass("public class " << cls.name)
+      bld.startClass("public class " << getClassName(cls))
 
       if Utils.instance.hasAnArray(cls)
         bld.separate
