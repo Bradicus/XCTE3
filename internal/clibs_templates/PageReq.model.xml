@@ -5,7 +5,7 @@
 	</description>
 
 	<var_group genGet="true" genSet="true" visibility="private">
-			<var name="pageNum"	type="Int32" default="1" />
+			<var name="pageNum"	type="Int32" default="0" />
 			<var name="pageSize"	type="Int32" default="10" />		
 			<var name="sortBy"	type="String" default = ""/>
 			<var name="sortOrder"	type="String" default = ""/>

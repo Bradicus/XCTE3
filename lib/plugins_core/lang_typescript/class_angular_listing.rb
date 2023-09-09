@@ -104,12 +104,7 @@ module XCTETypescript
 
       bld.separate
       bld.startBlock("ngOnInit()")
-
-      bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing(this.pageReq);")
-      bld.startBlock "this.pageObv.subscribe((p) =>  { "
-      bld.add "this.page = p;"
-      bld.endBlock "});"
-
+      bld.add "this.updatePageData();"
       bld.endBlock
 
       bld.separate
@@ -118,8 +113,28 @@ module XCTETypescript
       bld.add("return Math.min((this.page?.pageCount ?? 0, 10));")
       bld.endBlock
 
+      bld.startBlock("updatePageData()")
+      bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing(this.pageReq);")
+      bld.startBlock "this.pageObv.subscribe((p) =>  { "
+      bld.add "this.page = p;"
+      bld.add "this.pageReq.pageNum = this.page.pageNum;"
+      bld.add "this.pageReq.pageSize = this.page.pageSize;"
+      bld.endBlock "});"
+      bld.endBlock
+
       bld.startBlock("goToPage(pageNum: number)")
-      bld.add("this.page.pageNum = pageNum;")
+      bld.add("this.pageReq.pageNum = pageNum;")
+      bld.add "this.updatePageData();"
+      bld.endBlock
+
+      bld.startBlock("goToPreviousPage()")
+      bld.add "if (this.pageReq.pageNum > 0)"
+      bld.iadd "this.goToPage(this.pageReq.pageNum - 1);"
+      bld.endBlock
+
+      bld.startBlock("goToNextPage()")
+      bld.add "if (this.pageReq.pageNum < this.page.pageCount - 1)"
+      bld.iadd "this.goToPage(this.pageReq.pageNum + 1);"
       bld.endBlock
 
       bld.separate

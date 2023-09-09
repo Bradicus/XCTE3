@@ -17,7 +17,7 @@ module XCTEHtml
     include Singleton
 
     # Return formatted class name
-    def make_table(cls, listVarName, iteratorName, async = "")
+    def make_table(cls, listVarName, iteratorName, paging, async = "")
       tableElem = HtmlNode.new("table")
         .add_class("table")
 
@@ -80,11 +80,13 @@ module XCTEHtml
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
 
-      tFoot = HtmlNode.new("tfoot")
-      tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount ?? 0 > 1")
+      if paging
+        tFoot = HtmlNode.new("tfoot")
+        tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount ?? 0 > 1")
 
-      tFoot.add_child(make_paging_control(colCount, listVarName, asyncStr))
-      tableElem.add_child(tFoot)
+        tFoot.add_child(make_paging_control(colCount, listVarName, asyncStr))
+        tableElem.add_child(tFoot)
+      end
 
       return tableElem
 
@@ -113,8 +115,8 @@ module XCTEHtml
       tFootTd.add_class("list-group-horizontal")
       tFootTd.add_attribute("colspan", colCount.to_s)
 
-      firstPage = make_paging_button("&lt;&lt;", "this.page.pageNum = 0")
-      prevPage = make_paging_button("&lt;", "this.page.pageNum--")
+      firstPage = make_paging_button("&lt;&lt;", "goToPage(0)")
+      prevPage = make_paging_button("&lt;", "goToPreviousPage()")
 
       pageList = HtmlNode.new("ul")
         .add_class("pagination")
@@ -132,13 +134,13 @@ module XCTEHtml
       li = HtmlNode.new("li")
         .add_attribute("*ngFor", "let item of [].constructor((" + listVarName + asyncStr + ")?.pageCount ?? 0);let i = index")
         .add_class("page-item")
-        .add_child(make_paging_button("{{i + 1}}", "this.page.pageNum = {{i}}"))
+        .add_child(make_paging_button("{{i + 1}}", "goToPage(i)"))
 
       #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
       pageList.add_child(li)
 
-      nextPage = make_paging_button("&gt;", "this.page.pageNum = this.page.pageCount")
-      lastPage = make_paging_button("&gt;&gt;", "this.page.pageNum++")
+      nextPage = make_paging_button("&gt;", "goToPage(this.page.pageCount - 1)")
+      lastPage = make_paging_button("&gt;&gt;", "goToNextPage()")
 
       li = HtmlNode.new("li")
         .add_child(nextPage)

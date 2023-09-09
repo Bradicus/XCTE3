@@ -264,6 +264,9 @@ module XCTETypescript
       end
     end
 
+    def getStyledPageName(var)
+    end
+
     def renderClassList(clsList, bld)
       firstLine = true
       uniqueList = clsList.uniq()

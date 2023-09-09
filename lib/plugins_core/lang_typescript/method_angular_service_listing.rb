@@ -18,7 +18,16 @@ module XCTETypescript
       urlName = Utils.instance.getStyledUrlName(cls.getUName())
 
       bld.startFunction("listing(req: FilteredPageReqTpl<" + className + ">): Observable<FilteredPageRespTpl<" + className + ">>")
-      bld.add("return this.httpClient.get<FilteredPageRespTpl<" + className + ">>(`${this.apiUrl}/" + urlName + "`);")
+      bld.add "let params = new HttpParams();"
+      bld.separate
+      bld.add 'params = params.append("pageNum", req.pageNum);'
+      bld.add 'params = params.append("pageSize", req.pageSize);'
+      bld.add 'params = params.append("sortBy", req.sortBy);'
+      bld.add 'params = params.append("sortOrder", req.sortOrder);'
+      bld.add 'params = params.append("searchCols", req.searchCols);'
+      bld.add 'params = params.append("searchValue", req.searchValue);'
+      bld.separate
+      bld.add("return this.httpClient.get<FilteredPageRespTpl<" + className + ">>(`${this.apiUrl}/" + urlName + "`, { params} );")
       bld.endFunction()
     end
   end

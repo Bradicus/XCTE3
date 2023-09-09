@@ -52,7 +52,6 @@ module XCTETypescript
     def process_dependencies(cls, bld)
       cls.addInclude("../../../environments/environment", "environment", "lib")
       cls.addInclude("@angular/core", "Injectable")
-      cls.addInclude("@angular/common/http", "HttpClient ")
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("@faker-js/faker", "faker")
 

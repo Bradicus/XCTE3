@@ -115,7 +115,7 @@ module XCTEHtml
 
                 vName = Utils.instance.getStyledVariableName(optVar)
                 rowContainer.add_child(HtmlNode.new("h2").add_text(varCls.model.name.capitalize))
-                tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", "async")
+                tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", false, "async")
                 rowContainer.add_child(tableNode)
               else
                 varCls = ClassModelManager.findVarClass(var)
@@ -124,7 +124,7 @@ module XCTEHtml
                 end
 
                 rowContainer.add_child(HtmlNode.new("h2").add_text(cls.model.name.capitalize))
-                tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", "async")
+                tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", false, "async")
                 rowContainer.add_child(tableNode)
               end
             end
