@@ -9,7 +9,7 @@
 # class generator for example
 
 require "plugins_core/lang_typescript/utils.rb"
-require "plugins_core/lang_typescript/x_c_t_e_Typescript.rb"
+require "plugins_core/lang_typescript/x_c_t_e_typescript.rb"
 require "code_elem.rb"
 require "code_elem_parent.rb"
 require "code_elem_model.rb"
