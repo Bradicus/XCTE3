@@ -19,7 +19,7 @@ module XCTECSharp
     end
 
     def getClassName(cls)
-      if (cls.parentElem.is_a?(CodeStructure::CodeElemClassGen))
+      if cls.parentElem.is_a?(CodeStructure::CodeElemClassGen)
         parentPlug = XCTEPlugin::findClassPlugin(@language, cls.parentElem.plugName)
         return "i " + parentPlug.getUnformattedClassName(cls.parentElem)
       else

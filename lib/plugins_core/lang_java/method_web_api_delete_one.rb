@@ -14,7 +14,7 @@ require "plugins_core/lang_java/utils.rb"
 module XCTEJava
   class MethodWebApiUpdate < MethodWebApiBase
     def initialize
-      @name = "method_web_api_update_one"
+      @name = "method_web_api_delete_one"
       @language = "java"
       @category = XCTEPlugin::CAT_METHOD
     end
@@ -22,7 +22,7 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def get_definition(cls, bld, fun)
       bld.add("/*")
-      bld.add("* Web API update single " + cls.getUName())
+      bld.add("* Web API delete single " + cls.getUName())
       bld.add("*/")
 
       get_body(cls, bld, fun)
@@ -30,14 +30,7 @@ module XCTEJava
 
     def get_declairation(cls, bld, fun)
       bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-              " " + Utils.instance.getStyledClassName("put" + cls.getUName()) + "(int id);")
-    end
-    
-    def process_dependencies(cls, bld, fun)
-      cls.addUse("org.springframework.web.bind.annotation.PutMapping")
-      cls.addUse("org.springframework.web.bind.annotation.RequestBody")
-      cls.addUse("org.springframework.http.MediaType")
-      cls.addUse("org.springframework.http.ResponseEntity")
+              " " + Utils.instance.getStyledClassName("delete" + cls.getUName()) + "(int id);")
     end
 
     def get_body(cls, bld, fun)
@@ -56,12 +49,12 @@ module XCTEJava
       end
 
       #bld.add "@CrossOrigin"
-      bld.add '@PutMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '",'
+      bld.add '@DeleteMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '",'
       bld.iadd "consumes = MediaType.APPLICATION_JSON_VALUE, "
       bld.iadd "produces = MediaType.APPLICATION_JSON_VALUE)"
 
       bld.startFunction("public ResponseEntity<" + className +
-                        "> Put" + className +
+                        "> Delete" + className +
                         "(" + params.join(", ") + ")")
 
       bld.add "var dataItem = " + dataStoreName + ".findById(item.id);"
@@ -74,10 +67,10 @@ module XCTEJava
         bld.add "var returnItem = new " + className + "();"
         bld.add mapperName + ".map(savedItem, returnItem);"
 
-        bld.add "return new ResponseEntity<" + className + ">(returnItem, HttpStatus.CREATED);"
+        bld.add "return new ResponseEntity<Boolean>(true, HttpStatus.DELETED);"
       else
-        bld.add(Utils.instance.getStyledClassName(dataClass.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")
-        bld.add "return new ResponseEntity<" + className + ">(savedItem, HttpStatus.CREATED);"
+        bld.add(Utils.instance.getStyledClassName(dataClass.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")        
+        bld.add "return new ResponseEntity<Boolean>(true, HttpStatus.DELETED);"
       end
 
       bld.midBlock("else")

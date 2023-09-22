@@ -138,10 +138,13 @@ module XCTETypescript
       bld.endBlock
 
       bld.separate
+      
+      if (cls.model.findClassModel('method_angular_service_delete'))
 
-      # bld.startBlock("onDelete(item: " + standardClassName + ")")
-      # bld.add("this.service.delete(item.id);")
-      # bld.endBlock
+        bld.startBlock("onDelete(item)")
+        bld.add "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".delete(item)"
+        bld.endBlock
+      end
 
       # Generate code for functions
       render_functions(cls, bld)

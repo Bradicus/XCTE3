@@ -9,6 +9,7 @@
     <gen_class type="tsql_data_store" path="data" ns="com.example.demo.data" >
     	<function name="method_tsql_create" interface="true" />
     	<function name="method_tsql_update" interface="true" />
+      <function name="method_tsql_delete" interface="true" />      
     	<function name="method_tsql_retrieve_all" interface="true" />
     	<function name="method_tsql_retrieve_one_by" interface="true">
     		<var_ref name="id" />

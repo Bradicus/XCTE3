@@ -61,6 +61,9 @@ module XCTEHtml
           end
         }))
 
+        # Add one more row for actions
+        tHeadRow.children.push(HtmlNode.new("th").add_text(""))
+
         tHead.add_child(tHeadRow)
         tableElem.add_child(tHead)
       end
@@ -76,6 +79,25 @@ module XCTEHtml
             add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
         end
       }))
+
+      actions = HtmlNode.new("th")
+
+      if (cls.model.findClassModel('class_angular_reactive_edit'))
+        plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
+        
+        fullRoute = plug.get_full_route(cls, "view").join("/") + '/{{' + iteratorName + '.id}}'
+        actions.add_child(HtmlNode.new("a").add_attribute("routerLink", fullRoute + "/").add_text('View'))
+
+        fullRoute = plug.get_full_route(cls, "edit").join("/") + '/{{' + iteratorName + '.id}}'
+        actions.add_child(HtmlNode.new("a").add_attribute("routerLink", fullRoute + "/").add_text('Edit'))
+      end
+
+      if (cls.model.findClassModel('method_angular_service_delete'))
+        actions.add_child(HtmlNode.new("a").add_attribute("(click)", "onDelete(" + iteratorName + ")").add_text('Delete'))
+      end
+
+      # Add actions
+      tBodyRow.children.push(actions)
 
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
