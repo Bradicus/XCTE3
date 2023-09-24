@@ -40,6 +40,10 @@
 		<paging
 			pager="server"
 			sizes="10,20,50"/>
+		<actions>
+			<action name="view" role="user" />
+			<action name="edit" role="admin" />
+		</actions>
 	</gen_class>
 
 	<gen_class type="empty_file"

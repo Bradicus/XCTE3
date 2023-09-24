@@ -110,7 +110,7 @@ module XCTEHtml
                 optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
                 varCls = ClassModelManager.findVarClass(optVar)
                 if (varCls == nil)
-                  puts "Unable to find variable call " + var.getUType()
+                  puts "Unable to find variable type called " + var.getUType()
                 end
 
                 vName = Utils.instance.getStyledVariableName(optVar)

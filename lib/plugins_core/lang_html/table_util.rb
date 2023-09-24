@@ -86,14 +86,14 @@ module XCTEHtml
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
         
         fullRoute = plug.get_full_route(cls, "view").join("/") + '/{{' + iteratorName + '.id}}'
-        actions.add_child(HtmlNode.new("a").add_attribute("routerLink", fullRoute + "/").add_text('View'))
+        actions.add_child(make_action_button("View", "routerLink", fullRoute))
 
         fullRoute = plug.get_full_route(cls, "edit").join("/") + '/{{' + iteratorName + '.id}}'
-        actions.add_child(HtmlNode.new("a").add_attribute("routerLink", fullRoute + "/").add_text('Edit'))
+        actions.add_child(make_action_button("Edit", "routerLink", fullRoute))
       end
 
       if (cls.model.findClassModel('method_angular_service_delete'))
-        actions.add_child(HtmlNode.new("a").add_attribute("(click)", "onDelete(" + iteratorName + ")").add_text('Delete'))
+        actions.add_child(make_action_button("Delete", "(click)", "onDelete(" + iteratorName + ")"))
       end
 
       # Add actions
@@ -187,6 +187,13 @@ module XCTEHtml
                .add_class("page-link")
                .add_attribute("(click)", onClick)
                .add_text(text)
+    end
+
+    def make_action_button(text, attrib, attribValue)      
+      return HtmlNode.new("button")
+        .add_class('btn btn-primary')
+        .add_attribute(attrib, attribValue)
+        .add_text(text)
     end
 
     def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")

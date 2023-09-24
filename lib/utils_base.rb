@@ -173,9 +173,15 @@ class UtilsBase
     clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
     clsGen = ClassModelManager.findClass(var.getUType(), plugName)
 
-    if clsPlug != nil && clsGen != nil
+    if clsPlug != nil && clsGen != nil && !isSelfReference(cls, var, clsPlug)
       cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
     end
+  end
+
+  def isSelfReference(cls, var, clsPlug)
+    varUType = var.getUType()
+    classUType = clsPlug.getUnformattedClassName(cls)
+    return varUType == classUType
   end
 
   def render_param_list(pList)

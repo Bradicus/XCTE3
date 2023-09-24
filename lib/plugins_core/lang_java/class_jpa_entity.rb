@@ -85,7 +85,7 @@ module XCTEJava
           bld.add(Utils.instance.getVarDec(var))
         else
           if var.relation != nil
-            if var.relation == "many-to-many"
+            if var.relation.start_with? "many-to-many"
               bld.add("@ManyToMany(cascade = CascadeType.ALL)")
             elsif var.relation.start_with? "many-to-one"
               bld.add("@ManyToOne(cascade = CascadeType.ALL)")

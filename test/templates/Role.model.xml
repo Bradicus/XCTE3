@@ -8,12 +8,28 @@
 		<var name="id" identity="(1,1)" type="Int64" maxlen="10" pkey="true" />
 		<var name="name" type="String" maxlen="50" />
 		<var name="description" type="String" />
+		<var name="permissions" utype="permission" select_from="permission" rel="many-to-many-shared" set="List" />
 	</var_group>
 
 	<class_group_ref name="data store server" />
 	<class_group_ref name="data store client" />
 	<class_group_ref name="edit" feature_group="role" />
-	<class_group_ref name="listing" feature_group="role" />
+
+		<gen_class type="class_angular_listing"
+		  name="profile listing"
+		  path="profile/profile listing"
+			feature_group="profile">
+			<search_by name="first name"/>
+			<search_by name="last name"/>
+			<search_by name="email"/>
+			<paging
+				pager="server"
+				sizes="10,20,50"/>
+			<actions>
+				<action name="view" role="user" />
+				<action name="edit" role="admin" />
+			</actions>
+		</gen_class>
 
 	<gen_class type="class_angular_module" path="role" />
 	<gen_class type="class_angular_module_routing" path="role" />
@@ -23,5 +39,6 @@
 		<function name="method_web_api_write_one" />
 		<function name="method_web_api_update_one" />
 		<function name="method_web_api_read_many" />
+		<function name="method_web_api_delete_one" />
 	</gen_class>
 </model>

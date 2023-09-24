@@ -83,8 +83,8 @@ module XCTETypescript
       filePart = Utils.instance.getStyledFileName(cls.getUName())
 
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      userServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
-      dataGenUserServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_gen_service")
+      storeServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
+      dataGenServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_gen_service")
       userPopulateServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_map_service")
 
       bld.add("@Component({")
@@ -118,8 +118,8 @@ module XCTETypescript
       bld.separate
 
       constructorParams = Array.new
-      Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
-      Utils.instance.addParamIfAvailable(constructorParams, dataGenUserServiceVar)
+      Utils.instance.addParamIfAvailable(constructorParams, storeServiceVar)
+      Utils.instance.addParamIfAvailable(constructorParams, dataGenServiceVar)
       Utils.instance.addParamIfAvailable(constructorParams, userPopulateServiceVar)
 
       # Generate any selection list variable parameters for data stores
@@ -152,17 +152,25 @@ module XCTETypescript
       bld.add("this.route.paramMap.subscribe(params => {")
       bld.indent
       bld.add("let idVal = params.get('id');")
-      bld.add("if (!this.item?.id) {")
-
-      bld.iadd("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
-      bld.iadd("this." + Utils.instance.getStyledVariableName(dataGenUserServiceVar) + ".initData(this.item);")
-      bld.add("}")
       idVar = cls.model.getFilteredVars(lambda { |var| var.name == "id" })
       if (Utils.instance.isNumericPrimitive(idVar[0]))
         bld.add("this.item.id = idVal !== null ? parseInt(idVal) : 0;")
       else
         bld.add("this.item.id = idVal !== null ? idVal : '';")
       end
+
+      bld.separate
+
+      bld.startBlock("if (!this.item?.id)")
+
+      bld.add("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("this." + Utils.instance.getStyledVariableName(dataGenServiceVar) + ".initData(this.item);")
+      bld.midBlock 'else'
+      bld.startBlock "this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".detail(this.item.id).subscribe(data => {"
+      bld.add "this.item = data;"
+      bld.add "this.populate();"
+      bld.endBlock "});"
+      bld.endBlock 
       bld.unindent
       bld.add("});")
       bld.add("this.route.data.subscribe(data => {")
@@ -207,11 +215,11 @@ module XCTETypescript
       else
         bld.startBlock("if (this." + clsVar + ".controls['id'].value === null || !(this." + clsVar + ".controls['id'].value > 0))")
       end
-      bld.startBlock("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".create(this." + clsVar + ".value).subscribe(newItem => ")
+      bld.startBlock("this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".create(this." + clsVar + ".value).subscribe(newItem => ")
       bld.add "this.item = newItem;"
       bld.endBlock ");"
       bld.midBlock("else")
-      bld.startBlock("this." + Utils.instance.getStyledVariableName(userServiceVar) + ".update(this." + clsVar + ".value).subscribe(newItem => ")
+      bld.startBlock("this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".update(this." + clsVar + ".value).subscribe(newItem => ")
       bld.add "this.item = newItem;"
       bld.endBlock ");"
       bld.endBlock

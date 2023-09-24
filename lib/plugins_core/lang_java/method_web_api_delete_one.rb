@@ -12,7 +12,7 @@ require "code_name_styling.rb"
 require "plugins_core/lang_java/utils.rb"
 
 module XCTEJava
-  class MethodWebApiUpdate < MethodWebApiBase
+  class MethodWebApiDelete < MethodWebApiBase
     def initialize
       @name = "method_web_api_delete_one"
       @language = "java"
@@ -53,8 +53,7 @@ module XCTEJava
       bld.iadd "consumes = MediaType.APPLICATION_JSON_VALUE, "
       bld.iadd "produces = MediaType.APPLICATION_JSON_VALUE)"
 
-      bld.startFunction("public ResponseEntity<" + className +
-                        "> Delete" + className +
+      bld.startFunction("public ResponseEntity<Boolean> Delete" + className +
                         "(" + params.join(", ") + ")")
 
       bld.add "var dataItem = " + dataStoreName + ".findById(item.id);"
@@ -63,14 +62,14 @@ module XCTEJava
       bld.startBlock "if (dataItem.isPresent())"
       if cls.dataClass != nil
         bld.add mapperName + ".map(item, dataItem.get());"
-        bld.add(Utils.instance.getStyledClassName(dataClass.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(dataItem.get());")
+        bld.add(dataStoreName + ".delete(dataItem.get());")
         bld.add "var returnItem = new " + className + "();"
         bld.add mapperName + ".map(savedItem, returnItem);"
 
-        bld.add "return new ResponseEntity<Boolean>(true, HttpStatus.DELETED);"
+        bld.add "return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);"
       else
-        bld.add(Utils.instance.getStyledClassName(dataClass.getUName()) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")        
-        bld.add "return new ResponseEntity<Boolean>(true, HttpStatus.DELETED);"
+        bld.add(dataStoreName + ".delete(item);")        
+        bld.add "return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);"
       end
 
       bld.midBlock("else")
@@ -83,4 +82,4 @@ module XCTEJava
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiUpdate.new)
+XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiDelete.new)

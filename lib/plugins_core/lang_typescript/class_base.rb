@@ -36,6 +36,8 @@ module XCTETypescript
     def get_full_route(cls, actionName)
       route = Array.new
 
+      route.push('/')
+
       if cls.featureGroup != nil
         route.push(cls.featureGroup)
       else

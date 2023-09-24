@@ -32,7 +32,11 @@
 
 	<gen_class type="class_mapper_dozer" path="mapper" ns="com.example.demo.mapper">
 		<function name="method_map" gen_reverse="true">
-			<fromClass cname="profile edit" plugin="standard" />
+			<fromClass cname="profile edit user" plugin="standard" />
+			<toClass cname="profile" plugin="{DataModelPlugin}" />
+		</function>
+		<function name="method_map" gen_reverse="true">
+			<fromClass cname="profile edit admin" plugin="standard" />
 			<toClass cname="profile" plugin="{DataModelPlugin}" />
 		</function>
 			<function name="method_map" gen_list_map="true">

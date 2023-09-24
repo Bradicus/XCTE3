@@ -304,6 +304,7 @@ module XCTETypescript
       optVar.name = var.selectFrom + " options"
       optVar.utype = var.selectFrom
       optVar.vtype = nil
+      optVar.relation = nil
       optVar.defaultValue = "new Observable<FilteredPageRespTpl<" + getStyledClassName(optVar.utype) + ">>"
       optVar.templates = Array.new
       optVar.addTpl("Observable")
