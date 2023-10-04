@@ -11,8 +11,8 @@ class ClassModelManager
 
   def self.findClass(modelName, classPlugName)
     for c in @@list
-      # puts classPlugName + " " + c.plugName
-      # puts modelName + " " + c.model.name
+      puts classPlugName + " " + c.plugName
+      puts modelName + " " + c.model.name
       if (c.plugName == classPlugName && nameMatches(c.model.name, modelName))
         return c
       end

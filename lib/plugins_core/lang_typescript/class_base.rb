@@ -36,15 +36,13 @@ module XCTETypescript
     def get_full_route(cls, actionName)
       route = Array.new
 
-      route.push('/')
-
       if cls.featureGroup != nil
         route.push(cls.featureGroup)
       else
         route.push(cls.model.name)
       end
 
-      return route + get_relative_route(cls, actionName)
+      return '/' + (route + get_relative_route(cls, actionName)).join('/')
     end
 
     def process_dependencies(cls, bld)

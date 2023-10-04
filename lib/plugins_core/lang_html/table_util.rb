@@ -17,7 +17,7 @@ module XCTEHtml
     include Singleton
 
     # Return formatted class name
-    def make_table(cls, listVarName, iteratorName, paging, async = "")
+    def make_table(cls, listVarName, iteratorName, paging, async = "", embedded = false)
       tableElem = HtmlNode.new("table")
         .add_class("table")
 
@@ -82,18 +82,22 @@ module XCTEHtml
 
       actions = HtmlNode.new("th")
 
-      if (cls.model.findClassModel('class_angular_reactive_edit'))
-        plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-        
-        fullRoute = plug.get_full_route(cls, "view").join("/") + '/{{' + iteratorName + '.id}}'
-        actions.add_child(make_action_button("View", "routerLink", fullRoute))
-
-        fullRoute = plug.get_full_route(cls, "edit").join("/") + '/{{' + iteratorName + '.id}}'
-        actions.add_child(make_action_button("Edit", "routerLink", fullRoute))
-      end
-
-      if (cls.model.findClassModel('method_angular_service_delete'))
-        actions.add_child(make_action_button("Delete", "(click)", "onDelete(" + iteratorName + ")"))
+      if !embedded
+        for act in cls.actions
+          if act.linkModel != nil
+            linkcls = ClassModelManager.findClass(act.linkModel, act.linkClass)
+            clsPlug = XCTEPlugin::findClassPlugin("typescript", linkcls.plugName)
+            route = clsPlug.get_full_route(linkcls, act.name)
+            actions.add_child(make_action_button(act.name, "routerLink", route + "/" + '{{' + iteratorName + '.id}}'))
+          elsif act.trigger != nil
+            triggerFun = Utils.instance.getStyledFunctionName("on " + act.trigger) + "(" + iteratorName + ")"
+            if act.trigger == 'delete'
+              actions.add_child(make_action_button(act.name, "(click)", triggerFun))          
+            else
+              actions.add_child(make_action_button(act.name, "(click)", triggerFun))
+            end
+          end
+        end
       end
 
       # Add actions
@@ -193,7 +197,7 @@ module XCTEHtml
       return HtmlNode.new("button")
         .add_class('btn btn-primary')
         .add_attribute(attrib, attribValue)
-        .add_text(text)
+        .add_text(text.capitalize)
     end
 
     def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")

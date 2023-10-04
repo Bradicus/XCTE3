@@ -35,7 +35,7 @@ module XCTEHtml
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
 
         bld.add('<button type="button" class="btn btn-primary" routerLink="/' +
-                plug.get_full_route(cls, "edit").join("/") + '/0">New ' + cls.getUName() + "</button>")
+                plug.get_full_route(cls, "edit") + '/0">New ' + cls.getUName() + "</button>")
       end
 
       tbl = TableUtil.instance.make_table(cls, "page", "item", true)

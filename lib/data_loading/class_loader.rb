@@ -9,6 +9,7 @@
 
 require "code_elem_project.rb"
 require "code_elem_build_var.rb"
+require "code_elem_action"
 require "data_loading/variable_loader"
 require "data_loading/attribute_loader"
 require "data_loading/attribute_util"
@@ -120,6 +121,16 @@ module DataLoading
           end
         }
       end
+
+      # Load uses
+      genCXml.elements.each("actions/action") { |xmlNode|
+        act = CodeElemAction.new
+        act.name = AttributeLoader.init().xml(xmlNode).names("name").model(genC.model).cls(genC).get()
+        act.linkModel = AttributeLoader.init().xml(xmlNode).names("linkModel").model(genC.model).cls(genC).get()
+        act.linkClass = AttributeLoader.init().xml(xmlNode).names("linkClass").model(genC.model).cls(genC).get()
+        act.trigger = AttributeLoader.init().xml(xmlNode).names("trigger").model(genC.model).cls(genC).get()
+        genC.actions.push(act);
+      }
 
       modelManager.list << genC
       genC.model.classes << genC

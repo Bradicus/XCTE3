@@ -81,7 +81,7 @@ module XCTEHtml
             end
 
             editPath = plug.get_full_route(otherCls, "edit")
-            editPath.push("0")
+            editPath += "/0"
             curNode.children.push(NavigationNode.new(nodeName.capitalize + " create", editPath))
           end
         end
@@ -99,7 +99,7 @@ module XCTEHtml
 
         bld.startBlock('<div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">')
         for cNode in fNode.children
-          bld.add '<a ngbDropdownItem routerLink="' + cNode.link.join("/") + '">' + cNode.name + "</a>"
+          bld.add '<a ngbDropdownItem routerLink="' + cNode.link + '">' + cNode.name + "</a>"
         end
         bld.endBlock "</div>"
         bld.endBlock "</li>"

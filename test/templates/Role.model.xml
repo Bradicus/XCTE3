@@ -14,22 +14,7 @@
 	<class_group_ref name="data store server" />
 	<class_group_ref name="data store client" />
 	<class_group_ref name="edit" feature_group="role" />
-
-		<gen_class type="class_angular_listing"
-		  name="profile listing"
-		  path="profile/profile listing"
-			feature_group="profile">
-			<search_by name="first name"/>
-			<search_by name="last name"/>
-			<search_by name="email"/>
-			<paging
-				pager="server"
-				sizes="10,20,50"/>
-			<actions>
-				<action name="view" role="user" />
-				<action name="edit" role="admin" />
-			</actions>
-		</gen_class>
+	<class_group_ref name="listing" feature_group="role" />
 
 	<gen_class type="class_angular_module" path="role" />
 	<gen_class type="class_angular_module_routing" path="role" />

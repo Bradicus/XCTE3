@@ -163,7 +163,7 @@ module XCTETypescript
 
     def renderAddNodeLine(bld, nd, assignTo, addToNode)
       if nd.link != nil
-        bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", "' + nd.link.join("/") + '");')
+        bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", "' + nd.link + '");')
       else
         bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", null);')
       end
