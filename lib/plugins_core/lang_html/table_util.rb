@@ -51,8 +51,10 @@ module XCTEHtml
         Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
           if names.include?(var.name)
             searchInput = HtmlNode.new("input")
-            searchInput.add_class("form-control")
-            searchInput.add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " " + var.name))
+              .add_class("form-control")
+              .add_attribute("type", "search")
+              .add_attribute("placeholder", "Filter")
+              .add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " " + var.name))
             th = HtmlNode.new("th")
             th.add_child(searchInput)
             tHeadRow.children.push(th)
@@ -84,11 +86,8 @@ module XCTEHtml
 
       if !embedded
         for act in cls.actions
-          if act.linkModel != nil
-            linkcls = ClassModelManager.findClass(act.linkModel, act.linkClass)
-            clsPlug = XCTEPlugin::findClassPlugin("typescript", linkcls.plugName)
-            route = clsPlug.get_full_route(linkcls, act.name)
-            actions.add_child(make_action_button(act.name, "routerLink", route + "/" + '{{' + iteratorName + '.id}}'))
+          if act.link != nil
+            actions.add_child(make_action_button(act.name, "routerLink", act.link + "/" + '{{' + iteratorName + '.id}}'))
           elsif act.trigger != nil
             triggerFun = Utils.instance.getStyledFunctionName("on " + act.trigger) + "(" + iteratorName + ")"
             if act.trigger == 'delete'

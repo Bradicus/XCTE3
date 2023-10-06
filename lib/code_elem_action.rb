@@ -7,8 +7,7 @@
 
 class CodeElemAction
   attr_accessor :name,
-    :linkModel,
-    :linkModelNS,
-    :linkClass,
-    :trigger
+    :link,
+    :trigger,
+    :role
 end

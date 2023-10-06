@@ -126,8 +126,7 @@ module DataLoading
       genCXml.elements.each("actions/action") { |xmlNode|
         act = CodeElemAction.new
         act.name = AttributeLoader.init().xml(xmlNode).names("name").model(genC.model).cls(genC).get()
-        act.linkModel = AttributeLoader.init().xml(xmlNode).names("linkModel").model(genC.model).cls(genC).get()
-        act.linkClass = AttributeLoader.init().xml(xmlNode).names("linkClass").model(genC.model).cls(genC).get()
+        act.link = AttributeLoader.init().xml(xmlNode).names("link").model(genC.model).cls(genC).get()
         act.trigger = AttributeLoader.init().xml(xmlNode).names("trigger").model(genC.model).cls(genC).get()
         genC.actions.push(act);
       }

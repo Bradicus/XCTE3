@@ -43,15 +43,19 @@ module XCTEHtml
           add_attribute("[formGroup]", @formName).
           add_attribute("(ngSubmit)", "onSubmit()")
 
+        buttonNode = HtmlNode.new("div").add_attribute("*ngIf", "enableEdit")
+
         populateButton = Utils.instance.make_primary_button(cls.genCfg, "Populate").
           add_attribute("(click)", "populateRandom()")
 
-        contentNode.add_child(populateButton)
+        buttonNode.add_child(populateButton)
 
         submitButton = Utils.instance.make_primary_button(cls.genCfg, "Submit").
           add_attribute("(click)", "onSubmit()")
 
-        contentNode.add_child(submitButton)
+        buttonNode.add_child(submitButton)
+
+        contentNode.add_child(buttonNode)
       else
         formNode = formNode = Utils.instance.make_node(cls.genCfg, "div").
           add_attribute("[formGroup]", @formName)
@@ -59,7 +63,12 @@ module XCTEHtml
 
       contentNode.add_child(formNode)
 
-      rowContainer = formNode
+      formFieldsetNode = HtmlNode.new('fieldset').
+        add_attribute("[disabled]", "!enableEdit")
+
+      formNode.add_child(formFieldsetNode)
+
+      rowContainer = formFieldsetNode
 
       rowNode = Utils.instance.make_node(cls.genCfg, "div").
         add_class("row", "form-group")
@@ -94,7 +103,7 @@ module XCTEHtml
             end
 
             rowNode = new_row(cls, rowContainer, rowNode)
-            formNode.add_child(fieldsetNode)
+            formFieldsetNode.add_child(fieldsetNode)
 
             rowContainer = formNode
           elsif var.isList()
@@ -134,16 +143,14 @@ module XCTEHtml
         wBeforeGroupCb(lambda { |innerVar|
         if (rowContainer != nil && rowNode.children.length > 0)
           rowNode = new_row(cls, rowContainer, rowNode)
+          rowContainer = rowNode
         end
-
-        rowContainer = formNode
       }).
         wAfterGroupCb(lambda { |innerVar|
         if (rowContainer != nil && rowNode.children.length > 0)
           rowNode = new_row(cls, rowContainer, rowNode)
+          rowContainer = rowNode
         end
-
-        rowContainer = formNode
       }))
 
       # Flush out data in remaining row if need be

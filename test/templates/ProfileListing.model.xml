@@ -41,8 +41,9 @@
 			pager="server"
 			sizes="10,20,50"/>
 		<actions>
-			<action name="view" role="user" />
-			<action name="edit" role="admin" />
+			<action name="view" link="/!{FeatureGroup}/!{FeatureGroup}-edit-admin-view" role="admin"/>
+			<action name="edit" link="/!{FeatureGroup}/!{FeatureGroup}-edit-admin" role="admin" />
+			<action name="disable" trigger="disable" role="admin" />
 		</actions>
 	</gen_class>
 
