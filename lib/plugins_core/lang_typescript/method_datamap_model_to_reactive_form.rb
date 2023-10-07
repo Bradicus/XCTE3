@@ -29,7 +29,7 @@ module XCTETypescript
           vName = Utils.instance.getStyledVariableName(var)
           bld.add('formGroup.get("' + vName + '")?.markAsTouched()')
           if (var.getUType().downcase == "datetime")
-            bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ".toISOString().slice(0, -1))")
+            bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + "?.toISOString().slice(0, -1))")
           else
             bld.add('formGroup.get("' + vName + '")?.setValue(src.' + vName + ")")
           end

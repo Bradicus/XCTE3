@@ -23,7 +23,8 @@ module XCTETypescript
       cls.addInclude("../../../environments/environment", "environment", "lib")
       cls.addInclude("@angular/core", "Injectable")
       cls.addInclude("@angular/common/http", "HttpClient, HttpParams")
-      cls.addInclude("rxjs", "Observable", "lib")
+      cls.addInclude("rxjs", "Observable, map", "lib")
+      
 
       fPath = Utils.instance.getStyledFileName(cls.model.name)
       cName = Utils.instance.getStyledClassName(cls.model.name)
