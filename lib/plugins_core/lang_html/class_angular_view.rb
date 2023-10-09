@@ -40,22 +40,7 @@ module XCTEHtml
       if (!nested)
         contentNode.add_child(Utils.instance.make_node(cls.genCfg, "h2").add_text(cls.model.name.capitalize))
         formNode = Utils.instance.make_node(cls.genCfg, "form").
-          add_attribute("[formGroup]", @formName).
-          add_attribute("(ngSubmit)", "onSubmit()")
-
-        buttonNode = HtmlNode.new("div")
-
-        populateButton = Utils.instance.make_primary_button(cls.genCfg, "Populate").
-          add_attribute("(click)", "populateRandom()")
-
-        buttonNode.add_child(populateButton)
-
-        submitButton = Utils.instance.make_primary_button(cls.genCfg, "Submit").
-          add_attribute("(click)", "onSubmit()")
-
-        buttonNode.add_child(submitButton)
-
-        contentNode.add_child(buttonNode)
+          add_attribute("[formGroup]", @formName)
       else
         formNode = formNode = Utils.instance.make_node(cls.genCfg, "div").
           add_attribute("[formGroup]", @formName)
@@ -63,7 +48,7 @@ module XCTEHtml
 
       contentNode.add_child(formNode)
 
-      formFieldsetNode = HtmlNode.new('fieldset')
+      formFieldsetNode = HtmlNode.new('fieldset').add_attribute('[disabled]', 'true')
 
       formNode.add_child(formFieldsetNode)
 
@@ -188,12 +173,9 @@ module XCTEHtml
 
       labelNode = HtmlNode.new("label").add_text(var.getDisplayName())
       inputNode = HtmlNode.new("input")
-      selectNode = HtmlNode.new("select")
+      selectNode = HtmlNode.new("input")
 
-      if (var.readonly)
-        inputNode.add_attribute("[readonly]", "true")
-        selectNode.add_attribute("[readonly]", "true")
-      end
+      selectNode.add_attribute("[disabled]", "true")
 
       fldNode.add_child(labelNode)
 
@@ -211,13 +193,9 @@ module XCTEHtml
 
       if var.selectFrom != nil
         itemName = CodeNameStyling.getStyled(var.selectFrom + " item", Utils.instance.langProfile.variableNameStyle)
-        optVarName = CodeNameStyling.getStyled(var.selectFrom + " options", Utils.instance.langProfile.variableNameStyle)
+        
         selectNode.add_attribute("id", varId)
         selectNode.add_attribute("formControlName", Utils.instance.getStyledVariableName(var, ""))
-        selectNode.add_child(HtmlNode.new("option").
-          add_attribute("*ngFor", "let " + itemName + " of (" + optVarName + " | async)?.data").
-          add_attribute("value", itemName + ".id").
-          add_text("{{" + itemName + ".name}}"))
 
         fldNode.add_child(selectNode)
       else

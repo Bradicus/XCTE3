@@ -14,6 +14,7 @@
 	<class_group_ref name="data store server" />
 	<class_group_ref name="data store client" />
 	<class_group_ref name="edit" feature_group="role" />
+	<class_group_ref name="view" feature_group="role" />
 	<class_group_ref name="listing" feature_group="role" />
 
 	<gen_class type="class_angular_module" path="role" />

@@ -7,7 +7,7 @@ require "include_util"
 module XCTETypescript
   class ClassAngularReactiveEdit < ClassBase
     def initialize
-      @name = "class_angular_reactive_edit"
+      @name = "class_angular_view"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -98,7 +98,7 @@ module XCTETypescript
       bld.add
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")      
-      bld.add("item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("public item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       bld.separate
 
       # Generate class variables
@@ -197,29 +197,6 @@ module XCTETypescript
 
       bld.separate
       bld.add("this.populate();")
-      bld.endBlock
-
-      bld.separate
-      bld.startBlock("onSubmit()")
-      bld.startBlock("if (!this." + clsVar + ".invalid)")
-      if (idVar[0].getUType().downcase() == "string" || idVar[0].getUType().downcase() == "guid")
-        bld.startBlock("if (this." + clsVar + ".controls['id'].value?.length === 0)")
-      else
-        bld.startBlock("if (this." + clsVar + ".controls['id'].value === null || !(this." + clsVar + ".controls['id'].value > 0))")
-      end
-      bld.startBlock("this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".create(this." + clsVar + ".value).subscribe(newItem => ")
-      bld.add "this.item = newItem;"
-      bld.endBlock ");"
-      bld.midBlock("else")
-      bld.startBlock("this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".update(this." + clsVar + ".value).subscribe(newItem => ")
-      bld.add "this.item = newItem;"
-      bld.endBlock ");"
-      bld.endBlock
-      bld.endBlock
-      bld.endBlock
-
-      bld.separate
-      bld.startBlock("onExit()")
       bld.endBlock
 
       render_functions(cls, bld)

@@ -137,7 +137,7 @@ module XCTETypescript
         compName = plug.getClassName(otherCls)
         #compName = getClassName(cls)
         pathLines.push("{ path: '" + viewPath.join("/") + "/:id', component: " + compName + " },")
-        pathLines.push("{ path: '" + editPath.join("/") + "/:id', component: " + compName + ", data: {enableEdit: true} },")
+        pathLines.push("{ path: '" + editPath.join("/") + "/:id', component: " + compName + " },")
       elsif otherCls.plugName == "class_angular_listing"
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
 

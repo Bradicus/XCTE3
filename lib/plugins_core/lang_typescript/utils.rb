@@ -228,11 +228,11 @@ module XCTETypescript
         vdString = ", [" + validators.join(", ") + "]"
       end
 
-      return getStyledVariableName(var) + ": " + getFormcontrolType(var, var.getUType(), vdString)
+      return getStyledVariableName(var) + ": " + getFormcontrolType(var, vdString)
     end
 
-    def getFormcontrolType(var, utype, vdString)
-      utype = utype.downcase
+    def getFormcontrolType(var, vdString)
+      utype = var.getUType().downcase
       if utype.start_with?("date")
         return "new FormControl<Date>(new Date()" + vdString + ")"
       else
