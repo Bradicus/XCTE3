@@ -57,6 +57,7 @@ module XCTETypescript
 
       for otherCls in relClasses
         if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
+            otherCls.plugName.start_with?("class_angular_reactive_view") ||
             otherCls.plugName.start_with?("class_angular_listing"))
           plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
           cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
@@ -87,6 +88,7 @@ module XCTETypescript
 
       decList = Array.new
       Utils.instance.addClassnamesFor(decList, relClasses, "typescript", "class_angular_reactive_edit")
+      Utils.instance.addClassnamesFor(decList, relClasses, "typescript", "class_angular_reactive_view")
       Utils.instance.addClassnamesFor(decList, relClasses, "typescript", "class_angular_listing")
 
       Utils.instance.renderClassList(decList, bld)
@@ -96,7 +98,7 @@ module XCTETypescript
       importList = ["CommonModule", "RouterModule"]
 
       for otherCls in relClasses
-        if otherCls.plugName.start_with?("class_angular_reactive_edit")
+        if otherCls.plugName.start_with?("class_angular_reactive_edit") || otherCls.plugName.start_with?("class_angular_reactive_edit")
           importList.push("ReactiveFormsModule")
         end
       end
@@ -112,6 +114,7 @@ module XCTETypescript
       exportList = ["RouterModule"]
 
       Utils.instance.addClassnamesFor(exportList, relClasses, "typescript", "class_angular_reactive_edit")
+      Utils.instance.addClassnamesFor(exportList, relClasses, "typescript", "class_angular_reactive_view")
       Utils.instance.addClassnamesFor(exportList, relClasses, "typescript", "class_angular_listing")
 
       bld.add "exports:["
@@ -141,6 +144,14 @@ module XCTETypescript
             editClass = varCls.model.findClassModel("class_angular_reactive_edit")
             if (editClass != nil)
               importList.push(getStyledClassName(editClass.model.name + " module"))
+            end
+            
+            varCls = ClassModelManager.findVarClass(var, "class_angular_reactive_view")
+            if varCls != nil
+              viewClass = varCls.model.findClassModel("class_angular_reactive_view")
+              if (viewClass != nil)
+                importList.push(getStyledClassName(viewClass.model.name + " module"))
+              end
             end
           end
         end

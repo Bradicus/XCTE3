@@ -137,7 +137,7 @@ module XCTECss
     end
 
     # process variable group
-    def getFormgroup(cls, bld, vGroup)
+    def renderReactiveFormGroup(cls, bld, vGroup, isDisabled)
       bld.sameLine("this.fb.group({")
       bld.indent
 
@@ -156,7 +156,7 @@ module XCTECss
               bld.add(Utils.instance.getStyledVariableName(var) + ": ")
               if otherClass != nil
                 for group in otherClass.model.groups
-                  getFormgroup(otherClass, bld, group)
+                  renderReactiveFormGroup(otherClass, bld, group, isDisabled)
                 end
               else
                 bld.sameLine("[''],")

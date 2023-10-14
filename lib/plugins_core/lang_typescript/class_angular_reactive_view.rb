@@ -2,12 +2,12 @@ require "plugins_core/lang_typescript/class_base.rb"
 require "include_util"
 
 ##
-# Class:: ClassAngularReactiveEdit
+# Class:: ClassAngularReactiveView
 #
 module XCTETypescript
-  class ClassAngularReactiveEdit < ClassBase
+  class ClassAngularReactiveView < ClassBase
     def initialize
-      @name = "class_angular_view"
+      @name = "class_angular_reactive_view"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -209,9 +209,9 @@ module XCTETypescript
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + " = ")
 
-      Utils.instance.getFormgroup(cls, bld, vGroup)
+      Utils.instance.renderReactiveFormGroup(cls, bld, vGroup, true)
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularReactiveEdit.new)
+XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularReactiveView.new)

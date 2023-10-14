@@ -52,6 +52,7 @@ module XCTETypescript
 
         for otherCls in fClasses
           if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
+              otherCls.plugName.start_with?("class_angular_reactive_view") ||
               otherCls.plugName.start_with?("class_angular_listing"))
             plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
             cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
@@ -61,6 +62,7 @@ module XCTETypescript
 
       for otherCls in cls.model.classes
         if (otherCls.plugName.start_with?("class_angular_reactive_edit") ||
+            otherCls.plugName.start_with?("class_angular_reactive_view") ||
             otherCls.plugName.start_with?("class_angular_listing"))
           plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
           cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + "/" + plug.getFileName(otherCls), plug.getClassName(otherCls))
@@ -130,14 +132,18 @@ module XCTETypescript
     def addPathsForClass(cls, bld, otherCls, pathLines)
       if otherCls.plugName.start_with? "class_angular_reactive_edit"
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
-
-        viewPath = plug.get_relative_route(otherCls, "view")
         editPath = plug.get_relative_route(otherCls, "edit")
 
         compName = plug.getClassName(otherCls)
         #compName = getClassName(cls)
-        pathLines.push("{ path: '" + viewPath.join("/") + "/:id', component: " + compName + " },")
         pathLines.push("{ path: '" + editPath.join("/") + "/:id', component: " + compName + " },")
+      elsif otherCls.plugName.start_with? "class_angular_reactive_view"
+        plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_view")
+        viewPath = plug.get_relative_route(otherCls, "view")
+
+        compName = plug.getClassName(otherCls)
+        #compName = getClassName(cls)
+        pathLines.push("{ path: '" + viewPath.join("/") + "/:id', component: " + compName + " },")
       elsif otherCls.plugName == "class_angular_listing"
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_listing")
 

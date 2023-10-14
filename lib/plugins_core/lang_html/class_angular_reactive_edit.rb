@@ -19,7 +19,7 @@ module XCTEHtml
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, bld)
       genFileContent(cls, bld)

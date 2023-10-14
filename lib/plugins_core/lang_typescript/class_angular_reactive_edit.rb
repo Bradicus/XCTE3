@@ -232,7 +232,7 @@ module XCTETypescript
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + " = ")
 
-      Utils.instance.getFormgroup(cls, bld, vGroup)
+      Utils.instance.renderReactiveFormGroup(cls, bld, vGroup, false)
     end
   end
 end

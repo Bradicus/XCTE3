@@ -1,12 +1,12 @@
 require "plugins_core/lang_typescript/utils.rb"
 
 ##
-# Class:: ClassAngularReactiveEdit
+# Class:: ClassAngularReactiveView
 #
 module XCTEHtml
-  class ClassAngularReactiveEdit < ClassBase
+  class ClassAngularReactiveView < ClassBase
     def initialize
-      @name = "class_angular_reactive_edit"
+      @name = "class_angular_reactive_view"
       @language = "html"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -19,7 +19,7 @@ module XCTEHtml
       srcFiles = Array.new
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + ".component")
+      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls) + ".component")
       bld.lfExtension = Utils.instance.getExtension("body")
       #genFileComment(cls, bld)
       genFileContent(cls, bld)
@@ -173,9 +173,7 @@ module XCTEHtml
 
       labelNode = HtmlNode.new("label").add_text(var.getDisplayName())
       inputNode = HtmlNode.new("input")
-      selectNode = HtmlNode.new("input")
-
-      selectNode.add_attribute("[disabled]", "true")
+      selectNode = HtmlNode.new("select")
 
       fldNode.add_child(labelNode)
 
@@ -237,4 +235,4 @@ module XCTEHtml
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEHtml::ClassAngularReactiveEdit.new)
+XCTEPlugin::registerPlugin(XCTEHtml::ClassAngularReactiveView.new)

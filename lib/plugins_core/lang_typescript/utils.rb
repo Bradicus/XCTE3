@@ -175,7 +175,7 @@ module XCTETypescript
     end
 
     # process variable group
-    def getFormgroup(cls, bld, vGroup, separator = ";")
+    def renderReactiveFormGroup(cls, bld, vGroup, isDisabled, separator = ";")
       bld.sameLine("new FormGroup({")
       bld.indent
 
@@ -183,7 +183,7 @@ module XCTETypescript
         if isPrimitive(var)
           hasMult = var.isList()
           if !var.isList()
-            bld.add(genPrimitiveFormControl(var) + ",")
+            bld.add(genPrimitiveFormControl(var, isDisabled) + ",")
           else
             bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
@@ -195,10 +195,10 @@ module XCTETypescript
               if var.selectFrom != nil
                 bld.add(getStyledVariableName(var, "", " id") + ": ")
                 idVar = cls.model.getIdentityVar()
-                bld.sameLine(getFormcontrolType(idVar, idVar.getUType(), "") + ",")
+                bld.sameLine(getFormcontrolType(idVar, idVar.getUType(), "", isDisabled) + ",")
               else
                 bld.add(getStyledVariableName(var) + ": ")
-                getFormgroup(otherClass, bld, otherClass.model.varGroup, ",")
+                renderReactiveFormGroup(otherClass, bld, otherClass.model.varGroup, isDisabled, ",")
               end
             else
               bld.add(getStyledVariableName(var) + ": ")
@@ -214,7 +214,7 @@ module XCTETypescript
       bld.add("})" + separator)
     end
 
-    def genPrimitiveFormControl(var)
+    def genPrimitiveFormControl(var, isDisabled)
       validators = []
       if var.required
         validators << "Validators.required"
@@ -228,10 +228,10 @@ module XCTETypescript
         vdString = ", [" + validators.join(", ") + "]"
       end
 
-      return getStyledVariableName(var) + ": " + getFormcontrolType(var, vdString)
+      return getStyledVariableName(var) + ": " + getFormcontrolType(var, vdString, isDisabled)
     end
 
-    def getFormcontrolType(var, vdString)
+    def getFormcontrolType(var, vdString, isDisabled)
       utype = var.getUType().downcase
       if utype.start_with?("date")
         return "new FormControl<Date>(new Date()" + vdString + ")"
@@ -241,7 +241,11 @@ module XCTETypescript
         elsif utype == "boolean"
           return "new FormControl<" + getBaseTypeName(var) + ">(false)"
         end
-        return "new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
+        if isDisabled
+          return "new FormControl<" + getBaseTypeName(var) + ">({value: 0, disabled: true}" + vdString + ")"
+        else          
+          return "new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
+        end
       end
     end
 

@@ -3,15 +3,15 @@
   	<!-- Angular -->
 
     <gen_class type="class_angular_reactive_edit"
-      name="!{ModelName}"
-      path="!{FeatureGroup}/!{ModelName}"
-      route="!{ModelName}">
+      name="!{ModelName} edit"
+      path="!{FeatureGroup}/!{ModelName} edit"
+      route="!{ModelName} edit">
     	<function name="method_service_datagen_random" />
     	<function name="method_angular_reactive_call_datamap" />s
     </gen_class>
 
   	<gen_class type="empty_file"
-      name="!{ModelName}"
-      path="!{FeatureGroup}/!{ModelName}"></gen_class>
+      name="!{ModelName} edit"
+      path="!{FeatureGroup}/!{ModelName} edit"></gen_class>
 
 </class_group>
