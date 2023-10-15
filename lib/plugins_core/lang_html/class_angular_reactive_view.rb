@@ -48,107 +48,96 @@ module XCTEHtml
 
       contentNode.add_child(formNode)
 
-      formFieldsetNode = HtmlNode.new('fieldset').add_attribute('[disabled]', 'true')
+      process_var_group(cls, cls.model.varGroup, formNode)
 
-      formNode.add_child(formFieldsetNode)
+      bld.render_html(contentNode)
+    end
+    
+    def process_var_group(cls, vGroup, rowContainer)
+      rowNode = add_row_node(cls, rowContainer)
 
-      rowContainer = formFieldsetNode
-
-      rowNode = Utils.instance.make_node(cls.genCfg, "div").
-        add_class("row", "form-group")
-
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).
-        wVarCb(lambda { |var|
+      for var in vGroup.vars
         if !var.isList() && (Utils.instance.isPrimitive(var) || var.selectFrom != nil)
           fldNode = make_field(cls, var, nil)
           rowNode.add_child(fldNode)
         else
-          if (!var.isList() && var.selectFrom == nil)
-            vName = Utils.instance.getStyledVariableName(var)
-            fieldsetNode = Utils.instance.make_node(cls.genCfg, "fieldset").
-              add_attribute("formGroupName", vName)
-
-            legNode = Utils.instance.make_node(cls.genCfg, "legend").
-              add_text(var.getDisplayName())
-            fieldsetNode.add_child(legNode)
-
-            rowNode = new_row(cls, rowContainer, rowNode)
-            rowContainer = fieldsetNode
-
-            varCls = ClassModelManager.findVarClass(var)
-
-            if varCls != nil
-              eachVar(uevParams().wCls(varCls).wBld(bld).wSeparate(true).
-                wVarCb(lambda { |innerVar|
-                rowNode.add_child(make_field(cls, innerVar, vName))
-              }))
-            else
-              Log.error("Unable to find varible class for var: " + var.name + "  type: " + var.getUType())
-            end
-
-            rowNode = new_row(cls, rowContainer, rowNode)
-            formFieldsetNode.add_child(fieldsetNode)
-
-            rowContainer = formNode
+          if (!var.isList() && var.selectFrom == nil)            
+            process_object_var(cls, vGroup, var, rowContainer)
           elsif var.isList()
-            vName = Utils.instance.getStyledVariableName(var)
-            # List of primitive "ids" linked to an options list
-            if Utils.instance.isPrimitive(var) && var.selectFrom != nil
-              optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
-              tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
-              formNode.add_child(tableNode)
-              # Not an options list, just a reglar array of data
-            else
-              if var.relation != nil
-                optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
-                varCls = ClassModelManager.findVarClass(optVar)
-                if (varCls == nil)
-                  puts "Unable to find variable type called " + var.getUType()
-                end
-
-                vName = Utils.instance.getStyledVariableName(optVar)
-                rowContainer.add_child(HtmlNode.new("h2").add_text(varCls.model.name.capitalize))
-                tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", false, "async", true)
-                rowContainer.add_child(tableNode)
-              else
-                varCls = ClassModelManager.findVarClass(var)
-                if (varCls == nil)
-                  puts "Unable to find variable call " + var.getUType()
-                end
-
-                rowContainer.add_child(HtmlNode.new("h2").add_text(cls.model.name.capitalize))
-                tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", false, "async", true)
-                rowContainer.add_child(tableNode)
-              end
-            end
+            process_list_var(cls, vGroup, var, rowContainer)
           end
         end
-      }).
-        wBeforeGroupCb(lambda { |innerVar|
-        if (rowContainer != nil && rowNode.children.length > 0)
-          rowNode = new_row(cls, rowContainer, rowNode)
-          rowContainer = rowNode
-        end
-      }).
-        wAfterGroupCb(lambda { |innerVar|
-        if (rowContainer != nil && rowNode.children.length > 0)
-          rowNode = new_row(cls, rowContainer, rowNode)
-          rowContainer = rowNode
-        end
-      }))
+      end
 
-      # Flush out data in remaining row if need be
-      rowNode = new_row(cls, rowContainer, rowNode)
-
-      bld.render_html(contentNode)
+      for grp in vGroup.varGroups
+        process_var_group(cls, grp, rowContainer)
+      end
     end
 
-    def new_row(cls, rowContainer, rowNode)
-      if (rowContainer != nil && rowNode.children.length > 0)
-        rowContainer.add_child(rowNode)
-        rowNode = Utils.instance.make_node(cls.genCfg, "div").
-          add_class("row", "form-group")
+    def process_object_var(cls, vGroup, var, rowContainer)
+      vName = Utils.instance.getStyledVariableName(var)
+      fieldsetNode = Utils.instance.make_node(cls.genCfg, "fieldset").
+        add_attribute("formGroupName", vName)
+
+      rowContainer.add_child(fieldsetNode)
+
+      legNode = Utils.instance.make_node(cls.genCfg, "legend").
+        add_text(var.getDisplayName())
+      fieldsetNode.add_child(legNode)
+
+      rowNode = add_row_node(cls, rowContainer)
+      
+      varCls = ClassModelManager.findVarClass(var)
+
+      if varCls != nil
+        eachVar(uevParams().wCls(varCls).
+          wVarCb(lambda { |innerVar|
+          rowNode.add_child(make_field(cls, innerVar, vName))
+        }))
+      else
+        Log.error("Unable to find varible class for var: " + var.name + "  type: " + var.getUType())
       end
+    end
+
+    def process_list_var(cls, vGroup, var, rowContainer)
+      vName = Utils.instance.getStyledVariableName(var)
+      # List of primitive "ids" linked to an options list
+      if Utils.instance.isPrimitive(var) && var.selectFrom != nil
+        optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
+        rowContainer.add_child(tableNode)
+        # Not an options list, just a reglar array of data
+      else
+        if var.relation != nil
+          optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+          varCls = ClassModelManager.findVarClass(optVar)
+          if (varCls == nil)
+            puts "Unable to find variable type called " + var.getUType()
+          end
+
+          vName = Utils.instance.getStyledVariableName(optVar)
+          rowContainer.add_child(HtmlNode.new("h2").add_text(varCls.model.name.capitalize))
+          tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", false, "async", true)
+          rowContainer.add_child(tableNode)
+        else
+          varCls = ClassModelManager.findVarClass(var)
+          if (varCls == nil)
+            puts "Unable to find variable call " + var.getUType()
+          end
+
+          rowContainer.add_child(HtmlNode.new("h2").add_text(cls.model.name.capitalize))
+          tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", false, "async", true)
+          rowContainer.add_child(tableNode)
+        end
+      end
+    end
+
+    def add_row_node(cls, rowContainer)
+      rowNode = Utils.instance.make_node(cls.genCfg, "div").
+        add_class("row", "form-group")
+
+      rowContainer.add_child(rowNode)
+
       return rowNode
     end
 

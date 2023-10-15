@@ -8,6 +8,5 @@
 	</var_group>
 
 	<gen_class type="class_angular_navbar" path="navbar" />
-	<gen_class type="empty_file" path="navbar" />
 
 </model>

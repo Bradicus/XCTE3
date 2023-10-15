@@ -5,9 +5,9 @@ require "x_c_t_e_plugin.rb"
 # Class:: ClassAngularListing
 #
 module XCTECss
-  class EmptyFile < XCTEPlugin
+  class ClassAngularReactiveEdit < XCTEPlugin
     def initialize
-      @name = "empty_file"
+      @name = "class_angular_reactive_edit"
       @language = "css"
       @category = XCTEPlugin::CAT_CLASS
     end
@@ -44,4 +44,4 @@ module XCTECss
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECss::EmptyFile.new)
+XCTEPlugin::registerPlugin(XCTECss::ClassAngularReactiveEdit.new)

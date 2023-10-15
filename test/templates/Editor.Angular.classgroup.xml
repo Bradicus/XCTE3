@@ -10,8 +10,4 @@
     	<function name="method_angular_reactive_call_datamap" />s
     </gen_class>
 
-  	<gen_class type="empty_file"
-      name="!{ModelName} edit"
-      path="!{FeatureGroup}/!{ModelName} edit"></gen_class>
-
 </class_group>
