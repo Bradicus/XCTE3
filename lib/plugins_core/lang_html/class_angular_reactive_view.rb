@@ -92,7 +92,7 @@ module XCTEHtml
       if varCls != nil
         eachVar(uevParams().wCls(varCls).
           wVarCb(lambda { |innerVar|
-          rowNode.add_child(make_field(cls, innerVar, vName))
+          fieldsetNode.add_child(make_field(cls, innerVar, vName))
         }))
       else
         Log.error("Unable to find varible class for var: " + var.name + "  type: " + var.getUType())

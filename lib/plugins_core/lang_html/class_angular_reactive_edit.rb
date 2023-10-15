@@ -70,7 +70,7 @@ module XCTEHtml
 
     def process_var_group(cls, vGroup, rowContainer)
       rowNode = add_row_node(cls, rowContainer)
-
+      
       for var in vGroup.vars
         if !var.isList() && (Utils.instance.isPrimitive(var) || var.selectFrom != nil)
           fldNode = make_field(cls, var, nil)
@@ -92,7 +92,8 @@ module XCTEHtml
     def process_object_var(cls, vGroup, var, rowContainer)
       vName = Utils.instance.getStyledVariableName(var)
       fieldsetNode = Utils.instance.make_node(cls.genCfg, "fieldset").
-        add_attribute("formGroupName", vName)
+        add_attribute("formGroupName", vName).
+        add_class("row", "form-group")
 
       rowContainer.add_child(fieldsetNode)
 
@@ -107,7 +108,7 @@ module XCTEHtml
       if varCls != nil
         eachVar(uevParams().wCls(varCls).
           wVarCb(lambda { |innerVar|
-          rowNode.add_child(make_field(cls, innerVar, vName))
+          fieldsetNode.add_child(make_field(cls, innerVar, vName))
         }))
       else
         Log.error("Unable to find varible class for var: " + var.name + "  type: " + var.getUType())
