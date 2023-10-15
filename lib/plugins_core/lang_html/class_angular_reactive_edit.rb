@@ -50,7 +50,7 @@ module XCTEHtml
 
         buttonNode.add_child(populateButton)
 
-        submitButton = Utils.instance.make_primary_button(cls.genCfg, "Submit").
+        submitButton = Utils.instance.make_primary_button(cls.genCfg, "Save").
           add_attribute("(click)", "onSubmit()")
 
         buttonNode.add_child(submitButton)
