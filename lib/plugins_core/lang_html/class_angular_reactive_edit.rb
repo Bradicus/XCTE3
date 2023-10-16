@@ -77,15 +77,15 @@ module XCTEHtml
           rowNode.add_child(fldNode)
         else
           if (!var.isList() && var.selectFrom == nil)            
-            process_object_var(cls, vGroup, var, rowContainer)
+            process_object_var(cls, vGroup, var, rowNode)
           elsif var.isList()
-            process_list_var(cls, vGroup, var, rowContainer)
+            process_list_var(cls, vGroup, var, rowNode)
           end
         end
       end
 
       for grp in vGroup.varGroups
-        process_var_group(cls, grp, rowContainer)
+        process_var_group(cls, grp, rowNode)
       end
     end
 
@@ -206,7 +206,7 @@ module XCTEHtml
         selectNode.add_attribute("formControlName", Utils.instance.getStyledVariableName(var, ""))
         selectNode.add_child(HtmlNode.new("option").
           add_attribute("*ngFor", "let " + itemName + " of (" + optVarName + " | async)?.data").
-          add_attribute("value", itemName + ".id").
+          add_attribute("value", "{{" + itemName + ".id}}").
           add_text("{{" + itemName + ".name}}"))
 
         fldNode.add_child(selectNode)
