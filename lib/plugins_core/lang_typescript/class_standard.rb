@@ -44,6 +44,17 @@ module XCTETypescript
       return srcFiles
     end
 
+    def process_dependencies(cls, bld)
+      super
+
+      # Generate class variables
+      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|        
+        if !Utils.instance.isPrimitive(var)
+          Utils.instance.tryAddIncludeForVar(cls, var, "standard")
+        end
+      }))
+    end
+
     def genFileComment(cls, bld)
       cfg = UserSettings.instance
       headerString = String.new
@@ -89,7 +100,7 @@ module XCTETypescript
       end
 
       bld.separate
-      bld.startClass("class " + getClassName(cls))
+      bld.startClass("export class " + getClassName(cls))
 
       # Generate class variables
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

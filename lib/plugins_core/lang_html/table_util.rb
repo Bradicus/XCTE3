@@ -31,12 +31,16 @@ module XCTEHtml
       tHeadRow = HtmlNode.new("tr")
       colCount = 0
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.isList()
-          tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
-          colCount = colCount + 1
-        end
-      }))
+      if !embedded
+        Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
+          if Utils.instance.isPrimitive(var) && !var.isList()
+            tHeadRow.children.push(HtmlNode.new("th")
+              .add_text(var.getDisplayName())
+              .add_attribute('(onClick)', "sortBy('" + Utils.instance.getStyledVariableName(var) + "')"))
+            colCount = colCount + 1
+          end
+        }))
+      end
 
       tHead.add_child(tHeadRow)
       tableElem.add_child(tHead)

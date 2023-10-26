@@ -47,7 +47,7 @@ module XCTETypescript
       cls.addInclude("@angular/router", "ActivatedRoute")
       cls.addInclude("rxjs", "Observable, of", "lib")
 
-      cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+      cls.addInclude("shared/dto/model/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
       IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
       IncludeUtil.init("class_angular_data_gen_service").wModel(cls.model).addTo(cls)
@@ -55,14 +55,14 @@ module XCTETypescript
 
       eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.isPrimitive(var)
-          cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
+          cls.addInclude("shared/dto/model/" + Utils.instance.getStyledFileName(var.getUType()), Utils.instance.getStyledClassName(var.getUType()))
         end
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
-          cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(optVar.getUType()),
+          cls.addInclude("shared/dto/model/" + Utils.instance.getStyledFileName(optVar.getUType()),
                          Utils.instance.getStyledClassName(optVar.getUType()))
 
-          bCls = ClassModelManager.findClass(cls.model.name, "ts_interface")
+          bCls = ClassModelManager.findClass(cls.model.name, "standard")
           optStoreVar = Utils.instance.createVarFor(bCls, "class_angular_data_store_service")
           Utils.instance.tryAddIncludeForVar(bCls, optVar, "class_angular_data_store_service")
           Utils.instance.tryAddIncludeForVar(cls, optVar, "class_angular_data_store_service")
@@ -162,7 +162,7 @@ module XCTETypescript
 
       bld.startBlock("if (!this.item?.id)")
 
-      bld.add("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("this.item = new " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       bld.add("this." + Utils.instance.getStyledVariableName(dataGenServiceVar) + ".initData(this.item);")
       bld.midBlock 'else'
       bld.startBlock "this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".detail(this.item.id).subscribe(data => {"

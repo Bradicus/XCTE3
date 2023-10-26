@@ -29,7 +29,7 @@ module XCTETypescript
       fPath = Utils.instance.getStyledFileName(cls.model.name)
       cName = Utils.instance.getStyledClassName(cls.model.name)
       # Eventaully switch to finding standard class and using path from there
-      cls.addInclude("shared/interfaces/" + fPath, cName)
+      cls.addInclude("shared/dto/model/" + fPath, cName)
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)

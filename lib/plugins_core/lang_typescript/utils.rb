@@ -78,6 +78,16 @@ module XCTETypescript
         else
           vDec << " = " << var.defaultValue << ""
         end
+      else
+        if (var.getUType().downcase == "string")
+          vDec << ' = ""'
+        elsif var.isList()
+          vDec << ' = []'
+        elsif !isPrimitive(var)
+          vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType(), @langProfile.classNameStyle) + "()"
+        else
+          vDec << " = 0"
+        end      
       end
 
       vDec << ";"
@@ -188,7 +198,7 @@ module XCTETypescript
             bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         else
-          otherClass = ClassModelManager.findVarClass(var, "ts_interface")
+          otherClass = ClassModelManager.findVarClass(var, "standard")
 
           if !var.isList()
             if otherClass != nil
@@ -205,7 +215,7 @@ module XCTETypescript
               bld.sameLine("new FormControl(''),")
             end
           else
-            #bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
           end
         end
       }))

@@ -1,6 +1,6 @@
 <class_group name="data store client">
 
-    <gen_class type="ts_interface" path="shared/interfaces">
+    <gen_class type="standard" path="{DtoModelPath}">
     	<use-csharp name="System.Collections.Generic" />
     	<use-java name='java.time.*' />
     	<use-java name='java.util.*' />

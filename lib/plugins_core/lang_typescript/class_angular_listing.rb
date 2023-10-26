@@ -45,7 +45,7 @@ module XCTETypescript
       cls.addInclude("@angular/core", "Component, OnInit")
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
-      cls.addInclude("shared/interfaces/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
+      cls.addInclude("shared/dto/model/" + Utils.instance.getStyledFileName(cls.model.name), Utils.instance.getStyledClassName(cls.model.name))
 
       cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
       cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
@@ -113,6 +113,8 @@ module XCTETypescript
       bld.add("return Math.min((this.page?.pageCount ?? 0, 10));")
       bld.endBlock
 
+      bld.separate
+
       bld.startBlock("updatePageData()")
       bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing(this.pageReq);")
       bld.startBlock "this.pageObv.subscribe((p) =>  { "
@@ -122,19 +124,29 @@ module XCTETypescript
       bld.endBlock "});"
       bld.endBlock
 
+      bld.separate
+
       bld.startBlock("goToPage(pageNum: number)")
       bld.add("this.pageReq.pageNum = pageNum;")
       bld.add "this.updatePageData();"
       bld.endBlock
+
+      bld.separate
 
       bld.startBlock("goToPreviousPage()")
       bld.add "if (this.pageReq.pageNum > 0)"
       bld.iadd "this.goToPage(this.pageReq.pageNum - 1);"
       bld.endBlock
 
+      bld.separate
+
       bld.startBlock("goToNextPage()")
       bld.add "if (this.pageReq.pageNum < this.page.pageCount - 1)"
       bld.iadd "this.goToPage(this.pageReq.pageNum + 1);"
+      bld.endBlock
+
+      bld.startBlock("sortBy(colName: string)")
+      bld.add "this.pageReq.sortBy = colName"
       bld.endBlock
 
       bld.separate

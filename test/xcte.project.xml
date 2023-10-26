@@ -3,8 +3,8 @@
   <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app">
     <xdep name="angular" version="14"  />
     <build_vars>
-      <build_var name="DataModelPlugin" value="ts_interface" />
-      <build_var name="DataModelPath" value="shared/interfaces" />
+      <build_var name="DataModelPlugin" value="class_standard" />
+      <build_var name="DtoModelPath" value="shared/dto/model" />
       <build_var name="ServicesPath" value="shared/services" />
       <build_var name="EditModelPath" value="shared/interfaces" />
     </build_vars>
