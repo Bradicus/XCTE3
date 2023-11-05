@@ -59,7 +59,15 @@ module DataLoading
 
       xmlDoc.root.elements.each("gen_class") { |genCXML|
         cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
-        ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
+        cls.loadAttributes(genCXML)
+
+        if cls.langInclude.length > 0
+          if (cls.langInclude.include? (pComponent.language))
+            ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
+          end
+        else
+          ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
+        end
       }
 
       # Load class groups
@@ -72,7 +80,15 @@ module DataLoading
           cGroup.xmlElement.elements.each("gen_class") { |genCXML|
             cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
             cls.classGroupRef = cgRef
-            ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
+            cls.loadAttributes(genCXML)
+                
+            if cls.langInclude.length > 0
+              if (cls.langInclude.include? (pComponent.language))
+                ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
+              end
+            else
+              ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
+            end
           }
         end
       }

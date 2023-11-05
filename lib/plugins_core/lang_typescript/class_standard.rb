@@ -95,10 +95,6 @@ module XCTETypescript
 
       bld.separate
 
-      for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.getExtension("body") + "'")
-      end
-
       bld.separate
       bld.startClass("export class " + getClassName(cls))
 

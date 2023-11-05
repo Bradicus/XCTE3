@@ -1,9 +1,6 @@
 <class_group name="data store client">
 
-    <gen_class type="standard" path="{DtoModelPath}">
-    	<use-csharp name="System.Collections.Generic" />
-    	<use-java name='java.time.*' />
-    	<use-java name='java.util.*' />
+    <gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" lang_only="typescript">    	
     </gen_class>
 
       	<gen_class type="class_angular_data_store_service" path="{ServicesPath}">
@@ -19,7 +16,6 @@
 
       	<gen_class type="class_angular_data_gen_service" path="{ServicesPath}">
       		  <function name="method_service_datagen_faker_get" />
-      		  <function name="method_service_datagen_init" />
       	</gen_class>
 
       	<gen_class type="class_filter_util" name="filter" path="util" ns="com.example.demo.util">

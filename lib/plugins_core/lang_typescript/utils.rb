@@ -81,6 +81,10 @@ module XCTETypescript
       else
         if (var.getUType().downcase == "string")
           vDec << ' = ""'
+        elsif (var.getUType().downcase == "boolean")
+          vDec << ' = false'
+        elsif Types.instance.inCategory(var, "time")
+          vDec << ' = new Date()'
         elsif var.isList()
           vDec << ' = []'
         elsif !isPrimitive(var)

@@ -9,7 +9,7 @@
 
 class CodeElem
   attr_accessor :elementId, :xmlElement, :osInclude, :parentElem, :visibility,
-                :name, :displayName, :description
+                :name, :displayName, :description, :langInclude
 
   ELEM_MODEL = "class"
   ELEM_CLASS_GEN = "class_gen"
@@ -54,7 +54,7 @@ class CodeElem
     if (nodeXML.attributes["lang_ignore"] != nil)
       ignoreLangs = nodeXML.attributes["lang_ignore"].split(",")
       for iLang in ignoreLangs
-        @langInclude.delete(strip(iLang))
+        @langInclude.delete(iLang.strip)
       end
     end
 
@@ -62,7 +62,7 @@ class CodeElem
       ignoreLangs = nodeXML.attributes["lang_only"].split(",")
       @langInclude = Array.new
       for iLang in ignoreLangs
-        @langInclude << strip(iLang)
+        @langInclude << iLang.strip
       end
     end
   end

@@ -225,6 +225,8 @@ module XCTEJava
 
       if (plugNameClass == nil)
         Log.error("unable to find class by type " + plugName)
+      elsif plugNameClass.namespace.nsList.length == 0
+        throw 'Zero length namespace'
       else
         cls.addUse(plugNameClass.namespace.get(".") + ".*")
       end
