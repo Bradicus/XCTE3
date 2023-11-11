@@ -133,10 +133,10 @@ module XCTEJava
         baseTypeName = langType
       end
 
-      if var.namespace.hasItems?()
-        nsPrefix = var.namespace.get("::") + "::"
-        baseTypeName = nsPrefix + baseTypeName
-      end
+      # if var.namespace.hasItems?()
+      #   nsPrefix = var.namespace.get("::") + "::"
+      #   baseTypeName = nsPrefix + baseTypeName
+      # end
 
       return baseTypeName
     end

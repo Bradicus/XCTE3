@@ -1,6 +1,6 @@
 <class_group name="data store client">
 
-    <gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" lang_only="typescript">    	
+    <gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" lang_only="typescript,html">    	
     </gen_class>
 
       	<gen_class type="class_angular_data_store_service" path="{ServicesPath}">

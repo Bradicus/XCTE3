@@ -39,15 +39,12 @@ class ClassModelManager
     dList = @@list
     for c in @@list
       if c.model.name != nil
-        #puts c.model.name + " " + var.getUType()
-        if (nameMatches(c.model.name, var.getUType()))
-          #uts c.model.name + " " + var.getUType()
+          #puts c.model.name + " " + var.getUType()
           #puts c.plugName + " " + plugName
-          if (nameMatches(c.model.name, var.getUType()) &&
-              (plugName == nil || nameMatches(c.plugName, plugName)))
-            if (c.namespace.same?(var.namespace))
-              return c
-            end
+        if (nameMatches(c.model.name, var.getUType()) &&
+            (plugName == nil || nameMatches(c.plugName, plugName)))
+          if (c.namespace.same?(var.namespace) || !var.namespace.hasItems?())
+            return c
           end
         end
       end
