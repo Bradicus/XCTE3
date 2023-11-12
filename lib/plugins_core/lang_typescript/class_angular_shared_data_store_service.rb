@@ -43,7 +43,7 @@ module XCTETypescript
       bld.endBlock(")")
       bld.startClass("export class " + getClassName(cls))
       
-      itemVar = Utils.instance.createVarFor(cls, "ts_interface")
+      itemVar = Utils.instance.createVarFor(cls, "standard")
 
       if cls.xmlElement['isList'] == "true"
         observableType = "Observable<" + Utils.instance.getStyledClassName(cls.model.name) + "[]>"

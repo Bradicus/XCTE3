@@ -15,7 +15,7 @@ module XCTETypescript
     def get_definition(cls, bld)
       clsVar = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
       clsName = CodeNameStyling.getStyled(cls.getUName() + " form", Utils.instance.langProfile.variableNameStyle)
-      clsIntf = Utils.instance.createVarFor(cls, "ts_interface")
+      clsIntf = Utils.instance.createVarFor(cls, "standard")
 
       bld.startFunction("initData(item: " + Utils.instance.getStyledClassName(cls.model.name) + "): void")
 
@@ -34,7 +34,7 @@ module XCTETypescript
           else
             bld.add("item." + Utils.instance.getStyledVariableName(var) +
                     " = {} as " + Utils.instance.getStyledClassName(var.getUType()) + ";")
-            varCls = ClassModelManager.findVarClass(var, "ts_interface")
+            varCls = ClassModelManager.findVarClass(var, "standard")
             if varCls != nil
               vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
 

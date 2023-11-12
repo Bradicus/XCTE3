@@ -12,7 +12,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld)
+    def get_definition(cls, bld, fun)
       # process class variables
 
       className = Utils.instance.getStyledClassName(cls.model.name)
@@ -42,7 +42,7 @@ module XCTETypescript
             bld.add(name + varName + ".push(" + getFakerAssignment(var) + ");")
           end
         elsif (!var.isList())
-          varCls = ClassModelManager.findVarClass(var, "ts_interface")
+          varCls = ClassModelManager.findVarClass(var, "standard")
           if varCls != nil
             vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")
 

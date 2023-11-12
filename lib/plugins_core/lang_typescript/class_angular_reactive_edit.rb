@@ -125,11 +125,11 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
-          optCls = ClassModelManager.findClass(var.selectFrom, "ts_interface")
+          optCls = ClassModelManager.findClass(var.selectFrom, "standard")
           if optVar == nil
             Log.error("No options var for var: " + var.name)
           elsif optCls == nil
-            Log.error("No ts_interface class for var: " + var.name)
+            Log.error("No standard class for var: " + var.name)
           else
             dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
             if dataStoreOptServiceVar != nil
@@ -178,11 +178,11 @@ module XCTETypescript
         if var.selectFrom != nil
           optVar = Utils.instance.getOptionsVarFor(var)
           reqVar = Utils.instance.getOptionsReqVarFor(var)
-          optCls = ClassModelManager.findClass(var.selectFrom, "ts_interface")
+          optCls = ClassModelManager.findClass(var.selectFrom, "standard")
           if optVar == nil
             Log.error("No options var for var: " + var.name)
           elsif optCls == nil
-            Log.error("No ts_interface class for var: " + var.name)
+            Log.error("No standard class for var: " + var.name)
           else
             dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, "class_angular_data_store_service")
             if dataStoreOptServiceVar != nil

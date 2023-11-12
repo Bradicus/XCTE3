@@ -37,7 +37,7 @@ module XCTETypescript
       # Generate class variables
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|        
         if !Utils.instance.isPrimitive(var)
-          Utils.instance.tryAddIncludeForVar(cls, var, "ts_interface")
+          Utils.instance.tryAddIncludeForVar(cls, var, "standard")
         end
       }))
     end

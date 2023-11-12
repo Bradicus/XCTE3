@@ -39,8 +39,8 @@ class ClassModelManager
     dList = @@list
     for c in @@list
       if c.model.name != nil
-          #puts c.model.name + " " + var.getUType()
-          #puts c.plugName + " " + plugName
+        #puts c.model.name + " " + var.getUType()
+        #puts c.plugName + " " + plugName
         if (nameMatches(c.model.name, var.getUType()) &&
             (plugName == nil || nameMatches(c.plugName, plugName)))
           if (c.namespace.same?(var.namespace) || !var.namespace.hasItems?())
