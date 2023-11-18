@@ -98,7 +98,7 @@ module XCTETypescript
       bld.add
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")      
-      bld.add("public item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("public item: " + Utils.instance.getStyledClassName(cls.model.name) + " = new " + Utils.instance.getStyledClassName(cls.model.name) + "();")
       bld.separate
 
       # Generate class variables

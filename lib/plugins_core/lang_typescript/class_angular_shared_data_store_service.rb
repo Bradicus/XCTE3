@@ -47,10 +47,10 @@ module XCTETypescript
 
       if cls.xmlElement['isList'] == "true"
         observableType = "Observable<" + Utils.instance.getStyledClassName(cls.model.name) + "[]>"
-        bld.add("item: " + observableType + " = {} as " + observableType + ";")
+        bld.add("item: " + observableType + " = new " + observableType + ";")
       else
         observableType = "Observable<" + Utils.instance.getStyledClassName(cls.model.name) + ">"
-        bld.add("item: " + observableType + " = {} as " + observableType + ";")
+        bld.add("item: " + observableType + " = new " + observableType + ";")
       end
 
       bld.add('lastUpdate: Date = new Date(0);')

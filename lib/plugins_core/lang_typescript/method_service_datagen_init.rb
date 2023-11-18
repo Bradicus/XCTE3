@@ -33,7 +33,7 @@ module XCTETypescript
             bld.add("item." + Utils.instance.getStyledVariableName(var) + " = '';")
           else
             bld.add("item." + Utils.instance.getStyledVariableName(var) +
-                    " = {} as " + Utils.instance.getStyledClassName(var.getUType()) + ";")
+                    " = new " + Utils.instance.getStyledClassName(var.getUType()) + "();")
             varCls = ClassModelManager.findVarClass(var, "standard")
             if varCls != nil
               vService = Utils.instance.createVarFor(varCls, "class_angular_data_gen_service")

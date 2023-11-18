@@ -98,7 +98,7 @@ module XCTETypescript
       bld.add
 
       bld.startBlock("export class " + getClassName(cls) + " implements OnInit ")      
-      bld.add("item: " + Utils.instance.getStyledClassName(cls.model.name) + " = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("item: " + Utils.instance.getStyledClassName(cls.model.name) + " = new " + Utils.instance.getStyledClassName(cls.model.name) + "();")
       bld.separate
 
       # Generate class variables
@@ -162,7 +162,7 @@ module XCTETypescript
 
       bld.startBlock("if (!this.item?.id)")
 
-      bld.add("this.item = {} as " + Utils.instance.getStyledClassName(cls.model.name) + ";")
+      bld.add("this.item = new " + Utils.instance.getStyledClassName(cls.model.name) + ";")
       #bld.add("this." + Utils.instance.getStyledVariableName(dataGenServiceVar) + ".initData(this.item);")
       bld.midBlock 'else'
       bld.startBlock "this." + Utils.instance.getStyledVariableName(storeServiceVar) + ".detail(this.item.id).subscribe(data => {"
