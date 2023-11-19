@@ -108,27 +108,27 @@ module XCTEHtml
         rowContainer.add_child(tableNode)
         # Not an options list, just a reglar array of data
       else
-        if var.relation != nil
-          optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
-          varCls = ClassModelManager.findVarClass(optVar)
-          if (varCls == nil)
-            puts "Unable to find variable type called " + var.getUType()
-          end
+        # if var.relation != nil
+        #   optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+        #   varCls = ClassModelManager.findVarClass(optVar)
+        #   if (varCls == nil)
+        #     puts "Unable to find variable type called " + var.getUType()
+        #   end
 
-          vName = Utils.instance.getStyledVariableName(optVar)
-          rowContainer.add_child(HtmlNode.new("h2").add_text(varCls.model.name.capitalize))
-          tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", false, "async", true)
-          rowContainer.add_child(tableNode)
-        else
+        #   vName = Utils.instance.getStyledVariableName(optVar)
+        #   rowContainer.add_child(HtmlNode.new("h2").add_text(varCls.model.name.capitalize))
+        #   tableNode = TableUtil.instance.make_table(varCls, vName, vName + "Item", false, "async", true)
+        #   rowContainer.add_child(tableNode)
+        # else
           varCls = ClassModelManager.findVarClass(var)
           if (varCls == nil)
             puts "Unable to find variable call " + var.getUType()
           end
 
-          rowContainer.add_child(HtmlNode.new("h2").add_text(cls.model.name.capitalize))
-          tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", false, "async", true)
+          rowContainer.add_child(HtmlNode.new("h2").add_text(var.name.capitalize))
+          tableNode = TableUtil.instance.make_table(varCls, "item." + vName, vName + "Item", false, "", true)
           rowContainer.add_child(tableNode)
-        end
+       # end
       end
     end
 
