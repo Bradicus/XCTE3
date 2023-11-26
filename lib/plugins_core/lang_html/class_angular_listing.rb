@@ -38,7 +38,7 @@ module XCTEHtml
                 plug.get_full_route(cls, "edit") + '/0">New ' + cls.getUName() + "</button>")
       end
 
-      tbl = TableUtil.instance.make_table(cls, "page", "item", true)
+      tbl = TableUtil.instance.make_table(cls, "page", "item", "async", true)
 
       bld.render_html(tbl)
     end

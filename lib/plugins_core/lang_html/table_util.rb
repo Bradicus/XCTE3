@@ -18,8 +18,26 @@ module XCTEHtml
 
     # Return formatted class name
     def make_table(cls, listVarName, iteratorName, paging, async = "", embedded = false)
+      tableDiv = HtmlNode.new('div')
+
+      # Generate search fields
+      names = load_search_names(cls)
+      
+      if (names.length > 0 && paging)
+        searchInput = HtmlNode.new("input")
+          .add_class("form-control")
+          .add_attribute("type", "search")
+          .add_attribute("placeholder", "Search")
+          .add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " search"))
+          .add_attribute("(keyUp)", "onSearch($event)")
+        
+          tableDiv.add_child(searchInput)
+      end
+
       tableElem = HtmlNode.new("table")
         .add_class("table")
+
+      tableDiv.add_child(tableElem)
 
       asyncStr = ""
       if async == "async"
@@ -31,7 +49,7 @@ module XCTEHtml
       tHeadRow = HtmlNode.new("tr")
       colCount = 0
 
-      if !embedded
+      if !embedded && paging
         Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
           if Utils.instance.isPrimitive(var) && !var.isList()
             tHeadRow.children.push(HtmlNode.new("th")
@@ -44,35 +62,6 @@ module XCTEHtml
 
       tHead.add_child(tHeadRow)
       tableElem.add_child(tHead)
-
-      # Generate search fields
-      names = load_search_names(cls)
-
-      tHead = HtmlNode.new("thead")
-      tHeadRow = HtmlNode.new("tr")
-
-      if (names.length > 0)
-        Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-          if names.include?(var.name)
-            searchInput = HtmlNode.new("input")
-              .add_class("form-control")
-              .add_attribute("type", "search")
-              .add_attribute("placeholder", "Filter")
-              .add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " " + var.name))
-            th = HtmlNode.new("th")
-            th.add_child(searchInput)
-            tHeadRow.children.push(th)
-          else
-            tHeadRow.children.push(HtmlNode.new("th").add_text(""))
-          end
-        }))
-
-        # Add one more row for actions
-        tHeadRow.children.push(HtmlNode.new("th").add_text(""))
-
-        tHead.add_child(tHeadRow)
-        tableElem.add_child(tHead)
-      end
 
       # Generate table body
       tBody = HtmlNode.new("tbody")
@@ -93,7 +82,7 @@ module XCTEHtml
 
       actions = HtmlNode.new("th")
 
-      if !embedded
+      if !embedded && paging
         for act in cls.actions
           if act.link != nil
             actions.add_child(make_action_button(act.name, "routerLink", act.link + "/" + '{{' + iteratorName + '.id}}'))
@@ -122,7 +111,7 @@ module XCTEHtml
         tableElem.add_child(tFoot)
       end
 
-      return tableElem
+      return tableDiv
 
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/view/{{item.id}}">View</a></td>')
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/{{item.id}}">Edit</a></td>')
@@ -252,7 +241,7 @@ module XCTEHtml
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
 
-      return tableElem
+      return tableDiv
     end
   end
 end

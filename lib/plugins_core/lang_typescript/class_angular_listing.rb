@@ -146,7 +146,11 @@ module XCTETypescript
       bld.endBlock
 
       bld.startBlock("sortBy(colName: string)")
-      bld.add "this.pageReq.sortBy = colName"
+      bld.add "this.pageReq.sortBy = colName;"
+      bld.endBlock
+      
+      bld.startBlock("onSearch(event: any)")
+      bld.add "this.pageReq.searchValue = event.key;"
       bld.endBlock
 
       bld.separate
