@@ -94,7 +94,7 @@ module XCTEJava
       params.push('@RequestParam(defaultValue="0") Integer pageNum')
       params.push('@RequestParam(defaultValue="' + pageSize.to_s + '") Integer pageSize')
       params.push('@RequestParam(defaultValue="' + sortCol + '") String sortBy')
-      params.push('@RequestParam(defaultValue="' + defaultSortDir + '") String sortOrder')
+      params.push('@RequestParam(defaultValue="true") Boolean sortAsc')
       params.push('@RequestParam(defaultValue="") String searchValue')
 
       bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName()) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
@@ -103,8 +103,8 @@ module XCTEJava
                                Utils.instance.getStyledClassName(cls.getUName()) + "s", params)
 
       bld.add "Sort sort = null;"
-      bld.startBlock "if (sortBy.length() > 0 && sortOrder.length() > 0)"
-      bld.add "sort = Filter.getSort(sortBy, sortOrder);"
+      bld.startBlock "if (sortBy.length() > 0 && sortBy.length() > 0)"
+      bld.add "sort = Filter.getSort(sortBy, sortAsc);"
       bld.endBlock
 
       bld.separate
@@ -116,7 +116,24 @@ module XCTEJava
 
       bld.separate
       bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
-      bld.add("var items = " + dataStoreName + ".findAll(pageRequest);")
+      bld.add "Page<" + Utils.instance.getStyledClassName(cls.getUName()) + "> items;"
+
+      if cls.model.paging.search.columns.length > 0
+        bld.add "items = " + dataStoreName + ".findBy"
+
+        colNames = []
+        colNameCointain = []
+
+        for col in cls.model.paging.search.columns
+          colNameCointain.push(Utils.instance.getStyledClassName(col)) + 'Containing'
+          # get param list for cols
+        end
+
+        bld.sameLine(colNames.join('Or'))
+        bld.sameLine'(pageRequest, "");'
+      else
+        bld.add "items = " + dataStoreName + ".findAll(pageRequest);"
+      end
 
       bld.separate
       if @dsClass != nil

@@ -92,7 +92,11 @@ module XCTEJava
 
       if cls.model.paging.pageSizes.length > 0
         bld.add("final List<Integer> pageSizes = List.of(" + cls.model.paging.pageSizes.join(",") + ");")
+        bld.separate
+      end
 
+      if cls.model.paging.search.columns != nil
+        bld.add('final List<String> searchCols = List.of("' + cls.model.paging.search.columns.join('","') + '");')
         bld.separate
       end
 
@@ -112,6 +116,10 @@ module XCTEJava
 
       # Generate code for functions
       render_functions(cls, bld)
+
+      #@Query("SELECT u FROM User u WHERE (:name is null or u.name = :name) and (:lastname is null"
+#  null + " or u.lastname= :lastname)")
+ # Page<User> search(@Param("name") String name, @Param("lastname") String lastname, Pageable pageable);
 
       bld.endClass
     end

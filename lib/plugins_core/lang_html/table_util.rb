@@ -29,7 +29,7 @@ module XCTEHtml
           .add_attribute("type", "search")
           .add_attribute("placeholder", "Search")
           .add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " search"))
-          .add_attribute("(keyUp)", "onSearch($event)")
+          .add_attribute("(keyup)", "onSearch($event)")
         
           tableDiv.add_child(searchInput)
       end
@@ -54,7 +54,10 @@ module XCTEHtml
           if Utils.instance.isPrimitive(var) && !var.isList()
             tHeadRow.children.push(HtmlNode.new("th")
               .add_text(var.getDisplayName())
-              .add_attribute('(onClick)', "sortBy('" + Utils.instance.getStyledVariableName(var) + "')"))
+              .add_child(HtmlNode.new("i").add_class('bi bi-arrow-bar-down'))
+              .add_attribute('scope', 'col')
+              .add_attribute('style', 'cursor: pointer')
+              .add_attribute('(click)', "sortBy('" + Utils.instance.getStyledVariableName(var) + "')"))
             colCount = colCount + 1
           end
         }))
@@ -75,8 +78,14 @@ module XCTEHtml
 
       Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var) && !var.isList()
-          tBodyRow.add_child(HtmlNode.new("td").
-            add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+          puts var.getUType().downcase
+          if var.getUType().downcase.start_with? 'date'
+            tBodyRow.add_child(HtmlNode.new("td").
+              add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + " | date:'medium'}}"))
+          else
+            tBodyRow.add_child(HtmlNode.new("td").
+              add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+          end
         end
       }))
 
@@ -186,6 +195,7 @@ module XCTEHtml
     def make_paging_button(text, onClick)
       return HtmlNode.new("a")
                .add_class("page-link")
+               .add_attribute('style', 'cursor: pointer')
                .add_attribute("(click)", onClick)
                .add_text(text)
     end

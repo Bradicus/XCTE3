@@ -103,6 +103,9 @@ module XCTETypescript
       bld.endBlock
 
       bld.separate
+
+      searchNames = load_search_names(cls)
+
       bld.startBlock("ngOnInit()")
       bld.add "this.updatePageData();"
       bld.endBlock
@@ -145,12 +148,19 @@ module XCTETypescript
       bld.iadd "this.goToPage(this.pageReq.pageNum + 1);"
       bld.endBlock
 
-      bld.startBlock("sortBy(colName: string)")
+      bld.startBlock "sortBy(colName: string)"
+      bld.startBlock "if (colName === this.pageReq.sortBy)"      
+      bld.add "this.pageReq.sortAsc = !this.pageReq.sortAsc;"
+      bld.midBlock 'else'
       bld.add "this.pageReq.sortBy = colName;"
+      bld.add "this.pageReq.sortAsc = true;"
+      bld.endBlock
+      bld.add "this.updatePageData();"
       bld.endBlock
       
       bld.startBlock("onSearch(event: any)")
-      bld.add "this.pageReq.searchValue = event.key;"
+      bld.add "this.pageReq.searchValue = event.target.value;"
+      bld.add "this.goToPage(0);"
       bld.endBlock
 
       bld.separate
@@ -173,6 +183,16 @@ module XCTETypescript
       render_functions(cls, bld)
 
       bld.endClass
+    end
+
+    def load_search_names(cls)
+      names = Array.new
+
+      cls.xmlElement.elements.each("search_by") { |xmlNode|
+        names.push(xmlNode.attributes["name"])
+      }
+
+      return names
     end
   end
 end

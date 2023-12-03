@@ -23,8 +23,7 @@ module XCTETypescript
       bld.add 'params = params.append("pageNum", req.pageNum);'
       bld.add 'params = params.append("pageSize", req.pageSize);'
       bld.add 'params = params.append("sortBy", req.sortBy);'
-      bld.add 'params = params.append("sortOrder", req.sortOrder);'
-      bld.add 'params = params.append("searchCols", req.searchCols);'
+      bld.add 'params = params.append("sortAsc", req.sortAsc);'
       bld.add 'params = params.append("searchValue", req.searchValue);'
       bld.separate
       bld.add("return this.httpClient.get<FilteredPageRespTpl<" + className + ">>(`${this.apiUrl}/" + urlName + "`, { params} );")

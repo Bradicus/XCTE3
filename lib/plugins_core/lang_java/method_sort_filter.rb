@@ -25,23 +25,21 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, fun)
-      bld.add("Sort getSort(String sortBy, String sortOrder);")
+      bld.add("Sort getSort(String sortBy, Boolean sortAsc);")
     end
 
     def process_dependencies(cls, bld, fun)
     end
 
     def get_body(cls, bld, fun)
-      bld.startFunction("public static Sort getSort(String sortBy, String sortOrder)")
+      bld.startFunction("public static Sort getSort(String sortBy, Boolean sortAsc)")
       bld.add "Sort sort = null;"
       bld.startBlock("if (sortBy != null)")
       bld.add "sort = Sort.by(sortBy);"
-      bld.startBlock("if (sortOrder != null)")
-      bld.startBlock('if (sortOrder.equals("asc"))')
+      bld.startBlock('if (sortAsc == true)')
       bld.add "sort = sort.ascending();"
       bld.midBlock "else"
       bld.add "sort = sort.descending();"
-      bld.endBlock
       bld.endBlock
       bld.endBlock
       bld.add "return sort;"

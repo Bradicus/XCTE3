@@ -14,6 +14,7 @@ module Pages
 
     def initialize
       @type = "shared"
+      @columns = []
     end
   end
 end
