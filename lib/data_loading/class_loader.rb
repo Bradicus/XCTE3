@@ -70,7 +70,7 @@ module DataLoading
       }
 
       genCXml.elements.each("data_class") { |dcXml|
-        genC.dataClass = ClassRefLoader.loadClassRef(dcXml, genCXml, pComponent)
+        genC.dataClass = ClassRefLoader.loadClassRef(dcXml, genCXml, pComponent, genC.model)
       }
 
       genCXml.elements.each("interface") { |ifXml|

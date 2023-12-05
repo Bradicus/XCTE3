@@ -267,5 +267,49 @@ module XCTEJava
         Log.error("Unable to find class type " + plugName + " for model " + fromCls.model.name)
       end
     end
+
+    def get_search_fun(cls, searchColNames)
+      fun = CodeStructure::CodeElemFunction.new(nil)
+
+      if cls.dataClass != nil        
+        dataClass = ClassModelManager.findClass(cls.dataClass.className, cls.dataClass.pluginName)
+        pageReqVar = createVarFor(dataClass, dataClass.plugName)
+      else
+        dataClass = cls
+        pageReqVar = createVarFor(dataClass, "class_jpa_entity")
+      end
+
+      if (pageReqVar == nil)
+        throw ('could not find class_jpa_entity for ' + dataClass.model.name)
+      end
+
+      pageReqVar.templates.push(CodeStructure::CodeElemTemplate.new('Page'))
+      fun.returnValue = pageReqVar
+
+      colNameCointain = []
+      pageVar = CodeStructure::CodeElemVariable.new(nil)
+      pageVar.name = 'pageRequest'
+      pageVar.vtype = 'PageRequest'
+      fun.add_param(pageVar)
+
+      for col in searchColNames
+        colVar = dataClass.model.getFilteredVars(lambda { |var| var.name == col })
+        if colVar.length == 0
+          throw ('Could not find column variable named ' + col)
+        end
+        colNameCointain.push(getStyledClassName(col) + 'Contains')
+        fun.add_param(colVar[0])
+        # get param list for cols
+      end
+
+      fun.name = 'findBy' + colNameCointain.join('Or')
+
+      return fun
+    end
+
+    def render_fun_call(bld, fun)
+
+      return getStyledFunctionName(col) + '(' +  + ')'
+    end
   end
 end

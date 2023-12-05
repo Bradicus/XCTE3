@@ -36,6 +36,8 @@ module XCTEJava
     def process_dependencies(cls, bld)
       Utils.instance.requires_class_type(cls, cls, "class_jpa_entity")
       cls.addUse("org.springframework.data.jpa.repository.*")
+      cls.addUse("org.springframework.data.domain.Page")
+      cls.addUse("org.springframework.data.domain.PageRequest")
 
       super
     end
@@ -61,6 +63,15 @@ module XCTEJava
       eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var| }))
 
       bld.separate
+
+      fun = Utils.instance.get_search_fun(cls, cls.model.paging.search.columns)
+
+      if fun.parameters.vars.length > 1
+        bld.render_function_declairation(fun)
+      end
+      
+      bld.separate
+
       # Generate code for functions
       render_functions(cls, bld)
 

@@ -25,6 +25,12 @@
 		</var_group>
 	</var_group>
 
+	<paging pager="server">
+		<sort defaultVar="id" defaultOrder="" />
+		<search type="shared" columns="first name, last name, email"/>
+		<page_filter sizes="5, 25, 50, 100" default="5" />
+	</paging>
+
 	<class_group_ref name="data store server" />
 
 	<gen_class type="class_angular_module" path="profile" />

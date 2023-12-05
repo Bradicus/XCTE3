@@ -34,5 +34,9 @@ module CodeStructure
       @returnValue = CodeElemVariable.new(self)
       @returnValue.vtype = "void"
     end
+
+    def add_param(param)
+      parameters.vars.push(param)
+    end
   end
 end

@@ -13,13 +13,13 @@ require "data_loading/attribute_loader"
 
 module DataLoading
   class ClassRefLoader
-    def self.loadClassRef(xmlNode, parentElem, pComponent)
+    def self.loadClassRef(xmlNode, parentElem, pComponent, model = nil)
       cRef = CodeStructure::CodeElemClassRef.new(parentElem, pComponent)
 
       cRef.namespaces = NamespaceUtil.loadNamespaces(xmlNode, pComponent)
 
-      cRef.className = AttributeLoader.init().xml(xmlNode).names("cname").required().get()
-      cRef.pluginName = AttributeLoader.init().xml(xmlNode).names("plugin").required().get()
+      cRef.className = AttributeLoader.init().xml(xmlNode).model(model).names("cname").required().get()
+      cRef.pluginName = AttributeLoader.init().xml(xmlNode).model(model).names("plugin").required().get()
 
       return cRef
     end

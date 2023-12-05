@@ -116,21 +116,19 @@ module XCTEJava
 
       bld.separate
       bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
-      bld.add "Page<" + Utils.instance.getStyledClassName(cls.getUName()) + "> items;"
+      bld.add "Page<" + Utils.instance.getStyledClassName(dataClass.getUName()) + "> items;"
 
       if cls.model.paging.search.columns.length > 0
-        bld.add "items = " + dataStoreName + ".findBy"
+        fun = Utils.instance.get_search_fun(cls, cls.model.paging.search.columns)
+        paramVars = []
 
-        colNames = []
-        colNameCointain = []
+        paramVars.push("pageRequest")
 
-        for col in cls.model.paging.search.columns
-          colNameCointain.push(Utils.instance.getStyledClassName(col)) + 'Containing'
-          # get param list for cols
+        for funParam in fun.parameters.vars.drop(1)
+          paramVars.push("searchValue")
         end
-
-        bld.sameLine(colNames.join('Or'))
-        bld.sameLine'(pageRequest, "");'
+        
+        bld.render_function_call("items", dataStoreName, fun, paramVars)
       else
         bld.add "items = " + dataStoreName + ".findAll(pageRequest);"
       end

@@ -116,7 +116,7 @@ module DataLoading
               value = value.split(@arrayDelim)
 
               for val in value
-                val = val.strip()
+                val.strip!()
               end
             end
           end
