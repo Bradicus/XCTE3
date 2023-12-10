@@ -342,5 +342,65 @@ module XCTETypescript
 
       return optVar
     end
+    
+    def get_search_fun(cls, searchColNames)
+      fun = CodeStructure::CodeElemFunction.new(nil)
+      
+      colNameCointain = []
+      pageVar = CodeStructure::CodeElemVariable.new(nil)
+      pageVar.name = 'pageRequest'
+      pageVar.vtype = 'PageRequest'
+      fun.add_param(pageVar)
+
+      for col in searchColNames
+        colNameCointain.push(getStyledClassName(col))
+      end
+
+      eventVar = CodeStructure::CodeElemVariable.new(nil)
+      eventVar.name = 'event'
+      eventVar.vtype = 'any'
+      fun.add_param(eventVar)
+
+      fun.name = 'onSearchBy' + colNameCointain.join('Or')
+
+      return fun
+    end
+
+    def get_search_var(cls, searchColNames)
+      fun = CodeStructure::CodeElemFunction.new(nil)
+      
+      colNameCointain = []
+      pageVar = CodeStructure::CodeElemVariable.new(nil)
+      pageVar.name = 'pageRequest'
+      pageVar.vtype = 'PageRequest'
+      fun.add_param(pageVar)
+
+      for col in searchColNames
+        colNameCointain.push(getStyledClassName(col))
+      end
+
+      eventVar = CodeStructure::CodeElemVariable.new(nil)
+      eventVar.name = 'event'
+      eventVar.vtype = 'any'
+      fun.add_param(eventVar)
+
+      fun.name = 'search' + colNameCointain.join('Or')
+
+      return fun
+    end
+
+    def get_search_subject(search)
+      colNameCointain = []
+      for col in search.columns
+        colNameCointain.push(getStyledClassName(col))
+      end
+
+      subjectVar = CodeStructure::CodeElemVariable.new(nil)
+      subjectVar.name = 'search' + colNameCointain.join('Or') + "Subject"
+      subjectVar.vtype = 'BehaviorSubject<string>'
+      subjectVar.defaultValue = "''";
+
+      return subjectVar
+    end
   end
 end

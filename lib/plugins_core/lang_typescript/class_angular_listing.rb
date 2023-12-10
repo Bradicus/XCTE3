@@ -49,6 +49,10 @@ module XCTETypescript
 
       cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
       cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
+      
+      if cls.model.paging.search.columns != nil  
+        cls.addInclude("rxjs", "Subject, debounceTime, distinctUntilChanged", "lib")
+      end
 
       IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
 
@@ -94,11 +98,28 @@ module XCTETypescript
 
       bld.separate
 
+      if cls.model.paging.search.columns.length > 0
+        subjectVar = Utils.instance.get_search_subject(cls.model.paging.search)
+        bld.add 'public ' + subjectVar.name + ': Subject<string> = new Subject<string>();'
+        bld.separate
+      end
+
+      bld.separate
+
       constructorParams = Array.new
       userServiceVar = Utils.instance.createVarFor(cls, "class_angular_data_store_service")
       Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
       constructorParams.push("private route: ActivatedRoute")
       bld.startFunctionParamed("constructor", constructorParams)
+
+      if cls.model.paging.search.columns.length > 0
+        subjectVar = Utils.instance.get_search_subject(cls.model.paging.search)
+        bld.add 'this.' + subjectVar.name + '.pipe('
+        bld.iadd 'debounceTime(250),'
+        bld.iadd 'distinctUntilChanged())'
+        bld.add '.subscribe((p) =>  { this.goToPage(0); });'        
+        bld.separate
+      end
 
       bld.endBlock
 
@@ -120,11 +141,11 @@ module XCTETypescript
 
       bld.startBlock("updatePageData()")
       bld.add("this.pageObv = " + "this." + Utils.instance.getStyledVariableName(userServiceVar) + ".listing(this.pageReq);")
-      bld.startBlock "this.pageObv.subscribe((p) =>  { "
+      bld.startBlock "this.pageObv.subscribe((p) =>  "
       bld.add "this.page = p;"
       bld.add "this.pageReq.pageNum = this.page.pageNum;"
       bld.add "this.pageReq.pageSize = this.page.pageSize;"
-      bld.endBlock "});"
+      bld.endBlock ");"
       bld.endBlock
 
       bld.separate
@@ -160,7 +181,12 @@ module XCTETypescript
       
       bld.startBlock("onSearch(event: any)")
       bld.add "this.pageReq.searchValue = event.target.value;"
-      bld.add "this.goToPage(0);"
+      
+      if cls.model.paging.search.columns.length > 0
+        subjectVar = Utils.instance.get_search_subject(cls.model.paging.search)
+        bld.add 'this.' + subjectVar.name + '.next(event.target.value);'
+      end
+
       bld.endBlock
 
       bld.separate
