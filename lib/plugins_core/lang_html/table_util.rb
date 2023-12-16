@@ -171,8 +171,8 @@ module XCTEHtml
       #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
       pageList.add_child(li)
 
-      nextPage = make_paging_button("&gt;", "goToPage(this.page.pageCount - 1)")
-      lastPage = make_paging_button("&gt;&gt;", "goToNextPage()")
+      nextPage = make_paging_button("&gt;", "goToNextPage()")
+      lastPage = make_paging_button("&gt;&gt;", "goToPage(this.page.pageCount - 1)")
 
       li = HtmlNode.new("li")
         .add_child(nextPage)
@@ -202,7 +202,7 @@ module XCTEHtml
 
     def make_action_button(text, attrib, attribValue)      
       return HtmlNode.new("button")
-        .add_class('btn btn-primary')
+        .add_class('btn btn-primary btn-sm')
         .add_attribute(attrib, attribValue)
         .add_text(text.capitalize)
     end

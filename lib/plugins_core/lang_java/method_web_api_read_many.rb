@@ -148,7 +148,7 @@ module XCTEJava
       else
         bld.add "var response = new " + @returnType + "();"
         bld.add "response.data = items.getContent();"
-        bld.add "response.pageCount = 1;"
+        bld.add "response.pageCount = items.getTotalPages();"
       end
 
       bld.add "response.pageNum = pageNum.intValue();"

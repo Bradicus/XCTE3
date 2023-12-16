@@ -34,7 +34,7 @@ module XCTEHtml
       if (cls.model.findClassModel("class_angular_reactive_edit"))
         plug = XCTEPlugin::findClassPlugin("typescript", "class_angular_reactive_edit")
 
-        bld.add('<button type="button" class="btn btn-primary" routerLink="/' +
+        bld.add('<button type="button" class="btn btn-primary btn-sm" routerLink="/' +
                 plug.get_full_route(cls, "edit") + '/0">New ' + cls.getUName() + "</button>")
       end
 

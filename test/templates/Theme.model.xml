@@ -15,15 +15,16 @@
 	<class_group_ref name="view" feature_group="theme" />
 	<class_group_ref name="edit" feature_group="theme" />
 
+	<paging pager="server">
+		<sort defaultVar="id" defaultOrder="" />
+		<search type="shared" columns="name"/>
+		<page_filter sizes="5, 25, 50, 100" default="5" />
+	</paging>
+
 			<gen_class type="class_angular_listing"
 			  name="!{FeatureGroup} listing"
 			  path="!{FeatureGroup}/!{FeatureGroup} listing"
 				feature_group="theme">
-				<search_by name="code"/>
-				<search_by name="description"/>
-				<paging
-					pager="server"
-					sizes="10,20,50"/>
 				<actions>
 					<action name="view" link="/!{FeatureGroup}/!{FeatureGroup}-view" role="user"/>
 					<action name="edit" link="/!{FeatureGroup}/!{FeatureGroup}-edit" role="admin" />

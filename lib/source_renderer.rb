@@ -96,7 +96,12 @@ class SourceRenderer
 
   def endBlock(afterClose = "")
     unindent
-    add(@blockDelimClose + afterClose)
+
+    if !@lines.last.strip.empty?
+      add(@blockDelimClose + afterClose)
+    else
+      sameLine(@blockDelimClose + afterClose)
+    end    
   end
 
   def startFunction(functionDeclairation)
@@ -131,8 +136,7 @@ class SourceRenderer
   end
 
   def endClass(afterClose = "")
-    unindent
-    add(@blockDelimClose + afterClose)
+    endBlock(afterClose)
   end
 
   def startBlock(statement)
