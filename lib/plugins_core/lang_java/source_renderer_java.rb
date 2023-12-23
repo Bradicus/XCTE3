@@ -7,11 +7,11 @@
 #
 # This class renders Java code
 
-require "plugins_core/lang_java/utils.rb"
-require "source_renderer_brace_delim.rb"
+require 'plugins_core/lang_java/utils'
+require 'source_renderer_brace_delim'
 
 class SourceRendererJava < SourceRendererBraceDelim
-  def initialize()
+  def initialize
     super
 
     @hangingBlockStart = true
@@ -19,41 +19,43 @@ class SourceRendererJava < SourceRendererBraceDelim
     @hangingFunctionStart = true
   end
 
-  def get_utils()
+  def get_utils
     return XCTEJava::Utils.instance
   end
 
-  def endClass(afterClose = "")
+  def endClass(afterClose = '')
     endBlock(afterClose)
   end
 
   def render_function_declairation(fun)
     paramStrings = []
 
-    for pVar in fun.parameters.vars
-      paramStrings.push(get_utils().getParamDec(pVar))
+    for annotation in fun.annotations
+      add annotation
     end
-    
-    typeName = get_utils().getTypeName(fun.returnValue)
 
-    if (typeName == 'void')
+    for pVar in fun.parameters.vars
+      paramStrings.push(get_utils.getParamDec(pVar))
+    end
+
+    typeName = get_utils.getTypeName(fun.returnValue)
+
+    if typeName == 'void'
       add typeName + ' '
     else
-      add get_utils().getStyledClassName(typeName) + ' '
+      add get_utils.get_styled_class_name(typeName) + ' '
     end
 
-    sameLine get_utils().getStyledFunctionName(fun.name) + "(" + paramStrings.join(', ') + ");"
+    sameLine get_utils.getStyledFunctionName(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
 
   def render_function_call(assignTo, callFrom, fun, paramStrings)
-  
-    if assignTo == nil
-      assignment = ""
+    if assignTo.nil?
+      assignment = ''
     else
-      assignment = assignTo + " = "
+      assignment = assignTo + ' = '
     end
 
-    add assignment + callFrom + "." + get_utils().getStyledFunctionName(fun.name) + "(" + paramStrings.join(', ') + ");"
+    add assignment + callFrom + '.' + get_utils.getStyledFunctionName(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
-
 end

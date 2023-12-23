@@ -4,32 +4,31 @@
 module XCTETypescript
   class ClassAngularDatastoreService < ClassBase
     def initialize
-      @name = "class_angular_data_store_service"
-      @language = "typescript"
+      @name = 'class_angular_data_store_service'
+      @language = 'typescript'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName() + " data store service"
+    def get_unformatted_class_name(cls)
+      cls.getUName + ' data store service'
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
 
-      cls.addInclude("../../../environments/environment", "environment", "lib")
-      cls.addInclude("@angular/core", "Injectable")
-      cls.addInclude("@angular/common/http", "HttpClient, HttpParams")
-      cls.addInclude("rxjs", "Observable, map", "lib")
-      
+      cls.addInclude('../../../environments/environment', 'environment', 'lib')
+      cls.addInclude('@angular/core', 'Injectable')
+      cls.addInclude('@angular/common/http', 'HttpClient, HttpParams')
+      cls.addInclude('rxjs', 'Observable, map', 'lib')
 
       fPath = Utils.instance.getStyledFileName(cls.model.name)
-      cName = Utils.instance.getStyledClassName(cls.model.name)
+      cName = Utils.instance.get_styled_class_name(cls.model.name)
       # Eventaully switch to finding standard class and using path from there
-      cls.addInclude("shared/dto/model/" + fPath, cName)
+      cls.addInclude('shared/dto/model/' + fPath, cName)
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
@@ -41,27 +40,26 @@ module XCTETypescript
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     # Returns the code for the content for this class
-    def genFileComment(cls, bld)
-    end
+    def genFileComment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      bld.startBlock("@Injectable(")
+      bld.startBlock('@Injectable(')
       bld.add("providedIn: 'root',")
-      bld.endBlock(")")
-      bld.startClass("export class " + getClassName(cls))
+      bld.endBlock(')')
+      bld.startClass('export class ' + getClassName(cls))
 
-      bld.add("private apiUrl=environment.apiUrl;")
+      bld.add('private apiUrl=environment.apiUrl;')
       # bld.add("private dataExpires: Number = 600; // Seconds")
-      # bld.add("private items: " + Utils.instance.getStyledClassName(cls.getUName()) + "[];")
+      # bld.add("private items: " + Utils.instance.get_styled_class_name(cls.getUName()) + "[];")
 
       bld.separate
-      bld.startFunction("constructor(private httpClient: HttpClient)")
-      bld.add("this.apiUrl = environment.apiUrl;")
+      bld.startFunction('constructor(private httpClient: HttpClient)')
+      bld.add('this.apiUrl = environment.apiUrl;')
       bld.endFunction
 
       bld.separate
@@ -91,25 +89,25 @@ module XCTETypescript
     def process_function(cls, bld, fun)
       bld.separate
 
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
-          if templ != nil
-            templ.get_definition(cls, bld)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
-        else # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("typescript", "method_empty")
-          if templ != nil
-            templ.get_definition(fun, cfg)
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-          end
+      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+
+      if fun.isTemplate
+        templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
+        if !templ.nil?
+          templ.get_definition(cls, bld)
+        else
+          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
+        end
+      else # Must be empty function
+        templ = XCTEPlugin.findMethodPlugin('typescript', 'method_empty')
+        if !templ.nil?
+          templ.get_definition(fun, cfg)
+        else
+          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end
       end
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularDatastoreService.new)
+XCTEPlugin.registerPlugin(XCTETypescript::ClassAngularDatastoreService.new)

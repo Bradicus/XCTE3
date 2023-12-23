@@ -1,28 +1,28 @@
-require "data_processing/process_custom_code"
-require "data_processing/process_project_class_gen"
-require "data_loading/class_group_loader"
-require "code_elem_classgroup"
-require "class_groups"
-require "debug"
-require "env"
+require 'data_processing/process_custom_code'
+require 'data_processing/process_project_class_gen'
+require 'data_loading/class_group_loader'
+require 'code_elem_classgroup'
+require 'class_groups'
+require 'debug'
+require 'env'
 
 module DataProcessing
   class ProcessComponent
     # Loads a class from an xml node
     def self.process(project, pComponent, pcGroup)
-      Log.info("Processing component with language: " + pComponent.language)
+      Log.info('Processing component with language: ' + pComponent.language)
       currentDir = Dir.pwd
       projectPlan = ProjectPlan.new
       ProjectPlanManager.plans[pComponent.language] = projectPlan
-      ClassModelManager.reset()
-      ClassGroups.reset()
+      ClassModelManager.reset
+      ClassGroups.reset
 
-      Log.debug("Processing component path: " + pComponent.tplPath)
+      Log.debug('Processing component path: ' + pComponent.tplPath)
 
       # Load internal models
-      Find.find(Env.getCodeRootDir() + "/../internal/clibs_templates") do |path|
+      Find.find(Env.getCodeRootDir + '/../internal/clibs_templates') do |path|
         if isModelFile(path)
-          Log.debug("Processing model: " + path)
+          Log.debug('Processing model: ' + path)
 
           pn = Pathname.new(path)
 
@@ -32,11 +32,11 @@ module DataProcessing
       end
 
       # Load class groups
-      Find.find(currentDir + "/" + pComponent.tplPath) do |path|
+      Find.find(currentDir + '/' + pComponent.tplPath) do |path|
         if isClassgroupFile(path)
-          Log.debug("Processing model: " + path)
+          Log.debug('Processing model: ' + path)
 
-          basepn = Pathname.new(currentDir + "/" + pComponent.tplPath)
+          basepn = Pathname.new(currentDir + '/' + pComponent.tplPath)
           pn = Pathname.new(path)
 
           classGroup = CodeStructure::CodeElemClassgroup.new(nil)
@@ -47,21 +47,19 @@ module DataProcessing
       end
 
       # Load models
-      Find.find(currentDir + "/" + pComponent.tplPath) do |path|
+      Find.find(currentDir + '/' + pComponent.tplPath) do |path|
         if isModelFile(path)
-          Log.debug("Processing model: " + path)
+          Log.debug('Processing model: ' + path)
 
-          basepn = Pathname.new(currentDir + "/" + pComponent.tplPath)
+          basepn = Pathname.new(currentDir + '/' + pComponent.tplPath)
           pn = Pathname.new(path)
 
           dataModel = CodeStructure::CodeElemModel.new
           DataLoading::ModelLoader.loadModelFile(dataModel, path, pComponent, ClassModelManager)
 
-          language = XCTEPlugin::getLanguages()[pComponent.language]
+          language = XCTEPlugin.getLanguages[pComponent.language]
 
-          if (language == nil)
-            Log.debug("No language found for: " + pComponent.language)
-          end
+          Log.debug('No language found for: ' + pComponent.language) if language.nil?
 
           projectPlan.addModel(dataModel)
           ProcessProjectClassGen.process(dataModel, pComponent, projectPlan)
@@ -96,52 +94,53 @@ module DataProcessing
       # Debug.logModels(projectPlan.models)
 
       for plan in projectPlan.classes
-        language = XCTEPlugin::getLanguages()[plan.language]
+        language = XCTEPlugin.getLanguages[plan.language]
 
-        Log.debug("generating model " + plan.model.name + " class " + plan.plugName + " language: " + plan.language +
-                  "  namespace: " + plan.namespace.get("."))
+        Log.debug('generating model ' + plan.model.name + ' class ' + plan.plugName + ' language: ' + plan.language +
+                  '  namespace: ' + plan.namespace.get('.'))
 
-        #project.singleFile = "map gen settings"
+        # project.singleFile = "map gen settings"
 
-        if (project.singleFile == nil || project.singleFile == plan.model.name)
+        if project.singleFile.nil? || project.singleFile == plan.model.name
           srcFiles = language[plan.plugName].genSourceFiles(plan)
 
           for srcFile in srcFiles
             foundStart = false
             foundEnd = false
             overwriteFile = false
-            fName = plan.filePath + "/" + srcFile.lfName + "." + srcFile.lfExtension
+            fName = plan.filePath + '/' + srcFile.lfName + '.' + srcFile.lfExtension
 
-            if (File.file?(fName))
+            if File.file?(fName)
               plan.customCode = ProcessCustomCode.extractCustomCode(fName)
 
-              if (plan.customCode != nil && plan.customCode.strip.length > 0)
+              if !plan.customCode.nil? && plan.customCode.strip.length > 0
                 srcFile.lines = ProcessCustomCode.insertCustomCode(plan.customCode, srcFile)
+                for line in srcFile.lines
+                  line.!strip if line.blank?
+                end
               end
             end
 
-            if (!File.file?(fName))
+            if !File.file?(fName)
               overwriteFile = true
             else
-              existingFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "r")
+              existingFile = File.new(File.join(plan.filePath, srcFile.lfName + '.' + srcFile.lfExtension), mode: 'r')
               fileData = existingFile.read
               genContents = srcFile.getContents
 
-              if (fileData != genContents)
-                overwriteFile = true
-              end
+              overwriteFile = true if fileData != genContents
 
               existingFile.close
             end
           end
 
-          if (overwriteFile)
-            Log.debug("writing file: " + File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension))
+          if overwriteFile
+            Log.debug('writing file: ' + File.join(plan.filePath, srcFile.lfName + '.' + srcFile.lfExtension))
             if !File.directory?(plan.filePath)
               FileUtils.mkdir_p(plan.filePath)
               #   Log.debug("Creating folder: " + newPath
             end
-            sFile = File.new(File.join(plan.filePath, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
+            sFile = File.new(File.join(plan.filePath, srcFile.lfName + '.' + srcFile.lfExtension), mode: 'w')
             sFile << srcFile.getContents
             sFile.close
           end
@@ -155,16 +154,16 @@ module DataProcessing
 
     def self.isModelFile(filePath)
       return FileTest.file?(filePath) &&
-               filePath.include?(".xml") &&
-               !filePath.include?(".svn") &&
-               (filePath.include?(".model.xml") || filePath.include?(".class.xml"))
+             filePath.include?('.xml') &&
+             !filePath.include?('.svn') &&
+             (filePath.include?('.model.xml') || filePath.include?('.class.xml'))
     end
 
     def self.isClassgroupFile(filePath)
       return FileTest.file?(filePath) &&
-               filePath.include?(".xml") &&
-               !filePath.include?(".svn") &&
-               (filePath.include?(".classgroup.xml"))
+             filePath.include?('.xml') &&
+             !filePath.include?('.svn') &&
+             filePath.include?('.classgroup.xml')
     end
   end
 end

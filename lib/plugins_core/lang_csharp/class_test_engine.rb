@@ -3,36 +3,36 @@
 # Author:: Brad Ottoson
 #
 
-require "plugins_core/lang_csharp/utils.rb"
-require "plugins_core/lang_csharp/source_renderer_csharp.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "lang_file.rb"
-require "x_c_t_e_plugin.rb"
+require 'plugins_core/lang_csharp/utils'
+require 'plugins_core/lang_csharp/source_renderer_csharp'
+require 'code_elem'
+require 'code_elem_parent'
+require 'lang_file'
+require 'x_c_t_e_plugin'
 
 module XCTECSharp
   class XCTECSharp::TestEngine < XCTEPlugin
     def initialize
-      @name = "test_engine"
-      @language = "csharp"
+      @name = 'test_engine'
+      @language = 'csharp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def getClassName(cls)
-      return Utils.instance.getStyledClassName(cls.getUName() + " engine")
+      return Utils.instance.get_styled_class_name(cls.getUName + ' engine')
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
-      cls.setName(Utils.instance.getStyledClassName(cls.getUName() + " engine test"))
-      if cls.interfacenamespace.hasItems?()
-        cls.includes << CodeElemInclude.new(cls.interfaceNamespace, cls.getUName() + " interface")
+      cls.setName(Utils.instance.get_styled_class_name(cls.getUName + ' engine test'))
+      if cls.interfacenamespace.hasItems?
+        cls.includes << CodeElemInclude.new(cls.interfaceNamespace, cls.getUName + ' interface')
       end
 
       bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.getStyledClassName(cls.name)
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.get_styled_class_name(cls.name)
+      bld.lfExtension = Utils.instance.getExtension('body')
 
       genFileContent(cls, bld)
 
@@ -43,7 +43,7 @@ module XCTECSharp
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      templ = XCTEPlugin::findMethodPlugin("csharp", "method_test_engine")
+      templ = XCTEPlugin.findMethodPlugin('csharp', 'method_test_engine')
       templ.process_dependencies(cls, bld)
 
       Utils.instance.genFunctionDependencies(cls, bld)
@@ -51,8 +51,8 @@ module XCTECSharp
 
       Utils.instance.genNamespaceStart(cls.namespace, bld)
 
-      bld.add("[TestClass]")
-      classDec = cls.model.visibility + " class " + Utils.instance.getStyledClassName(cls.name)
+      bld.add('[TestClass]')
+      classDec = cls.model.visibility + ' class ' + Utils.instance.get_styled_class_name(cls.name)
 
       bld.startClass(classDec)
 
@@ -65,4 +65,4 @@ module XCTECSharp
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECSharp::TestEngine.new)
+XCTEPlugin.registerPlugin(XCTECSharp::TestEngine.new)

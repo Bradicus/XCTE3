@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="paging filter" >
+
+	<description>
+	Filters data set down to current page
+	</description>
+				
+	<gen_class type="standard" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="page sizes"	type="int32" set="List" default = "[]"/>
+		<var name="pager"		type="string" default="none" />
+		<var name="page size default"	type="int32"  default="10" />
+	</var_group>		
+	
+</model>

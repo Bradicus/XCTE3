@@ -1,7 +1,9 @@
 <project>
 <!--  <generate language="csharp" tpl_path="templates" dest="./csharp_razor" /> -->
   <generate language="typescript" tpl_path="templates" dest="./angular/ClientApp/src/app">
-    <xdep name="angular" version="14"  />
+    <xdep name="angular" version="14">
+      <validation name="basic" />
+    </xdep>
     <build_vars>
       <build_var name="DataModelPlugin" value="class_standard" />
       <build_var name="DtoModelPath" value="shared/dto/model" />
@@ -12,12 +14,15 @@
   </generate>
   <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
     <xdep name="bootstrap" version="5" />
-    <xdep name="angular" version="14"  />
+    <xdep name="angular" version="14">
+      <validation name="basic" />
+    </xdep>
   </generate>
   <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
   <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" >
     <xdep name="spring-boot" version="3" />
-      <build_vars>
+    <logging logger="slf4j" />
+    <build_vars>
       <build_var name="ControllerNs" value="com.example.demo.api" />
       <build_var name="ControllerPath" value="api" />
       <build_var name="DataModelNs" value="com.example.demo.db_model" />

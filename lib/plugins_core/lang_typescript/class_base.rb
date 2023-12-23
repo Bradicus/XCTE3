@@ -1,6 +1,6 @@
-require "plugins_core/lang_typescript/plugin_base"
-require "x_c_t_e_plugin"
-require "x_c_t_e_class_base"
+require 'plugins_core/lang_typescript/plugin_base'
+require 'x_c_t_e_plugin'
+require 'x_c_t_e_class_base'
 
 # This class contains functions that may be usefull in any type of class
 module XCTETypescript
@@ -13,19 +13,17 @@ module XCTETypescript
       return Utils.instance.getStyledFileName(uName)
     end
 
-    def getStyledClassName(uName)
-      return Utils.instance.getStyledClassName(uName)
+    def get_styled_class_name(uName)
+      return Utils.instance.get_styled_class_name(uName)
     end
 
     def get_relative_route(cls, actionName)
-      route = Array.new
+      route = []
 
-      if cls.variant != nil
-        route.push(cls.variant)
-      end
+      route.push(cls.variant) if !cls.variant.nil?
 
-      if (!cls.model.name.include?(actionName))
-        route.push(Utils.instance.getStyledUrlName(cls.model.name) + "-" + actionName)
+      if !cls.model.name.include?(actionName)
+        route.push(Utils.instance.getStyledUrlName(cls.model.name) + '-' + actionName)
       else
         route.push(Utils.instance.getStyledUrlName(cls.model.name))
       end
@@ -34,9 +32,9 @@ module XCTETypescript
     end
 
     def get_full_route(cls, actionName)
-      route = Array.new
+      route = []
 
-      if cls.featureGroup != nil
+      if !cls.featureGroup.nil?
         route.push(cls.featureGroup)
       else
         route.push(cls.model.name)
@@ -53,13 +51,13 @@ module XCTETypescript
     end
 
     def process_fuction_dependencies(cls, bld, fun)
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        templ = XCTEPlugin::findMethodPlugin("typescript", fun.name)
-        if templ != nil
-          templ.process_dependencies(cls, bld)
-        else
-          #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-        end
+      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+
+      templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
+      if !templ.nil?
+        templ.process_dependencies(cls, bld)
+      else
+        # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
       end
     end
 
@@ -71,29 +69,29 @@ module XCTETypescript
       for inc in cls.includes
         path = inc.path
 
-        if !inc.path.start_with?("@") && inc.itype != "lib"
-          clsPaths = cls.path.split("/")
-          incPaths = inc.path.split("/")
+        if !inc.path.start_with?('@') && inc.itype != 'lib'
+          clsPaths = cls.path.split('/')
+          incPaths = inc.path.split('/')
 
-          path = ""
+          path = ''
 
-          while (clsPaths.length > 0 && incPaths.length > 0 && clsPaths[0] == incPaths[0])
+          while clsPaths.length > 0 && incPaths.length > 0 && clsPaths[0] == incPaths[0]
             clsPaths.shift
             incPaths.shift
           end
 
-          if (clsPaths.length == 0)
-            path = "./"
+          if clsPaths.length == 0
+            path = './'
           else
             for cp in clsPaths
-              path += "../"
+              path += '../'
             end
           end
 
-          path += incPaths.join("/")
+          path += incPaths.join('/')
         end
 
-        bld.add("import { " + inc.name + " } from '" + path + "';")
+        bld.add('import { ' + inc.name + " } from '" + path + "';")
       end
     end
   end

@@ -7,10 +7,11 @@
 
 module CodeElement
   class CodeElemListPaging
-    attr_accessor :sort, :search_by, :page_filter
+    attr_accessor :sort, :search_by, :page_filter, :static_filter
 
     @sort
     @search_by = []
     @page_filter
+    @static_filter = []
   end
 end

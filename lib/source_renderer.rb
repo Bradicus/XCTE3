@@ -11,23 +11,21 @@ class SourceRenderer
                 :customCode, :lines
 
   def initialize
-    @lfName
     @lfPath = nil
-    @lfExtension
     @indentLevel = 0
-    @indentChars = "    "
+    @indentChars = '    '
     @lines = []
-    @blockDelimOpen = "{"
-    @blockDelimClose = "}"
+    @blockDelimOpen = '{'
+    @blockDelimClose = '}'
     @hangingFunctionStart = false
     @hangingBlockStart = true
 
     # Ruby will use encoding specified when the file was opened, don't need this
-    #if (OS.windows?)
+    # if (OS.windows?)
     @lineEnding = "\n"
-    #else
+    # else
     #  @lineEnding = "\n"
-    #end
+    # end
   end
 
   def indent(count = 1)
@@ -38,19 +36,19 @@ class SourceRenderer
     @indentLevel -= count
   end
 
-  def add(line = "")
-    if (line.is_a?(Array))
-      line.each { |item|
-        self.add(item)
-      }
-    elsif (line.is_a?(String))
-      if (line.length > 0)
-        @lines.push(getIndent() << line)
+  def add(line = '')
+    if line.is_a?(Array)
+      for item in line
+        add(item)
+      end
+    elsif line.is_a?(String)
+      if line.length > 0
+        @lines.push(getIndent << line)
       else
-        @lines.push(getIndent() << line)
+        @lines.push(getIndent << line)
       end
     else
-      raise TypeError, "invalid type " + line.inspect
+      raise TypeError, 'invalid type ' + line.inspect
     end
   end
 
@@ -64,44 +62,47 @@ class SourceRenderer
 
   # if the last line isn't a blank line, add one for separation
   def separate
-    if (@lines.count > 0 && !@lines.last.strip.empty?)
-      add
-    end
+    return unless @lines.count > 0 && !@lines.last.strip.empty?
+
+    add
   end
 
   # if the last line isn't a blank line, add one for separation
   def separateIf(condition)
-    if (condition && @lines.count > 0 && !@lines.last.strip.empty?)
-      add
-    end
+    return unless condition && @lines.count > 0 && !@lines.last.strip.empty?
+
+    add
   end
 
   def getIndent(extraIndent = 0)
-    totalIndent = ""
+    totalIndent = ''
     for i in 0..(@indentLevel + extraIndent - 1)
       totalIndent += @indentChars
     end
 
-    return totalIndent
+    totalIndent
   end
 
-  def getContents()
-    outStr = ""
+  def getContents
+    outStr = ''
 
-    @lines.each { |line|
+    @lines.each do |line|
       outStr << line << @lineEnding
-    }
-    return(outStr)
+    end
+    outStr
   end
 
-  def endBlock(afterClose = "")
+  def endBlock(afterClose = '')
     unindent
 
     if !@lines.last.strip.empty?
       add(@blockDelimClose + afterClose)
     else
+      @lines.last.strip!
       sameLine(@blockDelimClose + afterClose)
-    end    
+    end
+
+    separate
   end
 
   def startFunction(functionDeclairation)
@@ -109,25 +110,25 @@ class SourceRenderer
   end
 
   def startFunctionParamed(functionName, paramList)
-    oneLiner = paramList.join(", ")
+    oneLiner = paramList.join(', ')
     if oneLiner.length > 100
       paramStr = "\n"
 
       (0..paramList.length - 1).each do |i|
-        if (i < paramList.length - 1)
-          paramStr += getIndent(2) + paramList[i] + "," + "\n"
+        if i < paramList.length - 1
+          paramStr += getIndent(2) + paramList[i] + ',' + "\n"
         else
           paramStr += getIndent(2) + paramList[i]
         end
       end
 
-      startDelimedChunk(functionName + "(" + paramStr + ")", @hangingFunctionStart)
+      startDelimedChunk(functionName + '(' + paramStr + ')', @hangingFunctionStart)
     else
-      startDelimedChunk(functionName + "(" + oneLiner + ")", @hangingFunctionStart)
+      startDelimedChunk(functionName + '(' + oneLiner + ')', @hangingFunctionStart)
     end
   end
 
-  def endFunction()
+  def endFunction
     endBlock
   end
 
@@ -135,7 +136,7 @@ class SourceRenderer
     startDelimedChunk(classDeclairation, @hangingFunctionStart)
   end
 
-  def endClass(afterClose = "")
+  def endClass(afterClose = '')
     endBlock(afterClose)
   end
 
@@ -143,16 +144,14 @@ class SourceRenderer
     startDelimedChunk(statement, @hangingBlockStart)
   end
 
-  def startDelimedChunk(statement = "", hanging = true)
-    if (statement != "" && @blockDelimOpen.length > 0 && hanging)
-      statement += " "
-    end
+  def startDelimedChunk(statement = '', hanging = true)
+    statement += ' ' if statement != '' && @blockDelimOpen.length > 0 && hanging
 
-    if (hanging)
-      @lines.push(getIndent() + statement + @blockDelimOpen)
+    if hanging
+      @lines.push(getIndent + statement + @blockDelimOpen)
     else
-      @lines.push(getIndent() + statement)
-      @lines.push(getIndent() + @blockDelimOpen)
+      @lines.push(getIndent + statement)
+      @lines.push(getIndent + @blockDelimOpen)
     end
     indent
   end

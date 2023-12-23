@@ -7,58 +7,58 @@
 #
 # This class contains utility functions for a language
 
-require "lang_profile.rb"
-require "code_name_styling.rb"
-require "utils_base"
-require "singleton"
+require 'lang_profile'
+require 'code_name_styling'
+require 'utils_base'
+require 'singleton'
 
 module XCTEHtml
   class TableUtil
     include Singleton
 
     # Return formatted class name
-    def make_table(cls, listVarName, iteratorName, paging, async = "", embedded = false)
+    def make_table(cls, listVarName, iteratorName, paging, async = '', embedded = false)
       tableDiv = HtmlNode.new('div')
 
       # Generate search fields
       names = load_search_names(cls)
-      
-      if (names.length > 0 && paging)
-        searchInput = HtmlNode.new("input")
-          .add_class("form-control")
-          .add_attribute("type", "search")
-          .add_attribute("placeholder", "Search")
-          .add_attribute("id", Utils.instance.getStyledUrlName(cls.model.name + " search"))
-          .add_attribute("(keyup)", "onSearch($event)")
-        
-          tableDiv.add_child(searchInput)
+
+      if names.length > 0 && paging
+        searchInput = HtmlNode.new('input')
+                              .add_class('form-control')
+                              .add_attribute('type', 'search')
+                              .add_attribute('placeholder', 'Search')
+                              .add_attribute('id', Utils.instance.getStyledUrlName(cls.model.name + ' search'))
+                              .add_attribute('(keyup)', 'onSearch($event)')
+
+        tableDiv.add_child(searchInput)
       end
 
-      tableElem = HtmlNode.new("table")
-        .add_class("table")
+      tableElem = HtmlNode.new('table')
+                          .add_class('table')
 
       tableDiv.add_child(tableElem)
 
-      asyncStr = ""
-      if async == "async"
-        asyncStr = " | async"
+      asyncStr = ''
+      if async == 'async'
+        asyncStr = ' | async'
       end
 
       # Generate table header
-      tHead = HtmlNode.new("thead")
-      tHeadRow = HtmlNode.new("tr")
+      tHead = HtmlNode.new('thead')
+      tHeadRow = HtmlNode.new('tr')
       colCount = 0
 
       if !embedded && paging
-        Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-          if Utils.instance.isPrimitive(var) && !var.isList()
-            tHeadRow.children.push(HtmlNode.new("th")
-              .add_text(var.getDisplayName())
-              .add_child(HtmlNode.new("i").add_class('bi bi-arrow-bar-down'))
+        Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+          if Utils.instance.isPrimitive(var) && !var.isList
+            tHeadRow.children.push(HtmlNode.new('th')
+              .add_text(var.getDisplayName)
+              .add_child(HtmlNode.new('i').add_class('bi bi-arrow-bar-down'))
               .add_attribute('scope', 'col')
               .add_attribute('style', 'cursor: pointer')
-              .add_attribute('(click)', "sortBy('" + Utils.instance.getStyledVariableName(var) + "')"))
-            colCount = colCount + 1
+              .add_attribute('(click)', "sortBy('" + Utils.instance.get_styled_variable_name(var) + "')"))
+            colCount += 1
           end
         }))
       end
@@ -67,40 +67,41 @@ module XCTEHtml
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new("tbody")
-      tBodyRow = HtmlNode.new("tr")
+      tBody = HtmlNode.new('tbody')
+      tBodyRow = HtmlNode.new('tr')
 
-      if (embedded)
-        tBodyRow.add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")")
+      if embedded
+        tBodyRow.add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')')
       else
-        tBodyRow.add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.data")
+        tBodyRow.add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
       end
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.isList()
-          puts var.getUType().downcase
-          if var.getUType().downcase.start_with? 'date'
-            tBodyRow.add_child(HtmlNode.new("td").
-              add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + " | date:'medium'}}"))
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+        if Utils.instance.isPrimitive(var) && !var.isList
+          puts var.getUType.downcase
+          if var.getUType.downcase.start_with? 'date'
+            tBodyRow.add_child(HtmlNode.new('td')
+              .add_text('{{' + iteratorName + '.' + Utils.instance.get_styled_variable_name(var) + " | date:'medium'}}"))
           else
-            tBodyRow.add_child(HtmlNode.new("td").
-              add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}"))
+            tBodyRow.add_child(HtmlNode.new('td')
+              .add_text('{{' + iteratorName + '.' + Utils.instance.get_styled_variable_name(var) + '}}'))
           end
         end
       }))
 
-      actions = HtmlNode.new("th")
+      actions = HtmlNode.new('th')
 
       if !embedded && paging
         for act in cls.actions
-          if act.link != nil
-            actions.add_child(make_action_button(act.name, "routerLink", act.link + "/" + '{{' + iteratorName + '.id}}'))
-          elsif act.trigger != nil
-            triggerFun = Utils.instance.getStyledFunctionName("on " + act.trigger) + "(" + iteratorName + ")"
+          if !act.link.nil?
+            actions.add_child(make_action_button(act.name, 'routerLink',
+                                                 act.link + '/' + '{{' + iteratorName + '.id}}'))
+          elsif !act.trigger.nil?
+            triggerFun = Utils.instance.getStyledFunctionName('on ' + act.trigger) + '(' + iteratorName + ')'
             if act.trigger == 'delete'
-              actions.add_child(make_action_button(act.name, "(click)", triggerFun))          
+              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
             else
-              actions.add_child(make_action_button(act.name, "(click)", triggerFun))
+              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
             end
           end
         end
@@ -113,8 +114,8 @@ module XCTEHtml
       tableElem.add_child(tBody)
 
       if paging
-        tFoot = HtmlNode.new("tfoot")
-        tFoot.add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount ?? 0 > 1")
+        tFoot = HtmlNode.new('tfoot')
+        tFoot.add_attribute('*ngIf', '(' + listVarName + asyncStr + ')?.pageCount ?? 0 > 1')
 
         tFoot.add_child(make_paging_control(colCount, listVarName, asyncStr))
         tableElem.add_child(tFoot)
@@ -131,61 +132,61 @@ module XCTEHtml
     end
 
     def load_search_names(cls)
-      names = Array.new
+      names = []
 
-      cls.xmlElement.elements.each("search_by") { |xmlNode|
-        names.push(xmlNode.attributes["name"])
-      }
+      cls.xmlElement.elements.each('search_by') do |xmlNode|
+        names.push(xmlNode.attributes['name'])
+      end
 
       return names
     end
 
     def make_paging_control(colCount, listVarName, asyncStr)
-      tFootRow = HtmlNode.new("tr")
+      tFootRow = HtmlNode.new('tr')
 
-      tFootTd = HtmlNode.new("td")
-      tFootTd.add_class("list-group-horizontal")
-      tFootTd.add_attribute("colspan", colCount.to_s)
+      tFootTd = HtmlNode.new('td')
+      tFootTd.add_class('list-group-horizontal')
+      tFootTd.add_attribute('colspan', colCount.to_s)
 
-      firstPage = make_paging_button("&lt;&lt;", "goToPage(0)")
-      prevPage = make_paging_button("&lt;", "goToPreviousPage()")
+      firstPage = make_paging_button('&lt;&lt;', 'goToPage(0)')
+      prevPage = make_paging_button('&lt;', 'goToPreviousPage()')
 
-      pageList = HtmlNode.new("ul")
-        .add_class("pagination")
-        .add_class("list-group")
-        .add_class("list-group-horizontal")
+      pageList = HtmlNode.new('ul')
+                         .add_class('pagination')
+                         .add_class('list-group')
+                         .add_class('list-group-horizontal')
 
-      li = HtmlNode.new("li")
-        .add_child(firstPage)
+      li = HtmlNode.new('li')
+                   .add_child(firstPage)
       pageList.add_child(li)
 
-      li = HtmlNode.new("li")
-        .add_child(prevPage)
+      li = HtmlNode.new('li')
+                   .add_child(prevPage)
       pageList.add_child(li)
 
-      li = HtmlNode.new("li")
-        .add_attribute("*ngFor", "let item of [].constructor((" + listVarName + asyncStr + ")?.pageCount ?? 0);let i = index")
-        .add_class("page-item")
-        .add_child(make_paging_button("{{i + 1}}", "goToPage(i)"))
+      li = HtmlNode.new('li')
+                   .add_attribute('*ngFor', 'let item of [].constructor((' + listVarName + asyncStr + ')?.pageCount ?? 0);let i = index')
+                   .add_class('page-item')
+                   .add_child(make_paging_button('{{i + 1}}', 'goToPage(i)'))
 
-      #li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
+      # li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
       pageList.add_child(li)
 
-      nextPage = make_paging_button("&gt;", "goToNextPage()")
-      lastPage = make_paging_button("&gt;&gt;", "goToPage(this.page.pageCount - 1)")
+      nextPage = make_paging_button('&gt;', 'goToNextPage()')
+      lastPage = make_paging_button('&gt;&gt;', 'goToPage(this.page.pageCount - 1)')
 
-      li = HtmlNode.new("li")
-        .add_child(nextPage)
+      li = HtmlNode.new('li')
+                   .add_child(nextPage)
       pageList.add_child(li)
 
-      li = HtmlNode.new("li")
-        .add_child(lastPage)
+      li = HtmlNode.new('li')
+                   .add_child(lastPage)
 
       pageList.add_child(li)
 
       tFootTd.add_child(pageList)
 
-      tFootTd.add_child(HtmlNode.new("span").add_class("justify-content-end").add_text("Page "))
+      tFootTd.add_child(HtmlNode.new('span').add_class('justify-content-end').add_text('Page '))
 
       tFootRow.add_child(tFootTd)
 
@@ -193,39 +194,39 @@ module XCTEHtml
     end
 
     def make_paging_button(text, onClick)
-      return HtmlNode.new("a")
-               .add_class("page-link")
-               .add_attribute('style', 'cursor: pointer')
-               .add_attribute("(click)", onClick)
-               .add_text(text)
+      return HtmlNode.new('a')
+                     .add_class('page-link')
+                     .add_attribute('style', 'cursor: pointer')
+                     .add_attribute('(click)', onClick)
+                     .add_text(text)
     end
 
-    def make_action_button(text, attrib, attribValue)      
-      return HtmlNode.new("button")
-        .add_class('btn btn-primary btn-sm')
-        .add_attribute(attrib, attribValue)
-        .add_text(text.capitalize)
+    def make_action_button(text, attrib, attribValue)
+      return HtmlNode.new('button')
+                     .add_class('btn btn-primary btn-sm')
+                     .add_attribute(attrib, attribValue)
+                     .add_text(text.capitalize)
     end
 
-    def make_sel_option_table(listVar, optionsVar, iteratorName, async = "")
-      tableElem = HtmlNode.new("table")
-        .add_class("table")
+    def make_sel_option_table(_listVar, optionsVar, iteratorName, async = '')
+      tableElem = HtmlNode.new('table')
+                          .add_class('table')
 
-      asyncStr = ""
-      if async == "async"
-        asyncStr = " | async"
+      asyncStr = ''
+      if async == 'async'
+        asyncStr = ' | async'
       end
 
       # Generate table header
-      tHead = HtmlNode.new("thead")
-      tHeadRow = HtmlNode.new("tr")
+      tHead = HtmlNode.new('thead')
+      tHeadRow = HtmlNode.new('tr')
 
       optClass = ClassModelManager.findVarClass(optionsVar)
-      listVarName = Utils.instance.getStyledVariableName(optionsVar)
+      listVarName = Utils.instance.get_styled_variable_name(optionsVar)
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          tHeadRow.children.push(HtmlNode.new("th").add_text(var.getDisplayName()))
+          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName))
         end
       }))
 
@@ -233,17 +234,17 @@ module XCTEHtml
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new("tbody")
-      tBodyRow = HtmlNode.new("tr").
-        add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.data")
+      tBody = HtmlNode.new('tbody')
+      tBodyRow = HtmlNode.new('tr')
+                         .add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(optClass).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.isPrimitive(var)
-          td = HtmlNode.new("td")
-          ##            .add_text("{{" + iteratorName + "." + Utils.instance.getStyledVariableName(var) + "}}")
-          td.add_child(HtmlNode.new("a")
-            .add_class("page-link")
-            .add_text("{{i}}}"))
+          td = HtmlNode.new('td')
+          ##            .add_text("{{" + iteratorName + "." + Utils.instance.get_styled_variable_name(var) + "}}")
+          td.add_child(HtmlNode.new('a')
+            .add_class('page-link')
+            .add_text('{{i}}}'))
           tBodyRow.add_child(td)
         end
       }))

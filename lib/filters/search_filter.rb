@@ -3,17 +3,12 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 
-#
-
-module Pages
-  class PagingSearch
+module Filters
+  class SearchFilter
     attr_accessor :type, :columns
 
-    @type
-    @columns
-
     def initialize
-      @type = "shared"
+      @type = 'shared'
       @columns = []
     end
   end

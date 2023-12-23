@@ -7,65 +7,65 @@
 #
 # This plugin creates a constructor for a class
 
-require "plugins_core/lang_java/method_web_api_base"
-require "code_name_styling.rb"
-require "plugins_core/lang_java/utils.rb"
+require 'plugins_core/lang_java/method_web_api_base'
+require 'code_name_styling'
+require 'plugins_core/lang_java/utils'
 
 module XCTEJava
   class MethodWebApiRead < MethodWebApiBase
     def initialize
-      @name = "method_web_api_read_one"
-      @language = "java"
+      @name = 'method_web_api_read_one'
+      @language = 'java'
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns definition string for this class's constructor
     def get_definition(cls, bld, fun)
-      bld.add("/*")
-      bld.add("* Web API get single " + cls.getUName())
-      bld.add("*/")
+      bld.add('/*')
+      bld.add('* Web API get single ' + cls.getUName)
+      bld.add('*/')
 
       get_body(cls, bld, fun)
     end
 
-    def get_declairation(cls, bld, fun)
-      bld.add("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-              " Get" + Utils.instance.getStyledClassName(cls.getUName()) + "(int id);")
+    def get_declairation(cls, bld, _fun)
+      bld.add('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
+              ' Get' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id);')
     end
 
-    def get_body(cls, bld, fun)
+    def get_body(cls, bld, _fun)
       conDef = String.new
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(dataClass.getUName() + " data store", Utils.instance.langProfile.variableNameStyle)
-      mapperName = "mapper"
+        CodeNameStyling.getStyled(dataClass.getUName + ' data store', Utils.instance.langProfile.variableNameStyle)
+      mapperName = 'mapper'
 
-      params = Array.new
-      idVar = cls.model.getIdentityVar()
+      params = []
+      idVar = cls.model.getIdentityVar
 
-      if idVar != nil
-        params << '@PathVariable("' + Utils.instance.getStyledVariableName(idVar) + '") ' + Utils.instance.getParamDec(idVar)
+      if !idVar.nil?
+        params << '@PathVariable("' + Utils.instance.get_styled_variable_name(idVar) + '") ' + Utils.instance.getParamDec(idVar)
       end
 
-      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName()) + '/{id}")')
+      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName) + '/{id}")')
 
-      bld.startFunction("public " + Utils.instance.getStyledClassName(cls.getUName()) +
-                        " Get" + Utils.instance.getStyledClassName(cls.getUName()) +
-                        "(" + params.join(", ") + ")")
+      bld.startFunction('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
+                        ' Get' + Utils.instance.get_styled_class_name(cls.getUName) +
+                        '(' + params.join(', ') + ')')
 
-      bld.add("var item = " + dataStoreName + ".findById(id);")
+      bld.add('var item = ' + dataStoreName + '.findById(id);')
       bld.separate
 
-      if cls.dataClass != nil
-        bld.startBlock "if (item.isPresent())"
-        bld.add "var mappedItem = new " + Utils.instance.getStyledClassName(cls.getUName()) + "();"
-        bld.add(mapperName + ".map(item.get(), mappedItem);")
-        bld.add("return mappedItem;")
+      if !cls.dataClass.nil?
+        bld.startBlock 'if (item.isPresent())'
+        bld.add 'var mappedItem = new ' + Utils.instance.get_styled_class_name(cls.getUName) + '();'
+        bld.add(mapperName + '.map(item.get(), mappedItem);')
+        bld.add('return mappedItem;')
         bld.endBlock
 
-        bld.add "return null;"
+        bld.add 'return null;'
       else
-        bld.add("return item.get();")
+        bld.add('return item.get();')
       end
 
       bld.endFunction
@@ -74,4 +74,4 @@ module XCTEJava
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodWebApiRead.new)
+XCTEPlugin.registerPlugin(XCTEJava::MethodWebApiRead.new)

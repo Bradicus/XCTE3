@@ -7,54 +7,54 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
-require "plugins_core/lang_python/x_c_t_e_python.rb"
+require 'x_c_t_e_plugin'
+require 'plugins_core/lang_python/x_c_t_e_python'
 
 module XCTEPython
   class MethodConstructor < XCTEPlugin
     def initialize
-      @name = "method_constructor"
-      @language = "python"
+      @name = 'method_constructor'
+      @language = 'python'
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, fun, rend)
+    def get_definition(cls, _fun, rend)
       conDef = String.new
 
-      rend.add("# Initializer")
+      rend.add('# Initializer')
 
-      rend.startFunction("def __init__(self)")
+      rend.startFunction('def __init__(self)')
 
-      varArray = Array.new
+      varArray = []
       cls.model.getAllVarsFor(varArray)
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE && var.isStatic != true
-          if var.defaultValue != nil
-            rend.add("self." << Utils.instance.getStyledVariableName(var) + " = ")
+          if !var.defaultValue.nil?
+            rend.add('self.' << Utils.instance.get_styled_variable_name(var) + ' = ')
 
-            if var.vtype == "String"
+            if var.vtype == 'String'
               rend.sameLine('"' + var.defaultValue + '"')
             else
               rend.sameLine(var.defaultValue)
             end
 
-            if var.comment != nil
+            if !var.comment.nil?
               rend.sameLine("\t# " + var.comment)
             end
 
             rend.add
           else
-            rend.add("self." << Utils.instance.getStyledVariableName(var) + " = None")
+            rend.add('self.' << Utils.instance.get_styled_variable_name(var) + ' = None')
           end
         end
       end
 
-      rend.endBlock("# init")
+      rend.endBlock('# init')
     end
   end
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEPython::MethodConstructor.new)
+XCTEPlugin.registerPlugin(XCTEPython::MethodConstructor.new)

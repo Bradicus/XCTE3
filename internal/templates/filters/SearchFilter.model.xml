@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="search filter" >
+
+	<description>
+	Filters data set based on search
+	</description>
+				
+	<gen_class type="standard" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="type"		type="string" default="shared" />
+		<var name="columns"	type="int32" set="List" default="[]" />
+	</var_group>		
+	
+</model>

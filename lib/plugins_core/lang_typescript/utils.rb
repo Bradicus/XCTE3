@@ -7,19 +7,19 @@
 #
 # This class contains utility functions for a language
 
-require "lang_profile.rb"
-require "utils_base"
-require "types"
-require "code_elem_variable"
-require "code_elem_model"
-require "code_elem_var_group"
+require 'lang_profile'
+require 'utils_base'
+require 'types'
+require 'code_elem_variable'
+require 'code_elem_model'
+require 'code_elem_var_group'
 
 module XCTETypescript
   class Utils < UtilsBase
     include Singleton
 
     def initialize
-      super("typescript")
+      super('typescript')
     end
 
     # Get a parameter declaration for a method parameter
@@ -27,33 +27,29 @@ module XCTETypescript
       vDec = String.new
       typeName = String.new
 
-      vDec << getStyledVariableName(var)
-      vDec << ": " + getTypeName(var)
+      vDec << get_styled_variable_name(var)
+      vDec << ': ' + getTypeName(var)
 
-      if var.arrayElemCount.to_i > 0 && var.vtype != "String"
-        vDec << "[]"
-      end
+      vDec << '[]' if var.arrayElemCount.to_i > 0 && var.vtype != 'String'
 
-      if var.comment != nil
-        vDec << "\t/** " << var.comment << " */"
-      end
+      vDec << "\t/** " << var.comment << ' */' if !var.comment.nil?
 
-      return vDec
+      vDec
     end
 
     def addParamIfAvailable(params, var)
-      if (var != nil)
-        params.push("private " + getParamDec(var))
-      end
+      return if var.nil?
+
+      params.push('private ' + getParamDec(var))
     end
 
     def getParamDecForClass(cls, plug)
       pDec = String.new
-      pDec << CodeNameStyling.getStyled(plug.getUnformattedClassName(cls), @langProfile.variableNameStyle) << ": "
+      pDec << CodeNameStyling.getStyled(plug.get_unformatted_class_name(cls), @langProfile.variableNameStyle) << ': '
 
       pDec << plug.getClassName(cls)
 
-      return pDec
+      pDec
     end
 
     # Returns variable declaration for the specified variable
@@ -61,119 +57,105 @@ module XCTETypescript
       vDec = String.new
       typeName = String.new
 
-      if var.isConst
-        vDec << "const "
-      end
+      vDec << 'const ' if var.isConst
 
-      if var.isStatic
-        vDec << "static "
-      end
+      vDec << 'static ' if var.isStatic
 
-      vDec << getStyledVariableName(var)
-      vDec << ": " + getTypeName(var)
+      vDec << get_styled_variable_name(var)
+      vDec << ': ' + getTypeName(var)
 
-      if (var.defaultValue != nil)
-        if (var.getUType().downcase == "string")
+      if !var.defaultValue.nil?
+        if var.getUType.downcase == 'string'
           vDec << ' = "' << var.defaultValue << '"'
         else
-          vDec << " = " << var.defaultValue << ""
+          vDec << ' = ' << var.defaultValue << ''
         end
+      elsif var.getUType.downcase == 'string'
+        vDec << ' = ""'
+      elsif var.getUType.downcase == 'boolean'
+        vDec << ' = false'
+      elsif Types.instance.inCategory(var, 'time')
+        vDec << ' = new Date()'
+      elsif var.isList
+        vDec << ' = []'
+      elsif !isPrimitive(var)
+        vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '()'
       else
-        if (var.getUType().downcase == "string")
-          vDec << ' = ""'
-        elsif (var.getUType().downcase == "boolean")
-          vDec << ' = false'
-        elsif Types.instance.inCategory(var, "time")
-          vDec << ' = new Date()'
-        elsif var.isList()
-          vDec << ' = []'
-        elsif !isPrimitive(var)
-          vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType(), @langProfile.classNameStyle) + "()"
-        else
-          vDec << " = 0"
-        end      
+        vDec << ' = 0'
       end
 
-      vDec << ";"
+      vDec << ';'
 
-      if var.comment != nil
-        vDec << "\t/** " << var.comment << " */"
-      end
+      vDec << "\t/** " << var.comment << ' */' if !var.comment.nil?
 
-      return vDec
+      vDec
     end
 
     # Returns a size constant for the specified variable
     def getSizeConst(var)
-      return "ARRAYSZ_" << var.name.upcase
+      'ARRAYSZ_' << var.name.upcase
     end
 
     # Get a type name for a variable
     def getTypeName(var)
       typeName = getSingleItemTypeName(var)
 
-      if var.isList()
-        typeName = apply_template(var.templates[0], typeName)
-      end
+      typeName = apply_template(var.templates[0], typeName) if var.isList
 
-      return typeName
+      typeName
     end
 
     def getSingleItemTypeName(var)
       typeName = getBaseTypeName(var)
 
       singleTpls = var.templates
-      if var.isList()
-        singleTpls = singleTpls.drop(1)
-      end
+      singleTpls = singleTpls.drop(1) if var.isList
 
-      for tpl in singleTpls.reverse()
+      for tpl in singleTpls.reverse
         typeName = apply_template(tpl, typeName)
       end
 
-      return typeName
+      typeName
     end
 
     def apply_template(tpl, curTypeName)
       tplType = @langProfile.getTypeName(tpl.name)
-      if tpl.name.downcase == "list"
-        typeName = curTypeName + "[]"
+      if tpl.name.downcase == 'list'
+        typeName = curTypeName + '[]'
       else
-        typeName = tplType + "<" + curTypeName + ">"
+        typeName = tplType + '<' + curTypeName + '>'
       end
 
-      return typeName
+      typeName
     end
 
     # Return the language type based on the generic type
     def getBaseTypeName(var)
-      nsPrefix = ""
+      nsPrefix = ''
 
-      baseTypeName = ""
-      if (var.vtype != nil)
+      baseTypeName = ''
+      if !var.vtype.nil?
         baseTypeName = @langProfile.getTypeName(var.vtype)
       else
         baseTypeName = CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
       end
 
-      baseTypeName = nsPrefix + baseTypeName
-
-      return baseTypeName
+      nsPrefix + baseTypeName
     end
 
     def getListTypeName(listTypeName)
-      return @langProfile.getTypeName(listTypeName)
+      @langProfile.getTypeName(listTypeName)
     end
 
     # Get the extension for a file type
     def getExtension(eType)
-      return @langProfile.getExtension(eType)
+      @langProfile.getExtension(eType)
     end
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
     def getComment(var)
-      return "/* " << var.text << " */\n"
+      '/* ' << var.text << " */\n"
     end
 
     # Capitalizes the first letter of a string
@@ -181,118 +163,103 @@ module XCTETypescript
       newStr = String.new
       newStr += str[0, 1].capitalize
 
-      if (str.length > 1)
-        newStr += str[1..str.length - 1]
-      end
+      newStr += str[1..str.length - 1] if str.length > 1
 
-      return(newStr)
+      newStr
     end
 
     # process variable group
-    def renderReactiveFormGroup(cls, bld, vGroup, isDisabled, separator = ";")
-      bld.sameLine("new FormGroup({")
+    def renderReactiveFormGroup(cls, bld, _vGroup, isDisabled, separator = ';')
+      bld.sameLine('new FormGroup({')
       bld.indent
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if isPrimitive(var)
-          hasMult = var.isList()
-          if !var.isList()
-            bld.add(genPrimitiveFormControl(var, isDisabled) + ",")
+          hasMult = var.isList
+          if !var.isList
+            bld.add(genPrimitiveFormControl(var, isDisabled) + ',')
           else
-            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+            bld.add(get_styled_variable_name(var) + ': new FormArray([]),')
           end
         else
-          otherClass = ClassModelManager.findVarClass(var, "standard")
+          otherClass = ClassModelManager.findVarClass(var, 'standard')
 
-          if !var.isList()
-            if otherClass != nil
-              if var.selectFrom != nil
-                bld.add(getStyledVariableName(var, "", " id") + ": ")
-                idVar = cls.model.getIdentityVar()
-                bld.sameLine(getFormcontrolType(idVar, idVar.getUType(), "", isDisabled) + ",")
+          if !var.isList
+            if !otherClass.nil?
+              if !var.selectFrom.nil?
+                bld.add(get_styled_variable_name(var, '', ' id') + ': ')
+                idVar = cls.model.getIdentityVar
+                bld.sameLine(getFormcontrolType(idVar, idVar.getUType, '', isDisabled) + ',')
               else
-                bld.add(getStyledVariableName(var) + ": ")
-                renderReactiveFormGroup(otherClass, bld, otherClass.model.varGroup, isDisabled, ",")
+                bld.add(get_styled_variable_name(var) + ': ')
+                renderReactiveFormGroup(otherClass, bld, otherClass.model.varGroup, isDisabled, ',')
               end
             else
-              bld.add(getStyledVariableName(var) + ": ")
+              bld.add(get_styled_variable_name(var) + ': ')
               bld.sameLine("new FormControl(''),")
             end
           else
-            bld.add(getStyledVariableName(var) + ": new FormArray([]),")
+            bld.add(get_styled_variable_name(var) + ': new FormArray([]),')
           end
         end
       }))
 
       bld.unindent
-      bld.add("})" + separator)
+      bld.add('})' + separator)
     end
 
     def genPrimitiveFormControl(var, isDisabled)
       validators = []
-      if var.required
-        validators << "Validators.required"
-      end
-      if var.arrayElemCount > 0
-        validators << "Validators.maxLength(" + var.arrayElemCount.to_s + ")"
-      end
+      validators << 'Validators.required' if var.required
+      validators << 'Validators.maxLength(' + var.arrayElemCount.to_s + ')' if var.arrayElemCount > 0
 
-      vdString = ""
-      if validators.length > 0
-        vdString = ", [" + validators.join(", ") + "]"
-      end
+      vdString = ''
+      vdString = ', [' + validators.join(', ') + ']' if validators.length > 0
 
-      return getStyledVariableName(var) + ": " + getFormcontrolType(var, vdString, isDisabled)
+      get_styled_variable_name(var) + ': ' + getFormcontrolType(var, vdString, isDisabled)
     end
 
     def getFormcontrolType(var, vdString, isDisabled)
-      utype = var.getUType().downcase
-      if utype.start_with?("date")
-        return "new FormControl<Date>(new Date()" + vdString + ")"
-      else
-        if Types.instance.inCategory(var, "text") || utype == "guid"
-          return "new FormControl<" + getBaseTypeName(var) + ">(''" + vdString + ")"
-        elsif utype == "boolean"
-          return "new FormControl<" + getBaseTypeName(var) + ">(false)"
-        end
-        if isDisabled
-          return "new FormControl<" + getBaseTypeName(var) + ">({value: 0, disabled: true}" + vdString + ")"
-        else          
-          return "new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
-        end
+      utype = var.getUType.downcase
+      return 'new FormControl<Date>(new Date()' + vdString + ')' if utype.start_with?('date')
+
+      if Types.instance.inCategory(var, 'text') || utype == 'guid'
+        return 'new FormControl<' + getBaseTypeName(var) + ">(''" + vdString + ')'
+      elsif utype == 'boolean'
+        return 'new FormControl<' + getBaseTypeName(var) + '>(false)'
       end
+      return 'new FormControl<' + getBaseTypeName(var) + '>({value: 0, disabled: true}' + vdString + ')' if isDisabled
+
+      'new FormControl<' + getBaseTypeName(var) + '>(0' + vdString + ')'
     end
 
     def getStyledUrlName(name)
-      return CodeNameStyling.getStyled(name, "DASH_LOWER")
+      CodeNameStyling.getStyled(name, 'DASH_LOWER')
     end
 
     def isNumericPrimitive(var)
       isPrim = @langProfile.isPrimitive(var)
-      isNum = Types.instance.inCategory(var, "number")
-      return isPrim && isNum
+      isNum = Types.instance.inCategory(var, 'number')
+      isPrim && isNum
     end
 
     def addClassnamesFor(clsList, otherClasses, language, classType)
       for otherCls in otherClasses
         if otherCls.plugName == classType
-          plug = XCTEPlugin::findClassPlugin(language, classType)
+          plug = XCTEPlugin.findClassPlugin(language, classType)
           clsList.push(plug.getClassName(otherCls))
         end
       end
     end
 
-    def getStyledPageName(var)
-    end
+    def getStyledPageName(var); end
 
     def renderClassList(clsList, bld)
       firstLine = true
-      uniqueList = clsList.uniq()
+      uniqueList = clsList.uniq
 
       for c in uniqueList
-        if !firstLine
-          bld.sameLine(",")
-        end
+        bld.sameLine(',') if !firstLine
 
         bld.iadd(c)
         firstLine = false
@@ -300,9 +267,9 @@ module XCTETypescript
     end
 
     def getRelatedClasses(cls)
-      relClasses = Array.new
+      relClasses = []
 
-      if cls.model.featureGroup != nil
+      if !cls.model.featureGroup.nil?
         fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
 
         for otherCls in fClasses
@@ -314,38 +281,38 @@ module XCTETypescript
         relClasses.push(otherCls)
       end
 
-      return relClasses.uniq
+      relClasses.uniq
     end
 
     def getOptionsVarFor(var)
       optVar = var.clone
-      optVar.name = var.selectFrom + " options"
+      optVar.name = var.selectFrom + ' options'
       optVar.utype = var.selectFrom
       optVar.vtype = nil
       optVar.relation = nil
-      optVar.defaultValue = "new Observable<FilteredPageRespTpl<" + getStyledClassName(optVar.utype) + ">>"
-      optVar.templates = Array.new
-      optVar.addTpl("Observable")
-      optVar.addTpl("FilteredPageRespTpl", true)
+      optVar.defaultValue = 'new Observable<FilteredPageRespTpl<' + get_styled_class_name(optVar.utype) + '>>'
+      optVar.templates = []
+      optVar.addTpl('Observable')
+      optVar.addTpl('FilteredPageRespTpl', true)
 
-      return optVar
+      optVar
     end
 
     def getOptionsReqVarFor(var)
       optVar = var.clone
-      optVar.name = var.selectFrom + " options req"
+      optVar.name = var.selectFrom + ' options req'
       optVar.utype = var.selectFrom
       optVar.vtype = nil
-      optVar.defaultValue = "new FilteredPageReqTpl<" + getStyledClassName(optVar.utype) + ">"
-      optVar.templates = Array.new
-      optVar.addTpl("FilteredPageReqTpl", true)
+      optVar.defaultValue = 'new FilteredPageReqTpl<' + get_styled_class_name(optVar.utype) + '>'
+      optVar.templates = []
+      optVar.addTpl('FilteredPageReqTpl', true)
 
-      return optVar
+      optVar
     end
-    
-    def get_search_fun(cls, searchColNames)
+
+    def get_search_fun(_cls, searchColNames)
       fun = CodeStructure::CodeElemFunction.new(nil)
-      
+
       colNameCointain = []
       pageVar = CodeStructure::CodeElemVariable.new(nil)
       pageVar.name = 'pageRequest'
@@ -353,7 +320,7 @@ module XCTETypescript
       fun.add_param(pageVar)
 
       for col in searchColNames
-        colNameCointain.push(getStyledClassName(col))
+        colNameCointain.push(get_styled_class_name(col))
       end
 
       eventVar = CodeStructure::CodeElemVariable.new(nil)
@@ -363,12 +330,12 @@ module XCTETypescript
 
       fun.name = 'onSearchBy' + colNameCointain.join('Or')
 
-      return fun
+      fun
     end
 
-    def get_search_var(cls, searchColNames)
+    def get_search_var(_cls, searchColNames)
       fun = CodeStructure::CodeElemFunction.new(nil)
-      
+
       colNameCointain = []
       pageVar = CodeStructure::CodeElemVariable.new(nil)
       pageVar.name = 'pageRequest'
@@ -376,7 +343,7 @@ module XCTETypescript
       fun.add_param(pageVar)
 
       for col in searchColNames
-        colNameCointain.push(getStyledClassName(col))
+        colNameCointain.push(get_styled_class_name(col))
       end
 
       eventVar = CodeStructure::CodeElemVariable.new(nil)
@@ -386,21 +353,21 @@ module XCTETypescript
 
       fun.name = 'search' + colNameCointain.join('Or')
 
-      return fun
+      fun
     end
 
     def get_search_subject(search)
       colNameCointain = []
       for col in search.columns
-        colNameCointain.push(getStyledClassName(col))
+        colNameCointain.push(get_styled_class_name(col))
       end
 
       subjectVar = CodeStructure::CodeElemVariable.new(nil)
-      subjectVar.name = 'search' + colNameCointain.join('Or') + "Subject"
+      subjectVar.name = 'search' + colNameCointain.join('Or') + 'Subject'
       subjectVar.vtype = 'BehaviorSubject<string>'
-      subjectVar.defaultValue = "''";
+      subjectVar.defaultValue = "''"
 
-      return subjectVar
+      subjectVar
     end
   end
 end

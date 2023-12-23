@@ -8,26 +8,26 @@
 # This class contains the language profile for CSharp and utility fuctions
 # used by various plugins
 
-require "lang_profile.rb"
-require "code_name_styling.rb"
-require "utils_base.rb"
-require "singleton"
+require 'lang_profile'
+require 'code_name_styling'
+require 'utils_base'
+require 'singleton'
 
 module XCTECSharp
   class Utils < UtilsBase
     include Singleton
 
     def initialize
-      super("csharp")
+      super('csharp')
     end
 
     # Get a parameter declaration for a method parameter
     def getParamDec(var)
       pDec = String.new
 
-      pDec << self.getTypeName(var)
+      pDec << getTypeName(var)
 
-      pDec << " " << self.getStyledVariableName(var)
+      pDec << ' ' << get_styled_variable_name(var)
 
       return pDec
     end
@@ -36,46 +36,32 @@ module XCTECSharp
     def getVarDec(var)
       vDec = String.new
 
-      vDec << var.visibility << " "
+      vDec << var.visibility << ' '
 
-      if var.isConst
-        vDec << "const "
-      end
+      vDec << 'const ' if var.isConst
 
-      if var.isStatic
-        vDec << "static "
-      end
+      vDec << 'static ' if var.isStatic
 
-      if var.isVirtual
-        vDec << "virtual "
-      end
+      vDec << 'virtual ' if var.isVirtual
 
-      vDec << self.getTypeName(var)
+      vDec << getTypeName(var)
 
-      vDec << " "
+      vDec << ' '
 
-      if var.nullable
-        vDec << "?"
-      end
+      vDec << '?' if var.nullable
 
-      vDec << self.getStyledVariableName(var)
+      vDec << get_styled_variable_name(var)
 
-      if (var.genGet != nil || var.genSet != nil)
-        vDec << " { "
-        if (var.genGet != nil)
-          vDec << "get; "
-        end
-        if (var.genSet != nil)
-          vDec << "set; "
-        end
-        vDec << "}"
+      if !var.genGet.nil? || !var.genSet.nil?
+        vDec << ' { '
+        vDec << 'get; ' if !var.genGet.nil?
+        vDec << 'set; ' if !var.genSet.nil?
+        vDec << '}'
       else
-        vDec << ";"
+        vDec << ';'
       end
 
-      if var.comment != nil
-        vDec << "\t/** " << var.comment << " */"
-      end
+      vDec << "\t/** " << var.comment << ' */' if !var.comment.nil?
 
       return vDec
     end
@@ -86,7 +72,7 @@ module XCTECSharp
 
       if var.templates.length > 0 && var.templates[0].isCollection
         tplType = @langProfile.getTypeName(var.templates[0].name)
-        typeName = tplType + "<" + typeName + ">"
+        typeName = tplType + '<' + typeName + '>'
       end
 
       return typeName
@@ -99,13 +85,11 @@ module XCTECSharp
       if singleTpls.length > 0 && singleTpls[0].isCollection
         singleTpls = singleTpls.drop(1)
 
-        if isPrimitive(var)
-          typeName = getObjTypeName(var)
-        end
+        typeName = getObjTypeName(var) if isPrimitive(var)
       end
 
-      for tpl in singleTpls.reverse()
-        typeName = tpl.name + "<" + typeName + ">"
+      for tpl in singleTpls.reverse
+        typeName = tpl.name + '<' + typeName + '>'
       end
 
       return typeName.strip
@@ -113,17 +97,17 @@ module XCTECSharp
 
     # Return the language type based on the generic type
     def getBaseTypeName(var)
-      nsPrefix = ""
-      langType = @langProfile.getTypeName(var.getUType())
+      nsPrefix = ''
+      langType = @langProfile.getTypeName(var.getUType)
 
-      if (var.utype != nil) # Only unformatted name needs styling
+      if !var.utype.nil? # Only unformatted name needs styling
         baseTypeName = CodeNameStyling.getStyled(langType, @langProfile.classNameStyle)
       else
         baseTypeName = langType
       end
 
-      if var.namespace.hasItems?()
-        nsPrefix = var.namespace.get("::") + "::"
+      if var.namespace.hasItems?
+        nsPrefix = var.namespace.get('::') + '::'
         baseTypeName = nsPrefix + baseTypeName
       end
 
@@ -132,38 +116,31 @@ module XCTECSharp
 
     # Return the language type based on the generic type
     def getObjTypeName(var)
-      if (var.vtype != nil)
-        objType = getType(var.vtype + "obj")
-        if (objType != nil)
-          return objType.langType
-        end
+      return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle) if var.vtype.nil?
 
-        return @langProfile.getTypeName(var.vtype)
-      else
-        return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
-      end
+      objType = getType(var.vtype + 'obj')
+      return objType.langType if !objType.nil?
+
+      return @langProfile.getTypeName(var.vtype)
     end
 
     def addClassInclude(cls, plugName)
-      cls.addUse(cls.model.findClassModelByPluginName(plugName).namespace.get("."))
+      cls.addUse(cls.model.findClassModelByPluginName(plugName).namespace.get('.'))
     end
 
     # Returns a size constant for the specified variable
     def getSizeConst(var)
-      return "ARRAYSZ_" << var.name.upcase
+      return 'ARRAYSZ_' << var.name.upcase
     end
 
     # Returns the version of this name styled for this language
-    def getStyledVariableName(var, varPrefix = "")
-      if var.is_a?(CodeStructure::CodeElemVariable)
-        if (var.genGet || var.genSet)
-          return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle)
-        else
-          return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
-        end
-      else
+    def get_styled_variable_name(var, varPrefix = '')
+      unless var.is_a?(CodeStructure::CodeElemVariable)
         return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
       end
+      return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle) if var.genGet || var.genSet
+
+      return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
     end
 
     # Capitalizes the first letter of a string
@@ -171,9 +148,7 @@ module XCTECSharp
       newStr = String.new
       newStr += str[0, 1].capitalize
 
-      if (str.length > 1)
-        newStr += str[1..str.length - 1]
-      end
+      newStr += str[1..str.length - 1] if str.length > 1
 
       return(newStr)
     end
@@ -184,27 +159,23 @@ module XCTECSharp
     end
 
     def getComment(var)
-      return "/* " << var.text << " */\n"
+      return '/* ' << var.text << " */\n"
     end
 
     # Should move this into language def xml
     def getZero(var)
-      if var.vtype == "Float32"
-        return "0.0f"
-      end
-      if var.vtype == "Float64"
-        return "0.0"
-      end
+      return '0.0f' if var.vtype == 'Float32'
+      return '0.0' if var.vtype == 'Float64'
 
-      return "0"
+      return '0'
     end
 
     def getDataListInfo(classXML)
-      dInfo = Hash.new
+      dInfo = {}
 
-      classXML.elements.each("DATA_LIST_TYPE") { |dataListXML|
-        dInfo["csharpTemplateType"] = dataListXML.attributes["csharpTemplateType"]
-      }
+      classXML.elements.each('DATA_LIST_TYPE') do |dataListXML|
+        dInfo['csharpTemplateType'] = dataListXML.attributes['csharpTemplateType']
+      end
 
       return(dInfo)
     end
@@ -212,86 +183,82 @@ module XCTECSharp
     # generate use list for file
     def genUses(useList, bld)
       for use in useList
-        bld.add("using " + use.namespace.get(".") + ";")
+        bld.add('using ' + use.namespace.get('.') + ';')
       end
 
-      if !useList.empty?
-        bld.add
-      end
+      return if useList.empty?
+
+      bld.add
     end
 
     def genFunctionDependencies(cls, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
-              templ.process_dependencies(cls, bld, fun)
-            else
-              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
-            end
+        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
+          templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
+          if !templ.nil?
+            templ.process_dependencies(cls, bld, fun)
+          else
+            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
         end
       end
     end
 
     def addNonIdentityParams(cls, bld)
-      varArray = Array.new
+      varArray = []
       cls.model.getNonIdentityVars(varArray)
 
       addParameters(varArray, cls, bld)
     end
 
-    def addParameters(varArray, cls, bld)
+    def addParameters(varArray, _cls, bld)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
           bld.add('cmd.Parameters.AddWithValue("@' +
-                  Utils.instance.getStyledVariableName(var) +
-                  '", o.' + Utils.instance.getStyledVariableName(var) + ");")
-        else
-          if var.elementId == CodeElem::ELEM_FORMAT
-            bld.add(var.formatText)
-          end
+                  Utils.instance.get_styled_variable_name(var) +
+                  '", o.' + Utils.instance.get_styled_variable_name(var) + ');')
+        elsif var.elementId == CodeElem::ELEM_FORMAT
+          bld.add(var.formatText)
         end
       end
     end
 
     # Generate a list of @'d parameters
-    def genParamList(cls, bld, varPrefix = "")
-      separator = ""
+    def genParamList(cls, bld, varPrefix = '')
+      separator = ''
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.sameLine(separator)
-        bld.add("@" + getStyledVariableName(var, varPrefix))
-        separator = ","
+        bld.add('@' + get_styled_variable_name(var, varPrefix))
+        separator = ','
       }))
     end
 
     # Generate a list of variables
-    def genVarList(cls, bld, varPrefix = "")
-      separator = ""
+    def genVarList(cls, bld, varPrefix = '')
+      separator = ''
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.sameLine(separator)
-        bld.add("[" + XCTETSql::Utils.instance.getStyledVariableName(var, varPrefix) + "]")
-        separator = ","
+        bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, varPrefix) + ']')
+        separator = ','
       }))
     end
 
     def genAssignResults(cls, bld)
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.isList() && isPrimitive(var)
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.isList && isPrimitive(var)
           resultVal = 'results["' +
-                      XCTETSql::Utils.instance.getStyledVariableName(var, cls.varPrefix) + '"]'
-          objVar = "o." + XCTECSharp::Utils.instance.getStyledVariableName(var)
+                      XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) + '"]'
+          objVar = 'o.' + XCTECSharp::Utils.instance.get_styled_variable_name(var)
 
           if var.nullable
-            bld.add(objVar + " = " + resultVal + " == DBNull.Value ? null : Convert.To" +
-                    var.vtype + "(" + resultVal + ");")
+            bld.add(objVar + ' = ' + resultVal + ' == DBNull.Value ? null : Convert.To' +
+                    var.vtype + '(' + resultVal + ');')
           else
-            bld.add(objVar + " = Convert.To" +
-                    var.vtype + "(" + resultVal + ");")
+            bld.add(objVar + ' = Convert.To' +
+                    var.vtype + '(' + resultVal + ');')
           end
         end
       }))
@@ -302,18 +269,18 @@ module XCTECSharp
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
+            templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
+            if !templ.nil?
               templ.get_definition(cls, fun, nil, bld)
             else
-              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
+              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
           else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("csharp", "method_empty")
-            if templ != nil
+            templ = XCTEPlugin.findMethodPlugin('csharp', 'method_empty')
+            if !templ.nil?
               templ.get_definition(cls, fun, nil, bld)
             else
-              #puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
+              # puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
           end
 
@@ -324,16 +291,16 @@ module XCTECSharp
 
     def genNamespaceStart(namespace, bld)
       # Process namespace items
-      if namespace.hasItems?()
-        bld.startBlock("namespace " << namespace.get("."))
-      end
+      return unless namespace.hasItems?
+
+      bld.startBlock('namespace ' << namespace.get('.'))
     end
 
     def genNamespaceEnd(namespace, bld)
-      if namespace.hasItems?()
-        bld.endBlock(" // namespace " + namespace.get("."))
-        bld.add
-      end
+      return unless namespace.hasItems?
+
+      bld.endBlock(' // namespace ' + namespace.get('.'))
+      bld.add
     end
 
     def getLangugageProfile
@@ -341,22 +308,20 @@ module XCTECSharp
     end
 
     def getClassTypeName(cls)
-      nsPrefix = ""
-      if cls.namespace.hasItems?()
-        nsPrefix = cls.namespace.get(".") + "."
-      end
+      nsPrefix = ''
+      nsPrefix = cls.namespace.get('.') + '.' if cls.namespace.hasItems?
 
       baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
       baseTypeName = nsPrefix + baseTypeName
 
-      if (cls.templateParams.length > 0)
-        allParams = Array.new
+      if cls.templateParams.length > 0
+        allParams = []
 
         for param in cls.templateParams
           allParams.push(CodeNameStyling.getStyled(param.name, @langProfile.classNameStyle))
         end
 
-        baseTypeName += "<" + allParams.join(", ") + ">"
+        baseTypeName += '<' + allParams.join(', ') + '>'
       end
 
       return baseTypeName
@@ -364,18 +329,18 @@ module XCTECSharp
 
     # Retrieve the standard version of this model's class
     def getStandardClassInfo(cls)
-      cls.standardClass = cls.model.findClassModelByPluginName("standard")
+      cls.standardClass = cls.model.findClassModelByPluginName('standard')
 
-      if (cls.standardClass.namespace.hasItems?())
-        ns = cls.standardClass.namespace.get(".") + "."
+      if cls.standardClass.namespace.hasItems?
+        ns = cls.standardClass.namespace.get('.') + '.'
       else
-        ns = ""
+        ns = ''
       end
 
-      cls.standardClassType = ns + Utils.instance.getStyledClassName(cls.getUName())
+      cls.standardClassType = ns + Utils.instance.get_styled_class_name(cls.getUName)
 
-      if (cls.standardClass != nil && cls.standardClass.plugName != "enum")
-        cls.addInclude(cls.standardClass.namespace.get("/"), Utils.instance.getStyledClassName(cls.getUName()))
+      if !cls.standardClass.nil? && cls.standardClass.plugName != 'enum'
+        cls.addInclude(cls.standardClass.namespace.get('/'), Utils.instance.get_styled_class_name(cls.getUName))
       end
 
       return cls.standardClass

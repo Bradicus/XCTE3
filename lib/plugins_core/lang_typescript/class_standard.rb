@@ -8,31 +8,31 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require "plugins_core/lang_typescript/utils.rb"
-require "plugins_core/lang_typescript/x_c_t_e_typescript.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "code_elem_model.rb"
-require "lang_file.rb"
+require 'plugins_core/lang_typescript/utils'
+require 'plugins_core/lang_typescript/x_c_t_e_typescript'
+require 'code_elem'
+require 'code_elem_parent'
+require 'code_elem_model'
+require 'lang_file'
 
 module XCTETypescript
   class ClassStandard < ClassBase
     def initialize
-      @name = "standard"
-      @language = "typescript"
+      @name = 'standard'
+      @language = 'typescript'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName()
+    def get_unformatted_class_name(cls)
+      cls.getUName
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
@@ -41,17 +41,15 @@ module XCTETypescript
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     def process_dependencies(cls, bld)
       super
 
       # Generate class variables
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|        
-        if !Utils.instance.isPrimitive(var)
-          Utils.instance.tryAddIncludeForVar(cls, var, "standard")
-        end
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        Utils.instance.tryAddIncludeForVar(cls, var, 'standard') if !Utils.instance.isPrimitive(var)
       }))
     end
 
@@ -59,34 +57,26 @@ module XCTETypescript
       cfg = UserSettings.instance
       headerString = String.new
 
-      bld.add("/**")
-      bld.add("* @class " + cls.name)
+      bld.add('/**')
+      bld.add('* @class ' + cls.name)
 
-      if (cfg.codeAuthor != nil)
-        bld.add("* @author " + cfg.codeAuthor)
+      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+
+      bld.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+
+      bld.add("*\n* " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
+
+      bld.add('* ')
+
+      if !cls.description.nil?
+        cls.description.each_line do |descLine|
+          bld.add('* ' << descLine.chomp) if descLine.strip.size > 0
+        end
       end
 
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        bld.add("* " + cfg.codeCompany)
-      end
+      bld.add('*/')
 
-      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
-        bld.add("*\n* " + cfg.codeLicense)
-      end
-
-      bld.add("* ")
-
-      if (cls.description != nil)
-        cls.description.each_line { |descLine|
-          if descLine.strip.size > 0
-            bld.add("* " << descLine.chomp)
-          end
-        }
-      end
-
-      bld.add("*/")
-
-      return(headerString)
+      headerString
     end
 
     # Returns the code for the header for this class
@@ -96,10 +86,10 @@ module XCTETypescript
       bld.separate
 
       bld.separate
-      bld.startClass("export class " + getClassName(cls))
+      bld.startClass('export class ' + getClassName(cls))
 
       # Generate class variables
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
 
@@ -112,4 +102,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassStandard.new)
+XCTEPlugin.registerPlugin(XCTETypescript::ClassStandard.new)

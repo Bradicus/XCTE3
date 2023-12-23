@@ -10,32 +10,32 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require "plugins_core/lang_java/utils.rb"
-require "plugins_core/lang_java/x_c_t_e_java.rb"
-require "plugins_core/lang_java/class_base.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "code_elem_model.rb"
-require "lang_file.rb"
+require 'plugins_core/lang_java/utils'
+require 'plugins_core/lang_java/x_c_t_e_java'
+require 'plugins_core/lang_java/class_base'
+require 'code_elem'
+require 'code_elem_parent'
+require 'code_elem_model'
+require 'lang_file'
 
 module XCTEJava
   class ClassJpaEntity < ClassBase
     def initialize
-      @name = "class_jpa_entity"
-      @language = "java"
+      @name = 'class_jpa_entity'
+      @language = 'java'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName()
+    def get_unformatted_class_name(cls)
+      cls.getUName
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
 
       process_dependencies(cls, bld)
 
@@ -47,11 +47,11 @@ module XCTEJava
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     def process_dependencies(cls, bld)
-      cls.addUse("jakarta.persistence.*")
+      cls.addUse('jakarta.persistence.*')
       super
     end
 
@@ -59,40 +59,36 @@ module XCTEJava
     def genFileContent(cls, bld)
       bld.separate
       clsName = getClassName(cls)
-      tableName = XCTESql::Utils.instance.getStyledTableName(cls.getUName())
+      tableName = XCTESql::Utils.instance.getStyledTableName(cls.getUName)
 
-      bld.add("@Entity")
-      if (tableName != clsName)
-        bld.add('@Table(name="' + tableName + '")')
-      end
-      bld.startClass("public class " + clsName)
+      bld.add('@Entity')
+      bld.add('@Table(name="' + tableName + '")') if tableName != clsName
+      bld.startClass('public class ' + clsName)
 
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          bld.add("public static final int " + Utils.instance.getSizeConst(var) + " = " << var.arrayElemCount.to_s + ";")
+          bld.add('public static final int ' + Utils.instance.getSizeConst(var) + ' = ' << var.arrayElemCount.to_s + ';')
         end
       }))
 
-      if Utils.instance.hasAnArray(cls)
-        bld.separate
-      end
+      bld.separate if Utils.instance.hasAnArray(cls)
 
       # Generate class variables
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if (var.name == "id")
-          bld.add("@Id")
-          bld.add("@GeneratedValue(strategy=GenerationType.SEQUENCE)")
+      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.name == 'id'
+          bld.add('@Id')
+          bld.add('@GeneratedValue(strategy=GenerationType.SEQUENCE)')
           bld.add(Utils.instance.getVarDec(var))
         else
-          if var.relation != nil
-            if var.relation.start_with? "many-to-many"
-              bld.add("@ManyToMany(cascade = CascadeType.ALL)")
-            elsif var.relation.start_with? "many-to-one"
-              bld.add("@ManyToOne(cascade = CascadeType.ALL)")
-            elsif var.relation.start_with? "one-to-many"
-              bld.add("@OneToMany(cascade = CascadeType.ALL)")
-            elsif var.relation.start_with? "one-to-one"
-              bld.add("@OneToOne(cascade = CascadeType.ALL)")
+          if !var.relation.nil?
+            if var.relation.start_with? 'many-to-many'
+              bld.add('@ManyToMany(cascade = CascadeType.ALL)')
+            elsif var.relation.start_with? 'many-to-one'
+              bld.add('@ManyToOne(cascade = CascadeType.ALL)')
+            elsif var.relation.start_with? 'one-to-many'
+              bld.add('@OneToMany(cascade = CascadeType.ALL)')
+            elsif var.relation.start_with? 'one-to-one'
+              bld.add('@OneToOne(cascade = CascadeType.ALL)')
             end
           end
           bld.add(Utils.instance.getVarDec(var))
@@ -109,4 +105,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassJpaEntity.new)
+XCTEPlugin.registerPlugin(XCTEJava::ClassJpaEntity.new)

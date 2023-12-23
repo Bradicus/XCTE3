@@ -3,44 +3,44 @@
 # Author:: Brad Ottoson
 #
 
-require "plugins_core/lang_csharp/utils.rb"
-require "plugins_core/lang_csharp/class_base.rb"
-require "plugins_core/lang_csharp/source_renderer_csharp.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "lang_file.rb"
-require "x_c_t_e_plugin.rb"
+require 'plugins_core/lang_csharp/utils'
+require 'plugins_core/lang_csharp/class_base'
+require 'plugins_core/lang_csharp/source_renderer_csharp'
+require 'code_elem'
+require 'code_elem_parent'
+require 'lang_file'
+require 'x_c_t_e_plugin'
 
 module XCTECSharp
   class ClassTsqlDataStore < ClassBase
     def initialize
-      @name = "tsql_data_store"
-      @language = "csharp"
+      @name = 'tsql_data_store'
+      @language = 'csharp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName() + " data store"
+    def get_unformatted_class_name(cls)
+      cls.getUName + ' data store'
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       cls.setName(getClassName(cls))
 
-      if cls.interfaceNamespace.hasItems?()
-        cls.addUse(cls.interfaceNamespace.get("."), "I" + getUnformattedClassName(cls))
-        Utils.instance.addClassInclude(cls, "standard")
+      if cls.interfaceNamespace.hasItems?
+        cls.addUse(cls.interfaceNamespace.get('.'), 'I' + get_unformatted_class_name(cls))
+        Utils.instance.addClassInclude(cls, 'standard')
       end
 
       bld = SourceRendererCSharp.new
       bld.lfName = cls.name
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfExtension = Utils.instance.getExtension('body')
       genFileContent(cls, bld)
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     # Returns the code for the content for this class
@@ -49,22 +49,22 @@ module XCTECSharp
       Utils.instance.genUses(cls.uses, bld)
       Utils.instance.genNamespaceStart(cls.namespace, bld)
 
-      classDec = cls.model.visibility + " class " + cls.name
+      classDec = cls.model.visibility + ' class ' + cls.name
 
-      inheritsFrom = Array.new
+      inheritsFrom = []
 
       for baseClass in cls.baseClasses
         inheritsFrom << baseClass.name
       end
-      if cls.interfaceNamespace.hasItems?()
-        inheritsFrom << Utils.instance.getStyledClassName("i " + getUnformattedClassName(cls))
+      if cls.interfaceNamespace.hasItems?
+        inheritsFrom << Utils.instance.get_styled_class_name('i ' + get_unformatted_class_name(cls))
       end
 
       for par in (0..inheritsFrom.size)
-        if par == 0 && inheritsFrom[par] != nil
-          classDec << " : " << inheritsFrom[par]
-        elsif inheritsFrom[par] != nil
-          classDec << ", " << inheritsFrom[par]
+        if par == 0 && !inheritsFrom[par].nil?
+          classDec << ' : ' << inheritsFrom[par]
+        elsif !inheritsFrom[par].nil?
+          classDec << ', ' << inheritsFrom[par]
         end
       end
 
@@ -79,4 +79,4 @@ module XCTECSharp
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECSharp::ClassTsqlDataStore.new)
+XCTEPlugin.registerPlugin(XCTECSharp::ClassTsqlDataStore.new)

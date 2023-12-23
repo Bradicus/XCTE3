@@ -10,40 +10,40 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require "plugins_core/lang_ruby/x_c_t_e_ruby.rb"
-require "plugins_core/lang_ruby/utils.rb"
-require "plugins_core/lang_ruby/class_base.rb"
-require "x_c_t_e_plugin.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "code_elem_model.rb"
-require "lang_file.rb"
-require "log"
+require 'plugins_core/lang_ruby/x_c_t_e_ruby'
+require 'plugins_core/lang_ruby/utils'
+require 'plugins_core/lang_ruby/class_base'
+require 'x_c_t_e_plugin'
+require 'code_elem'
+require 'code_elem_parent'
+require 'code_elem_model'
+require 'lang_file'
+require 'log'
 
 module XCTERuby
   class ClassStandard < ClassBase
     def initialize
-      @name = "standard"
-      @language = "ruby"
+      @name = 'standard'
+      @language = 'ruby'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName()
+    def get_unformatted_class_name(cls)
+      cls.getUName
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
       genFileComment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     def genFileComment(cls, bld)
@@ -51,14 +51,12 @@ module XCTERuby
 
       bld.separate
 
-      bld.add("#")
+      bld.add('#')
 
-      if (cls.description != nil)
-        cls.description.each_line { |descLine|
-          if descLine.strip.size > 0
-            bld.add("# " + descLine.chomp)
-          end
-        }
+      return if cls.description.nil?
+
+      cls.description.each_line do |descLine|
+        bld.add('# ' + descLine.chomp) if descLine.strip.size > 0
       end
     end
 
@@ -67,32 +65,28 @@ module XCTERuby
       bld.separate
 
       for inc in cls.includes
-        bld.add("require '" << inc.path << inc.name << "." << Utils.instance.getExtension("body"))
+        bld.add("require '" << inc.path << inc.name << '.' << Utils.instance.getExtension('body'))
       end
 
       bld.separate
 
       render_namespace_starts(cls, bld)
 
-      inheritFrom = ""
+      inheritFrom = ''
 
-      if cls.baseClasses.length > 0
-        inheritFrom = " < " + Utils.instance.getClassTypeName(cls.baseClasses[0])
-      end
+      inheritFrom = ' < ' + Utils.instance.getClassTypeName(cls.baseClasses[0]) if cls.baseClasses.length > 0
 
-      if cls.baseClasses.length > 1
-        Log.error("Ruby doesn't support multiple inheritance")
-      end
+      Log.error("Ruby doesn't support multiple inheritance") if cls.baseClasses.length > 1
 
-      bld.startClass("class " + getClassName(cls) + inheritFrom)
+      bld.startClass('class ' + getClassName(cls) + inheritFrom)
 
       accessors = Accessors.new
       # Do automatic static array size declairations at top of class
       process_var_accessors(accessors, cls, bld, cls.model.varGroup)
 
-      add_accessors("attr_accessor", accessors.both, bld)
-      add_accessors("attr_attr_reader", accessors.readers, bld)
-      add_accessors("attr_attr_writer", accessors.writers, bld)
+      add_accessors('attr_accessor', accessors.both, bld)
+      add_accessors('attr_attr_reader', accessors.readers, bld)
+      add_accessors('attr_attr_writer', accessors.writers, bld)
 
       bld.separate
 
@@ -112,9 +106,7 @@ module XCTERuby
     # process variable group
     def process_var_accessors(accessors, cls, bld, vGroup)
       for var in vGroup.vars
-        if var.genGet || var.genSet
-          accessors.add(Accessor.new(var, var.genGet, var.genSet))
-        end
+        accessors.add(Accessor.new(var, var.genGet, var.genSet)) if var.genGet || var.genSet
 
         for group in vGroup.varGroups
           process_var_accessors(accessors, cls, bld, group)
@@ -123,20 +115,20 @@ module XCTERuby
     end
 
     def add_accessors(accName, accList, bld)
-      if accList.length > 0
-        bld.add(accName + " :")
-        bld.sameLine(get_accessor_var_list(accList).join(", :"))
-      end
+      return unless accList.length > 0
+
+      bld.add(accName + ' :')
+      bld.sameLine(get_accessor_var_list(accList).join(', :'))
     end
 
     def get_accessor_var_list(accList)
-      vList = Array.new
+      vList = []
 
       for acc in accList
-        vList.push(Utils.instance.getStyledVariableName(acc.var))
+        vList.push(Utils.instance.get_styled_variable_name(acc.var))
       end
 
-      return vList
+      vList
     end
 
     # process variable group
@@ -156,25 +148,25 @@ module XCTERuby
     end
 
     def process_function(cls, bld, fun)
-      if fun.elementId == CodeElem::ELEM_FUNCTION
-        if fun.isTemplate
-          templ = XCTEPlugin::findMethodPlugin("ruby", fun.name)
-          if templ != nil
-            bld.add(templ.get_definition(cls, cfg))
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
-          end
-        else # Must be empty function
-          templ = XCTEPlugin::findMethodPlugin("ruby", "method_empty")
-          if templ != nil
-            bld.add(templ.get_definition(fun, cfg))
-          else
-            #puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
-          end
+      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+
+      if fun.isTemplate
+        templ = XCTEPlugin.findMethodPlugin('ruby', fun.name)
+        if !templ.nil?
+          bld.add(templ.get_definition(cls, cfg))
+        else
+          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
+        end
+      else # Must be empty function
+        templ = XCTEPlugin.findMethodPlugin('ruby', 'method_empty')
+        if !templ.nil?
+          bld.add(templ.get_definition(fun, cfg))
+        else
+          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
         end
       end
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTERuby::ClassStandard.new)
+XCTEPlugin.registerPlugin(XCTERuby::ClassStandard.new)

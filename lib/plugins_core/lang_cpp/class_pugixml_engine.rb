@@ -7,76 +7,70 @@
 #
 # This class generates source files for a json_engine classes
 
-require "plugins_core/lang_cpp/utils.rb"
-require "plugins_core/lang_cpp/method_empty.rb"
-require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "lang_file.rb"
-require "x_c_t_e_plugin.rb"
-require "log"
+require 'plugins_core/lang_cpp/utils'
+require 'plugins_core/lang_cpp/method_empty'
+require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require 'code_elem'
+require 'code_elem_parent'
+require 'lang_file'
+require 'x_c_t_e_plugin'
+require 'log'
 
 module XCTECpp
   class ClassPugiXmlEngine < ClassBase
     def initialize
-      @name = "pugixml_engine"
-      @language = "cpp"
+      @name = 'pugixml_engine'
+      @language = 'cpp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName() + " pugi xml engine"
+    def get_unformatted_class_name(cls)
+      cls.getUName + ' pugi xml engine'
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "PugiXmlEngine")
-      hFile.lfExtension = Utils.instance.getExtension("header")
+      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName + 'PugiXmlEngine')
+      hFile.lfExtension = Utils.instance.getExtension('header')
       genHeaderComment(cls, hFile)
       genHeader(cls, hFile)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName() + "PugiXmlEngine")
-      cppFile.lfExtension = Utils.instance.getExtension("body")
+      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName + 'PugiXmlEngine')
+      cppFile.lfExtension = Utils.instance.getExtension('body')
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
 
       srcFiles << hFile
       srcFiles << cppFile
 
-      return srcFiles
+      srcFiles
     end
 
     def genHeaderComment(cls, hFile)
-      hFile.add("/**")
-      hFile.add("* @class " + getClassName(cls))
+      hFile.add('/**')
+      hFile.add('* @class ' + getClassName(cls))
 
-      if (cfg.codeAuthor != nil)
-        hFile.add("* @author " + cfg.codeAuthor)
+      hFile.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+
+      hFile.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+
+      if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
+        hFile.add('*')
+        hFile.add('* ' + cfg.codeLicense)
       end
 
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        hFile.add("* " + cfg.codeCompany)
+      hFile.add('* ')
+
+      if !cls.model.description.nil?
+        cls.model.description.each_line do |descLine|
+          hFile.add('* ' << descLine.strip) if descLine.strip.size > 0
+        end
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
-      end
-
-      hFile.add("* ")
-
-      if (cls.model.description != nil)
-        cls.model.description.each_line { |descLine|
-          if descLine.strip.size > 0
-            hFile.add("* " << descLine.strip)
-          end
-        }
-      end
-
-      hFile.add("*/")
+      hFile.add('*/')
     end
 
     # Returns the code for the header for this class
@@ -87,87 +81,77 @@ module XCTECpp
 
       # Generate function declarations
       for funItem in cls.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              templ.process_dependencies(cls, funItem, hFile)
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
+        if funItem.elementId == CodeElem::ELEM_FUNCTION && funItem.isTemplate
+          templ = XCTEPlugin.findMethodPlugin('cpp', funItem.name)
+          if !templ.nil?
+            templ.process_dependencies(cls, funItem, hFile)
+          else
+            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
           end
         end
       end
 
       process_dependencies(cls, bld)
 
-      if cls.includes.length > 0
-        hFile.add
-      end
+      hFile.add if cls.includes.length > 0
 
       # Process namespace items
-      if cls.namespace.hasItems?()
+      if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          hFile.startBlock("namespace " << nsItem)
+          hFile.startBlock('namespace ' << nsItem)
         end
         hFile.add
       end
 
       # Do automatic static array size declairations above class def
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          hFile.add("#define " << Utils.instance.getSizeConst(var) << " " << var.arrayElemCount.to_s)
+          hFile.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
         end
       }))
 
-      if Utils.instance.hasAnArray(cls)
-        hFile.separate
-      end
+      hFile.separate if Utils.instance.hasAnArray(cls)
 
-      classDec = "class " + cls.name
+      classDec = 'class ' + cls.name
 
       for par in (0..cls.baseClassModelManager.size)
-        nameSp = ""
-        if par == 0 && cls.baseClasses[par] != nil
-          classDec << " : "
-        elsif cls.baseClasses[par] != nil
-          classDec << ", "
+        nameSp = ''
+        if par == 0 && !cls.baseClasses[par].nil?
+          classDec << ' : '
+        elsif !cls.baseClasses[par].nil?
+          classDec << ', '
         end
 
-        if cls.baseClasses[par] != nil
-          if cls.baseClasses[par].namespace.hasItems?() && cls.baseClasses[par].namespace.nsList.size > 0
-            nameSp = cls.baseClasses[par].namespace.get("::") + "::"
+        if !cls.baseClasses[par].nil?
+          if cls.baseClasses[par].namespace.hasItems? && cls.baseClasses[par].namespace.nsList.size > 0
+            nameSp = cls.baseClasses[par].namespace.get('::') + '::'
           end
 
-          classDec << cls.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(cls.baseClasses[par].name)
+          classDec << cls.baseClasses[par].visibility << ' ' << nameSp << Utils.instance.get_styled_class_name(cls.baseClasses[par].name)
         end
       end
 
       hFile.startClass(classDec)
 
-      hFile.add("public:")
+      hFile.add('public:')
       hFile.indent
 
       # Generate class variables
 
-      Utils.instance.eachVar(UtilsEachVarParams.new().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.arrayElemCount > 0
-          hFile.add(Utils.instance.getVarDec(var))
-        end
+      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        hFile.add(Utils.instance.getVarDec(var)) if var.arrayElemCount > 0
       }))
 
-      if (cls.functions.length > 0)
-        hFile.add
-      end
+      hFile.add if cls.functions.length > 0
 
       # Generate function declarations
       for funItem in cls.functions
         if funItem.elementId == CodeElem::ELEM_FUNCTION
           if funItem.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", funItem.name)
-            if templ != nil
-              if (funItem.isInline)
+            templ = XCTEPlugin.findMethodPlugin('cpp', funItem.name)
+            if !templ.nil?
+              if funItem.isInline
                 templ.get_declaration_inline(cls, funItem, hFile)
               else
                 templ.get_declaration(cls, funItem, hFile)
@@ -176,9 +160,9 @@ module XCTECpp
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
           else # Must be an empty function
-            templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
-            if templ != nil
-              if (funItem.isInline)
+            templ = XCTEPlugin.findMethodPlugin('cpp', 'method_empty')
+            if !templ.nil?
+              if funItem.isInline
                 templ.get_declaration_inline(cls, funItem, hFile)
               else
                 templ.get_declaration(cls, funItem, hFile)
@@ -190,7 +174,7 @@ module XCTECpp
         elsif funItem.elementId == CodeElem::ELEM_COMMENT
           hFile.add(Utils.instance.getComment(funItem))
         elsif funItem.elementId == CodeElem::ELEM_FORMAT
-          if (funItem.formatText == "\n")
+          if funItem.formatText == "\n"
             hFile.add
           else
             hFile.sameLine(funItem.formatText)
@@ -205,33 +189,31 @@ module XCTECpp
       render_namespace_end(cls, hFile)
 
       hFile.separate
-      hFile.add("#endif")
+      hFile.add('#endif')
     end
 
     # Returns the code for the body for this class
     def genBody(cls, cppGen)
-      cppGen.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName()) << ".h\"")
+      cppGen.add('#include "' << Utils.instance.get_styled_class_name(cls.getUName) << '.h"')
       cppGen.add
 
       render_namespace_start(cls, cppGen)
 
       # Initialize static variables
-      varArray = Array.new
+      varArray = []
       cls.model.getAllVarsFor(varArray)
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
-          if var.isStatic
-            cppGen.add(Utils.instance.getTypeName(var) << " ")
-            cppGen.sameLine(Utils.instance.getStyledClassName(cls.getUName()) << " :: ")
-            cppGen.sameLine(Utils.instance.getStyledVariableName(var))
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.isStatic
+          cppGen.add(Utils.instance.getTypeName(var) << ' ')
+          cppGen.sameLine(Utils.instance.get_styled_class_name(cls.getUName) << ' :: ')
+          cppGen.sameLine(Utils.instance.get_styled_variable_name(var))
 
-            if var.arrayElemCount.to_i > 0 # This is an array
-              cppGen.sameLine("[" + Utils.instance.getSizeConst(var) << "]")
-            end
-
-            cppGen.sameLine(";")
+          if var.arrayElemCount.to_i > 0 # This is an array
+            cppGen.sameLine('[' + Utils.instance.getSizeConst(var) << ']')
           end
+
+          cppGen.sameLine(';')
         end
       end
 
@@ -241,24 +223,20 @@ module XCTECpp
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION
           if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("cpp", fun.name)
+            templ = XCTEPlugin.findMethodPlugin('cpp', fun.name)
 
-            Log.debug("processing template for function " + fun.name)
-            if templ != nil
-              if (!fun.isInline)
-                templ.get_definition(cls, fun, cppGen)
-              end
+            Log.debug('processing template for function ' + fun.name)
+            if !templ.nil?
+              templ.get_definition(cls, fun, cppGen) if !fun.isInline
             else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
+              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end
           else # Must be empty function
-            templ = XCTEPlugin::findMethodPlugin("cpp", "method_empty")
-            if templ != nil
-              if (!fun.isInline)
-                templ.get_definition(cls, fun, cppGen)
-              end
+            templ = XCTEPlugin.findMethodPlugin('cpp', 'method_empty')
+            if !templ.nil?
+              templ.get_definition(cls, fun, cppGen) if !fun.isInline
             else
-              #puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
+              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end
           end
         end
@@ -269,4 +247,4 @@ module XCTECpp
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECpp::ClassPugiXmlEngine.new)
+XCTEPlugin.registerPlugin(XCTECpp::ClassPugiXmlEngine.new)

@@ -7,66 +7,61 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
+require 'x_c_t_e_plugin'
 
 class XCTECSharp::MethodConstructor < XCTEPlugin
   def initialize
-    @name = "method_constructor"
-    @language = "csharp"
+    @name = 'method_constructor'
+    @language = 'csharp'
     @category = XCTEPlugin::CAT_METHOD
   end
 
   # Returns definition string for this class's constructor
   def get_definition(cls, bld, fun)
-    bld.add("///")
-    bld.add("/// Constructor")
-    bld.add("///")
+    bld.add('///')
+    bld.add('/// Constructor')
+    bld.add('///')
 
-    standardClassName = XCTECSharp::Utils.instance.getStyledClassName(cls.getUName())
+    standard_class_name = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
 
-    bld.startClass(standardClassName + "()")
+    bld.startClass(standard_class_name + '()')
 
     get_body(cls, bld, fun)
 
     bld.endClass
   end
 
-  def get_declairation(cls, bld, fun)
-    bld.add("public " + XCTECSharp::Utils.instance.getStyledClassName(cls.getUName()) + "();")
+  def get_declairation(cls, bld, _fun)
+    bld.add('public ' + XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName) + '();')
   end
 
   # No deps
-  def process_dependencies(cls, bld, fun)
-  end
+  def process_dependencies(cls, bld, fun); end
 
-  def get_body(cls, bld, fun)
+  def get_body(cls, bld, _fun)
     conDef = String.new
-    varArray = Array.new
+    varArray = []
     cls.model.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.defaultValue != nil
-          bld.add(var.name << " = ")
+      if var.elementId == CodeElem::ELEM_VARIABLE && !var.defaultValue.nil?
+        bld.add(var.name << ' = ')
 
-          if var.vtype == "String"
-            bld.sameLine('"' << var.defaultValue << '";')
-          else
-            bld.sameLine(var.defaultValue << ";")
-          end
-
-          if var.comment != nil
-            bld.sameLine("\t// " << var.comment)
-          end
-
-          bld.add
+        if var.vtype == 'String'
+          bld.sameLine('"' << var.defaultValue << '";')
+        else
+          bld.sameLine(var.defaultValue << ';')
         end
+
+        bld.sameLine("\t// " << var.comment) if !var.comment.nil?
+
+        bld.add
       end
     end
 
-    return(conDef)
+    conDef
   end
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTECSharp::MethodConstructor.new)
+XCTEPlugin.registerPlugin(XCTECSharp::MethodConstructor.new)

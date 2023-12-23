@@ -1,28 +1,28 @@
 ##
 # Class:: ClassAngularNavbar
 #
-require "active_component"
-require "navigation_node"
-require "managers/project_plan_manager"
+require 'active_component'
+require 'navigation_node'
+require 'managers/project_plan_manager'
 
 module XCTETypescript
   class ClassAngularNavbar < ClassBase
     def initialize
-      @name = "class_angular_navbar"
-      @language = "typescript"
+      @name = 'class_angular_navbar'
+      @language = 'typescript'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName() + " component"
+    def get_unformatted_class_name(cls)
+      cls.getUName + ' component'
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + ".component")
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + '.component')
+      bld.lfExtension = Utils.instance.getExtension('body')
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
@@ -32,107 +32,100 @@ module XCTETypescript
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
-    def process_dependencies(cls, bld)
-      cls.addInclude("@angular/core", "Component")
+    def process_dependencies(cls, _bld)
+      cls.addInclude('@angular/core', 'Component')
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld)
-    end
+    def genFileComment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      filePart = Utils.instance.getStyledFileName(cls.getUName())
+      filePart = Utils.instance.getStyledFileName(cls.getUName)
 
-      bld.startClass("class NavNode")
-      bld.add("name: string;")
-      bld.add("url: string | null;")
-      bld.add("children: NavNode[] = [];")
+      bld.startClass('class NavNode')
+      bld.add('name: string;')
+      bld.add('url: string | null;')
+      bld.add('children: NavNode[] = [];')
 
-      bld.startFunction("constructor(name: string, url: string | null)")
+      bld.startFunction('constructor(name: string, url: string | null)')
 
-      bld.add("this.name = name;")
-      bld.add("this.url = url;")
+      bld.add('this.name = name;')
+      bld.add('this.url = url;')
       bld.endFunction
       bld.endBlock
       bld.separate
 
-      bld.add("@Component({")
+      bld.add('@Component({')
       bld.indent
       bld.add("selector: 'app-" + filePart + "',")
       bld.add("templateUrl: './" + filePart + ".component.html',")
       bld.add("styleUrls: ['./" + filePart + ".component.css']")
       bld.unindent
-      bld.add("})")
+      bld.add('})')
 
-      bld.startClass("export class " + getClassName(cls))
+      bld.startClass('export class ' + getClassName(cls))
 
       bld.add('public navNode:NavNode = new NavNode("", null);')
-      bld.add "collapsed = true;"
+      bld.add 'collapsed = true;'
       bld.separate
 
-      bld.startFunction("constructor()")
+      bld.startFunction('constructor()')
 
-      features = Hash.new
-      rootNode = NavigationNode.new("", "/")
+      features = {}
+      rootNode = NavigationNode.new('', '/')
 
-      for mdl in ProjectPlanManager.current().models
+      for mdl in ProjectPlanManager.current.models
         for otherCls in mdl.classes
-          if (otherCls.plugName.start_with?("class_angular_listing"))
-            plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
+          if otherCls.plugName.start_with?('class_angular_listing')
+            plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
 
             featureName = otherCls.featureGroup
-            if featureName == nil
-              featureName = cls.model.name
-            end
+            featureName = cls.model.name if featureName.nil?
 
             formattedFeatureName = featureName.capitalize
             curNode = findChildNode(rootNode, formattedFeatureName)
 
-            if curNode == nil
+            if curNode.nil?
               curNode = NavigationNode.new(formattedFeatureName, nil)
               rootNode.children.push(curNode)
             end
 
-            editPath = plug.get_full_route(otherCls, "listing")
-            curNode.children.push(NavigationNode.new(formattedFeatureName + " listing", editPath))
-          elsif otherCls.plugName.start_with?("class_angular_reactive_edit")
-            plug = XCTEPlugin::findClassPlugin("typescript", otherCls.plugName)
+            editPath = plug.get_full_route(otherCls, 'listing')
+            curNode.children.push(NavigationNode.new(formattedFeatureName + ' listing', editPath))
+          elsif otherCls.plugName.start_with?('class_angular_reactive_edit')
+            plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
 
             featureName = otherCls.featureGroup
-            if featureName == nil
-              featureName = cls.model.name
-            end
+            featureName = cls.model.name if featureName.nil?
 
-            if cls.variant != nil
-              featureName = cls.variant + " " + featureName
-            end
+            featureName = cls.variant + ' ' + featureName if !cls.variant.nil?
 
             formattedFeatureName = featureName.capitalize
             curNode = findChildNode(rootNode, formattedFeatureName)
 
-            if curNode == nil
+            if curNode.nil?
               curNode = NavigationNode.new(formattedFeatureName, nil)
               rootNode.children.push(curNode)
             end
 
-            editPath = plug.get_full_route(otherCls, "edit")
-            curNode.children.push(NavigationNode.new(featureName.capitalize + " create", editPath))
+            editPath = plug.get_full_route(otherCls, 'edit')
+            curNode.children.push(NavigationNode.new(featureName.capitalize + ' create', editPath))
           end
         end
       end
 
-      bld.add "var newNode: NavNode;"
-      bld.add "var cNode: NavNode;"
+      bld.add 'var newNode: NavNode;'
+      bld.add 'var cNode: NavNode;'
 
       for nd in rootNode.children
-        renderAddNodeLine(bld, nd, "newNode", "this.navNode")
+        renderAddNodeLine(bld, nd, 'newNode', 'this.navNode')
 
         for cnd in nd.children
-          renderAddNodeLine(bld, cnd, "cNode", "newNode")
+          renderAddNodeLine(bld, cnd, 'cNode', 'newNode')
         end
       end
 
@@ -140,35 +133,33 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startFunction "addNode(toNode: NavNode, name: string, link: string | null)"
-      bld.add "var newNode = new NavNode(name, link);"
-      bld.add "toNode.children.push(newNode);"
-      bld.add "return newNode;"
+      bld.startFunction 'addNode(toNode: NavNode, name: string, link: string | null)'
+      bld.add 'var newNode = new NavNode(name, link);'
+      bld.add 'toNode.children.push(newNode);'
+      bld.add 'return newNode;'
       bld.endFunction
 
       bld.endClass
     end
 
     def findChildNode(rootNode, formattedFeatureName)
-      if rootNode.children != nil
+      if !rootNode.children.nil?
         for node in rootNode.children
-          if node.name == formattedFeatureName
-            return node
-          end
+          return node if node.name == formattedFeatureName
         end
       end
 
-      return nil
+      nil
     end
 
     def renderAddNodeLine(bld, nd, assignTo, addToNode)
-      if nd.link != nil
-        bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", "' + nd.link + '");')
+      if !nd.link.nil?
+        bld.add(assignTo + ' = this.addNode(' + addToNode + ', "' + nd.name + '", "' + nd.link + '");')
       else
-        bld.add(assignTo + " = this.addNode(" + addToNode + ', "' + nd.name + '", null);')
+        bld.add(assignTo + ' = this.addNode(' + addToNode + ', "' + nd.name + '", null);')
       end
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::ClassAngularNavbar.new)
+XCTEPlugin.registerPlugin(XCTETypescript::ClassAngularNavbar.new)

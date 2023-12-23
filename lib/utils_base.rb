@@ -5,9 +5,9 @@
 #
 # This class contains utility functions useful for all languages.
 
-require "lang_profile.rb"
-require "params/process_dependencies_params"
-require "log"
+require 'lang_profile'
+require 'params/process_dependencies_params'
+require 'log'
 
 class UtilsBase
   attr_accessor :langProfile
@@ -15,87 +15,85 @@ class UtilsBase
   def initialize(langName)
     @langProfile = LangProfiles.instance.profiles[langName]
 
-    if (@langProfile == nil)
-      Log.debug("Profile " + langName + " not found")
-    end
+    return unless @langProfile.nil?
+
+    Log.debug('Profile ' + langName + ' not found')
   end
 
   # Returns true if this is a primitive data type
   def isPrimitive(var)
-    return @langProfile.isPrimitive(var)
+    @langProfile.isPrimitive(var)
   end
 
   # Return the language type based on the generic type
   def getTypeName(var)
-    if (var.vtype != nil)
-      return @langProfile.getTypeName(var.vtype)
-    else
-      return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
-    end
+    return @langProfile.getTypeName(var.vtype) if !var.vtype.nil?
+
+    CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
   end
 
   # Return the language type based on the generic type
   def getType(gType)
-    return @langProfile.getType(gType)
+    @langProfile.getType(gType)
   end
 
   # Returns the version of this name styled for this language
-  def getStyledVariableName(var, prefix = "", postfix = "")
-    return CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
+  def get_styled_variable_name(var, prefix = '', postfix = '')
+    CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
   end
 
   def getStyledFunctionName(funName)
-    return CodeNameStyling.getStyled(funName, @langProfile.functionNameStyle)
+    CodeNameStyling.getStyled(funName, @langProfile.functionNameStyle)
   end
 
   # Returns the version of this class name styled for this language
-  def getStyledClassName(className)
-    return CodeNameStyling.getStyled(className, @langProfile.classNameStyle)
+  def get_styled_class_name(className)
+    CodeNameStyling.getStyled(className, @langProfile.classNameStyle)
   end
 
   # Returns the version of this class name styled for this language
   def getStyledNamespaceName(nsName)
-    return CodeNameStyling.getStyled(nsName, @langProfile.classNameStyle)
+    CodeNameStyling.getStyled(nsName, @langProfile.classNameStyle)
   end
 
   def getStyledEnumName(enumName)
-    return CodeNameStyling.getStyled(enumName, @langProfile.enumNameStyle)
+    CodeNameStyling.getStyled(enumName, @langProfile.enumNameStyle)
   end
 
   # Returns the version of this file name styled for this language
   def getStyledFileName(fileName)
-    return CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
+    CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
   end
 
   # Returns the version of this file name styled for this language
   def getStyledPathName(pathName)
-    return CodeNameStyling.getStyled(pathName, @langProfile.fileNameStyle)
+    CodeNameStyling.getStyled(pathName, @langProfile.fileNameStyle)
   end
 
   # Get the extension for a file type
   def getExtension(eType)
-    return @langProfile.getExtension(eType)
+    @langProfile.getExtension(eType)
   end
 
   # Create a variable with a type cls
   def createVarFor(cls, plugName)
     plugClass = cls.model.findClassModel(plugName)
-    plug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
+    plug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
 
-    if (plugClass == nil)
-      Log.debug("Class not found for " + plugName)
+    if plugClass.nil?
+      Log.debug('Class not found for ' + plugName)
       return nil
     end
-    if (plug == nil)
-      Log.debug("Plugin not found for " + plugName)
+    if plug.nil?
+      Log.debug('Plugin not found for ' + plugName)
       return nil
     end
 
     newVar = CodeStructure::CodeElemVariable.new(nil)
-    newVar.utype = plug.getUnformattedClassName(plugClass)
+    newVar.utype = plug.get_unformatted_class_name(plugClass)
     newVar.name = newVar.utype
 
-    return newVar
+    newVar
   end
 
   # Run a function on each variable in a class
@@ -108,24 +106,18 @@ class UtilsBase
     for var in vGroup.vars
       if var.elementId == CodeElem::ELEM_VARIABLE
         varFun.call(var)
-      elsif bld != nil && var.elementId == CodeElem::ELEM_COMMENT
+      elsif !bld.nil? && var.elementId == CodeElem::ELEM_COMMENT
         bld.sameLine(getComment(var))
-      elsif bld != nil && var.elementId == CodeElem::ELEM_FORMAT
+      elsif !bld.nil? && var.elementId == CodeElem::ELEM_FORMAT
         bld.add(var.formatText)
       end
     end
 
     for grp in vGroup.varGroups
-      if (bgCb != nil)
-        bgCb.call(grp)
-      end
+      bgCb.call(grp) if !bgCb.nil?
       eachVarGrp(grp, bld, separateGroups, varFun, bgCb, agCb)
-      if (agCb != nil)
-        agCb.call(grp)
-      end
-      if (separateGroups && bld != nil)
-        bld.separate
-      end
+      agCb.call(grp) if !agCb.nil?
+      bld.separate if separateGroups && !bld.nil?
     end
   end
 
@@ -135,13 +127,11 @@ class UtilsBase
       if clsFun.elementId == CodeElem::ELEM_FUNCTION
         params.bld.separate
 
-        if clsFun.isTemplate
-          params.funCb.call(clsFun)
-        end
+        params.funCb.call(clsFun) if clsFun.isTemplate
       elsif funItem.elementId == CodeElem::ELEM_COMMENT
         bld.add(Utils.instance.getComment(funItem))
       elsif funItem.elementId == CodeElem::ELEM_FORMAT
-        if (funItem.formatText == "\n")
+        if funItem.formatText == "\n"
           bld.add
         else
           bld.sameLine(funItem.formatText)
@@ -149,7 +139,7 @@ class UtilsBase
       elsif funItem.elementId == CodeElem::ELEM_COMMENT
         bld.add(getComment(funItem))
       elsif funItem.elementId == CodeElem::ELEM_FORMAT
-        if (funItem.formatText == "\n")
+        if funItem.formatText == "\n"
           bld.add
         else
           bld.sameLine(funItem.formatText)
@@ -160,44 +150,42 @@ class UtilsBase
 
   # Add an include if there's a class model defined for it
   def tryAddIncludeFor(cls, plugName)
-    clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
+    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
     clsGen = cls.model.findClassModel(plugName)
 
-    if clsPlug != nil && clsGen != nil
-      cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(cls))
-    end
+    return unless !clsPlug.nil? && !clsGen.nil?
+
+    cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(cls))
   end
 
   # Add an include if there's a class model defined for it
   def tryAddIncludeForVar(cls, var, plugName)
-    clsPlug = XCTEPlugin::findClassPlugin(@langProfile.name, plugName)
-    clsGen = ClassModelManager.findClass(var.getUType(), plugName)
+    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
+    clsGen = ClassModelManager.findClass(var.getUType, plugName)
 
-    if clsPlug != nil && clsGen != nil && !isSelfReference(cls, var, clsPlug)
-      cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
-    end
+    return unless !clsPlug.nil? && !clsGen.nil? && !isSelfReference(cls, var, clsPlug)
+
+    cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
   end
 
   def isSelfReference(cls, var, clsPlug)
-    varUType = var.getUType()
-    classUType = clsPlug.getUnformattedClassName(cls)
-    return varUType == classUType
+    varUType = var.getUType
+    classUType = clsPlug.get_unformatted_class_name(cls)
+    varUType == classUType
   end
 
   def render_param_list(pList)
-    oneLiner = pList.join(", ")
-    if pList.length > 100
-      return pList.join(", ")
-    end
+    oneLiner = pList.join(', ')
+    return unless pList.length > 100
+
+    pList.join(', ')
   end
 
   def hasAnArray(cls)
-    eachVar(UtilsEachVarParams.new().wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-      if var.arrayElemCount > 0
-        return true
-      end
+    eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+      true if var.arrayElemCount > 0
     }))
 
-    return false
+    false
   end
 end

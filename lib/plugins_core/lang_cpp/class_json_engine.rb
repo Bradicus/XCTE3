@@ -7,79 +7,73 @@
 #
 # This class generates source files for a json_engine classes
 
-require "plugins_core/lang_cpp/utils.rb"
-require "plugins_core/lang_cpp/method_empty.rb"
-require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "lang_file.rb"
-require "x_c_t_e_plugin.rb"
+require 'plugins_core/lang_cpp/utils'
+require 'plugins_core/lang_cpp/method_empty'
+require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require 'code_elem'
+require 'code_elem_parent'
+require 'lang_file'
+require 'x_c_t_e_plugin'
 
 module XCTECpp
   class ClassJsonEngine < ClassBase
     def initialize
-      @name = "json_engine"
-      @language = "cpp"
+      @name = 'json_engine'
+      @language = 'cpp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName() + " json engine"
+    def get_unformatted_class_name(cls)
+      cls.getUName + ' json engine'
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
-      cls.setName(getUnformattedClassName(cls))
+      cls.setName(get_unformatted_class_name(cls))
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
-      bld.lfExtension = Utils.instance.getExtension("header")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + 'JsonEngine')
+      bld.lfExtension = Utils.instance.getExtension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName() + "JsonEngine")
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + 'JsonEngine')
+      bld.lfExtension = Utils.instance.getExtension('body')
       genHeaderComment(cls, bld)
       genBody(cls, bld)
 
       srcFiles << bld
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     def genHeaderComment(cls, bld)
       cfg = UserSettings.instance
 
-      bld.add("/**")
-      bld.add("* @class " + Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine"))
+      bld.add('/**')
+      bld.add('* @class ' + Utils.instance.get_styled_class_name(cls.getUName + 'JsonEngine'))
 
-      if (cfg.codeAuthor != nil)
-        bld.add("* @author " + cfg.codeAuthor)
+      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+
+      bld.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+
+      if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
+        bld.add('*')
+        bld.add('* ' + cfg.codeLicense)
       end
 
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        bld.add("* " + cfg.codeCompany)
+      bld.add('* ')
+
+      if !cls.model.description.nil?
+        cls.model.description.each_line do |descLine|
+          bld.add('* ' << descLine.strip) if descLine.strip.size > 0
+        end
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
-        bld.add("*")
-        bld.add("* " + cfg.codeLicense)
-      end
-
-      bld.add("* ")
-
-      if (cls.model.description != nil)
-        cls.model.description.each_line { |descLine|
-          if descLine.strip.size > 0
-            bld.add("* " << descLine.strip)
-          end
-        }
-      end
-
-      bld.add("*/")
+      bld.add('*/')
     end
 
     # Returns the code for the header for this class
@@ -91,40 +85,38 @@ module XCTECpp
       render_fun_dependencies(cls, bld)
       render_dependencies(cls, bld)
 
-      if cls.includes.length > 0
-        bld.add
-      end
+      bld.add if cls.includes.length > 0
 
       # Process namespace items
-      if cls.namespace.hasItems?()
+      if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          bld.startBlock("namespace " << nsItem)
+          bld.startBlock('namespace ' << nsItem)
         end
         bld.add
       end
 
-      classDec = "class " + Utils.instance.getDerivedClassPrefix(cls)
+      classDec = 'class ' + Utils.instance.getDerivedClassPrefix(cls)
 
       for par in (0..cls.baseClassModelManager.size)
-        nameSp = ""
-        if par == 0 && cls.baseClasses[par] != nil
-          classDec << " : "
-        elsif cls.baseClasses[par] != nil
-          classDec << ", "
+        nameSp = ''
+        if par == 0 && !cls.baseClasses[par].nil?
+          classDec << ' : '
+        elsif !cls.baseClasses[par].nil?
+          classDec << ', '
         end
 
-        if cls.baseClasses[par] != nil
-          if cls.baseClasses[par].namespace.hasItems?() && cls.baseClasses[par].namespace.nsList.size > 0
-            nameSp = cls.baseClasses[par].namespace.get("::") + "::"
+        if !cls.baseClasses[par].nil?
+          if cls.baseClasses[par].namespace.hasItems? && cls.baseClasses[par].namespace.nsList.size > 0
+            nameSp = cls.baseClasses[par].namespace.get('::') + '::'
           end
 
-          classDec << cls.baseClasses[par].visibility << " " << nameSp << Utils.instance.getStyledClassName(cls.baseClasses[par].name)
+          classDec << cls.baseClasses[par].visibility << ' ' << nameSp << Utils.instance.get_styled_class_name(cls.baseClasses[par].name)
         end
       end
 
       bld.startClass(classDec)
 
-      bld.add("public:")
+      bld.add('public:')
       bld.indent
 
       render_function_declairations(cls, bld)
@@ -134,19 +126,19 @@ module XCTECpp
       bld.endClass
 
       # Process namespace items
-      if cls.namespace.hasItems?()
+      if cls.namespace.hasItems?
         cls.namespace.nsList.reverse_each do |nsItem|
-          bld.endBlock("  // namespace " << nsItem)
+          bld.endBlock('  // namespace ' << nsItem)
         end
         bld.add
       end
 
-      bld.add("#endif")
+      bld.add('#endif')
     end
 
     # Returns the code for the body for this class
     def genBody(cls, bld)
-      bld.add("#include \"" << Utils.instance.getStyledClassName(cls.getUName() + "JsonEngine") << '.h"')
+      bld.add('#include "' << Utils.instance.get_styled_class_name(cls.getUName + 'JsonEngine') << '.h"')
       bld.add
 
       render_namespace_start(cls, bld)
@@ -156,4 +148,4 @@ module XCTECpp
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECpp::ClassJsonEngine.new)
+XCTEPlugin.registerPlugin(XCTECpp::ClassJsonEngine.new)

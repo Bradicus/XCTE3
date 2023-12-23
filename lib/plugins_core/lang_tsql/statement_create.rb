@@ -8,84 +8,75 @@
 # This plugin generates a create statement for a database based
 # on this class
 
-require "x_c_t_e_plugin.rb"
-require "plugins_core/lang_tsql/class_base"
+require 'x_c_t_e_plugin'
+require 'plugins_core/lang_tsql/class_base'
 
 module XCTETSql
   class StatementCreate < ClassBase
     def initialize
-      @name = "statement_create"
-      @language = "tsql"
+      @name = 'statement_create'
+      @language = 'tsql'
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName()
+    def get_unformatted_class_name(cls)
+      cls.getUName
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererTSql.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
 
       genFileComment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld)
-    end
+    def genFileComment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      sqlCDef = Array.new
+      sqlCDef = []
       first = true
 
-      bld.add("CREATE TABLE [" + cls.name + "] (")
+      bld.add('CREATE TABLE [' + cls.name + '] (')
       bld.indent
 
       # Generate code for class variables
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !var.hasManyToManyRelation()
-          if !first
-            bld.sameLine(", ")
-          end
+      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !var.hasManyToManyRelation
+          bld.sameLine(', ') if !first
           first = false
 
           varDec = XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix)
-          if varDec != nil && varDec.strip().length > 0
-            bld.add(varDec)
-          end
+          bld.add(varDec) if !varDec.nil? && varDec.strip.length > 0
 
-          if var.defaultValue != nil
-            bld.sameLine(" default '" << var.defaultValue << "'")
-          end
+          bld.sameLine(" default '" << var.defaultValue << "'") if !var.defaultValue.nil?
         end
       }))
 
-      primKeys = Array.new
+      primKeys = []
 
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.isPrimary == true
-          primKeys << "[" + Utils.instance.getStyledVariableName(var, cls.varPrefix) + "]"
-        end
+      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        primKeys << '[' + Utils.instance.get_styled_variable_name(var, cls.varPrefix) + ']' if var.isPrimary == true
       }))
 
       if primKeys.length > 0
-        bld.sameLine(",")
-        bld.add("PRIMARY KEY (" + primKeys.join(", ") + ")")
+        bld.sameLine(',')
+        bld.add('PRIMARY KEY (' + primKeys.join(', ') + ')')
       end
 
       bld.unindent
-      bld.add(") ")
+      bld.add(') ')
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETSql::StatementCreate.new)
+XCTEPlugin.registerPlugin(XCTETSql::StatementCreate.new)

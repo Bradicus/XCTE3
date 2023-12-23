@@ -10,83 +10,74 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require "plugins_core/lang_csharp/utils.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "lang_file.rb"
-require "x_c_t_e_plugin.rb"
+require 'plugins_core/lang_csharp/utils'
+require 'code_elem'
+require 'code_elem_parent'
+require 'lang_file'
+require 'x_c_t_e_plugin'
 
 module XCTECSharp
   class EnumStandard < XCTEPlugin
     def initialize
-      @name = "enum"
-      @language = "csharp"
+      @name = 'enum'
+      @language = 'csharp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName()
+    def get_unformatted_class_name(cls)
+      cls.getUName
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
-      cls.setName(getUnformattedClassName(cls))
+      cls.setName(get_unformatted_class_name(cls))
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName())
-      hFile.lfExtension = Utils.instance.getExtension("header")
+      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName)
+      hFile.lfExtension = Utils.instance.getExtension('header')
       genHeaderComment(cls, hFile)
       getBody(cls, hFile)
 
       srcFiles << hFile
 
-      return srcFiles
+      srcFiles
     end
 
     def genHeaderComment(cls, hFile)
-      hFile.add("/**")
-      hFile.add("* @enum " + cls.getUName())
+      hFile.add('/**')
+      hFile.add('* @enum ' + cls.getUName)
 
-      if (cfg.codeAuthor != nil)
-        hFile.add("* @author " + cfg.codeAuthor)
+      hFile.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+
+      hFile.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+
+      if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
+        hFile.add('*')
+        hFile.add('* ' + cfg.codeLicense)
       end
 
-      if cfg.codeCompany != nil && cfg.codeCompany.size > 0
-        hFile.add("* " + cfg.codeCompany)
+      hFile.add('* ')
+
+      if !cls.model.description.nil?
+        cls.model.description.each_line do |descLine|
+          hFile.add('* ' << descLine.strip) if descLine.strip.size > 0
+        end
       end
 
-      if cfg.codeLicense != nil && cfg.codeLicense.strip.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
-      end
-
-      hFile.add("* ")
-
-      if (cls.model.description != nil)
-        cls.model.description.each_line { |descLine|
-          if descLine.strip.size > 0
-            hFile.add("* " << descLine.strip)
-          end
-        }
-      end
-
-      hFile.add("*/")
+      hFile.add('*/')
     end
 
     # Returns the code for the header for this class
     def getBody(cls, hFile)
-
       # Add in any dependencies required by functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-            if templ != nil
-              templ.process_dependencies(cls, bld, fun)
-            else
-              puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
-            end
+        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
+          templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
+          if !templ.nil?
+            templ.process_dependencies(cls, bld, fun)
+          else
+            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end
         end
       end
@@ -94,12 +85,12 @@ module XCTECSharp
       Utils.instance.genUses(cls.uses, bld)
       Utils.instance.genNamespaceStart(cls.namespace, bld)
 
-      classDec = cls.model.visibility + " enum  " + getClassName(cls)
+      classDec = cls.model.visibility + ' enum  ' + getClassName(cls)
 
       hFile.startBlock(classDec)
 
       # Generate class variables
-      varArray = Array.new
+      varArray = []
 
       for vGrp in cls.model.groups
         cls.model.getAllVarsFor(varArray)
@@ -109,12 +100,8 @@ module XCTECSharp
         var = varArray[i]
         if var.elementId == CodeElem::ELEM_VARIABLE
           hFile.add(Utils.instance.getStyledEnumName(var.name))
-          if (var.defaultValue != nil)
-            hFile.sameLine(" = " + var.defaultValue)
-          end
-          if i != varArray.length - 1
-            hFile.sameLine(",")
-          end
+          hFile.sameLine(' = ' + var.defaultValue) if !var.defaultValue.nil?
+          hFile.sameLine(',') if i != varArray.length - 1
         elsif var.elementId == CodeElem::ELEM_COMMENT
           hFile.add(Utils.instance.getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
@@ -122,19 +109,19 @@ module XCTECSharp
         end
       end
 
-      hFile.endBlock(";")
+      hFile.endBlock(';')
 
       # Process namespace items
-      if cls.namespace.hasItems?()
+      if cls.namespace.hasItems?
         cls.namespace.nsList.reverse_each do |nsItem|
-          hFile.endBlock("  // namespace " << nsItem)
+          hFile.endBlock('  // namespace ' << nsItem)
         end
         hFile.add
       end
 
-      hFile.add("#endif")
+      hFile.add('#endif')
     end
   end
 end
 
-XCTEPlugin::registerPlugin(XCTECSharp::EnumStandard.new)
+XCTEPlugin.registerPlugin(XCTECSharp::EnumStandard.new)

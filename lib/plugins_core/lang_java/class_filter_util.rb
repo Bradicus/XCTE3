@@ -10,32 +10,32 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require "plugins_core/lang_java/utils.rb"
-require "plugins_core/lang_java/x_c_t_e_java.rb"
-require "plugins_core/lang_java/class_base.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "code_elem_model.rb"
-require "lang_file.rb"
+require 'plugins_core/lang_java/utils'
+require 'plugins_core/lang_java/x_c_t_e_java'
+require 'plugins_core/lang_java/class_base'
+require 'code_elem'
+require 'code_elem_parent'
+require 'code_elem_model'
+require 'lang_file'
 
 module XCTEJava
   class ClassFilterUtil < ClassBase
     def initialize
-      @name = "class_filter_util"
-      @language = "java"
+      @name = 'class_filter_util'
+      @language = 'java'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName()
+    def get_unformatted_class_name(cls)
+      cls.getUName
     end
 
     def genSourceFiles(cls)
-      srcFiles = Array.new
+      srcFiles = []
 
       bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.getStyledFileName(getUnformattedClassName(cls))
-      bld.lfExtension = Utils.instance.getExtension("body")
+      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.getExtension('body')
 
       process_dependencies(cls, bld)
 
@@ -47,12 +47,12 @@ module XCTEJava
 
       srcFiles << bld
 
-      return srcFiles
+      srcFiles
     end
 
     def process_dependencies(cls, bld)
-      cls.addUse("org.springframework.data.domain.PageRequest")
-      cls.addUse("org.springframework.data.domain.Sort")
+      cls.addUse('org.springframework.data.domain.PageRequest')
+      cls.addUse('org.springframework.data.domain.Sort')
 
       super
     end
@@ -61,7 +61,7 @@ module XCTEJava
     def genFileContent(cls, bld)
       cfg = UserSettings.instance
 
-      bld.startClass("public class Filter")
+      bld.startClass('public class Filter')
 
       render_functions(cls, bld)
 
@@ -70,4 +70,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassFilterUtil.new)
+XCTEPlugin.registerPlugin(XCTEJava::ClassFilterUtil.new)

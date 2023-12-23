@@ -14,10 +14,10 @@
 		<var name="zip code"		type="String" maxlen="20" required="true" />
 	</var_group>
 
-	<paging pager="server">
+	<filters pager="server">
 		<sort defaultVar="id" defaultOrder="" />
 		<page_filter sizes="5, 25, 50, 100" default="5" />
-	</paging>
+	</filters>
 
 	<class_group_ref name="data store server" />
 	<class_group_ref name="data store client" />

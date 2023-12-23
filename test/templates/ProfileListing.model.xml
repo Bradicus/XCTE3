@@ -22,11 +22,12 @@
 			</var_group>
 		</var_group>
 
-		<paging pager="server">
+		<filters pager="server">
 			<sort defaultVar="id" defaultOrder="" />
 			<search type="shared" columns="first name, last name, email"/>
+			<static_filter column="active" value="true" />
 			<page_filter sizes="5, 25, 50, 100" default="5" />
-		</paging>
+		</filters>
 
 	<class_group_ref name="data store client" />
 

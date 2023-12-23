@@ -8,23 +8,23 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require "plugins_core/lang_java/utils.rb"
-require "plugins_core/lang_java/x_c_t_e_java.rb"
-require "code_elem.rb"
-require "code_elem_parent.rb"
-require "code_elem_model.rb"
-require "lang_file.rb"
+require 'plugins_core/lang_java/utils'
+require 'plugins_core/lang_java/x_c_t_e_java'
+require 'code_elem'
+require 'code_elem_parent'
+require 'code_elem_model'
+require 'lang_file'
 
 module XCTEJava
   class ClassFilteredDatasetReqTpl < ClassBase
     def initialize
-      @name = "class_filtered_dataset_req_tpl"
-      @language = "java"
+      @name = 'class_filtered_dataset_req_tpl'
+      @language = 'java'
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getUnformattedClassName(cls)
-      return cls.getUName() + " req tpl"
+    def get_unformatted_class_name(cls)
+      cls.getUName + ' req tpl'
     end
 
     # Returns the code for the header for this class
@@ -32,12 +32,12 @@ module XCTEJava
       headerString = String.new
 
       bld.separate
-      bld.startClass("public class " + getClassName(cls) + "<T>")
+      bld.startClass('public class ' + getClassName(cls) + '<T>')
 
-      model = InternalClassModelManager.findModel("page request")
+      model = InternalClassModelManager.findModel('page request')
 
       # Generate class variables
-      eachVar(uevParams().wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      eachVar(uevParams.wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
 
@@ -46,4 +46,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin::registerPlugin(XCTEJava::ClassFilteredDatasetReqTpl.new)
+XCTEPlugin.registerPlugin(XCTEJava::ClassFilteredDatasetReqTpl.new)

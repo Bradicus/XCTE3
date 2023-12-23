@@ -7,52 +7,53 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
-require "code_name_styling.rb"
-require "plugins_core/lang_csharp/utils.rb"
+require 'x_c_t_e_plugin'
+require 'code_name_styling'
+require 'plugins_core/lang_csharp/utils'
 
 module XCTECSharp
   class MethodSave < XCTEPlugin
     def initialize
-      @name = "method_save"
-      @language = "csharp"
+      @name = 'method_save'
+      @language = 'csharp'
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns definition string for this class's constructor
     def get_definition(cls, bld, fun)
-      bld.add("///")
-      bld.add("/// Save all components of this object")
-      bld.add("///")
+      bld.add('///')
+      bld.add('/// Save all components of this object')
+      bld.add('///')
 
-      bld.startFunction("public void Save()")
+      bld.startFunction('public void Save()')
 
       get_body(cls, bld, fun)
 
       bld.endFunction
     end
 
-    def get_declairation(cls, bld, fun)
-      bld.add("void Save();")
+    def get_declairation(_cls, bld, _fun)
+      bld.add('void Save();')
     end
 
-    def process_dependencies(cls, bld, fun)
-      cls.addUse("System", "Exception")
-      cls.addUse("System.Data.SqlClient", "SqlConnection")
+    def process_dependencies(cls, _bld, _fun)
+      cls.addUse('System', 'Exception')
+      cls.addUse('System.Data.SqlClient', 'SqlConnection')
     end
 
-    def get_body(cls, bld, fun)
+    def get_body(cls, bld, _fun)
       conDef = String.new
-      varArray = Array.new
+      varArray = []
       cls.model.getAllVarsFor(varArray)
 
-      bld.add("_conn.Open();")
+      bld.add('_conn.Open();')
 
       for var in varArray
-        if (Utils.instance.isPrimitive(var) == false)
-          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, "tsql_engine", "method_tsql_create")
-          if varCreateFun != nil
-            bld.add("_" + Utils.instance.getStyledVariableName(var, "") + ".Create(o);")
+        if Utils.instance.isPrimitive(var) == false
+          varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, 'tsql_engine',
+                                                                'method_tsql_create')
+          if !varCreateFun.nil?
+            bld.add('_' + Utils.instance.get_styled_variable_name(var, '') + '.Create(o);')
           end
         end
       end
@@ -61,4 +62,4 @@ module XCTECSharp
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTECSharp::MethodSave.new)
+XCTEPlugin.registerPlugin(XCTECSharp::MethodSave.new)
