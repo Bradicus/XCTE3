@@ -10,13 +10,13 @@ require 'filters/static_filter'
 
 module Filters
   class DataFilter
-    attr_accessor :paging, :search, :sort, :static_filter
+    attr_accessor :paging, :search, :sort, :static_filters
 
     def initialize
       @paging = PagingFilter.new
       @search = SearchFilter.new
       @sort = SortFilter.new
-      @static_filter = nil
+      @static_filters = []
     end
   end
 end

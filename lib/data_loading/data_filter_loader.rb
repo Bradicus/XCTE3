@@ -49,7 +49,7 @@ module DataLoading
         static_filter = Filters::StaticFilter.new
         static_filter.column = AttributeLoader.init(xmlNode).names('column').get
         static_filter.value = AttributeLoader.init(xmlNode).names('value').get
-        data_filter.static_filter = static_filter
+        data_filter.static_filters.push(static_filter)
       end
     end
   end

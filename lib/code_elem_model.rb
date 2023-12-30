@@ -99,6 +99,16 @@ module CodeStructure
       return(@name + '.h')
     end
 
+    def get_var_by_name(var_name)
+      vars = getFilteredVars(->(var) { var.name == var_name })
+
+      if !vars.empty?
+        return vars[0]
+      end
+
+      return null
+    end
+
     def getFilteredVars(filterFun)
       varArray = []
       getFilteredGroup(@varGroup, varArray, filterFun)

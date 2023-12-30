@@ -177,7 +177,7 @@ module XCTETypescript
       bld.startBlock('onSearch(event: any)')
       bld.add 'this.pageReq.searchValue = event.target.value;'
 
-      if cls.model.data_filter.search.columns.empty?
+      if !cls.model.data_filter.search.columns.empty?
         subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search)
         bld.add 'this.' + subjectVar.name + '.next(event.target.value);'
       end

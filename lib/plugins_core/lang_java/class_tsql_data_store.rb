@@ -49,7 +49,9 @@ module XCTEJava
     def genFileContent(cls, bld)
       idVar = cls.model.getFilteredVars(->(var) { var.name == 'id' })
 
-      Log.error('Missing id var') if idVar.nil?
+      if idVar.nil?
+        Log.error('Missing id var')
+      end
 
       bld.startClass('public interface ' + getClassName(cls) + ' extends JpaRepository<' +
                      Utils.instance.get_styled_class_name(cls.model.name) + ', ' +
@@ -61,10 +63,18 @@ module XCTEJava
 
       bld.separate
 
-      fun = Utils.instance.get_search_fun(cls, cls.model.data_filter.search.columns)
+      data_class = cls.model.findClassModelByPluginName('class_jpa_entity')
 
-      if fun.parameters.vars.length > 1
-        bld.render_function_declairation(fun)
+      if !data_class.nil?
+        related_classes = ClassModelManager.find_classes_with_data_model(data_class)
+
+        for related_class in related_classes
+          fun = Utils.instance.get_search_fun(cls, related_class.model.data_filter.search.columns)
+
+          if fun.parameters.vars.length > 1 || !related_class.model.data_filter.static_filters.empty?
+            bld.render_function_declairation(fun)
+          end
+        end
       end
 
       bld.separate

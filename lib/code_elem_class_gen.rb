@@ -20,7 +20,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
-                  :genCfg, :injections, :dataClass, :featureGroup, :variant, :classGroupRef, :actions
+                  :genCfg, :injections, :dataClass, :featureGroup, :variant, :classGroupRef, :actions, :data_class_for
     attr_reader :name
 
     def initialize(parentElem, model, pComp, _isStatic)

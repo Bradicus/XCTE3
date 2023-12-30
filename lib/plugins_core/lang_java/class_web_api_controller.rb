@@ -107,7 +107,7 @@ module XCTEJava
       mapperName = 'mapper'
 
       if !cls.dataClass.nil?
-        mapperClassName = Utils.instance.get_styled_class_name(cls.dataClass.className + ' mapper')
+        mapperClassName = Utils.instance.get_styled_class_name(cls.dataClass.model_name + ' mapper')
         bld.separate
         bld.add(mapperClassName + ' ' + mapperName + ' = Mappers.getMapper( ' + mapperClassName + '.class );')
         bld.separate

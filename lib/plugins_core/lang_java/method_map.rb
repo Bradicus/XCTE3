@@ -43,7 +43,7 @@ module XCTEJava
       param = MapParam.new
 
       param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements[elemName], nil, cls.genCfg)
-      param.cls = ClassModelManager.findClass(param.ref.className, param.ref.pluginName)
+      param.cls = ClassModelManager.findClass(param.ref.model_name, param.ref.plugin_name)
       param.name = Utils.instance.get_styled_class_name(param.cls.getUName)
 
       return param

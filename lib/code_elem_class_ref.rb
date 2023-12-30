@@ -6,21 +6,32 @@
 ## This class stores information for the parent code structure
 # read in from an xml file
 
-require "code_elem.rb"
-require "code_elem_include.rb"
-require "code_elem_use.rb"
-require "code_elem_namespace.rb"
+require 'code_elem'
+require 'code_elem_include'
+require 'code_elem_use'
+require 'code_elem_namespace'
+require 'managers/name_compare'
 
 module CodeStructure
   class CodeElemClassRef < CodeElem
-    attr_accessor :namespaces, :className, :pluginName
+    attr_accessor :namespaces, :model_name, :plugin_name
 
-    @namespaces = Array.new()
-    @className = nil
-    @pluginName = nil
-
-    def initialize(parentElem, pComp)
+    def initialize(parentElem, _pComp)
       super(parentElem)
+
+      @namespaces = []
+      @model_name = nil
+      @plugin_name = nil
+    end
+
+    def matchesRef(ref)
+      return NameCompare.matches(@model_name, ref.model_name) && NameCompare.matches(@plugin_name, ref.plugin_name)
+    end
+
+    def matches(other_model_name, other_plugin_name)
+      puts 'comparing ' +  @model_name + ' and ' + other_model_name
+      puts 'comparing ' +  @plugin_name + ' and ' + other_plugin_name
+      return NameCompare.matches(@model_name, other_model_name) && NameCompare.matches(@plugin_name, other_plugin_name)
     end
   end
 end

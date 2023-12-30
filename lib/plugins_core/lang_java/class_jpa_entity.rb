@@ -21,6 +21,8 @@ require 'lang_file'
 module XCTEJava
   class ClassJpaEntity < ClassBase
     def initialize
+      super
+
       @name = 'class_jpa_entity'
       @language = 'java'
       @category = XCTEPlugin::CAT_CLASS
