@@ -1,0 +1,40 @@
+<project>
+<!--  <generate language="csharp" tpl_path="templates" dest="./csharp_razor" /> -->
+  <generate language="typescript" tpl_path="templates" dest="./angular/src/app">
+    <xdep name="angular" version="14">
+      <validation name="basic" />
+    </xdep>
+    <build_vars>
+      <build_var name="DataModelPlugin" value="class_standard" />
+      <build_var name="DtoModelPath" value="shared/dto/model" />
+      <build_var name="DtoModelNs" value="" />
+      <build_var name="ServicesPath" value="shared/services" />
+      <build_var name="EditModelPath" value="shared/interfaces" />
+    </build_vars>
+  </generate>
+  <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
+    <xdep name="bootstrap" version="5" />
+    <xdep name="angular" version="14">
+      <validation name="basic" />
+    </xdep>
+  </generate>
+  <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
+  <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" >
+    <xdep name="spring-boot" version="3" />
+    <logging logger="slf4j" />
+    <build_vars>
+      <build_var name="ControllerNs" value="com.example.demo.api" />
+      <build_var name="ControllerPath" value="api" />
+      <build_var name="DataModelNs" value="com.example.demo.db_model" />
+      <build_var name="DtoModelNs" value="com.example.demo.dto" />
+      <build_var name="DataModelPlugin" value="class_jpa_entity" />
+      <build_var name="DataModelPath" value="db_model" />
+      <build_var name="DtoModelPath" value="dto" />
+      <build_var name="EditModelPath" value="dto" />
+      <build_var name="EditModelNs" value="com.example.demo.dto" />
+    </build_vars>
+  </generate>
+  <generate language="tsql" tpl_path="templates" dest="./SqlScripts" />
+
+  <custom_lang_profiles path="lang_profiles" />
+</project>

@@ -18,5 +18,9 @@ module Filters
       @sort = SortFilter.new
       @static_filters = []
     end
+
+    def has_non_paging_filters?
+      return !@static_filters.empty? || !@search.columns.empty?
+    end
   end
 end

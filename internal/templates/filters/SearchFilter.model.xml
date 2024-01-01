@@ -9,6 +9,7 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true">
+		<var name="name"		type="string" default="search" />
 		<var name="type"		type="string" default="shared" />
 		<var name="columns"	type="int32" set="List" default="[]" />
 	</var_group>		

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="profile user" feature_group="profile">
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id" identity="(1,1)" type="Int64" pkey="true" />
+		<var_group>
+			<var name="first name" type="String" maxlen="255" required="true" />
+			<var name="last name" type="String" maxlen="255" required="true" />
+			<var name="email" type="String" maxlen="255" required="true" />
+		</var_group>
+		<var_group>
+			<var name="created date" type="DateTime" readonly="true" />
+			<var name="last login date" type="DateTime" readonly="true" />
+			<var name="mailing address" type="Address" ns="{DtoModelNs}" rel="one-to-one" store_in="address" />
+			<var name="physical address" type="Address" ns="{DtoModelNs}" rel="one-to-one" store_in="address" />
+			<!--<var name="role options" type="Role" set="List" options="true" />-->
+			<var name="themeId" type="Int64" select_from="theme" rel="one-to-one-shared" />
+			<!--<var name="theme options" type="Theme" set="List" options="true" />-->
+		</var_group>
+	</var_group>
+
+	<gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" />
+
+	<class_group_ref name="view" feature_group="profile" roles="user" />
+	<class_group_ref name="data store client" />
+
+	<class_group_ref name="edit" feature_group="profile" roles="admin" />
+
+	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
+		<data_class cname="profile" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
+		<function name="method_web_api_read_one" />
+		<function name="method_web_api_write_one" />
+		<function name="method_web_api_update_one" />
+	</gen_class>
+</model>

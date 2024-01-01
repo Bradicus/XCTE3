@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="permission">
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id" identity="(1,1)" type="Int64" maxlen="10" pkey="true" />
+		<var name="code" type="String" maxlen="50" />
+		<var name="description" type="String" />
+	</var_group>
+
+	<class_group_ref name="data store server w delete" />
+	<class_group_ref name="data store client w delete" />
+	<class_group_ref name="view" feature_group="permission" />
+	<class_group_ref name="edit" feature_group="permission" />
+
+		<gen_class type="class_angular_listing"
+		  name="!{FeatureGroup} listing"
+		  path="!{FeatureGroup}/!{FeatureGroup} listing"
+			feature_group="permission">
+			<search_by name="code"/>
+			<search_by name="description"/>
+			<paging
+				pager="server"
+				sizes="10,20,50"/>
+			<actions>
+				<action name="view" link="/!{FeatureGroup}/!{FeatureGroup}-view" role="user"/>
+				<action name="edit" link="/!{FeatureGroup}/!{FeatureGroup}-edit" role="admin" />
+				<action name="delete" trigger="delete" role="admin" />
+			</actions>
+		</gen_class>
+
+	<gen_class type="class_angular_module" path="permission" />
+	<gen_class type="class_angular_module_routing" path="permission" />
+
+	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
+		<function name="method_web_api_read_one" />
+		<function name="method_web_api_write_one" />
+		<function name="method_web_api_update_one" />
+		<function name="method_web_api_read_many" />
+		<function name="method_web_api_delete_one" />
+	</gen_class>
+</model>

@@ -4,6 +4,8 @@
 module XCTEJava
   class ClassTsqlDataStore < ClassBase
     def initialize
+      super
+
       @name = 'tsql_data_store'
       @language = 'java'
       @category = XCTEPlugin::CAT_CLASS
@@ -47,15 +49,15 @@ module XCTEJava
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      idVar = cls.model.getFilteredVars(->(var) { var.name == 'id' })
+      id_var = cls.model.getFilteredVars(->(var) { var.name == 'id' })
 
-      if idVar.nil?
+      if id_var.nil?
         Log.error('Missing id var')
       end
 
       bld.startClass('public interface ' + getClassName(cls) + ' extends JpaRepository<' +
                      Utils.instance.get_styled_class_name(cls.model.name) + ', ' +
-                     Utils.instance.getObjTypeName(idVar[0]) + '>')
+                     Utils.instance.getObjTypeName(id_var[0]) + '>')
 
       bld.separate
       # Generate class variables
@@ -69,9 +71,19 @@ module XCTEJava
         related_classes = ClassModelManager.find_classes_with_data_model(data_class)
 
         for related_class in related_classes
-          fun = Utils.instance.get_search_fun(cls, related_class.model.data_filter.search.columns)
+          if related_class.model.data_filter.has_non_paging_filters?
+            fun = Utils.instance.get_search_fun(cls, related_class)
 
-          if fun.parameters.vars.length > 1 || !related_class.model.data_filter.static_filters.empty?
+            if Utils.instance.needs_search_fun_declaration?(fun, related_class)
+              bld.render_function_declairation(fun)
+            end
+          end
+        end
+
+        if related_class.nil?
+          fun = Utils.instance.get_search_fun(cls, cls)
+
+          if Utils.instance.needs_search_fun_declaration?(fun, cls)
             bld.render_function_declairation(fun)
           end
         end

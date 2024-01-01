@@ -5,9 +5,10 @@
 
 module Filters
   class SearchFilter
-    attr_accessor :type, :columns
+    attr_accessor :type, :columns, :name
 
     def initialize
+      @name = 'search'
       @type = 'shared'
       @columns = []
     end

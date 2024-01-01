@@ -2586,7 +2586,7 @@ Metrics/BlockNesting:
   VersionAdded: '0.25'
   VersionChanged: '0.47'
   CountBlocks: false
-  Max: 3
+  Max: 4
 
 Metrics/ClassLength:
   Description: 'Avoid classes longer than 100 lines of code.'
@@ -4283,7 +4283,7 @@ Style/MethodCallWithArgsParentheses:
 Style/MethodCallWithoutArgsParentheses:
   Description: 'Do not use parentheses for method calls with no arguments.'
   StyleGuide: '#method-invocation-parens'
-  Enabled: true
+  Enabled: false
   AllowedMethods: []
   AllowedPatterns: []
   VersionAdded: '0.47'

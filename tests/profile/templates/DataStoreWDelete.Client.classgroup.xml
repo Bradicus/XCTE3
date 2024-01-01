@@ -1,0 +1,26 @@
+<class_group name="data store client w delete">
+
+    <gen_class type="standard" path="{DtoModelPath}" ns="{DtoModelNs}" lang_only="typescript">
+    </gen_class>
+
+      	<gen_class type="class_angular_data_store_service" path="{ServicesPath}">
+        		<function name="method_angular_service_detail" />
+        		<function name="method_angular_service_create" />
+        		<function name="method_angular_service_update" />
+        		<function name="method_angular_service_delete" />
+          	<function name="method_angular_service_listing" />
+      	</gen_class>
+
+      	<gen_class type="class_angular_data_map_service" path="{ServicesPath}">
+      		  <function name="method_datamap_model_to_reactive_form" />
+      	</gen_class>
+
+      	<gen_class type="class_angular_data_gen_service" path="{ServicesPath}">
+      		  <function name="method_service_datagen_faker_get" />
+      	</gen_class>
+
+      	<gen_class type="class_filter_util" name="filter" path="util" ns="com.example.demo.util">
+      		  <function name="method_pagerequest_filter" />
+      		  <function name="method_sort_filter" />
+      	</gen_class>
+</class_group>

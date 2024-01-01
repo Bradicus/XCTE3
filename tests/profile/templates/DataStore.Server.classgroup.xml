@@ -1,0 +1,17 @@
+<class_group name="data store server">
+  	<!-- Java -->
+    <gen_class type="class_jpa_entity" path="{DataModelPath}" ns="{DataModelNs}">
+    	<use-csharp name="System.Collections.Generic" />
+    	<use-java name='java.time.*' />
+    	<use-java name='java.util.*' />
+    </gen_class>
+
+    <gen_class type="tsql_data_store" path="data" ns="com.example.demo.data" >
+    	<function name="method_tsql_create" interface="true" />
+    	<function name="method_tsql_update" interface="true" />    
+    	<function name="method_tsql_retrieve_all" interface="true" />
+    	<function name="method_tsql_retrieve_one_by" interface="true">
+    		<var_ref name="id" />
+    	</function>
+    </gen_class>
+</class_group>

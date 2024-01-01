@@ -1,0 +1,9 @@
+<class_group name="listing">
+
+  	<!-- Angular -->
+    <gen_class type="class_angular_listing"
+      name="!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}"
+      path="!{FeatureGroup}/!{FeatureGroup} !{ClassGroupName} !{ClassGroupVariant}">
+    </gen_class>
+
+</class_group>

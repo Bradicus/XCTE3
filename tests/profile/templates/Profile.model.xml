@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="profile" feature_group="profile">
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id" identity="(1,1)" type="Int64" pkey="true" />
+		<var_group>
+			<var name="first name" type="String" maxlen="255" required="true" />
+			<var name="last name" type="String" maxlen="255" required="true" />
+			<var name="pusername" type="String" maxlen="255" readonly="true"/>
+			<var name="email" type="String" maxlen="255" required="true" />
+		</var_group>
+		<var_group>
+			<var name="created date" type="DateTime" readonly="true" />
+			<var name="last login date" type="DateTime" readonly="true" />
+			<var name="mailing address" type="Address" rel="one-to-one" store_in="address" />
+			<var name="physical address" type="Address" rel="one-to-one" store_in="address" />
+			<var name="roles" type="Role" tpl="List" select_from="role" rel="many-to-many" />
+			<!--<var name="role options" type="Role" set="List" options="true" />-->
+			<var name="theme" type="Theme" select_from="theme" rel="one-to-one-shared" />
+			<!--<var name="theme options" type="Theme" set="List" options="true" />-->
+			<var name="active" type="Boolean" />
+		</var_group>
+	</var_group>
+
+	<paging pager="server">
+		<sort defaultVar="id" defaultOrder="" />
+		<search type="shared" columns="first name, last name, email"/>
+		<page_filter sizes="5, 25, 50, 100" default="5" />
+	</paging>
+
+	<class_group_ref name="data store server" />
+
+	<gen_class type="class_angular_module" path="profile" />
+	<gen_class type="class_angular_module_routing" path="profile" />
+
+	<gen_class type="class_mapper_dozer" path="mapper" ns="com.example.demo.mapper">
+		<function name="method_map" gen_reverse="true">
+			<fromClass cname="profile user" plugin="standard" />
+			<toClass cname="profile" plugin="{DataModelPlugin}" />
+		</function>
+		<function name="method_map" gen_reverse="true">
+			<fromClass cname="profile admin" plugin="standard" />
+			<toClass cname="profile" plugin="{DataModelPlugin}" />
+		</function>
+			<function name="method_map" gen_list_map="true">
+				<fromClass cname="profile" plugin="{DataModelPlugin}" />
+				<toClass cname="profile listing" plugin="standard" />
+			</function>
+	</gen_class>
+</model>

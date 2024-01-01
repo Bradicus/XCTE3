@@ -116,8 +116,8 @@ module XCTEJava
       bld.add 'PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);'
       bld.add 'Page<' + Utils.instance.get_styled_class_name(dataClass.getUName) + '> items;'
 
-      if cls.model.data_filter.search.columns.length > 0
-        fun = Utils.instance.get_search_fun(cls, cls.model.data_filter.search.columns)
+      if cls.model.data_filter.has_non_paging_filters?
+        fun = Utils.instance.get_search_fun(dataClass, cls)
         paramVars = []
 
         paramVars.push('pageRequest')

@@ -247,82 +247,103 @@ module XCTEJava
       end
     end
 
-    def get_search_fun(cls, searchColNames)
+    def get_search_fun(cls, filtered_class)
       fun = CodeStructure::CodeElemFunction.new(nil)
 
-      if !cls.dataClass.nil?
-        dataClass = ClassModelManager.findClass(cls.dataClass.model_name, cls.dataClass.plugin_name)
-        pageReqVar = createVarFor(dataClass, dataClass.plugName)
+      if !filtered_class.dataClass.nil?
+        data_class = ClassModelManager.findClass(filtered_class.dataClass.model_name, filtered_class.dataClass.plugin_name)
+        pageReqVar = createVarFor(data_class, data_class.plugName)
       else
-        dataClass = cls
-        pageReqVar = createVarFor(dataClass, 'class_jpa_entity')
+        data_class = cls
+        pageReqVar = createVarFor(data_class, 'class_jpa_entity')
       end
 
-      throw('could not find class_jpa_entity for ' + dataClass.model.name) if pageReqVar.nil?
+      throw('could not find class_jpa_entity for ' + data_class.model.name) if pageReqVar.nil?
 
       pageReqVar.templates.push(CodeStructure::CodeElemTemplate.new('Page'))
       fun.returnValue = pageReqVar
 
-      colNameCointain = []
+      col_name_cointain = []
       pageVar = CodeStructure::CodeElemVariable.new(nil)
       pageVar.name = 'pageRequest'
       pageVar.vtype = 'PageRequest'
       fun.add_param(pageVar)
 
-      if cls.model.data_filter.search.columns.length > 0 && !cls.model.data_filter.static_filters.empty?
-        tableVar = CodeNameStyling.getStyled(dataClass.model.name, XCTETSql::Utils.instance.langProfile.variableNameStyle)
-        talbeName = CodeNameStyling.getStyled(dataClass.model.name, XCTETSql::Utils.instance.langProfile.classNameStyle)
+      if needs_custom_query? filtered_class.model.data_filter
+        tableVar = CodeNameStyling.getStyled(data_class.model.name, XCTETSql::Utils.instance.langProfile.variableNameStyle)
+        talbeName = CodeNameStyling.getStyled(data_class.model.name, XCTETSql::Utils.instance.langProfile.classNameStyle)
         query = 'SELECT ' + tableVar + ' FROM ' + talbeName
-        query += ' WHERE ' + tableVar + '.' + cls.model.data_filter.static_filters[0].column + ' = '
-        query += cls.model.data_filter.static_filters[0].value
+        query += ' WHERE '
 
-        if searchColNames.length > 0
+        if !filtered_class.model.data_filter.static_filters.empty?
+          staticCompares = []
+          for filter in filtered_class.model.data_filter.static_filters
+            staticCompares.push(get_styled_class_name(filter.column) + "='" + filter.value + "'")
+          end
+        end
+
+        if !filtered_class.model.data_filter.search.columns.empty?
           searchCompares = []
-          for col in searchColNames
-            searchCompares.push(get_styled_class_name(col) + "LIKE '%:searchValue%")
+          for col in filtered_class.model.data_filter.search.columns
+            col_var = data_class.model.get_var_by_name(col)
+            searchCompares.push(get_styled_class_name(col) + " LIKE '%:searchValue%")
+            fun.add_param(col_var)
           end
 
-          query += ' AND (' + searchCompares.join(' OR ') + ')'
+          query += '(' + staticCompares.join(' OR ') + ') AND (' + searchCompares.join(' OR ') + ')'
         end
 
         fun.annotations.push('@Query("' + query + '")')
-        fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.static_filters[0].column)
+        fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.search.name)
       else
-        for col in searchColNames
-          colVar = dataClass.model.get_var_by_name(col)
+        for col in filtered_class.model.data_filter.search.columns
+          col_var = data_class.model.get_var_by_name(col)
 
-          if colVar.nil?
+          if col_var.nil?
             throw('Could not find column variable named ' + col)
           end
 
-          if colVar.getUType == 'boolean'
-            colNameCointain.push(get_styled_class_name(col) + 'Contains')
-          else
-            colNameCointain.push(get_styled_class_name(col) + 'Contains')
-          end
-
-          fun.add_param(colVar)
+          add_jpa_function_part_for(col_name_cointain, col_var, nil)
+          fun.add_param(col_var)
         end
 
-        for static_filter in cls.model.data_filter.static_filters
-          colVar = dataClass.model.get_var_by_name(static_filter.column)
-
-          if !colVar.nil? && colVar.getUType == 'boolean'
-            colNameCointain.push(get_styled_class_name(static_filter.column) + static_filter.value.capitalize)
-          else
-            colNameCointain.push(get_styled_class_name(static_filter.column) + 'Contains')
-          end
+        for static_filter in filtered_class.model.data_filter.static_filters
+          static_filter_var = data_class.model.get_var_by_name(static_filter.column)
+          add_jpa_function_part_for(col_name_cointain, static_filter_var, static_filter)
         end
 
-        fun.name = 'findBy' + colNameCointain.join('Or')
+        fun.name = 'findBy' + col_name_cointain.join('Or')
         # else # Statif filter but no search filter
         #   fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.static_filters[0].column)
-        #   searchVar = dataClass.dataClass.model.get_var_by_name(cls.model.data_filter.static_filters[0].column)
+        #   searchVar = data_class.data_class.model.get_var_by_name(cls.model.data_filter.static_filters[0].column)
         #   if !searchVar.nil? && searchVar.getUType == 'boolean'
         #     fun.name += value.capitalize
       end
 
       return fun
+    end
+
+    def needs_search_fun_declaration?(fun, filtered_class)
+      return fun.parameters.vars.length > 1 ||
+             !filtered_class.model.data_filter.static_filters.empty? ||
+             fun.parameters.has_bool_param?
+    end
+
+    def needs_custom_query?(data_filter)
+      return !data_filter.search.columns.empty? && !data_filter.static_filters.empty?
+    end
+
+    def add_jpa_function_part_for(col_name_cointain, filter_var, static_filter)
+      if !filter_var.nil? && filter_var.getUType == 'boolean'
+        if !static_filter.nil?
+          value_text = static_filter.value.capitalize
+        else
+          value_text = ''
+        end
+        col_name_cointain.push(get_styled_class_name(filter_var.name) + value_text)
+      else
+        col_name_cointain.push(get_styled_class_name(filter_var.name) + 'Contains')
+      end
     end
 
     def render_fun_call(_bld, _fun)

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="address">
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="id"	identity="(1,1)"	type="Int64" pkey="true" />
+		<var name="street 1"	type="String" maxlen="50" required="true" />
+		<var name="street 2"	type="String" maxlen="50" />
+		<var name="city"	type="String" maxlen="50" required="true" />
+		<var name="state"	type="String" maxlen="2" required="true" />
+		<var name="country"	type="String" maxlen="50" required="true" />
+		<var name="zip code"		type="String" maxlen="20" required="true" />
+	</var_group>
+
+	<filters pager="server">
+		<sort defaultVar="id" defaultOrder="" />
+		<page_filter sizes="5, 25, 50, 100" default="5" />
+	</filters>
+
+	<class_group_ref name="data store server" />
+	<class_group_ref name="data store client" />
+	<class_group_ref name="edit" feature_group="address" role="admin" />
+	<class_group_ref name="listing" feature_group="address" />
+
+	<gen_class type="class_angular_module" path="address" />
+	<gen_class type="class_angular_module_routing" path="address" />
+
+	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
+		<function name="method_web_api_read_one" />
+		<function name="method_web_api_read_many">
+			 <sort />
+			 <column_filter />
+			 <page_filter sizes="5, 25, 50, 100" default="25" />
+			 <search_filter />
+		</function>
+		<function name="method_web_api_write_one" />
+		<function name="method_web_api_update_one" />
+	</gen_class>
+
+</model>
