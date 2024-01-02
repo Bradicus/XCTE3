@@ -188,7 +188,7 @@ module XCTETypescript
 
       for act in cls.actions
         if !act.trigger.nil?
-          triggerFun = Utils.instance.getStyledFunctionName('on ' + act.trigger)
+          triggerFun = Utils.instance.get_styled_function_name('on ' + act.trigger)
           if act.trigger == 'delete'
             bld.startBlock(triggerFun + '(item: ' + standard_class_name + ')')
             bld.add 'this.' + Utils.instance.get_styled_variable_name(userServiceVar) + '.' + act.trigger + '(item)'

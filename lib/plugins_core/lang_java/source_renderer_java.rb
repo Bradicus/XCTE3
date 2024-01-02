@@ -46,7 +46,7 @@ class SourceRendererJava < SourceRendererBraceDelim
       add get_utils.get_styled_class_name(typeName) + ' '
     end
 
-    sameLine get_utils.getStyledFunctionName(fun.name) + '(' + paramStrings.join(', ') + ');'
+    sameLine get_utils.get_styled_function_name(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
 
   def render_function_call(assignTo, callFrom, fun, paramStrings)
@@ -56,6 +56,6 @@ class SourceRendererJava < SourceRendererBraceDelim
       assignment = assignTo + ' = '
     end
 
-    add assignment + callFrom + '.' + get_utils.getStyledFunctionName(fun.name) + '(' + paramStrings.join(', ') + ');'
+    add assignment + callFrom + '.' + get_utils.get_styled_function_name(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
 end

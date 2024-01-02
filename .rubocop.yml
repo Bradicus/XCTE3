@@ -3942,7 +3942,7 @@ Style/GlobalVars:
 Style/GuardClause:
   Description: 'Check for conditionals that can be replaced with guard clauses.'
   StyleGuide: '#no-nested-conditionals'
-  Enabled: true
+  Enabled: false
   VersionAdded: '0.20'
   VersionChanged: '1.31'
   # `MinBodyLength` defines the number of lines of the a body of an `if` or `unless`

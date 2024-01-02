@@ -85,7 +85,7 @@ module XCTECSharp
       if singleTpls.length > 0 && singleTpls[0].isCollection
         singleTpls = singleTpls.drop(1)
 
-        typeName = getObjTypeName(var) if isPrimitive(var)
+        typeName = getObjTypeName(var) if is_primitive(var)
       end
 
       for tpl in singleTpls.reverse
@@ -248,7 +248,7 @@ module XCTECSharp
 
     def genAssignResults(cls, bld)
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.isList && isPrimitive(var)
+        if var.elementId == CodeElem::ELEM_VARIABLE && var.isList && is_primitive(var)
           resultVal = 'results["' +
                       XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) + '"]'
           objVar = 'o.' + XCTECSharp::Utils.instance.get_styled_variable_name(var)

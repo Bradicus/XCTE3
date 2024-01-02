@@ -55,7 +55,7 @@ module XCTETypescript
       IncludeUtil.init('class_angular_data_map_service').wModel(cls.model).addTo(cls)
 
       eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var)
+        if !Utils.instance.is_primitive(var)
           cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(var.getUType),
                          Utils.instance.get_styled_class_name(var.getUType))
         end
@@ -154,7 +154,7 @@ module XCTETypescript
       bld.indent
       bld.add("let idVal = params.get('id');")
       idVar = cls.model.getFilteredVars(->(var) { var.name == 'id' })
-      if Utils.instance.isNumericPrimitive(idVar[0])
+      if Utils.instance.is_numeric?(idVar[0])
         bld.add('this.item.id = idVal !== null ? parseInt(idVal) : 0;')
       else
         bld.add("this.item.id = idVal !== null ? idVal : '';")

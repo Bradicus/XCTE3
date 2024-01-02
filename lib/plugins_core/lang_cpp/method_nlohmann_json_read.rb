@@ -47,7 +47,7 @@ module XCTECpp
 
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var) && !Utils.instance.getTypeName(var).end_with?('Type')
+        if !Utils.instance.is_primitive(var) && !Utils.instance.getTypeName(var).end_with?('Type')
           # cls.addInclude(var.namespace, Utils.instance.getTypeName(var) )
           cls.addInclude(cls.namespace.get('/'), Utils.instance.getClassName(var) + 'JsonEngine')
         end
@@ -92,7 +92,7 @@ module XCTECpp
 
           isEnum = !curVarClass.nil? && curVarClass.plugName == 'enum'
 
-          if Utils.instance.isPrimitive(var) || isEnum
+          if Utils.instance.is_primitive(var) || isEnum
             if !var.isList
               if !isEnum
                 bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +

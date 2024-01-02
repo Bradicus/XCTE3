@@ -56,7 +56,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
       if var.elementId == CodeElem::ELEM_VARIABLE
         fmtVarName = Utils.instance.get_styled_variable_name(var)
         if !var.isStatic # Ignore static variables
-          if Utils.instance.isPrimitive(var)
+          if Utils.instance.is_primitive(var)
             if var.arrayElemCount.to_i > 0 # Array of primitives
               bld.add('memcpy(' << fmtVarName << ', ')
               bld.sameLine('src' << styledCName << '.')

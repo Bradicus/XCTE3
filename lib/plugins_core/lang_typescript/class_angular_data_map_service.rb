@@ -55,7 +55,7 @@ module XCTETypescript
 
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var)
+        if !Utils.instance.is_primitive(var)
           Utils.instance.tryAddIncludeForVar(cls, var, 'standard')
 
           Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_data_map_service') if !var.hasMultipleItems
@@ -88,7 +88,7 @@ module XCTETypescript
       constructorParams = []
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var) && !var.hasMultipleItems
+        if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           varCls = ClassModelManager.findVarClass(var, 'class_angular_data_map_service')
           if !varCls.nil?
             vService = Utils.instance.createVarFor(varCls, 'class_angular_data_map_service')

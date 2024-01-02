@@ -33,7 +33,13 @@ module XCTEJava
               ' Post' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id);')
     end
 
-    def get_body(cls, bld, _fun)
+    def process_dependencies(cls, bld, fun)
+      if !fun.role.nil?
+        cls.addUse('org.springframework.security.access.prepost.PreAuthorize')
+      end
+    end
+
+    def get_body(cls, bld, fun)
       conDef = String.new
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
@@ -47,6 +53,10 @@ module XCTEJava
       params << '@RequestBody ' + className + ' item' if !idVar.nil?
 
       # bld.add "@CrossOrigin"
+      if !fun.role.nil?
+        bld.add '@PreAuthorize("hasAuthority(\'' + fun.role + '\')")'
+      end
+
       bld.add '@PostMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName) + '",'
       bld.iadd 'consumes = MediaType.APPLICATION_JSON_VALUE, '
       bld.iadd 'produces = MediaType.APPLICATION_JSON_VALUE)'

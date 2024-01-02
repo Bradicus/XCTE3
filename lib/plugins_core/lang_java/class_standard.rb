@@ -53,7 +53,7 @@ module XCTEJava
     def process_dependencies(cls, bld)
       # Generate class variables
       eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        Utils.instance.requires_var(cls, var) if !isPrimitive(var)
+        Utils.instance.requires_var(cls, var) if !is_primitive(var)
       }))
 
       # if hasList(cls)

@@ -43,7 +43,7 @@ module XCTECSharp
       end
 
       'List<' + standard_class_name + '> ' +
-        XCTECSharp::Utils.instance.getStyledFunctionName('retrieve set by ' + paramNames.join(' ')) +
+        XCTECSharp::Utils.instance.get_styled_function_name('retrieve set by ' + paramNames.join(' ')) +
         '(SqlConnection conn, ' + paramDec.join(', ') + ')'
     end
 

@@ -21,13 +21,13 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isList
           bld.add('item.' + Utils.instance.get_styled_variable_name(var) + ' = [];')
-        elsif Utils.instance.isNumericPrimitive(var)
+        elsif Utils.instance.is_numeric?(var)
           bld.add('item.' + Utils.instance.get_styled_variable_name(var) + ' = 0;')
         elsif var.getUType.downcase == 'boolean'
           bld.add('item.' + Utils.instance.get_styled_variable_name(var) + ' = false;')
         elsif var.getUType.downcase == 'datetime'
           bld.add('item.' + Utils.instance.get_styled_variable_name(var) + ' = new Date();')
-        elsif Utils.instance.isPrimitive(var)
+        elsif Utils.instance.is_primitive(var)
           bld.add('item.' + Utils.instance.get_styled_variable_name(var) + " = '';")
         else
           bld.add('item.' + Utils.instance.get_styled_variable_name(var) +

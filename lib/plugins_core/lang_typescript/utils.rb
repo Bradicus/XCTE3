@@ -78,7 +78,7 @@ module XCTETypescript
         vDec << ' = new Date()'
       elsif var.isList
         vDec << ' = []'
-      elsif !isPrimitive(var)
+      elsif !is_primitive(var)
         vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '()'
       else
         vDec << ' = 0'
@@ -174,7 +174,7 @@ module XCTETypescript
       bld.indent
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if isPrimitive(var)
+        if is_primitive(var)
           hasMult = var.isList
           if !var.isList
             bld.add(genPrimitiveFormControl(var, isDisabled) + ',')
@@ -235,12 +235,6 @@ module XCTETypescript
 
     def getStyledUrlName(name)
       CodeNameStyling.getStyled(name, 'DASH_LOWER')
-    end
-
-    def isNumericPrimitive(var)
-      isPrim = @langProfile.isPrimitive(var)
-      isNum = Types.instance.inCategory(var, 'number')
-      isPrim && isNum
     end
 
     def addClassnamesFor(clsList, otherClasses, language, classType)

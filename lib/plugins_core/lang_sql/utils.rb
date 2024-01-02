@@ -7,8 +7,8 @@
 #
 # This class contains utility functions for a language
 
-require "lang_profile.rb"
-require "utils_base.rb"
+require 'lang_profile'
+require 'utils_base'
 
 module XCTESql
   class Utils < UtilsBase
@@ -16,23 +16,23 @@ module XCTESql
     @@langProfile = LangProfile.new
 
     def initialize
-      super("sql")
+      super('sql')
     end
 
     # Returns variable declaration for the specified variable
     def getVarDec(var)
       vDec = String.new
 
-      vDec << "`" << var.name << "` "
-      if (var.arrayElemCount.to_i > 0) # All arrays will be csv strings
-        vDec << "TEXT"
+      vDec << '`' << var.name << '` '
+      if var.arrayElemCount.to_i > 0 # All arrays will be csv strings
+        vDec << 'TEXT'
       else
         tName = getTypeName(var.vtype)
 
         if tName != var.vtype
           vDec << tName
         else
-          vDec << "TEXT"
+          vDec << 'TEXT'
         end
       end
 
@@ -52,11 +52,11 @@ module XCTESql
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
     def getComment(var)
-      return "/* " << var.text << " */\n"
+      return '/* ' << var.text << " */\n"
     end
 
-    def isPrimitive(var)
-      return @@langProfile.isPrimitive(var)
+    def is_primitive(var)
+      return @@langProfile.is_primitive(var)
     end
 
     def getStyledTableName(name)

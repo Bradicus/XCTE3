@@ -1,9 +1,8 @@
-#
 module XCTETypescript
   class MethodOnInitForm < XCTEPlugin
     def initialize
-      @name = "method_on_init_form"
-      @language = "typescript"
+      @name = 'method_on_init_form'
+      @language = 'typescript'
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -20,26 +19,24 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
           if !var.isStatic # Ignore static variables
-            if Utils.instance.isPrimitive(var)
+            if Utils.instance.is_primitive(var)
               if var.arrayElemCount.to_i > 0 # Array of primitives)
-                bld.startBlock("for i in 0..@" << var.name << ".size")
-                bld.add(var.name + "[i] = src" + codeClass.name + "[i]")
+                bld.startBlock('for i in 0..@' << var.name << '.size')
+                bld.add(var.name + '[i] = src' + codeClass.name + '[i]')
                 bld.endBlock
               else
-                bld.add(var.name + " = " + "src" + codeClass.name + "." + var.name)
+                bld.add(var.name + ' = ' + 'src' + codeClass.name + '.' + var.name)
               end
+            elsif var.arrayElemCount > 0
+              bld.startBlock('for i in 0..@' << var.name << '.size')
+              bld.add(var.name << '[i] = src' << codeClass.name << '[i]')
+              bld.endBlock # Array of objects
             else
-              if var.arrayElemCount > 0 # Array of objects
-                bld.startBlock("for i in 0..@" << var.name << ".size")
-                bld.add(var.name << "[i] = src" << codeClass.name << "[i]")
-                bld.endBlock
-              else
-                bld.add(var.name + " = " + "src" + codeClass.name + "." + var.name)
-              end
+              bld.add(var.name + ' = ' + 'src' + codeClass.name + '.' + var.name)
             end
           end
         elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.add(XCTECpp::Utils::getComment(var))
+          bld.add(XCTECpp::Utils.getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
@@ -51,4 +48,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin::registerPlugin(XCTETypescript::MethodOnInitForm.new)
+XCTEPlugin.registerPlugin(XCTETypescript::MethodOnInitForm.new)

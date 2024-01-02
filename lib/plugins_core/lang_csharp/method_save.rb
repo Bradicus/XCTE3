@@ -49,7 +49,7 @@ module XCTECSharp
       bld.add('_conn.Open();')
 
       for var in varArray
-        if Utils.instance.isPrimitive(var) == false
+        if Utils.instance.is_primitive(var) == false
           varCreateFun = ProjectPlan.instance.findClassFunction(@language, var.utype, 'tsql_engine',
                                                                 'method_tsql_create')
           if !varCreateFun.nil?

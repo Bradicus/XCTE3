@@ -64,7 +64,7 @@ module XCTECpp
         pugiCast = 'to_int()' if var.vtype.start_with? 'Int'
         pugiCast = 'to_float()' if var.vtype.start_with? 'Float'
 
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.is_primitive(var)
           if !var.isList
             bld.add(styledVarName + ' = item.child(' + styledVarName + ').' + pugiCast + ';')
           else

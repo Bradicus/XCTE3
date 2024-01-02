@@ -13,7 +13,7 @@ module CodeStructure
   class CodeElemFunction < CodeElem
     attr_accessor :name, :description, :visibility, :parameters, :isConst,
                   :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue,
-                  :variableReferences, :annotations
+                  :variableReferences, :annotations, :role
 
     def initialize(parentElem)
       super(parentElem)

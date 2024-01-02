@@ -14,6 +14,8 @@ require 'plugins_core/lang_java/utils'
 module XCTEJava
   class MethodWebApiRead < MethodWebApiBase
     def initialize
+      super
+
       @name = 'method_web_api_read_one'
       @language = 'java'
       @category = XCTEPlugin::CAT_METHOD

@@ -99,7 +99,7 @@ module XCTERuby
       bld.add('eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|')
 
       bld.startBlock('if !var.isStatic   # Ignore static variables')
-      bld.startBlock('if Utils.instance.isPrimitive(var)')
+      bld.startBlock('if Utils.instance.is_primitive(var)')
       bld.startBlock("if var.arrayElemCount.to_i > 0\t# Array of primitives)")
       bld.add('bld.startBlock("for i in 0..@" << var.name << ".size")')
       bld.add('bld.add(var.name + "[i] = src" + cls.name + "[i]")')

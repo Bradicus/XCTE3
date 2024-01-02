@@ -18,7 +18,7 @@
 				<var name="created date" type="DateTime" readonly="true" />
 				<var name="last login date" type="DateTime" readonly="true" />
 				<!--<var name="theme options" type="Theme" set="List" options="true" />-->
-				<var name="active" type="Boolean" />
+				<var name="active" type="Boolean" default="true"/>
 			</var_group>
 		</var_group>
 

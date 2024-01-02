@@ -57,7 +57,7 @@ module XCTETypescript
 
       # Include variable interfaces
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var)
+        if !Utils.instance.is_primitive(var)
           varCls = ClassModelManager.findVarClass(var, 'standard')
           cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(var.getUType),
                          Utils.instance.get_styled_class_name(var.getUType))
@@ -65,7 +65,7 @@ module XCTETypescript
       }))
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var) && !var.hasMultipleItems
+        if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_data_gen_service')
         end
       }))
@@ -88,7 +88,7 @@ module XCTETypescript
       constructorParams = []
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var) && !var.hasMultipleItems
+        if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           varCls = ClassModelManager.findVarClass(var, 'class_angular_data_gen_service')
           if !varCls.nil?
             vService = Utils.instance.createVarFor(varCls, 'class_angular_data_gen_service')

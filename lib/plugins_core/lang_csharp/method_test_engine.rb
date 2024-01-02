@@ -27,7 +27,7 @@ module XCTECSharp
       bld.add('///')
 
       bld.add('[TestMethod]')
-      bld.startFunction('public void ' + Utils.instance.getStyledFunctionName('test ' + cls.getUName + ' engine') + '()')
+      bld.startFunction('public void ' + Utils.instance.get_styled_function_name('test ' + cls.getUName + ' engine') + '()')
       get_body(cls, bld)
 
       bld.endFunction

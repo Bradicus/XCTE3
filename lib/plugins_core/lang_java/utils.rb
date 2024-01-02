@@ -101,7 +101,7 @@ module XCTEJava
       if singleTpls.length > 0 && singleTpls[0].isCollection
         singleTpls = singleTpls.drop(1)
 
-        typeName = getObjTypeName(var) if isPrimitive(var)
+        typeName = getObjTypeName(var) if is_primitive(var)
       end
 
       for tpl in singleTpls.reverse
@@ -172,7 +172,7 @@ module XCTEJava
 
     def process_var_dependencies(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !isPrimitive(var)
+        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
           fPath = getStyledFileName(var.getUType + '')
           cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))
@@ -272,29 +272,34 @@ module XCTEJava
       if needs_custom_query? filtered_class.model.data_filter
         tableVar = CodeNameStyling.getStyled(data_class.model.name, XCTETSql::Utils.instance.langProfile.variableNameStyle)
         talbeName = CodeNameStyling.getStyled(data_class.model.name, XCTETSql::Utils.instance.langProfile.classNameStyle)
-        query = 'SELECT ' + tableVar + ' FROM ' + talbeName
-        query += ' WHERE '
+        query = 'SELECT ' + tableVar + ' FROM ' + talbeName + ' ' + tableVar + ' WHERE '
 
         if !filtered_class.model.data_filter.static_filters.empty?
-          staticCompares = []
+          static_compares = []
           for filter in filtered_class.model.data_filter.static_filters
-            staticCompares.push(get_styled_class_name(filter.column) + "='" + filter.value + "'")
+            col_var = data_class.model.get_var_by_name(filter.column)
+            static_compares.push(get_sql_equality_compare(col_var, filter.value))
           end
         end
 
         if !filtered_class.model.data_filter.search.columns.empty?
-          searchCompares = []
+          search_compares = []
           for col in filtered_class.model.data_filter.search.columns
             col_var = data_class.model.get_var_by_name(col)
-            searchCompares.push(get_styled_class_name(col) + " LIKE '%:searchValue%")
+            search_compares.push(
+              get_sql_equality_like(col_var,
+                                    CodeNameStyling.getStyled(col,
+                                                              XCTETSql::Utils.instance.langProfile.variableNameStyle))
+            )
             fun.add_param(col_var)
           end
 
-          query += '(' + staticCompares.join(' OR ') + ') AND (' + searchCompares.join(' OR ') + ')'
+          query += '(' + static_compares.join(' OR ') + ') AND (' + search_compares.join(' OR ') + ')'
         end
 
         fun.annotations.push('@Query("' + query + '")')
-        fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.search.name)
+
+        fun.name = get_styled_function_name(filtered_class.model.data_filter.search.name)
       else
         for col in filtered_class.model.data_filter.search.columns
           col_var = data_class.model.get_var_by_name(col)
@@ -333,8 +338,29 @@ module XCTEJava
       return !data_filter.search.columns.empty? && !data_filter.static_filters.empty?
     end
 
+    def get_sql_equality_compare(var, value)
+      if var.is_bool?
+        return get_styled_variable_name(var) + '=' + (value.downcase == 'true' ? 'true' : 'false')
+      elsif is_numeric?(var)
+        return get_styled_variable_name(var) + '=' + value
+      else
+        return get_styled_variable_name(var) + "='" + value + "'"
+      end
+    end
+
+    def get_sql_equality_like(var, value)
+      if var.is_bool?
+        return get_sql_equality_compare(var, value)
+      elsif is_numeric?(var)
+        return get_styled_variable_name(var) + '=' + value
+      else
+        get_styled_variable_name(var) + " LIKE CONCAT('%',:" +
+          get_styled_variable_name(var) + ",'%')"
+      end
+    end
+
     def add_jpa_function_part_for(col_name_cointain, filter_var, static_filter)
-      if !filter_var.nil? && filter_var.getUType == 'boolean'
+      if !filter_var.nil? && filter_var.is_bool?
         if !static_filter.nil?
           value_text = static_filter.value.capitalize
         else
@@ -347,7 +373,7 @@ module XCTEJava
     end
 
     def render_fun_call(_bld, _fun)
-      return getStyledFunctionName(col) + '(' + ')'
+      return get_styled_function_name(col) + '(' + ')'
     end
   end
 end

@@ -8,62 +8,62 @@
 # This plugin creates an empty method with the specified function name
 # and parameters
 
-require "code_elem_model.rb"
-require "lang_file.rb"
+require 'code_elem_model'
+require 'lang_file'
 
-require "x_c_t_e_plugin.rb"
-require "plugins_core/lang_python/x_c_t_e_python.rb"
+require 'x_c_t_e_plugin'
+require 'plugins_core/lang_python/x_c_t_e_python'
 
 module XCTEPython
   class MethodEmpty < XCTEPlugin
     def initialize
-      @name = "method_empty"
-      @language = "python"
+      @name = 'method_empty'
+      @language = 'python'
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns definition string for an empty method
-    def get_definition(cls, fun, rend)
-      indent = String.new("    ")
+    def get_definition(_cls, fun, rend)
+      indent = String.new('    ')
 
       # Skeleton of comment block
-      rend.add("#")
-      rend.add("#")
+      rend.add('#')
+      rend.add('#')
 
       for param in fun.parameters.vars
-        rend.add("# " << param.name << "::")
+        rend.add('# ' << param.name << '::')
       end
 
-      if fun.returnValue.vtype != "void"
-        rend.add("# ")
-        rend.add("# return:: ")
+      if fun.returnValue.vtype != 'void'
+        rend.add('# ')
+        rend.add('# return:: ')
       end
 
-      rend.startFunction("def " + Utils.instance.getStyledFunctionName(fun.name))
+      rend.startFunction('def ' + Utils.instance.get_styled_function_name(fun.name))
 
       # Function body framework
 
-      rend.add("self." + Utils.instance.getStyledFunctionName(fun.name) + "(")
+      rend.add('self.' + Utils.instance.get_styled_function_name(fun.name) + '(')
 
       for param in (0..(fun.parameters.vars.size - 1))
         if param != 0
-          rend.sameLine(", ")
+          rend.sameLine(', ')
         end
 
         rend.sameLine(Utils.instance.getParamDec(fun.parameters.vars[param]))
       end
 
-      rend.sameLine(")")
+      rend.sameLine(')')
       rend.add
 
-      if fun.returnValue.vtype != "void"
+      if fun.returnValue.vtype != 'void'
         rend.add(fun.returnValue.name)
       end
 
-      rend.add("# " + fun.name)
+      rend.add('# ' + fun.name)
     end
   end
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEPython::MethodEmpty.new)
+XCTEPlugin.registerPlugin(XCTEPython::MethodEmpty.new)

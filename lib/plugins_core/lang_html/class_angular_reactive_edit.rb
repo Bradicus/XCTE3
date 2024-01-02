@@ -72,7 +72,7 @@ module XCTEHtml
       rowNode = add_row_node(cls, rowContainer)
 
       for var in vGroup.vars
-        if !var.isList && (Utils.instance.isPrimitive(var) || !var.selectFrom.nil?)
+        if !var.isList && (Utils.instance.is_primitive(var) || !var.selectFrom.nil?)
           fldNode = make_field(cls, var, nil)
           rowNode.add_child(fldNode)
         elsif !var.isList && var.selectFrom.nil?
@@ -116,7 +116,7 @@ module XCTEHtml
     def process_list_var(_cls, _vGroup, var, rowContainer)
       vName = Utils.instance.get_styled_variable_name(var)
       # List of primitive "ids" linked to an options list
-      if Utils.instance.isPrimitive(var) && !var.selectFrom.nil?
+      if Utils.instance.is_primitive(var) && !var.selectFrom.nil?
         optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
         tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + 'Item', 'async')
         rowContainer.add_child(tableNode)

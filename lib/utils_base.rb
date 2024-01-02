@@ -21,8 +21,14 @@ class UtilsBase
   end
 
   # Returns true if this is a primitive data type
-  def isPrimitive(var)
-    @langProfile.isPrimitive(var)
+  def is_primitive(var)
+    @langProfile.is_primitive(var)
+  end
+
+  def is_numeric?(var)
+    isPrim = @langProfile.is_primitive(var)
+    isNum = Types.instance.inCategory(var, 'number')
+    isPrim && isNum
   end
 
   # Return the language type based on the generic type
@@ -42,7 +48,7 @@ class UtilsBase
     CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
   end
 
-  def getStyledFunctionName(funName)
+  def get_styled_function_name(funName)
     CodeNameStyling.getStyled(funName, @langProfile.functionNameStyle)
   end
 

@@ -65,7 +65,7 @@ module XCTECpp
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         fmtVarName = Utils.instance.get_styled_variable_name(var)
         if !var.isStatic # Ignore static variables
-          if Utils.instance.isPrimitive(var)
+          if Utils.instance.is_primitive(var)
             if var.arrayElemCount.to_i > 0 # Array of primitives
               bld.add('memcpy(' + fmtVarName + ', ' + 'src' + styledCName + '.' + fmtVarName + ', ')
               bld.sameLine('sizeof(' + Utils.instance.getTypeName(var) + ') * ' + Utils.instance.getSizeConst(var))

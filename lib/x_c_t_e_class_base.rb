@@ -28,8 +28,8 @@ class XCTEClassBase < XCTEPlugin
     get_default_utils.getStyledFileName(get_unformatted_class_name(cls))
   end
 
-  def isPrimitive(var)
-    get_default_utils.isPrimitive(var)
+  def is_primitive(var)
+    get_default_utils.is_primitive(var)
   end
 
   def hasList(cls)

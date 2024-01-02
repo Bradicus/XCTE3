@@ -8,18 +8,17 @@
 # This plugin creates a method that returns the class variables as a string
 # this class to a stream
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
+require 'plugins_core/lang_cpp/x_c_t_e_cpp'
 
 class XCTECpp::MethodGetString < XCTEPlugin
-
   def initialize
-    @name = "method_get_string"
-    @language = "cpp"
+    @name = 'method_get_string'
+    @language = 'cpp'
     @category = XCTEPlugin::CAT_METHOD
   end
 
   # Returns declairation string for this class's logIt method
-  def get_declaration(codeClass, cfg)
+  def get_declaration(_codeClass, _cfg)
     methodString = String.new
 
     methodString << "\n#ifdef _LOG_IT\n"
@@ -32,13 +31,13 @@ class XCTECpp::MethodGetString < XCTEPlugin
   end
 
   # Returns definition string for this class's logIt method
-  def get_definition(codeClass, cfg)
+  def get_definition(codeClass, _cfg)
     methodString = String.new
 
     methodString << "/**\n* Returns a string representing object data\n"
-    methodString << "*/\n";
+    methodString << "*/\n"
 
-    methodString << "std::string " << codeClass.name << " :: getString() const\n"
+    methodString << 'std::string ' << codeClass.name << " :: getString() const\n"
     methodString << "{\n"
 
     if codeClass.hasAnArray
@@ -47,40 +46,38 @@ class XCTECpp::MethodGetString < XCTEPlugin
 
     methodString << "    std::stringstream outStr;\n\n"
 
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    varArray = []
+    codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE
         if !varSec.isPointer
           if varSec.arrayElemCount > 0
-            if XCTECpp::Utils::isPrimitive(varSec)
-              methodString << "    outStr << \"" << varSec.name << ": {\";"
-              methodString << "\n    for (i = 0; i < " << XCTECpp::Utils::getSizeConst(varSec) << "; i++)\n"
-              methodString << "        outStr << "
+            if XCTECpp::Utils.is_primitive(varSec)
+              methodString << '    outStr << "' << varSec.name << ': {";'
+              methodString << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(varSec) << "; i++)\n"
+              methodString << '        outStr << '
               methodString << varSec.name << "[i] << \"  \";\n"
               methodString << "    outStr << \"}\"\n\n"
             else
-              methodString << "    outStr << indent << \"" << varSec.name << ": [\";"
+              methodString << '    outStr << indent << "' << varSec.name << ': [";'
 
-              methodString << "        for (i = 0; i < " << XCTECpp::Utils::getSizeConst(varSec) + "; i++)\n"
-              methodString << "            " << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
+              methodString << '        for (i = 0; i < ' << XCTECpp::Utils.getSizeConst(varSec) + "; i++)\n"
+              methodString << '            ' << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
               methodString << "        outStr << \" ] \";\n\n"
             end
-          else  # Not an array
-            if XCTECpp::Utils::isPrimitive(varSec)
-              methodString << "    outStr << \"" << varSec.name << ": \" << "
-              methodString << varSec.name +  " << \"  \";\n"
-            else
-              methodString << "    outStr << \"Object " << varSec.name << ": \";"
-              methodString << "        " << varSec.name << ".getString();\n"
-            end
+          elsif XCTECpp::Utils.is_primitive(varSec) # Not an array
+            methodString << '    outStr << "' << varSec.name << ': " << '
+            methodString << varSec.name +  " << \"  \";\n"
+          else
+            methodString << '    outStr << "Object ' << varSec.name << ': ";'
+            methodString << '        ' << varSec.name << ".getString();\n"
           end
         else
-          methodString << "    // outStr << " << varSec.name << ";\n"
+          methodString << '    // outStr << ' << varSec.name << ";\n"
         end
       elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        methodString << "    " << XCTECpp::Utils::getComment(varSec);
+        methodString << '    ' << XCTECpp::Utils.getComment(varSec)
       elsif varSec.elementId == CodeElem::ELEM_FORMAT
         methodString << varSec.formatText
       end
@@ -93,4 +90,4 @@ class XCTECpp::MethodGetString < XCTEPlugin
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTECpp::MethodGetString.new)
+XCTEPlugin.registerPlugin(XCTECpp::MethodGetString.new)

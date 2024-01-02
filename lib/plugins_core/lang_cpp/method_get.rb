@@ -22,7 +22,7 @@ module XCTECpp
     def get_declaration(varSec, bld)
       return unless varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == true
 
-      funName = Utils.instance.getStyledFunctionName('get ' + varSec.name)
+      funName = Utils.instance.get_styled_function_name('get ' + varSec.name)
       varName = Utils.instance.get_styled_variable_name(varSec)
       bld.add('const ' + Utils.instance.getTypeName(varSec) + '& ' + funName)
       bld.sameLine("() const\t{ return(" + varName + '); };')

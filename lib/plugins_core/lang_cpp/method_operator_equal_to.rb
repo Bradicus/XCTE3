@@ -47,7 +47,7 @@ module XCTECpp
 
       # Process variables
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !var.isStatic && Utils.instance.isPrimitive(var) && (var.arrayElemCount.to_i == 0) # Array of primitives
+        if !var.isStatic && Utils.instance.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Array of primitives
           bld.add(seperator << Utils.instance.get_styled_variable_name(var) << ' == ')
           bld.sameLine('src' << cls.name << '.')
           bld.sameLine(Utils.instance.get_styled_variable_name(var))

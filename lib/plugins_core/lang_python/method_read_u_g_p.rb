@@ -7,68 +7,65 @@
 #
 # This plugin creates a read meathod for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_python/x_c_t_e_python.rb'
+require 'x_c_t_e_plugin'
+require 'plugins_core/lang_python/x_c_t_e_python'
 
 class XCTEPython::MethodReadUGP < XCTEPlugin
-
   def initialize
-    @name = "method_readugp"
-    @language = "python"
+    @name = 'method_readugp'
+    @language = 'python'
     @category = XCTEPlugin::CAT_METHOD
   end
 
   # Returns definition string for this class's UGP read method
-  def get_definition(codeClass, cfg)
+  def get_definition(codeClass, _cfg)
     readDef = String.new
 
     readDef << "# Reads this object from a stream\n"
-    readDef << "def read" + "(ugsr)\n"
+    readDef << 'def read' + "(ugsr)\n"
     readDef << "\n"
 
     if codeClass.hasAnArray
-      readDef << "    unsigned int i\n\n";
+      readDef << "    unsigned int i\n\n"
     end
 
     for par in codeClass.parentsList
-      readDef << "    super.read(ugsr)" << "\n"
+      readDef << '    super.read(ugsr)' << "\n"
     end
 
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    varArray = []
+    codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE
-        if varSec.isStatic   # Ignore static variables
-          readDef << ""
+        if varSec.isStatic # Ignore static variables
+          readDef << ''
         elsif !varSec.isPointer
           if varSec.arrayElemCount > 0
-            if XCTECpp::Utils::isPrimitive(varSec)
-              readDef << "\n    for " << varSec.name << "Item in @" << varSec.name << "\n"
-              readDef << "        ugsr.read" << XCTECpp::Utils::getTypeAbbrev(varSec) << "(" << varSec.name << "Item)\n"
-              readDef << "      end\n\n";
+            if XCTECpp::Utils.is_primitive(varSec)
+              readDef << "\n    for " << varSec.name << 'Item in @' << varSec.name << "\n"
+              readDef << '        ugsr.read' << XCTECpp::Utils.getTypeAbbrev(varSec) << '(' << varSec.name << "Item)\n"
+              readDef << "      end\n\n"
             else
-              readDef << "\n    for " << varSec.name << "Item in @" << varSec.name << "\n"
-              readDef << "        " + varSec.name << "Item.read(ugsr)\n";
-              readDef << "      end\n\n";
+              readDef << "\n    for " << varSec.name << 'Item in @' << varSec.name << "\n"
+              readDef << '        ' + varSec.name << "Item.read(ugsr)\n"
+              readDef << "      end\n\n"
             end
-          else # Not an array
-            if XCTECpp::Utils::isPrimitive(varSec)
-              readDef << "    ugsr.read" << XCTECpp::Utils::getTypeAbbrev(varSec)
-              readDef << "(@" + varSec.name << ")\n"
-            else
-              readDef << "    @" << varSec.name << ".read(ugsr)\n";
-            end
+          elsif XCTECpp::Utils.is_primitive(varSec) # Not an array
+            readDef << '    ugsr.read' << XCTECpp::Utils.getTypeAbbrev(varSec)
+            readDef << '(@' + varSec.name << ")\n"
+          else
+            readDef << '    @' << varSec.name << ".read(ugsr)\n"
           end
 
         elsif varSec.isPointer
-          readDef << "    // " + varSec.name + " -> read(ugsr);\n"
+          readDef << '    // ' + varSec.name + " -> read(ugsr);\n"
         else
           readDef << "\n"
         end
 
       elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        readDef << "    " << XCTECpp::Utils::getComment(varSec)
+        readDef << '    ' << XCTECpp::Utils.getComment(varSec)
       elsif varSec.elementId == CodeElem::ELEM_FORMAT
         readDef << varSec.formatText
       end
@@ -81,4 +78,4 @@ class XCTEPython::MethodReadUGP < XCTEPlugin
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEPython::MethodReadUGP.new)
+XCTEPlugin.registerPlugin(XCTEPython::MethodReadUGP.new)

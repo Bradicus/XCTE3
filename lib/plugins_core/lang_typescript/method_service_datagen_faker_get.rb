@@ -27,10 +27,10 @@ module XCTETypescript
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         varName = Utils.instance.get_styled_variable_name(var)
 
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.is_primitive(var)
           if var.name == 'id'
             bld.add('if (' + name + varName + ' == undefined)')
-            if Utils.instance.isNumericPrimitive(var)
+            if Utils.instance.is_numeric?(var)
               bld.iadd(name + varName + ' = 0;')
             else
               bld.iadd(name + varName + " = '';")
@@ -60,7 +60,7 @@ module XCTETypescript
 
       if !var.selectFrom.nil?
         return '1'
-      elsif Utils.instance.isNumericPrimitive(var)
+      elsif Utils.instance.is_numeric?(var)
         return 'faker.random.numeric(8)'
       elsif varType.start_with?('datetime')
         return 'faker.date.recent()'

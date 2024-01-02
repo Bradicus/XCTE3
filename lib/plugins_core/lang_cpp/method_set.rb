@@ -22,7 +22,7 @@ module XCTECpp
     def get_declaration(varSec, bld)
       return unless varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == true
 
-      funName = Utils.instance.getStyledFunctionName('set ' + varSec.name)
+      funName = Utils.instance.get_styled_function_name('set ' + varSec.name)
       varName = Utils.instance.get_styled_variable_name(varSec)
       inVarName = CodeNameStyling.getStyled('new ' + varSec.name, Utils.instance.langProfile.variableNameStyle)
       bld.add('void ' + funName)

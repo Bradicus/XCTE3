@@ -69,7 +69,7 @@ module XCTETypescript
 
       # Generate class variables
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_module') if !Utils.instance.isPrimitive(var)
+        Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_module') if !Utils.instance.is_primitive(var)
       }))
     end
 
@@ -136,7 +136,7 @@ module XCTETypescript
     # process variable group
     def process_var_group_imports(_cls, _bld, vGroup, importList)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !isPrimitive(var)
+        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var, 'class_angular_reactive_edit')
           if !varCls.nil?
             editClass = varCls.model.findClassModel('class_angular_reactive_edit')

@@ -72,7 +72,7 @@ module XCTEJava
 
         for related_class in related_classes
           if related_class.model.data_filter.has_non_paging_filters?
-            fun = Utils.instance.get_search_fun(cls, related_class)
+            fun = Utils.instance.get_search_fun(data_class, related_class)
 
             if Utils.instance.needs_search_fun_declaration?(fun, related_class)
               bld.render_function_declairation(fun)

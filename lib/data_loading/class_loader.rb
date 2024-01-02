@@ -46,7 +46,7 @@ module DataLoading
       genC.varPrefix = AttributeUtil.loadAttribute(genCXml, 'var_prefix', pComponent)
 
       # Add base namespace to class namespace lists
-      if !pComponent.nil? && pComponent.namespace.nsList.size > 0
+      if !pComponent.nil? && !pComponent.namespace.nsList.empty?
         genC.namespace.nsList = pComponent.namespace.nsList + genC.namespace.nsList
       end
 
@@ -152,6 +152,7 @@ module DataLoading
     def self.loadTemplateFunctionNode(genC, fun, tmpFunXML)
       fun.loadAttributes(tmpFunXML)
       fun.name = tmpFunXML.attributes['name']
+      fun.role = AttributeLoader.init.xml(tmpFunXML).names('role').cls(genC).get
       # puts "Loading function: " + fun.name
       fun.isTemplate = true
       fun.isInline = (tmpFunXML.attributes['inline'] == 'true')

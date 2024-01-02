@@ -75,7 +75,7 @@ module XCTECpp
           curVarClass = ClassModelManager.findVarClass(var)
           isEnum = !curVarClass.nil? && curVarClass.plugName == 'enum'
 
-          if Utils.instance.isPrimitive(var) || isEnum
+          if Utils.instance.is_primitive(var) || isEnum
             if !var.isList
               if var.getUType.downcase == 'string'
                 bld.add('if (item.' + curVarName + '.size() > 0) json["' + curVarName + '"] = item.' + curVarName + ';')

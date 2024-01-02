@@ -173,7 +173,7 @@ module XCTETypescript
     # process variable group
     def process_var_group_imports(_cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !isPrimitive(var)
+        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
           editClass = varCls.model.findClassModel('class_angular_reactive_edit')
           bld.iadd(get_styled_class_name(editClass.model.name + ' module') + ',') if !editClass.nil?
@@ -205,7 +205,7 @@ module XCTETypescript
 
     def process_var_dependencies(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !isPrimitive(var)
+        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
           fPath = getStyledFileName(var.getUType + '')
           cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))

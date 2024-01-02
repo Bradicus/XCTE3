@@ -60,7 +60,7 @@ module XCTECpp
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.get_styled_variable_name(var)
 
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.is_primitive(var)
           if !var.isList
             bld.add('node.append_attribute("' + styledVarName + '").set_value(' + styledVarName + ');')
           else

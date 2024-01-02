@@ -42,7 +42,7 @@ module XCTECSharp
         paramNames << Utils.instance.get_styled_variable_name(param)
       end
 
-      standard_class_name + ' ' + XCTECSharp::Utils.instance.getStyledFunctionName('retrieve one by ' + paramNames.join(' ')) +
+      standard_class_name + ' ' + XCTECSharp::Utils.instance.get_styled_function_name('retrieve one by ' + paramNames.join(' ')) +
         '(' + paramDec.join(', ') + ', SqlConnection conn, SqlTransaction trans = null)'
     end
 
@@ -111,7 +111,7 @@ module XCTECSharp
     # process variable group
     def process_var_group_sql(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && Utils.instance.isPrimitive(var)
+        if var.elementId == CodeElem::ELEM_VARIABLE && Utils.instance.is_primitive(var)
           return
           '[' +
             XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) +

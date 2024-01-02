@@ -7,67 +7,64 @@
 #
 # This plugin creates a write meathod for a class
 
-require 'plugins_core/lang_python/x_c_t_e_python.rb'
+require 'plugins_core/lang_python/x_c_t_e_python'
 
 class XCTEPython::MethodWriteUGP < XCTEPlugin
-
   def initialize
-    @name = "method_writeugp"
-    @language = "python"
+    @name = 'method_writeugp'
+    @language = 'python'
     @category = XCTEPlugin::CAT_METHOD
   end
 
   # Returns definition string for this class's UGP write method
-  def get_definition(codeClass, cfg)
+  def get_definition(codeClass, _cfg)
     writeDef = String.new
 
     writeDef << "# Writes this object to a stream\n"
-    writeDef << "def write" + "(ugsw)\n"
+    writeDef << 'def write' + "(ugsw)\n"
     writeDef << "\n"
 
     if codeClass.hasAnArray
-      writeDef << "    unsigned int i\n\n";
+      writeDef << "    unsigned int i\n\n"
     end
 
     for par in codeClass.parentsList
-      writeDef << "    " << par.name << "::write(ugsw)" << "\n"
+      writeDef << '    ' << par.name << '::write(ugsw)' << "\n"
     end
 
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    varArray = []
+    codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
       if varSec.elementId == CodeElem::ELEM_VARIABLE
-        if varSec.isStatic   # Ignore static variables
-          writeDef << ""
+        if varSec.isStatic # Ignore static variables
+          writeDef << ''
         elsif !varSec.isPointer
           if varSec.arrayElemCount > 0
-            if XCTECpp::Utils::isPrimitive(varSec)
-              writeDef << "\n    for " << varSec.name << "Item in @" << varSec.name << "\n"
-              writeDef << "        ugsw.write" << XCTECpp::Utils::getTypeAbbrev(varSec) << "(" << varSec.name << "Item)\n"
-              writeDef << "      end\n\n";
+            if XCTECpp::Utils.is_primitive(varSec)
+              writeDef << "\n    for " << varSec.name << 'Item in @' << varSec.name << "\n"
+              writeDef << '        ugsw.write' << XCTECpp::Utils.getTypeAbbrev(varSec) << '(' << varSec.name << "Item)\n"
+              writeDef << "      end\n\n"
             else
-              writeDef << "\n    for " << varSec.name << "Item in @" << varSec.name << "\n"
-              writeDef << "        " + varSec.name << "Item.write(ugsw)\n";
-              writeDef << "      end\n\n";
+              writeDef << "\n    for " << varSec.name << 'Item in @' << varSec.name << "\n"
+              writeDef << '        ' + varSec.name << "Item.write(ugsw)\n"
+              writeDef << "      end\n\n"
             end
-          else # Not an array
-            if XCTECpp::Utils::isPrimitive(varSec)
-              writeDef << "    ugsw.write" << XCTECpp::Utils::getTypeAbbrev(varSec)
-              writeDef << "(@" + varSec.name << ")\n"
-            else
-              writeDef << "    @" << varSec.name << ".write(ugsw)\n";
-            end
+          elsif XCTECpp::Utils.is_primitive(varSec) # Not an array
+            writeDef << '    ugsw.write' << XCTECpp::Utils.getTypeAbbrev(varSec)
+            writeDef << '(@' + varSec.name << ")\n"
+          else
+            writeDef << '    @' << varSec.name << ".write(ugsw)\n"
           end
 
         elsif varSec.isPointer
-          writeDef << "    // @" + varSec.name + ".write(ugsw);\n"
+          writeDef << '    // @' + varSec.name + ".write(ugsw);\n"
         else
           writeDef << "\n"
         end
 
       elsif varSec.elementId == CodeElem::ELEM_COMMENT
-        writeDef << "    " << XCTECpp::Utils::getComment(varSec)
+        writeDef << '    ' << XCTECpp::Utils.getComment(varSec)
       elsif varSec.elementId == CodeElem::ELEM_FORMAT
         writeDef << varSec.formatText
       end
@@ -80,4 +77,4 @@ class XCTEPython::MethodWriteUGP < XCTEPlugin
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEPython::MethodWriteUGP.new)
+XCTEPlugin.registerPlugin(XCTEPython::MethodWriteUGP.new)

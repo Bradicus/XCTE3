@@ -51,7 +51,7 @@ module XCTETSql
 
     # Get a parameter declaration for a method parameter
     def getTypeName(var)
-      if isPrimitive(var)
+      if is_primitive(var)
         if var.vtype == 'String'
           return('VARCHAR(MAX)') if var.arrayElemCount > 9999
 

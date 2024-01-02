@@ -51,7 +51,7 @@ module XCTEHtml
 
       if !embedded && paging
         Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
-          if Utils.instance.isPrimitive(var) && !var.isList
+          if Utils.instance.is_primitive(var) && !var.isList
             tHeadRow.children.push(HtmlNode.new('th')
               .add_text(var.getDisplayName)
               .add_child(HtmlNode.new('i').add_class('bi bi-arrow-bar-down'))
@@ -77,7 +77,7 @@ module XCTEHtml
       end
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var) && !var.isList
+        if Utils.instance.is_primitive(var) && !var.isList
           puts var.getUType.downcase
           if var.getUType.downcase.start_with? 'date'
             tBodyRow.add_child(HtmlNode.new('td')
@@ -97,7 +97,7 @@ module XCTEHtml
             actions.add_child(make_action_button(act.name, 'routerLink',
                                                  act.link + '/' + '{{' + iteratorName + '.id}}'))
           elsif !act.trigger.nil?
-            triggerFun = Utils.instance.getStyledFunctionName('on ' + act.trigger) + '(' + iteratorName + ')'
+            triggerFun = Utils.instance.get_styled_function_name('on ' + act.trigger) + '(' + iteratorName + ')'
             if act.trigger == 'delete'
               actions.add_child(make_action_button(act.name, '(click)', triggerFun))
             else
@@ -225,7 +225,7 @@ module XCTEHtml
       listVarName = Utils.instance.get_styled_variable_name(optionsVar)
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.is_primitive(var)
           tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName))
         end
       }))
@@ -239,7 +239,7 @@ module XCTEHtml
                          .add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
 
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.is_primitive(var)
           td = HtmlNode.new('td')
           ##            .add_text("{{" + iteratorName + "." + Utils.instance.get_styled_variable_name(var) + "}}")
           td.add_child(HtmlNode.new('a')

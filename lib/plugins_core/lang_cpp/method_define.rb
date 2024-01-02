@@ -27,7 +27,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
     bld.add('void define(')
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.isPrimitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
+      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
         bld.sameLine(seperator + XCTECpp::Utils.getTypeName(var.vtype) + ' ')
         bld.sameLine('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
         bld.sameLine(seperator = ', ')
@@ -49,7 +49,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
     bld.add('void define(')
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.isPrimitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
+      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
         bld.sameLine(seperator << XCTECpp::Utils.getTypeName(var.vtype) << ' ')
         bld.sameLine('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
         seperator = ', '
@@ -72,7 +72,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
     bld.add('void ' << codeClass.name << ' :: define(')
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.isPrimitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
+      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
         bld.sameLine(seperator << XCTECpp::Utils.getTypeName(var.vtype) << ' ')
         bld.sameLine('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
         seperator = ', '
@@ -104,7 +104,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && Utils.instance.isPrimitive(var)
+      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && Utils.instance.is_primitive(var)
         eqString << indent << var.name << ' = '
         eqString << 'new' << Utils.instance.get_styled_variable_name(var) << ";\n"
       end

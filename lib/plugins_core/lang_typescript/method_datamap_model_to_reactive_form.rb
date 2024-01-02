@@ -10,7 +10,7 @@ module XCTETypescript
 
     def process_dependencies(cls, bld, _funItem)
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.isPrimitive(var) && !var.hasMultipleItems
+        if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_data_map_service')
         end
       }))
@@ -24,7 +24,7 @@ module XCTETypescript
 
       bld.startBlock('if (src != null)')
       Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if Utils.instance.isPrimitive(var)
+        if Utils.instance.is_primitive(var)
           vName = Utils.instance.get_styled_variable_name(var)
           # bld.add('formGroup.get("' + vName + '")?.markAsTouched()')
           if var.getUType.downcase == 'datetime'

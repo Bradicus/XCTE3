@@ -143,7 +143,7 @@ module XCTECss
 
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          if Utils.instance.isPrimitive(var)
+          if Utils.instance.is_primitive(var)
             if var.isList
               bld.add(Utils.instance.get_styled_variable_name(var) + ": [''],")
             else
