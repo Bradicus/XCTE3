@@ -1,11 +1,13 @@
 require 'plugins_core/lang_html/class_base'
 
-##
-# Class:: ClassAngularListing
-#
 module XCTEHtml
+  ##
+  # Class:: ClassAngularListing
+  #
   class ClassAngularListing < ClassBase
     def initialize
+      super
+
       @name = 'class_angular_listing'
       @language = 'html'
       @category = XCTEPlugin::CAT_CLASS

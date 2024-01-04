@@ -12,13 +12,13 @@
       <build_var name="EditModelPath" value="shared/interfaces" />
     </build_vars>
   </generate>
-  <generate language="html" tpl_path="templates" dest="./angular/ClientApp/src/app" >
+  <generate language="html" tpl_path="templates" dest="./angular/src/app" >
     <xdep name="bootstrap" version="5" />
     <xdep name="angular" version="14">
       <validation name="basic" />
     </xdep>
   </generate>
-  <generate language="css" tpl_path="templates" dest="./angular/ClientApp/src/app" />
+  <generate language="css" tpl_path="templates" dest="./angular/src/app" />
   <generate language="java" tpl_path="templates" dest="./maven2/demo/src/main/java/com/example/demo" >
     <xdep name="spring-boot" version="3" />
     <logging logger="slf4j" />

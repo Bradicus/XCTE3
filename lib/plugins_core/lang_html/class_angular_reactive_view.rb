@@ -6,6 +6,8 @@ require 'plugins_core/lang_typescript/utils'
 module XCTEHtml
   class ClassAngularReactiveView < ClassBase
     def initialize
+      super
+
       @name = 'class_angular_reactive_view'
       @language = 'html'
       @category = XCTEPlugin::CAT_CLASS
@@ -76,6 +78,7 @@ module XCTEHtml
       vName = Utils.instance.get_styled_variable_name(var)
       fieldsetNode = Utils.instance.make_node(cls.genCfg, 'fieldset')
                           .add_attribute('formGroupName', vName)
+                          .add_class('row', 'form-group')
 
       rowContainer.add_child(fieldsetNode)
 

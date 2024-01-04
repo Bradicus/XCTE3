@@ -214,23 +214,42 @@ module XCTETypescript
       validators << 'Validators.maxLength(' + var.arrayElemCount.to_s + ')' if var.arrayElemCount > 0
 
       vdString = ''
-      vdString = ', [' + validators.join(', ') + ']' if validators.length > 0
+      if !validators.empty?
+        vdString = ', [' + validators.join(', ') + ']'
+      end
 
       get_styled_variable_name(var) + ': ' + getFormcontrolType(var, vdString, isDisabled)
     end
 
     def getFormcontrolType(var, vdString, isDisabled)
       utype = var.getUType.downcase
-      return 'new FormControl<Date>(new Date()' + vdString + ')' if utype.start_with?('date')
+      if utype.start_with?('date')
+        if !isDisabled
+          return 'new FormControl<Date>(new Date()' + vdString + ')'
+        else
+          return 'new FormControl<Date>({value: new Date(), disabled: true}' + vdString + ')'
+        end
+      end
 
       if Types.instance.inCategory(var, 'text') || utype == 'guid'
-        return 'new FormControl<' + getBaseTypeName(var) + ">(''" + vdString + ')'
+        if !isDisabled
+          return 'new FormControl<' + getBaseTypeName(var) + ">(''" + vdString + ')'
+        else
+          return 'new FormControl<' + getBaseTypeName(var) + ">({value: '', disabled: true}" + vdString + ')'
+        end
       elsif utype == 'boolean'
-        return 'new FormControl<' + getBaseTypeName(var) + '>(false)'
+        if !isDisabled
+          return 'new FormControl<' + getBaseTypeName(var) + '>(false)'
+        else
+          return 'new FormControl<' + getBaseTypeName(var) + '>({value: false, disabled: true})'
+        end
       end
-      return 'new FormControl<' + getBaseTypeName(var) + '>({value: 0, disabled: true}' + vdString + ')' if isDisabled
 
-      'new FormControl<' + getBaseTypeName(var) + '>(0' + vdString + ')'
+      if isDisabled
+        return 'new FormControl<' + getBaseTypeName(var) + '>({value: 0, disabled: true}' + vdString + ')'
+      end
+
+      return 'new FormControl<' + getBaseTypeName(var) + '>(0' + vdString + ')'
     end
 
     def getStyledUrlName(name)
