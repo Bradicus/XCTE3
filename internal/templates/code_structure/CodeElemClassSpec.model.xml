@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem class spec" >
+
+	<description>
+	Class specification
+	</description>
+
+	<gen_class type="standard" ns="code structure" >
+	</gen_class>
+
+	<var_group genGet="true" genSet="true">
+		<var name="elementId"		type="String" default="CodeElem::ELEM_CLASS_GEN" />
+		<var name="model"			type="String" default="model" />
+		<var name="path"			type="String" default="" />
+		<var name="genCfg"			utype="project component" default="pComp" />		
+		<var name="language"		type="String" default="nil" />
+		<var name="includes"		type="code elem include" set="List" />
+		<var name="uses"			type="code elem use" set="List" />
+		<var name="functions"		utype="code elem function" set="List" />
+		<var name="baseClasses"		utype="code elem class gen" set="List" />
+		<var name="interfaces"		utype="code elem interface" set="List" />
+		<var name="injections"		utype="code elem variable" set="List" />
+		<var name="namespace"		utype="code elem namespace" default="CodeElemNamespace.new" />
+		<var name="interfaceNamespace"	utype="code elem namespace" default="CodeElemNamespace.new" />
+		<var name="testNamespace"	utype="code elem namespace" default="CodeElemNamespace.new" />
+		<var name="templateParams"	utype="code elem class gen" set="List" />
+		<var name="varPrefix"		type="String" default="" />
+		<var name="preDefs"			type="String" set="List" />
+		<var name="path"			type="String" default="" />
+		<var name="filePath"			type="String" default="" />
+		<var name="standardClass"		type="String" default="" />
+		<var name="standardClassType"	type="String" default="" />
+		<var name="customCode"			type="String" default="" />
+		<var name="dataClass"			type="String" default="" />
+		<var name="classGroupRef"		type="String" default="nil" />
+		<var name="cgName"			type="String" default="nil" />
+		<var name="variant"			type="String" default="nil" />
+		<var name="featureGroup"			type="String" default="nil" />
+	</var_group>
+
+</model>

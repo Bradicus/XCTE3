@@ -99,7 +99,7 @@ class SourceRenderer
       add(@blockDelimClose + afterClose)
     else
       @lines.last.strip!
-      sameLine(@blockDelimClose + afterClose)
+      sameLine(getIndent + @blockDelimClose + afterClose)
     end
 
     separate

@@ -5,7 +5,7 @@
 	Code Element
 	</description>
 
-	<gen_class type="standard" ns="code element" >
+	<gen_class type="standard" ns="code structure" >
 	</gen_class>
 
 	<var_group genGet="true" genSet="true">

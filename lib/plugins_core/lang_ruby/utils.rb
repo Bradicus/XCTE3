@@ -53,6 +53,8 @@ module XCTERuby
         else
           vDec << var.defaultValue << ''
         end
+      elsif var.isList
+        vDec << ' = []'
       end
 
       vDec << "\t# " << var.comment if !var.comment.nil?

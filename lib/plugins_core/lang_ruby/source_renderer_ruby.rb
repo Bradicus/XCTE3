@@ -7,15 +7,15 @@
 #
 # This class renders C++ code
 
-require "source_renderer.rb"
+require 'source_renderer'
 
 class SourceRendererRuby < SourceRenderer
-  def initialize()
+  def initialize
     super
 
-    @blockDelimOpen = ""
-    @blockDelimClose = "end"
-    @indentChars = "  "
+    @blockDelimOpen = ''
+    @blockDelimClose = 'end'
+    @indentChars = '  '
     @hangingFunctionStart = true
   end
 

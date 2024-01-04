@@ -23,6 +23,8 @@ require 'log'
 module XCTERuby
   class ClassStandard < ClassBase
     def initialize
+      super
+
       @name = 'standard'
       @language = 'ruby'
       @category = XCTEPlugin::CAT_CLASS
@@ -76,7 +78,9 @@ module XCTERuby
 
       inheritFrom = ' < ' + Utils.instance.getClassTypeName(cls.baseClasses[0]) if cls.baseClasses.length > 0
 
-      Log.error("Ruby doesn't support multiple inheritance") if cls.baseClasses.length > 1
+      if cls.baseClasses.length > 1
+        Log.error("Ruby doesn't support multiple inheritance")
+      end
 
       bld.startClass('class ' + getClassName(cls) + inheritFrom)
 
@@ -90,10 +94,12 @@ module XCTERuby
 
       bld.separate
 
+      bld.startFunction 'def initialize'
       # Do automatic static array size declairations at top of class
       process_var_group(cls, bld, cls.model.varGroup)
 
-      bld.separate
+      bld.endFunction
+
       # Generate code for functions
       for fun in cls.functions
         process_function(cls, bld, fun)
@@ -134,13 +140,15 @@ module XCTERuby
     # process variable group
     def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        case var.elementId
+        when CodeElem::ELEM_VARIABLE
           bld.add(Utils.instance.getVarDec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
+        when CodeElem::ELEM_COMMENT
           bld.sameLine(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        when CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
+
         for group in vGroup.varGroups
           process_var_group(cls, bld, group)
         end
