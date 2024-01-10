@@ -9,7 +9,7 @@
 		<var_group>
 			<var name="first name" type="String" maxlen="255" required="true" />
 			<var name="last name" type="String" maxlen="255" required="true" />
-			<var name="pusername" type="String" maxlen="255" readonly="true"/>
+			<var name="username" type="String" maxlen="255" readonly="true"/>
 			<var name="email" type="String" maxlen="255" required="true" />
 		</var_group>
 		<var_group>

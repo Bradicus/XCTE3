@@ -9,7 +9,7 @@
 		<var_group>
 			<var name="first name" type="String" maxlen="255" required="true" />
 			<var name="last name" type="String" maxlen="255" required="true" />
-			<var name="pusername" type="String" maxlen="255" readonly="true"/>
+			<var name="username" type="String" maxlen="255" readonly="true"/>
 			<var name="email" type="String" maxlen="255" required="true" />
 		</var_group>
 		<var_group>
@@ -35,6 +35,10 @@
 
 	<gen_class type="class_angular_module" path="profile" />
 	<gen_class type="class_angular_module_routing" path="profile" />
+
+	<gen_class type="data_gen" path="data_gen" ns="com.example.demo.data_gen">
+		<function name="method_service_datagen_faker_get" />
+	</gen_class>
 
 	<gen_class type="class_mapper_dozer" path="mapper" ns="com.example.demo.mapper">
 		<function name="method_map" gen_reverse="true">

@@ -9,7 +9,7 @@
 # read in from an xml file
 
 require 'code_elem'
-require 'code_elem_class_gen'
+require 'code_elem_class_spec'
 require 'code_elem_comment'
 require 'code_elem_format'
 require 'code_elem_function'

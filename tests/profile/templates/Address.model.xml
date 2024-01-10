@@ -29,6 +29,10 @@
 	<gen_class type="class_angular_module" path="address" />
 	<gen_class type="class_angular_module_routing" path="address" />
 
+		<gen_class type="data_gen" path="data_gen" ns="com.example.demo.data_gen">
+			<function name="method_service_datagen_faker_get" />
+		</gen_class>
+		
 	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
 		<function name="method_web_api_read_one" />
 		<function name="method_web_api_read_many">

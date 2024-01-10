@@ -51,12 +51,12 @@ module DataLoading
       end
 
       genCXml.elements.each('base_class') do |bcXml|
-        baseClass = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
+        baseClass = CodeStructure::CodeElemClassSpec.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
         baseClass.name = bcXml.attributes['name']
         baseClass.namespace = NamespaceUtil.loadNamespaces(bcXml, pComponent)
 
         bcXml.elements.each('tpl_param') do |tplXml|
-          tplParam = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
+          tplParam = CodeStructure::CodeElemClassSpec.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
           tplParam.name = tplXml.attributes['name']
           baseClass.templateParams << tplParam
         end
@@ -73,7 +73,7 @@ module DataLoading
       end
 
       genCXml.elements.each('interface') do |ifXml|
-        intf = CodeStructure::CodeElemClassGen.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
+        intf = CodeStructure::CodeElemClassSpec.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
         intf.name = ifXml.attributes['name']
         intf.namespace = NamespaceUtil.loadNamespaces(ifXml, pComponent)
         genC.interfaces << intf
@@ -228,7 +228,7 @@ module DataLoading
     end
 
     def self.processInterface(cls, model, pComponent)
-      intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
+      intf = CodeStructure::CodeElemClassSpec.new(cls, model, pComponent, true)
       intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interfaceNamespace.get('.'))
       intf.path = cls.interfacePath
       intf.functions = cls.functions
@@ -239,7 +239,7 @@ module DataLoading
     end
 
     def self.processTests(cls, model, pComponent)
-      intf = CodeStructure::CodeElemClassGen.new(cls, model, pComponent, true)
+      intf = CodeStructure::CodeElemClassSpec.new(cls, model, pComponent, true)
       intf.namespace = CodeStructure::CodeElemNamespace.new(cls.testNamespace.get('.'))
       intf.path = cls.testPath
       intf.language = cls.language

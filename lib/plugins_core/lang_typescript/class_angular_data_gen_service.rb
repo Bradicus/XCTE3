@@ -13,15 +13,15 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' data gen service'
+      return cls.getUName + ' data gen service'
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      return Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
     end
 
     def getFilePath(_cls)
-      'shared/services'
+      return 'shared/services'
     end
 
     def genSourceFiles(cls)
@@ -46,7 +46,7 @@ module XCTETypescript
 
       srcFiles << bld
 
-      srcFiles
+      return srcFiles
     end
 
     def process_dependencies(cls, bld)

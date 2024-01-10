@@ -56,7 +56,7 @@ module DataLoading
       end
 
       xmlDoc.root.elements.each('gen_class') do |genCXML|
-        cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
+        cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
         cls.loadAttributes(genCXML)
 
         if cls.langInclude.length > 0
@@ -74,7 +74,7 @@ module DataLoading
 
         if !cGroup.nil?
           cGroup.xmlElement.elements.each('gen_class') do |genCXML|
-            cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
+            cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
             cls.classGroupRef = cgRef
             cls.loadAttributes(genCXML)
 
@@ -91,7 +91,7 @@ module DataLoading
     end
 
     def self.loadClassGenNode(model, genCXML, pComponent, cgRefXml)
-      cls = CodeStructure::CodeElemClassGen.new(model, model, pComponent, true)
+      cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
       cgRef = CodeStructure::CodeElemClassGroupRef.new
       ClassGroupRefLoader.loadClassGroupRef(cgRef, cgRefXml)
 

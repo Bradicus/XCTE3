@@ -7,83 +7,82 @@
 #
 # This class loads project information form an XML file
 
-require "code_elem_project"
-require "data_loading/project_build_var_loader"
-require "rexml/document"
+require 'code_elem_project'
+require 'data_loading/project_build_var_loader'
+require 'rexml/document'
 
 module DataLoading
   class ProjectLoader
-
     # Load project from a file
     def self.loadProject(project, fName)
       projFile = File.new(fName)
 
       xmlDoc = REXML::Document.new projFile
 
-      project.name = xmlDoc.root.attributes["name"]
-      if project.dest == nil
-        project.dest = "."
+      project.name = xmlDoc.root.attributes['name']
+      if project.dest.nil?
+        project.dest = '.'
       end
-      project.buildType = xmlDoc.root.attributes["build_type"]
+      project.buildType = xmlDoc.root.attributes['build_type']
 
       project.xmlElement = xmlDoc.root
 
-      xmlDoc.elements.each("project") { |prj|
+      xmlDoc.elements.each('project') do |prj|
         loadComponentGroup(project, project.componentGroup, prj)
-      }
+      end
     end
 
     def self.loadComponentGroup(project, groupNode, xmlGroup)
-      groupNode.name = xmlGroup.attributes["name"]
+      groupNode.name = xmlGroup.attributes['name']
 
-      if (xmlGroup.attributes["case"] != nil)
-        groupNode.case = xmlGroup.attributes["case"]
+      if !xmlGroup.attributes['case'].nil?
+        groupNode.case = xmlGroup.attributes['case']
       end
-      if (xmlGroup.attributes["path"] != nil)
-        groupNode.path = xmlGroup.attributes["path"]
+      if !xmlGroup.attributes['path'].nil?
+        groupNode.path = xmlGroup.attributes['path']
       end
 
-      xmlGroup.elements.each("DESCRIPTION") { |desc|
+      xmlGroup.elements.each('DESCRIPTION') do |desc|
         groupNode.description = desc.text
-      }
+      end
       # xmlGroup.elements.each("template_dir") { |tplDir|
       #   newTDir = CodeElemTemplateDirectory.new
       #   loadTemplateNode(newTDir, tplDir)
       #   groupNode.components << newTDir
       # }
 
-      xmlGroup.elements.each("generate") { |tplDir|
+      xmlGroup.elements.each('generate') do |tplDir|
         newTDir = LangGeneratorConfig.new
         loadGeneratorNode(newTDir, tplDir)
         groupNode.components << newTDir
-      }
+      end
 
-      xmlGroup.elements.each("custom_lang_profiles") { |langProf|
-        project.langProfilePaths << langProf.attributes["path"]
-      }
+      xmlGroup.elements.each('custom_lang_profiles') do |langProf|
+        project.langProfilePaths << langProf.attributes['path']
+      end
 
-      xmlGroup.elements.each("CLASS") { |cclass|
-        newClass = CodeElemClassGen.new(this)
+      xmlGroup.elements.each('CLASS') do |cclass|
+        newClass = CodeElemClassSpec.new(this)
         loadClassNode(newClass, cclass)
         groupNode.components << newClass
-      }
-      xmlGroup.elements.each("HEADER") { |header|
+      end
+      xmlGroup.elements.each('HEADER') do |header|
         newHeader = CodeElemHeader.new
         loadHeaderNode(newHeader, header)
         groupNode.components << newHeader
-      }
-      xmlGroup.elements.each("BODY") { |body|
+      end
+      xmlGroup.elements.each('BODY') do |body|
         newBody = CodeElemBody.new
         loadBodyNode(newBody, body)
         groupNode.components << newBody
-      }
-      xmlGroup.elements.each("CGROUP") { |cgroup|
+      end
+      xmlGroup.elements.each('CGROUP') do |cgroup|
         newCGroup = CodeElemProjectComponentGroup.new
         loadComponentGroup(newCGroup, cgroup)
         groupNode.subGroups << newCGroup
 
         # puts "Loaded component group: " << newCGroup.name << "\n"
-      }
+      end
 
       #   xmlGroup.elements.each("INCLUDE_DIRS") { |inc_d|
       #     inc_d.elements.each("INC") { |lib_p|
@@ -114,77 +113,77 @@ module DataLoading
     end
 
     def self.loadClassNode(cNode, cNodeXML)
-      cNode.name = cNodeXML.attributes["name"]
-      cNode.case = cNodeXML.attributes["case"]
+      cNode.name = cNodeXML.attributes['name']
+      cNode.case = cNodeXML.attributes['case']
     end
 
     def self.loadHeaderNode(hNode, hNodeXML)
-      hNode.name = hNodeXML.attributes["name"]
-      hNode.case = hNodeXML.attributes["case"]
+      hNode.name = hNodeXML.attributes['name']
+      hNode.case = hNodeXML.attributes['case']
     end
 
     def self.loadBodyNode(bNode, bNodeXML)
-      bNode.name = bNodeXML.attributes["name"]
-      bNode.case = bNodeXML.attributes["case"]
+      bNode.name = bNodeXML.attributes['name']
+      bNode.case = bNodeXML.attributes['case']
     end
 
     def self.loadExternalDependency(fw, fwXML)
-      fw.name = fwXML.attributes["name"]
-      fw.version = fwXML.attributes["version"]
-      fw.minVer = fwXML.attributes["minVer"]
-      fw.maxVer = fwXML.attributes["maxVer"]
+      fw.name = fwXML.attributes['name']
+      fw.version = fwXML.attributes['version']
+      fw.minVer = fwXML.attributes['minVer']
+      fw.maxVer = fwXML.attributes['maxVer']
     end
 
     def self.loadTemplateNode(tNode, tNodeXml)
-      tNode.path = tNodeXml.attributes["path"]
-      tNode.dest = tNodeXml.attributes["dest"]
+      tNode.path = tNodeXml.attributes['path']
+      tNode.dest = tNodeXml.attributes['dest']
 
-      if tNode.dest == nil
-        tNode.dest = "."
+      if tNode.dest.nil?
+        tNode.dest = '.'
       end
 
-      tNode.isStatic = (tNodeXml.attributes["static_code"] == true)
-      tNode.languages = tNodeXml.attributes["languages"].split(" ")
+      tNode.isStatic = (tNodeXml.attributes['static_code'] == true)
+      tNode.languages = tNodeXml.attributes['languages'].split(' ')
 
-      if (tNodeXml.attributes["base_namespace"] != nil)
-        tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes["base_namespace"])
+      if !tNodeXml.attributes['base_namespace'].nil?
+        tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes['base_namespace'])
       end
-      puts "template node loaded with path"
+      puts 'template node loaded with path'
     end
 
     def self.loadGeneratorNode(tNode, tNodeXml)
-      tNode.language = tNodeXml.attributes["language"]
-      tNode.tplPath = tNodeXml.attributes["tpl_path"]
-      tNode.dest = tNodeXml.attributes["dest"]
+      tNode.language = tNodeXml.attributes['language']
+      tNode.tplPath = tNodeXml.attributes['tpl_path']
+      tNode.dest = tNodeXml.attributes['dest']
 
-      tNodeXml.elements.each("head_comment") { |fwNode|
+      tNodeXml.elements.each('head_comment') do |fwNode|
         tNode.headerComment = fwNode.text.strip!()
-      }
-
-      if tNode.dest == nil
-        tNode.dest = "."
       end
 
-      if (tNodeXml.attributes["base_namespace"] != nil)
-        tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes["base_namespace"])
+      if tNode.dest.nil?
+        tNode.dest = '.'
       end
 
-      tNodeXml.elements.each("xdep") { |fwNode|
+      if !tNodeXml.attributes['base_namespace'].nil?
+        tNode.namespace = CodeElemNamespace.new(tNodeXml.attributes['base_namespace'])
+      end
+
+      tNodeXml.elements.each('xdep') do |fwNode|
         fw = ExternalDependency.new
         loadExternalDependency(fw, fwNode)
         tNode.xDeps << fw
-      }
+      end
 
-      tNodeXml.elements.each("build_vars") { |bvsNode|
+      tNodeXml.elements.each('build_vars') do |bvsNode|
         ProjectBuildVarLoader.loadBuildVars(tNode, bvsNode)
-      }
+      end
     end
 
     def self.loadBuildTypeNode(btNode, btNodeXML)
-      btNodeXML.elements.each("BOPTION") { |bopt|
-        newOpt = CodeElemBuildOption.new(bopt.attributes["otype"], bopt.attributes["ovalue"])
+      btNodeXML.elements.each('BOPTION') do |bopt|
+        newOpt = CodeElemBuildOption.new(bopt.attributes['otype'], bopt.attributes['ovalue'])
         btNode.buildOptions << newOpt
-      }
+      end
     end
   end
 end

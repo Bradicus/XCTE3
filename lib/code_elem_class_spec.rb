@@ -15,13 +15,12 @@ require 'code_elem_namespace'
 require 'filters/data_filter'
 
 module CodeStructure
-  class CodeElemClassGen < CodeElem
+  class CodeElemClassSpec < CodeElem
     attr_accessor :functions, :namespace, :plugName, :interfaceNamespace, :interfacePath,
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
                   :genCfg, :injections, :dataClass, :featureGroup, :variant, :classGroupRef, :actions, :data_class_for
-    attr_reader :name
 
     def initialize(parentElem, model, pComp, _isStatic)
       super(parentElem)

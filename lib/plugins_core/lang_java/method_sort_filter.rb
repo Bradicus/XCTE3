@@ -7,15 +7,17 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
-require "code_name_styling.rb"
-require "plugins_core/lang_java/utils.rb"
+require 'x_c_t_e_plugin'
+require 'code_name_styling'
+require 'plugins_core/lang_java/utils'
 
 module XCTEJava
   class MethodSortFilter < XCTEPlugin
     def initialize
-      @name = "method_sort_filter"
-      @language = "java"
+      super
+
+      @name = 'method_sort_filter'
+      @language = 'java'
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -24,29 +26,29 @@ module XCTEJava
       get_body(cls, bld, fun)
     end
 
-    def get_declairation(cls, bld, fun)
-      bld.add("Sort getSort(String sortBy, Boolean sortAsc);")
+    def get_declairation(_cls, bld, _fun)
+      bld.add('Sort getSort(String sortBy, Boolean sortAsc);')
     end
 
     def process_dependencies(cls, bld, fun)
     end
 
-    def get_body(cls, bld, fun)
-      bld.startFunction("public static Sort getSort(String sortBy, Boolean sortAsc)")
-      bld.add "Sort sort = null;"
-      bld.startBlock("if (sortBy != null)")
-      bld.add "sort = Sort.by(sortBy);"
+    def get_body(_cls, bld, _fun)
+      bld.startFunction('public static Sort getSort(String sortBy, Boolean sortAsc)')
+      bld.add 'Sort sort = null;'
+      bld.startBlock('if (sortBy != null)')
+      bld.add 'sort = Sort.by(sortBy);'
       bld.startBlock('if (sortAsc == true)')
-      bld.add "sort = sort.ascending();"
-      bld.midBlock "else"
-      bld.add "sort = sort.descending();"
+      bld.add 'sort = sort.ascending();'
+      bld.midBlock 'else'
+      bld.add 'sort = sort.descending();'
       bld.endBlock
       bld.endBlock
-      bld.add "return sort;"
+      bld.add 'return sort;'
       bld.endFunction
     end
   end
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodSortFilter.new)
+XCTEPlugin.registerPlugin(XCTEJava::MethodSortFilter.new)
