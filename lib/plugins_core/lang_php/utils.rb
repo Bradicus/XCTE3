@@ -16,7 +16,7 @@ module XCTEPhp
     def self.getParamDec(var)
       pDec = String.new
 
-      pDec << getTypeName(var.vtype)
+      pDec << get_type_name(var.vtype)
 
       pDec << " dataSet['" << var.name << "']"
 
@@ -43,13 +43,13 @@ module XCTEPhp
     end
 
     # Get a parameter declaration for a method parameter
-    def self.getTypeName(gType)
-      return @@langProfile.getTypeName(gType)
+    def self.get_type_name(gType)
+      return @@langProfile.get_type_name(gType)
     end
 
     # Get the extension for a file type
-    def self.getExtension(eType)
-      return @@langProfile.getExtension(eType)
+    def self.get_extension(eType)
+      return @@langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,

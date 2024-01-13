@@ -17,13 +17,13 @@ module XCTEHtml
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls) + '.component')
-      bld.lfExtension = Utils.instance.getExtension('body')
-      # genFileComment(cls, bld)
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
+      bld.lfExtension = Utils.instance.get_extension('body')
+      # gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -91,7 +91,7 @@ module XCTEHtml
       varCls = ClassModelManager.findVarClass(var)
 
       if !varCls.nil?
-        eachVar(uevParams.wCls(varCls)
+        each_var(uevParams.wCls(varCls)
           .wVarCb(lambda { |innerVar|
                     fieldsetNode.add_child(make_field(cls, innerVar, vName))
                   }))

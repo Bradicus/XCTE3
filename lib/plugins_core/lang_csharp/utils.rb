@@ -25,7 +25,7 @@ module XCTECSharp
     def getParamDec(var)
       pDec = String.new
 
-      pDec << getTypeName(var)
+      pDec << get_type_name(var)
 
       pDec << ' ' << get_styled_variable_name(var)
 
@@ -44,7 +44,7 @@ module XCTECSharp
 
       vDec << 'virtual ' if var.isVirtual
 
-      vDec << getTypeName(var)
+      vDec << get_type_name(var)
 
       vDec << ' '
 
@@ -67,11 +67,11 @@ module XCTECSharp
     end
 
     # Return the language type based on the generic type
-    def getTypeName(var)
+    def get_type_name(var)
       typeName = getSingleItemTypeName(var)
 
       if var.templates.length > 0 && var.templates[0].isCollection
-        tplType = @langProfile.getTypeName(var.templates[0].name)
+        tplType = @langProfile.get_type_name(var.templates[0].name)
         typeName = tplType + '<' + typeName + '>'
       end
 
@@ -98,7 +98,7 @@ module XCTECSharp
     # Return the language type based on the generic type
     def getBaseTypeName(var)
       nsPrefix = ''
-      langType = @langProfile.getTypeName(var.getUType)
+      langType = @langProfile.get_type_name(var.getUType)
 
       if !var.utype.nil? # Only unformatted name needs styling
         baseTypeName = CodeNameStyling.getStyled(langType, @langProfile.classNameStyle)
@@ -118,10 +118,10 @@ module XCTECSharp
     def getObjTypeName(var)
       return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle) if var.vtype.nil?
 
-      objType = getType(var.vtype + 'obj')
+      objType = get_type(var.vtype + 'obj')
       return objType.langType if !objType.nil?
 
-      return @langProfile.getTypeName(var.vtype)
+      return @langProfile.get_type_name(var.vtype)
     end
 
     def addClassInclude(cls, plugName)
@@ -154,8 +154,8 @@ module XCTECSharp
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     def getComment(var)
@@ -228,8 +228,8 @@ module XCTECSharp
     def genParamList(cls, bld, varPrefix = '')
       separator = ''
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        bld.sameLine(separator)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        bld.same_line(separator)
         bld.add('@' + get_styled_variable_name(var, varPrefix))
         separator = ','
       }))
@@ -239,15 +239,15 @@ module XCTECSharp
     def genVarList(cls, bld, varPrefix = '')
       separator = ''
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        bld.sameLine(separator)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        bld.same_line(separator)
         bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, varPrefix) + ']')
         separator = ','
       }))
     end
 
     def genAssignResults(cls, bld)
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.elementId == CodeElem::ELEM_VARIABLE && var.isList && is_primitive(var)
           resultVal = 'results["' +
                       XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) + '"]'
@@ -293,13 +293,13 @@ module XCTECSharp
       # Process namespace items
       return unless namespace.hasItems?
 
-      bld.startBlock('namespace ' << namespace.get('.'))
+      bld.start_block('namespace ' << namespace.get('.'))
     end
 
     def genNamespaceEnd(namespace, bld)
       return unless namespace.hasItems?
 
-      bld.endBlock(' // namespace ' + namespace.get('.'))
+      bld.end_block(' // namespace ' + namespace.get('.'))
       bld.add
     end
 

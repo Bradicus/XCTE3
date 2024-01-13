@@ -27,7 +27,7 @@ module XCTECSharp
       bld.add('///')
 
       bld.add('[TestMethod]')
-      bld.startFunction('public void ' + Utils.instance.get_styled_function_name('test ' + cls.getUName + ' engine') + '()')
+      bld.start_function('public void ' + Utils.instance.get_styled_function_name('test ' + cls.getUName + ' engine') + '()')
       get_body(cls, bld)
 
       bld.endFunction
@@ -54,9 +54,9 @@ module XCTECSharp
 
       bld.add
 
-      bld.startBlock('try')
-      bld.startBlock('using (var tScope = new TransactionScope())')
-      bld.startBlock('using (SqlConnection conn = new SqlConnection(connString))')
+      bld.start_block('try')
+      bld.start_block('using (var tScope = new TransactionScope())')
+      bld.start_block('using (SqlConnection conn = new SqlConnection(connString))')
       bld.add('conn.Open();')
 
       varArray = []
@@ -80,17 +80,17 @@ module XCTECSharp
       bld.add
       bld.add('intf.Create(obj, conn);')
 
-      bld.endBlock
+      bld.end_block
 
       bld.add
       bld.add('tScope.Complete();')
 
-      bld.endBlock
-      bld.endBlock
+      bld.end_block
+      bld.end_block
 
-      bld.startBlock('catch(Exception e)')
+      bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Failed to create new test object for ' + stdClassName + '", e);')
-      bld.endBlock
+      bld.end_block
 
       # Generate code for functions
       for fun in cls.functions

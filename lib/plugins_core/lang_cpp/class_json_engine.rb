@@ -27,20 +27,20 @@ module XCTECpp
       cls.getUName + ' json engine'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       cls.setName(get_unformatted_class_name(cls))
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + 'JsonEngine')
-      bld.lfExtension = Utils.instance.getExtension('header')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'JsonEngine')
+      bld.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + 'JsonEngine')
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'JsonEngine')
+      bld.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, bld)
       genBody(cls, bld)
 
@@ -90,7 +90,7 @@ module XCTECpp
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          bld.startBlock('namespace ' << nsItem)
+          bld.start_block('namespace ' << nsItem)
         end
         bld.add
       end
@@ -114,7 +114,7 @@ module XCTECpp
         end
       end
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
       bld.add('public:')
       bld.indent
@@ -123,12 +123,12 @@ module XCTECpp
 
       bld.unindent
 
-      bld.endClass
+      bld.end_class
 
       # Process namespace items
       if cls.namespace.hasItems?
         cls.namespace.nsList.reverse_each do |nsItem|
-          bld.endBlock('  // namespace ' << nsItem)
+          bld.end_block('  // namespace ' << nsItem)
         end
         bld.add
       end

@@ -25,12 +25,12 @@ module XCTECSharp
       cls.getUName + ' controller'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + 'Controller')
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'Controller')
+      bld.lfExtension = Utils.instance.get_extension('body')
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -67,7 +67,7 @@ module XCTECSharp
         end
       end
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
       bld.add if cls.functions.length > 0
 
@@ -91,7 +91,7 @@ module XCTECSharp
           end
         end
       end # class  + cls.getUName()
-      bld.endClass
+      bld.end_class
 
       Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end

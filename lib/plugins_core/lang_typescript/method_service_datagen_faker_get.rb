@@ -15,7 +15,7 @@ module XCTETypescript
       # process class variables
 
       className = Utils.instance.get_styled_class_name(cls.model.name)
-      bld.startFunction('populateRandom(item: ' + className + '): void')
+      bld.start_function('populateRandom(item: ' + className + '): void')
 
       genPopulate(cls, bld, 'item.')
 
@@ -24,7 +24,7 @@ module XCTETypescript
 
     # process variable group
     def genPopulate(cls, bld, name = '')
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         varName = Utils.instance.get_styled_variable_name(var)
 
         if Utils.instance.is_primitive(var)
@@ -43,7 +43,7 @@ module XCTETypescript
         elsif !var.isList
           varCls = ClassModelManager.findVarClass(var, 'standard')
           if !varCls.nil?
-            vService = Utils.instance.createVarFor(varCls, 'class_angular_data_gen_service')
+            vService = Utils.instance.create_var_for(varCls, 'class_angular_data_gen_service')
 
             if !vService.nil?
               srcName = 'item.' + Utils.instance.get_styled_variable_name(var)

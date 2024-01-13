@@ -32,19 +32,19 @@ module XCTEJava
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
 
       render_package_start(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -65,18 +65,18 @@ module XCTEJava
 
       bld.add('@Entity')
       bld.add('@Table(name="' + tableName + '")') if tableName != clsName
-      bld.startClass('public class ' + clsName)
+      bld.start_class('public class ' + clsName)
 
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
           bld.add('public static final int ' + Utils.instance.getSizeConst(var) + ' = ' << var.arrayElemCount.to_s + ';')
         end
       }))
 
-      bld.separate if Utils.instance.hasAnArray(cls)
+      bld.separate if Utils.instance.has_an_array?(cls)
 
       # Generate class variables
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.name == 'id'
           bld.add('@Id')
           bld.add('@GeneratedValue(strategy=GenerationType.SEQUENCE)')
@@ -102,7 +102,7 @@ module XCTEJava
       render_functions(cls, bld)
       render_header_var_group_getter_setters(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

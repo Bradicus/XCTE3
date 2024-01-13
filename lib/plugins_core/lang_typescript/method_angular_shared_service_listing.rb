@@ -15,12 +15,12 @@ module XCTETypescript
     def get_definition(cls, bld, _fun)
       className = Utils.instance.get_styled_class_name(cls.getUName)
       urlName = Utils.instance.getStyledUrlName(cls.getUName)
-      dataServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_store_service')
+      dataServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
 
-      bld.startFunction('listing(req: FilteredPageReqTpl<' + className + '>): Observable<FilteredPageRespTpl<' + className + '>>')
-      bld.startBlock('if ((this.lastUpdate + this.expireMinutes * 60000) < new Date())')
+      bld.start_function('listing(req: FilteredPageReqTpl<' + className + '>): Observable<FilteredPageRespTpl<' + className + '>>')
+      bld.start_block('if ((this.lastUpdate + this.expireMinutes * 60000) < new Date())')
       bld.add('this.item = ' + Utils.instance.get_styled_variable_name(dataServiceVar) + '.listing(req);')
-      bld.endBlock
+      bld.end_block
       bld.separate
       bld.add('return this.item;')
       bld.endFunction

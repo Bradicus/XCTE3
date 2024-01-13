@@ -35,7 +35,7 @@ class XCTEPhp::MethodLogIt < XCTEPlugin
 
     outcode.indent
 
-    if codeClass.hasAnArray
+    if codeClass.has_an_array
       outCode.add('int i;')
     end
 

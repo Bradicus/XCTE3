@@ -50,10 +50,10 @@ module XCTECpp
       bld.add('*/')
 
       classDef = String.new
-      classDef << Utils.instance.getTypeName(codeFun.returnValue) << ' ' <<
+      classDef << Utils.instance.get_type_name(codeFun.returnValue) << ' ' <<
         Utils.instance.get_styled_class_name(cls.name) << ' :: ' << 'write(nlohmann::json& json, const ' +
                                                                     cls.standardClassType + '& item)'
-      bld.startClass(classDef)
+      bld.start_class(classDef)
 
       get_body(cls, bld, codeFun)
 
@@ -68,10 +68,10 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.isStatic
           curVarName = Utils.instance.get_styled_variable_name(var)
-          curVarType = Utils.instance.getTypeName(var)
+          curVarType = Utils.instance.get_type_name(var)
           curVarClass = ClassModelManager.findVarClass(var)
           isEnum = !curVarClass.nil? && curVarClass.plugName == 'enum'
 
@@ -84,9 +84,9 @@ module XCTECpp
               end
             else
               bld.add('json["' + curVarName + '"] = nlohmann::json::array();')
-              bld.startBlock('for (auto const& val: item.' + curVarName + ')')
+              bld.start_block('for (auto const& val: item.' + curVarName + ')')
               bld.add('json["' + curVarName + '"].push_back(val);')
-              bld.endBlock
+              bld.end_block
             end
           elsif isEnum
             bld.add('json["' + curVarName + '"] = (int)item.' + curVarName + ';')
@@ -97,7 +97,7 @@ module XCTECpp
           else
             bld.add('nlohmann::json ' + curVarName + 'Node;')
             bld.add
-            bld.startBlock('for (auto const& val: item.' + curVarName + ')')
+            bld.start_block('for (auto const& val: item.' + curVarName + ')')
             bld.add('nlohmann::json newNode;')
             if var.isPointer(1)
               bld.add(Utils.instance.getClassName(var) + 'JsonEngine::write(newNode, *val);')
@@ -105,7 +105,7 @@ module XCTECpp
               bld.add(Utils.instance.getClassName(var) + 'JsonEngine::write(newNode, val);')
             end
             bld.add(curVarName + 'Node.push_back(newNode);')
-            bld.endBlock
+            bld.end_block
             bld.add('json["' + curVarName + '"] = ' + curVarName + 'Node;')
           end
         end

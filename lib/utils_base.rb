@@ -32,15 +32,15 @@ class UtilsBase
   end
 
   # Return the language type based on the generic type
-  def getTypeName(var)
-    return @langProfile.getTypeName(var.vtype) if !var.vtype.nil?
+  def get_type_name(var)
+    return @langProfile.get_type_name(var.vtype) if !var.vtype.nil?
 
     CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
   end
 
   # Return the language type based on the generic type
-  def getType(gType)
-    @langProfile.getType(gType)
+  def get_type(gType)
+    @langProfile.get_type(gType)
   end
 
   # Returns the version of this name styled for this language
@@ -58,31 +58,31 @@ class UtilsBase
   end
 
   # Returns the version of this class name styled for this language
-  def getStyledNamespaceName(nsName)
+  def get_styled_namespace_name(nsName)
     CodeNameStyling.getStyled(nsName, @langProfile.classNameStyle)
   end
 
-  def getStyledEnumName(enumName)
+  def get_styled_enum_name(enumName)
     CodeNameStyling.getStyled(enumName, @langProfile.enumNameStyle)
   end
 
   # Returns the version of this file name styled for this language
-  def getStyledFileName(fileName)
+  def get_styled_file_name(fileName)
     CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
   end
 
   # Returns the version of this file name styled for this language
-  def getStyledPathName(pathName)
+  def get_styled_path_name(pathName)
     CodeNameStyling.getStyled(pathName, @langProfile.fileNameStyle)
   end
 
   # Get the extension for a file type
-  def getExtension(eType)
-    @langProfile.getExtension(eType)
+  def get_extension(eType)
+    @langProfile.get_extension(eType)
   end
 
   # Create a variable with a type cls
-  def createVarFor(cls, plugName)
+  def create_var_for(cls, plugName)
     plugClass = cls.model.findClassModel(plugName)
     plug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
 
@@ -103,17 +103,17 @@ class UtilsBase
   end
 
   # Run a function on each variable in a class
-  def eachVar(params)
-    eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb, params.bgCb, params.agCb)
+  def each_var(params)
+    each_var_grp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb, params.bgCb, params.agCb)
   end
 
   # Run a function on each variable in a variable group and subgroups
-  def eachVarGrp(vGroup, bld, separateGroups, varFun, bgCb, agCb)
+  def each_var_grp(vGroup, bld, separateGroups, varFun, bgCb, agCb)
     for var in vGroup.vars
       if var.elementId == CodeElem::ELEM_VARIABLE
         varFun.call(var)
       elsif !bld.nil? && var.elementId == CodeElem::ELEM_COMMENT
-        bld.sameLine(getComment(var))
+        bld.same_line(getComment(var))
       elsif !bld.nil? && var.elementId == CodeElem::ELEM_FORMAT
         bld.add(var.formatText)
       end
@@ -121,14 +121,14 @@ class UtilsBase
 
     for grp in vGroup.varGroups
       bgCb.call(grp) if !bgCb.nil?
-      eachVarGrp(grp, bld, separateGroups, varFun, bgCb, agCb)
+      each_var_grp(grp, bld, separateGroups, varFun, bgCb, agCb)
       agCb.call(grp) if !agCb.nil?
       bld.separate if separateGroups && !bld.nil?
     end
   end
 
   # Run a function on each function in a class
-  def eachFun(params)
+  def each_fun(params)
     for clsFun in params.cls.functions
       if clsFun.elementId == CodeElem::ELEM_FUNCTION
         params.bld.separate
@@ -140,7 +140,7 @@ class UtilsBase
         if funItem.formatText == "\n"
           bld.add
         else
-          bld.sameLine(funItem.formatText)
+          bld.same_line(funItem.formatText)
         end
       elsif funItem.elementId == CodeElem::ELEM_COMMENT
         bld.add(getComment(funItem))
@@ -148,14 +148,14 @@ class UtilsBase
         if funItem.formatText == "\n"
           bld.add
         else
-          bld.sameLine(funItem.formatText)
+          bld.same_line(funItem.formatText)
         end
       end
     end
   end
 
   # Add an include if there's a class model defined for it
-  def tryAddIncludeFor(cls, plugName)
+  def try_add_include_for(cls, plugName)
     clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
     clsGen = cls.model.findClassModel(plugName)
 
@@ -165,16 +165,16 @@ class UtilsBase
   end
 
   # Add an include if there's a class model defined for it
-  def tryAddIncludeForVar(cls, var, plugName)
+  def try_add_include_for_var(cls, var, plugName)
     clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
     clsGen = ClassModelManager.findClass(var.getUType, plugName)
 
-    return unless !clsPlug.nil? && !clsGen.nil? && !isSelfReference(cls, var, clsPlug)
+    return unless !clsPlug.nil? && !clsGen.nil? && !is_self_reference(cls, var, clsPlug)
 
     cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
   end
 
-  def isSelfReference(cls, var, clsPlug)
+  def is_self_reference(cls, var, clsPlug)
     varUType = var.getUType
     classUType = clsPlug.get_unformatted_class_name(cls)
     varUType == classUType
@@ -187,8 +187,8 @@ class UtilsBase
     pList.join(', ')
   end
 
-  def hasAnArray(cls)
-    eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+  def has_an_array?(cls)
+    each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
       true if var.arrayElemCount > 0
     }))
 

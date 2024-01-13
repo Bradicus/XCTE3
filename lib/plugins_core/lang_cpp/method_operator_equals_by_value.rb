@@ -22,7 +22,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     eqString = String.new
 
     bld.add('const ' << Utils.instance.get_styled_class_name(codeClass.name) << '& operator=' << '(const ' << Utils.instance.get_styled_class_name(codeClass.name))
-    bld.sameLine('& src' << Utils.instance.get_styled_class_name(codeClass.name) << ');')
+    bld.same_line('& src' << Utils.instance.get_styled_class_name(codeClass.name) << ');')
     bld.add
 
     return eqString
@@ -38,10 +38,10 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     bld.add('/**')
     bld.add(' * Sets this object equal to incoming object')
     bld.add(' */')
-    bld.startClass('const ' + styledCName +
+    bld.start_class('const ' + styledCName +
                    '& ' + styledCName + ' :: operator=(const ' + styledCName + '& src' + styledCName + ');')
 
-    #    if codeClass.hasAnArray
+    #    if codeClass.has_an_array
     #      bld.add("    unsigned int i;\n");
     #    end
 
@@ -59,10 +59,10 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
           if Utils.instance.is_primitive(var)
             if var.arrayElemCount.to_i > 0 # Array of primitives
               bld.add('memcpy(' << fmtVarName << ', ')
-              bld.sameLine('src' << styledCName << '.')
-              bld.sameLine(fmtVarName << ', ')
-              bld.sameLine('sizeof(' + Utils.instance.getTypeName(var.vtype) << ') * ' << Utils.instance.getSizeConst(var))
-              bld.sameLine(');')
+              bld.same_line('src' << styledCName << '.')
+              bld.same_line(fmtVarName << ', ')
+              bld.same_line('sizeof(' + Utils.instance.get_type_name(var.vtype) << ') * ' << Utils.instance.getSizeConst(var))
+              bld.same_line(');')
             else
               bld.add(fmtVarName << ' = src' << styledCName << '.' << fmtVarName << ';')
             end
@@ -72,9 +72,9 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
               bld.add
               longArrayFound = true
             end
-            bld.startBlock('for (i = 0; i < ' << Utils.instance.getSizeConst(var) << '; i++)')
+            bld.start_block('for (i = 0; i < ' << Utils.instance.getSizeConst(var) << '; i++)')
             bld.add(fmtVarName + '[i] = src' + styledCName + '.' + '[i];')
-            bld.endBlock # Array of objects
+            bld.end_block # Array of objects
           else
             bld.add(fmtVarName + ' = src' + styledCName + '.' + fmtVarName + ';')
           end
@@ -88,7 +88,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
 
     bld.add
     bld.add('return(*this);')
-    bld.endBlock
+    bld.end_block
   end
 end
 

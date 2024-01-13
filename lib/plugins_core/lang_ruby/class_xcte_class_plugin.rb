@@ -30,13 +30,13 @@ module XCTERuby
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
-      genFileComment(cls, bld)
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -44,7 +44,7 @@ module XCTERuby
       srcFiles
     end
 
-    def genFileComment(cls, bld)
+    def gen_file_comment(cls, bld)
       bld.add('##')
       bld.add('# Class:: ' + cls.name)
 
@@ -73,7 +73,7 @@ module XCTERuby
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.getExtension('body') + "'")
+        bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.get_extension('body') + "'")
       end
 
       bld.add if !cls.includes.empty?
@@ -81,13 +81,13 @@ module XCTERuby
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          bld.startBlock('module ' << nsItem)
+          bld.start_block('module ' << nsItem)
         end
       end
 
-      bld.startClass('class ' + getClassName(cls) + ' < ClassBase')
+      bld.start_class('class ' + getClassName(cls) + ' < ClassBase')
 
-      bld.startFunction('def initialize')
+      bld.start_function('def initialize')
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
       bld.add('@language = "' + cls.xmlElement.attributes['lang'] + '"')
       bld.add('@category = XCTEPlugin::CAT_CLASS')
@@ -95,24 +95,24 @@ module XCTERuby
       bld.endFunction
       bld.separate
 
-      bld.startFunction('def get_unformatted_class_name(cls)')
+      bld.start_function('def get_unformatted_class_name(cls)')
       bld.add('return cls.getUName()')
       bld.endFunction
 
       bld.add
 
-      bld.startFunction('def genSourceFiles(cls)')
+      bld.start_function('def gen_source_files(cls)')
       bld.add('srcFiles = Array.new')
       bld.separate
       bld.add('bld = SourceRenderer' +
               CodeNameStyling.getStyled(cls.xmlElement.attributes['lang'], 'PASCAL_CASE') + '.new')
-      bld.add('bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))')
-      bld.add("bld.lfExtension = Utils.instance.getExtension('body')")
+      bld.add('bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))')
+      bld.add("bld.lfExtension = Utils.instance.get_extension('body')")
       bld.separate
       bld.add('process_dependencies(cls, bld)')
       bld.add('render_dependencies(cls, bld)')
       bld.separate
-      bld.add('genFileComment(cls, bld)')
+      bld.add('gen_file_comment(cls, bld)')
       bld.add('genFileContent(cls, bld)')
       bld.add
       bld.add('srcFiles << bld')
@@ -122,20 +122,20 @@ module XCTERuby
       bld.add
 
       bld.add('# Returns the code for the comment for this class')
-      bld.startFunction('def genFileComment(cls, bld)')
+      bld.start_function('def gen_file_comment(cls, bld)')
       bld.add
       bld.endFunction
       bld.add
 
       bld.add('# Returns the code for the content for this class')
-      bld.startFunction('def genFileContent(cls, bld)')
+      bld.start_function('def genFileContent(cls, bld)')
 
-      bld.add('bld.startClass("class " + getClassName(cls))')
+      bld.add('bld.start_class("class " + getClassName(cls))')
       bld.separate
       bld.add('bld.separate')
 
       bld.add('# Generate code for class variables')
-      bld.add('eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|')
+      bld.add('each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|')
       bld.add('}))')
 
       bld.separate
@@ -146,18 +146,18 @@ module XCTERuby
 
       bld.separate
 
-      bld.add('bld.endClass')
+      bld.add('bld.end_class')
       bld.endFunction
       bld.add
 
       bld.separate
 
-      bld.endBlock
+      bld.end_block
 
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          bld.endBlock
+          bld.end_block
         end
       end
 

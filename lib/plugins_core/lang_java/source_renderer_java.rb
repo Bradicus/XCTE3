@@ -23,8 +23,8 @@ class SourceRendererJava < SourceRendererBraceDelim
     return XCTEJava::Utils.instance
   end
 
-  def endClass(afterClose = '')
-    endBlock(afterClose)
+  def end_class(afterClose = '')
+    end_block(afterClose)
   end
 
   def render_function_declairation(fun)
@@ -38,7 +38,7 @@ class SourceRendererJava < SourceRendererBraceDelim
       paramStrings.push(get_utils.getParamDec(pVar))
     end
 
-    typeName = get_utils.getTypeName(fun.returnValue)
+    typeName = get_utils.get_type_name(fun.returnValue)
 
     if typeName == 'void'
       add typeName + ' '
@@ -46,7 +46,7 @@ class SourceRendererJava < SourceRendererBraceDelim
       add get_utils.get_styled_class_name(typeName) + ' '
     end
 
-    sameLine get_utils.get_styled_function_name(fun.name) + '(' + paramStrings.join(', ') + ');'
+    same_line get_utils.get_styled_function_name(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
 
   def render_function_call(assignTo, callFrom, fun, paramStrings)

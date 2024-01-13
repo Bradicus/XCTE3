@@ -25,12 +25,12 @@ module XCTEPython
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       rend = SourceRendererPython.new
-      rend.lfName = Utils.instance.getStyledFileName(cls.getUName)
-      rend.lfExtension = Utils.instance.getExtension('body')
+      rend.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      rend.lfExtension = Utils.instance.get_extension('body')
       genPythonFileComment(cls, rend)
       genPythonFileContent(cls, rend)
 
@@ -41,7 +41,7 @@ module XCTEPython
 
     def genPythonFileComment(cls, rend)
       rend.add('##')
-      rend.add('# Class:: ' + Utils.instance.getStyledFileName(cls.getUName))
+      rend.add('# Class:: ' + Utils.instance.get_styled_file_name(cls.getUName))
 
       if !cfg.codeAuthor.nil?
         rend.add('# Author:: ' + cfg.codeAuthor)
@@ -80,7 +80,7 @@ module XCTEPython
         rend.add
       end
 
-      rend.startClass('class ' + Utils.instance.getStyledFileName(cls.getUName))
+      rend.start_class('class ' + Utils.instance.get_styled_file_name(cls.getUName))
 
       # Do automatic static array size declairations at top of class
       varArray = []
@@ -115,7 +115,7 @@ module XCTEPython
         end
       end
 
-      rend.endBlock('# class ' + Utils.instance.getStyledFileName(cls.getUName))
+      rend.end_block('# class ' + Utils.instance.get_styled_file_name(cls.getUName))
       rend.add
     end
   end

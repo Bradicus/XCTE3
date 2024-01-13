@@ -23,12 +23,12 @@ module XCTECSharp
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -63,10 +63,10 @@ module XCTECSharp
         end
       end
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
       # Process variables
-      eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+      each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         XCTECSharp::Utils.instance.getVarDec(var)
       }))
 
@@ -75,7 +75,7 @@ module XCTECSharp
       # Generate code for functions
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
 
       Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end

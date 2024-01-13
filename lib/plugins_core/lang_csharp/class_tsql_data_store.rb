@@ -23,7 +23,7 @@ module XCTECSharp
       cls.getUName + ' data store'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       cls.setName(getClassName(cls))
@@ -35,7 +35,7 @@ module XCTECSharp
 
       bld = SourceRendererCSharp.new
       bld.lfName = cls.name
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfExtension = Utils.instance.get_extension('body')
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -68,11 +68,11 @@ module XCTECSharp
         end
       end
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
 
       Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end

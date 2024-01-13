@@ -1,17 +1,16 @@
 ##
 
-# 
+#
 # Copyright XCTE Contributors
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This class renders C++ code
 
-require 'source_renderer_brace_delim.rb'
+require 'source_renderer_brace_delim'
 
 class SourceRendererCpp < SourceRendererBraceDelim
-
-  def initialize()
+  def initialize
     super
   end
 
@@ -22,14 +21,13 @@ class SourceRendererCpp < SourceRendererBraceDelim
     end
     add(' */')
   end
-  
-  def endFunction(afterClose="")
-    endBlock(afterClose)
+
+  def endFunction(afterClose = '')
+    end_block(afterClose)
     add
   end
-  
-  def endClass(afterClose="")
-    endBlock(";" + afterClose)
+
+  def end_class(afterClose = '')
+    end_block(';' + afterClose)
   end
 end
-    

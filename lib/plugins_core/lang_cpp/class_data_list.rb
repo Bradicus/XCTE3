@@ -30,7 +30,7 @@ module XCTECpp
       cls.getUName + ' container'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       # Use the standard class once we've added the necessary components
@@ -62,13 +62,13 @@ module XCTECpp
 
       listHFile = LangFile.new
       listHFile.lfName = cls.name
-      listHFile.lfExtension = XCTECpp::Utils.getExtension('header')
+      listHFile.lfExtension = XCTECpp::Utils.get_extension('header')
       listHFile.lfContents = stdClass.genHeaderComment(cls, cfg)
       listHFile.lfContents << stdClass.genHeader(cls, cfg)
 
       listCppFile = LangFile.new
       listCppFile.lfName = cls.name
-      listCppFile.lfExtension = XCTECpp::Utils.getExtension('body')
+      listCppFile.lfExtension = XCTECpp::Utils.get_extension('body')
       listCppFile.lfContents = stdClass.genHeaderComment(cls, cfg)
       listCppFile.lfContents << stdClass.genBody(cls, cfg)
 

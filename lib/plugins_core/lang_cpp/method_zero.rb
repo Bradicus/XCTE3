@@ -41,7 +41,7 @@ class XCTECpp::MethodZero < XCTEPlugin
     eqString << 'void ' << codeClass.name << " :: zero()\n"
     eqString << "{\n"
 
-    #    if codeClass.hasAnArray
+    #    if codeClass.has_an_array
     #      eqString << "    unsigned int i;\n\n";
     #    end
 

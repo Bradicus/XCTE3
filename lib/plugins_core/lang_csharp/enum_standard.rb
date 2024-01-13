@@ -28,14 +28,14 @@ module XCTECSharp
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       cls.setName(get_unformatted_class_name(cls))
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName)
-      hFile.lfExtension = Utils.instance.getExtension('header')
+      hFile.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      hFile.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, hFile)
       getBody(cls, hFile)
 
@@ -87,7 +87,7 @@ module XCTECSharp
 
       classDec = cls.model.visibility + ' enum  ' + getClassName(cls)
 
-      hFile.startBlock(classDec)
+      hFile.start_block(classDec)
 
       # Generate class variables
       varArray = []
@@ -99,9 +99,9 @@ module XCTECSharp
       for i in 0..(varArray.length - 1)
         var = varArray[i]
         if var.elementId == CodeElem::ELEM_VARIABLE
-          hFile.add(Utils.instance.getStyledEnumName(var.name))
-          hFile.sameLine(' = ' + var.defaultValue) if !var.defaultValue.nil?
-          hFile.sameLine(',') if i != varArray.length - 1
+          hFile.add(Utils.instance.get_styled_enum_name(var.name))
+          hFile.same_line(' = ' + var.defaultValue) if !var.defaultValue.nil?
+          hFile.same_line(',') if i != varArray.length - 1
         elsif var.elementId == CodeElem::ELEM_COMMENT
           hFile.add(Utils.instance.getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
@@ -109,12 +109,12 @@ module XCTECSharp
         end
       end
 
-      hFile.endBlock(';')
+      hFile.end_block(';')
 
       # Process namespace items
       if cls.namespace.hasItems?
         cls.namespace.nsList.reverse_each do |nsItem|
-          hFile.endBlock('  // namespace ' << nsItem)
+          hFile.end_block('  // namespace ' << nsItem)
         end
         hFile.add
       end

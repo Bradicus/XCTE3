@@ -28,13 +28,13 @@ class XCTECpp::MethodDefine < XCTEPlugin
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
-        bld.sameLine(seperator + XCTECpp::Utils.getTypeName(var.vtype) + ' ')
-        bld.sameLine('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
-        bld.sameLine(seperator = ', ')
+        bld.same_line(seperator + XCTECpp::Utils.get_type_name(var.vtype) + ' ')
+        bld.same_line('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
+        bld.same_line(seperator = ', ')
       end
     end
 
-    bld.sameLine(');')
+    bld.same_line(');')
 
     return eqString
   end
@@ -50,14 +50,14 @@ class XCTECpp::MethodDefine < XCTEPlugin
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
-        bld.sameLine(seperator << XCTECpp::Utils.getTypeName(var.vtype) << ' ')
-        bld.sameLine('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
+        bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << ' ')
+        bld.same_line('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
         seperator = ', '
       end
     end
 
-    bld.sameLine(')')
-    bld.startBlock
+    bld.same_line(')')
+    bld.start_block
     get_body(codeClass, bld)
   end
 
@@ -73,22 +73,22 @@ class XCTECpp::MethodDefine < XCTEPlugin
 
     for var in varArray
       if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
-        bld.sameLine(seperator << XCTECpp::Utils.getTypeName(var.vtype) << ' ')
-        bld.sameLine('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
+        bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << ' ')
+        bld.same_line('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
         seperator = ', '
       end
     end
 
-    bld.sameLine(')')
-    bld.startBlock
+    bld.same_line(')')
+    bld.start_block
 
-    #    if codeClass.hasAnArray
+    #    if codeClass.has_an_array
     #      eqString << "    unsigned int i;\n\n";
     #    end
 
     eqString << get_body(codeClass, '    ')
 
-    bld.endBlock
+    bld.end_block
     bld.add
   end
 

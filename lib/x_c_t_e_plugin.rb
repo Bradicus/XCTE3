@@ -163,24 +163,24 @@ class XCTEPlugin
   end
 
   # Run a function on each variable in a class
-  def eachVar(params)
-    eachVarGrp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb)
+  def each_var(params)
+    each_var_grp(params.cls.model.varGroup, params.bld, params.separateGroups, params.varCb)
   end
 
   # Run a function on each variable in a variable group and subgroups
-  def eachVarGrp(vGroup, bld, separateGroups, varFun)
+  def each_var_grp(vGroup, bld, separateGroups, varFun)
     for var in vGroup.vars
       if var.elementId == CodeElem::ELEM_VARIABLE
         varFun.call(var)
       elsif !bld.nil? && var.elementId == CodeElem::ELEM_COMMENT
-        bld.sameLine(getComment(var))
+        bld.same_line(getComment(var))
       elsif !bld.nil? && var.elementId == CodeElem::ELEM_FORMAT
         bld.add(var.formatText)
       end
     end
 
     for grp in vGroup.varGroups
-      eachVarGrp(grp, bld, separateGroups, varFun)
+      each_var_grp(grp, bld, separateGroups, varFun)
       bld.separate if separateGroups && !bld.nil?
     end
   end

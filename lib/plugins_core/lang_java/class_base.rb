@@ -8,19 +8,19 @@ module XCTEJava
       Utils.instance
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
 
       render_package_start(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -56,7 +56,7 @@ module XCTEJava
     end
 
     def render_dependencies(cls, bld)
-      bld.separateIf(cls.uses.length > 0)
+      bld.seperate_if(cls.uses.length > 0)
 
       for use in cls.uses
         bld.add('import ' + use.namespace.get('.') + ';')
@@ -66,11 +66,11 @@ module XCTEJava
         # elsif inc.name.count(".") > 0
         #   bld.add('#include "' << incPathAndName << '"')
         # else
-        #   bld.add('#include "' << incPathAndName << "." << Utils.instance.getExtension("header") << '"')
+        #   bld.add('#include "' << incPathAndName << "." << Utils.instance.get_extension("header") << '"')
         # end
       end
 
-      bld.separateIf(cls.uses.length > 0)
+      bld.seperate_if(cls.uses.length > 0)
     end
 
     def render_package_start(cls, bld)
@@ -82,7 +82,7 @@ module XCTEJava
     end
 
     def render_header_var_group_getter_setters(cls, bld)
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
           templ = XCTEPlugin.findMethodPlugin('java', 'method_get')
           templ.get_definition(var, bld) if !templ.nil?
@@ -94,7 +94,7 @@ module XCTEJava
       }))
     end
 
-    def genFileComment(cls, bld)
+    def gen_file_comment(cls, bld)
       cfg = UserSettings.instance
       headerString = String.new
 

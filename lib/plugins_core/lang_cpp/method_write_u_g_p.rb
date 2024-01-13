@@ -29,7 +29,7 @@ class XCTECpp::MethodWriteUGP < XCTEPlugin
     writeDef << 'void ' << codeClass.name << ' :: write' + "(ug::io::StreamWriter* ugsw)\n"
     writeDef << "{\n"
 
-    if codeClass.hasAnArray
+    if codeClass.has_an_array
       writeDef << "    unsigned int i;\n\n"
     end
 

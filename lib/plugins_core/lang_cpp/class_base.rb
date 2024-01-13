@@ -35,7 +35,7 @@ module XCTECpp
         elsif inc.name.count('.') > 0
           bld.add('#include "' << incPathAndName << '"')
         else
-          bld.add('#include "' << incPathAndName << '.' << Utils.instance.getExtension('header') << '"')
+          bld.add('#include "' << incPathAndName << '.' << Utils.instance.get_extension('header') << '"')
         end
       end
     end
@@ -55,7 +55,7 @@ module XCTECpp
     end
 
     def render_function_declairations(cls, bld)
-      Utils.instance.eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+      Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
         if fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('cpp', fun.name)
           if !templ.nil?
@@ -93,7 +93,7 @@ module XCTECpp
       return unless cls.namespace.hasItems?
 
       for nsItem in cls.namespace.nsList
-        bld.startBlock('namespace ' << nsItem)
+        bld.start_block('namespace ' << nsItem)
       end
     end
 
@@ -102,17 +102,17 @@ module XCTECpp
       return unless cls.namespace.hasItems?
 
       cls.namespace.nsList.reverse_each do |nsItem|
-        bld.endBlock
-        bld.sameLine(nsCloseChar + '  // namespace ' << nsItem)
+        bld.end_block
+        bld.same_line(nsCloseChar + '  // namespace ' << nsItem)
       end
       # bld.add("\n"
     end
 
     def addAutoIncludes(cls)
       # Process variables
-      eachVar(uevParams.wCls(cls).wSeparate(false).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wSeparate(false).wVarCb(lambda { |var|
         if var.respond_to? :vtype
-          varTypeMap = Utils.instance.getType(var.vtype)
+          varTypeMap = Utils.instance.get_type(var.vtype)
           if !varTypeMap.nil? && !varTypeMap.autoInclude.name.nil? && !varTypeMap.autoInclude.name.empty?
             cls.addInclude(varTypeMap.autoInclude.path, varTypeMap.autoInclude.name, varTypeMap.autoInclude.itype)
           end

@@ -25,7 +25,7 @@ class XCTERuby::MethodEqualityAssign < XCTEPlugin
     eqString << "/**\n* Sets this object equal to incoming object\n*/\n"
     eqString << 'def =' << '(src' + codeClass.name << ")\n"
 
-    #    if codeClass.hasAnArray
+    #    if codeClass.has_an_array
     #      eqString << "    unsigned int i;\n\n";
     #    end
 

@@ -17,17 +17,17 @@ module XCTETypescript
       cls.getUName + ' component'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + '.component')
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '.component')
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -40,23 +40,23 @@ module XCTETypescript
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      filePart = Utils.instance.getStyledFileName(cls.getUName)
+      filePart = Utils.instance.get_styled_file_name(cls.getUName)
 
-      bld.startClass('class NavNode')
+      bld.start_class('class NavNode')
       bld.add('name: string;')
       bld.add('url: string | null;')
       bld.add('children: NavNode[] = [];')
 
-      bld.startFunction('constructor(name: string, url: string | null)')
+      bld.start_function('constructor(name: string, url: string | null)')
 
       bld.add('this.name = name;')
       bld.add('this.url = url;')
       bld.endFunction
-      bld.endBlock
+      bld.end_block
       bld.separate
 
       bld.add('@Component({')
@@ -67,13 +67,13 @@ module XCTETypescript
       bld.unindent
       bld.add('})')
 
-      bld.startClass('export class ' + getClassName(cls))
+      bld.start_class('export class ' + getClassName(cls))
 
       bld.add('public navNode:NavNode = new NavNode("", null);')
       bld.add 'collapsed = true;'
       bld.separate
 
-      bld.startFunction('constructor()')
+      bld.start_function('constructor()')
 
       features = {}
       rootNode = NavigationNode.new('', '/')
@@ -133,13 +133,13 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startFunction 'addNode(toNode: NavNode, name: string, link: string | null)'
+      bld.start_function 'addNode(toNode: NavNode, name: string, link: string | null)'
       bld.add 'var newNode = new NavNode(name, link);'
       bld.add 'toNode.children.push(newNode);'
       bld.add 'return newNode;'
       bld.endFunction
 
-      bld.endClass
+      bld.end_class
     end
 
     def findChildNode(rootNode, formattedFeatureName)

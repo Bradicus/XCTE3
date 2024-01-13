@@ -25,11 +25,11 @@ module XCTERazor
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererRazor.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName)
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
       bld.lfExtension = 'cshtml'
       genFileContent(cls, bld)
 

@@ -13,17 +13,17 @@ module XCTETypescript
       cls.getUName + ' shared data store service'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -32,16 +32,16 @@ module XCTETypescript
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      bld.startBlock('@Injectable(')
+      bld.start_block('@Injectable(')
       bld.add("providedIn: 'root',")
-      bld.endBlock(')')
-      bld.startClass('export class ' + getClassName(cls))
+      bld.end_block(')')
+      bld.start_class('export class ' + getClassName(cls))
 
-      itemVar = Utils.instance.createVarFor(cls, 'standard')
+      itemVar = Utils.instance.create_var_for(cls, 'standard')
 
       if cls.xmlElement['isList'] == 'true'
         observableType = 'Observable<' + Utils.instance.get_styled_class_name(cls.model.name) + '[]>'
@@ -54,19 +54,19 @@ module XCTETypescript
       bld.add('lastUpdate: Date = new Date(0);')
       bld.add('expireMinutes: Number = 5;')
 
-      dataServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_store_service')
+      dataServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
 
       constructorParams = []
       Utils.instance.addParamIfAvailable(constructorParams, dataServiceVar)
 
       bld.separate
-      bld.startFunctionParamed('constructor', constructorParams)
+      bld.start_function_paramed('constructor', constructorParams)
       bld.endFunction
 
       # Generate code for functions
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

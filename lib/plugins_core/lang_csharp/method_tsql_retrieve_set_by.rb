@@ -15,7 +15,7 @@ module XCTECSharp
       bld.add('/// <summary>')
       bld.add('/// Reads set of results using the specified filter parameters')
       bld.add('/// </summary>')
-      bld.startFunction('public ' + get_function_signature(cls, bld, fun))
+      bld.start_function('public ' + get_function_signature(cls, bld, fun))
 
       get_body(cls, bld, fun)
 
@@ -75,14 +75,14 @@ module XCTECSharp
         whereItems << whereCondition
       end
       bld.add(whereItems.join(' AND '))
-      bld.sameLine('";')
+      bld.same_line('";')
 
       bld.unindent
 
       bld.add
 
-      bld.startBlock('try')
-      bld.startBlock('using(SqlCommand cmd = new SqlCommand(sql, conn))')
+      bld.start_block('try')
+      bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
 
       fun.variableReferences.each do |param|
         bld.add('cmd.Parameters.AddWithValue(' +
@@ -92,7 +92,7 @@ module XCTECSharp
 
       bld.add('SqlDataReader results = cmd.ExecuteReader();')
 
-      bld.startBlock('while(results.Read())')
+      bld.start_block('while(results.Read())')
 
       bld.add('var o = new ' + Utils.instance.get_styled_class_name(cls.getUName) + '();')
       bld.add
@@ -102,13 +102,13 @@ module XCTECSharp
       bld.add
       bld.add('resultList.Add(o);')
 
-      bld.endBlock
-      bld.endBlock
+      bld.end_block
+      bld.end_block
 
-      bld.endBlock
-      bld.startBlock('catch(Exception e)')
+      bld.end_block
+      bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Error retrieving all items from ' + cls.getUName + '", e);')
-      bld.endBlock(';')
+      bld.end_block(';')
 
       bld.add
       bld.add('return resultList;')

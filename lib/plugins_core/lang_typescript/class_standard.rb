@@ -27,16 +27,16 @@ module XCTETypescript
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -48,12 +48,12 @@ module XCTETypescript
       super
 
       # Generate class variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        Utils.instance.tryAddIncludeForVar(cls, var, 'standard') if !Utils.instance.is_primitive(var)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        Utils.instance.try_add_include_for_var(cls, var, 'standard') if !Utils.instance.is_primitive(var)
       }))
     end
 
-    def genFileComment(cls, bld)
+    def gen_file_comment(cls, bld)
       cfg = UserSettings.instance
       headerString = String.new
 
@@ -86,10 +86,10 @@ module XCTETypescript
       bld.separate
 
       bld.separate
-      bld.startClass('export class ' + getClassName(cls))
+      bld.start_class('export class ' + getClassName(cls))
 
       # Generate class variables
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
 
@@ -97,7 +97,7 @@ module XCTETypescript
       # Generate code for functions
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

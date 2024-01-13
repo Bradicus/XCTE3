@@ -7,16 +7,16 @@
 #
 # This class renders CSharp code
 
-require "source_renderer_brace_delim.rb"
+require 'source_renderer_brace_delim'
 
 class SourceRendererCSharp < SourceRendererBraceDelim
-  def initialize()
+  def initialize
     super
 
     @hangingBlockStart = false
   end
 
-  def endClass(afterClose = "")
-    endBlock(afterClose)
+  def end_class(afterClose = '')
+    end_block(afterClose)
   end
 end

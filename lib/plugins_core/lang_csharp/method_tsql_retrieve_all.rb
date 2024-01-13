@@ -25,12 +25,12 @@ module XCTECSharp
 
       standard_class_name = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
 
-      bld.startClass('public IEnumerable<' + standard_class_name +
+      bld.start_class('public IEnumerable<' + standard_class_name +
                      '> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)')
 
       get_body(cls, bld, fun)
 
-      bld.endClass
+      bld.end_class
     end
 
     def get_declairation(cls, bld, _fun)
@@ -59,24 +59,24 @@ module XCTECSharp
 
       bld.add('FROM ' + tableName + '";')
       bld.add
-      bld.startBlock('try')
-      bld.startBlock('using(SqlCommand cmd = new SqlCommand(sql, conn))')
+      bld.start_block('try')
+      bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
       bld.add('cmd.Transaction = trans;')
       bld.add
       bld.add('SqlDataReader results = cmd.ExecuteReader();')
-      bld.startBlock('while(results.Read())')
+      bld.start_block('while(results.Read())')
 
       bld.add('var o = new ' + tableName + '();')
 
       Utils.instance.genAssignResults(cls, bld)
 
-      bld.endBlock
-      bld.endBlock
+      bld.end_block
+      bld.end_block
 
-      bld.endBlock
-      bld.startBlock('catch(Exception e)')
+      bld.end_block
+      bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Error retrieving all items from ' + tableName + '", e);')
-      bld.endBlock(';')
+      bld.end_block(';')
 
       bld.add
       bld.add('return resultList;')

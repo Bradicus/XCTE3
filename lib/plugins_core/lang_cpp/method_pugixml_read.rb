@@ -43,10 +43,10 @@ module XCTECpp
       bld.add('*/')
 
       classDef = String.new
-      classDef << Utils.instance.getTypeName(codeFun.returnValue) << ' ' <<
+      classDef << Utils.instance.get_type_name(codeFun.returnValue) << ' ' <<
         Utils.instance.get_styled_class_name(cls.name) << ' :: ' << 'read(pugi::xml_node node, ' +
                                                                     Utils.instance.get_styled_class_name(cls.name) + '& item)'
-      bld.startClass(classDef)
+      bld.start_class(classDef)
 
       get_body(cls, bld, codeFun)
 
@@ -57,7 +57,7 @@ module XCTECpp
       conDef = String.new
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.get_styled_variable_name(var)
 
         pugiCast = 'to_string()'
@@ -68,26 +68,26 @@ module XCTECpp
           if !var.isList
             bld.add(styledVarName + ' = item.child(' + styledVarName + ').' + pugiCast + ';')
           else
-            bld.startBlock('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
+            bld.start_block('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
             bld.add(styledVarName + '.push_back(pNode.' + pugiCast + ');')
-            bld.endBlock
+            bld.end_block
           end
         elsif !var.isList
           bld.add(
-            Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(' +
+            Utils.instance.get_type_name(var) + 'JsonEngine::loadFromJson(' +
             Utils.instance.get_styled_variable_name(var) +
               '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + Utils.instance.get_styled_variable_name(var) + ');'
           )
         else
-          bld.startBlock('for (auto aJson : json["' + Utils.instance.get_styled_variable_name(var) + '"])')
+          bld.start_block('for (auto aJson : json["' + Utils.instance.get_styled_variable_name(var) + '"])')
           if !var.isList
-            bld.add(Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(aJson, item);')
+            bld.add(Utils.instance.get_type_name(var) + 'JsonEngine::loadFromJson(aJson, item);')
           else
-            bld.add(Utils.instance.getTypeName(var) + ' newVar;')
-            bld.add(Utils.instance.getTypeName(var) + 'JsonEngine::loadFromJson(aJson, item);')
+            bld.add(Utils.instance.get_type_name(var) + ' newVar;')
+            bld.add(Utils.instance.get_type_name(var) + 'JsonEngine::loadFromJson(aJson, item);')
             bld.add(Utils.instance.get_styled_variable_name(var) + '.push_back(newVar);')
           end
-          bld.endBlock
+          bld.end_block
         end
       }))
     end

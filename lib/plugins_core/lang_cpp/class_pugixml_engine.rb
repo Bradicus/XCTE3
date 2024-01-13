@@ -28,18 +28,18 @@ module XCTECpp
       cls.getUName + ' pugi xml engine'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.getStyledFileName(cls.getUName + 'PugiXmlEngine')
-      hFile.lfExtension = Utils.instance.getExtension('header')
+      hFile.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'PugiXmlEngine')
+      hFile.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, hFile)
       genHeader(cls, hFile)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName + 'PugiXmlEngine')
-      cppFile.lfExtension = Utils.instance.getExtension('body')
+      cppFile.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'PugiXmlEngine')
+      cppFile.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
 
@@ -98,20 +98,20 @@ module XCTECpp
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          hFile.startBlock('namespace ' << nsItem)
+          hFile.start_block('namespace ' << nsItem)
         end
         hFile.add
       end
 
       # Do automatic static array size declairations above class def
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
           hFile.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
         end
       }))
 
-      hFile.separate if Utils.instance.hasAnArray(cls)
+      hFile.separate if Utils.instance.has_an_array?(cls)
 
       classDec = 'class ' + cls.name
 
@@ -132,14 +132,14 @@ module XCTECpp
         end
       end
 
-      hFile.startClass(classDec)
+      hFile.start_class(classDec)
 
       hFile.add('public:')
       hFile.indent
 
       # Generate class variables
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         hFile.add(Utils.instance.getVarDec(var)) if var.arrayElemCount > 0
       }))
 
@@ -177,14 +177,14 @@ module XCTECpp
           if funItem.formatText == "\n"
             hFile.add
           else
-            hFile.sameLine(funItem.formatText)
+            hFile.same_line(funItem.formatText)
           end
         end
       end
 
       hFile.unindent
 
-      hFile.endClass
+      hFile.end_class
 
       render_namespace_end(cls, hFile)
 
@@ -205,15 +205,15 @@ module XCTECpp
 
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE && var.isStatic
-          cppGen.add(Utils.instance.getTypeName(var) << ' ')
-          cppGen.sameLine(Utils.instance.get_styled_class_name(cls.getUName) << ' :: ')
-          cppGen.sameLine(Utils.instance.get_styled_variable_name(var))
+          cppGen.add(Utils.instance.get_type_name(var) << ' ')
+          cppGen.same_line(Utils.instance.get_styled_class_name(cls.getUName) << ' :: ')
+          cppGen.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array
-            cppGen.sameLine('[' + Utils.instance.getSizeConst(var) << ']')
+            cppGen.same_line('[' + Utils.instance.getSizeConst(var) << ']')
           end
 
-          cppGen.sameLine(';')
+          cppGen.same_line(';')
         end
       end
 

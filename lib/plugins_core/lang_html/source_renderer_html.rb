@@ -7,18 +7,18 @@
 #
 # This class renders php code
 
-require "source_renderer.rb"
+require 'source_renderer'
 
 class SourceRendererHtml < SourceRenderer
-  def initialize()
+  def initialize
     super
 
-    @blockDelimOpen = ""
-    @blockDelimClose = ""
+    @blockDelimOpen = ''
+    @blockDelimClose = ''
   end
 
   def render_html(htmlNodes)
-    if !htmlNodes.kind_of?(Array)
+    if !htmlNodes.is_a?(Array)
       render_html_node(htmlNodes)
     else
       for htmlNode in htmlNodes
@@ -29,7 +29,7 @@ class SourceRendererHtml < SourceRenderer
 
   def render_html_node(htmlNode)
     add('<' + htmlNode.name)
-    allAttribs = Hash.new
+    allAttribs = {}
 
     if htmlNode.classAttrib.length > 0
       allAttribs['class'] = htmlNode.classAttrib.join(' ')
@@ -39,18 +39,18 @@ class SourceRendererHtml < SourceRenderer
 
     if allAttribs.length > 0
       allAttribs.each do |key, value|
-        sameLine(' ' + key + '="' + value + '"')
+        same_line(' ' + key + '="' + value + '"')
       end
     end
 
     if htmlNode.selfClose
-      sameLine(' />')
+      same_line(' />')
     else
-      sameLine('>')
+      same_line('>')
       indent
 
       if htmlNode.text.length > 0
-        sameLine(htmlNode.text)
+        same_line(htmlNode.text)
       end
 
       for child in htmlNode.children
@@ -62,7 +62,7 @@ class SourceRendererHtml < SourceRenderer
       if htmlNode.children.length > 0
         add('</' + htmlNode.name + '>')
       else
-        sameLine('</' + htmlNode.name + '>')
+        same_line('</' + htmlNode.name + '>')
       end
     end
   end

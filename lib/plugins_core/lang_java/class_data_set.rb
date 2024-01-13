@@ -30,19 +30,19 @@ module XCTEJava
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
 
       render_package_start(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -52,7 +52,7 @@ module XCTEJava
 
     def process_dependencies(cls, bld)
       # Generate class variables
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         Utils.instance.requires_var(cls, var) if !is_primitive(var)
       }))
 
@@ -65,7 +65,7 @@ module XCTEJava
       super
     end
 
-    def genFileComment(cls, bld)
+    def gen_file_comment(cls, bld)
       cfg = UserSettings.instance
 
       bld.add('/**')
@@ -92,12 +92,12 @@ module XCTEJava
     def genFileContent(cls, bld)
       cfg = UserSettings.instance
 
-      bld.startClass('public class ' << cls.name)
+      bld.start_class('public class ' << cls.name)
 
-      bld.separate if Utils.instance.hasAnArray(cls)
+      bld.separate if Utils.instance.has_an_array?(cls)
 
       # Generate class variables
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
 
@@ -106,7 +106,7 @@ module XCTEJava
       render_functions(cls, bld)
       render_header_var_group_getter_setters(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

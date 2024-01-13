@@ -27,7 +27,7 @@ module XCTESql
       if var.arrayElemCount.to_i > 0 # All arrays will be csv strings
         vDec << 'TEXT'
       else
-        tName = getTypeName(var.vtype)
+        tName = get_type_name(var.vtype)
 
         if tName != var.vtype
           vDec << tName
@@ -40,13 +40,13 @@ module XCTESql
     end
 
     # Get a parameter declaration for a method parameter
-    def getTypeName(gType)
-      return @@langProfile.getTypeName(gType)
+    def get_type_name(gType)
+      return @@langProfile.get_type_name(gType)
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @@langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @@langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,

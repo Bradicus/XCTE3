@@ -24,8 +24,8 @@ module XCTEJava
       return unless var.genGet == true && !var.isPointer
 
       varName = Utils.instance.get_styled_variable_name(var)
-      bld.add('public ' + Utils.instance.getTypeName(var) + ' ' + Utils.instance.get_styled_function_name('get ' + var.name))
-      bld.sameLine("()\t{ return(" + varName + '); }')
+      bld.add('public ' + Utils.instance.get_type_name(var) + ' ' + Utils.instance.get_styled_function_name('get ' + var.name))
+      bld.same_line("()\t{ return(" + varName + '); }')
     end
   end
 end

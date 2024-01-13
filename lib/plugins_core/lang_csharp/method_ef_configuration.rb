@@ -26,7 +26,7 @@ module XCTECSharp
       entityClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
       configFunName = 'Configure(EntityTypeBuilder<' + entityClassName + '> builder)'
 
-      bld.startFunction('public void ' + configFunName)
+      bld.start_function('public void ' + configFunName)
 
       get_body(cls, bld, fun)
 
@@ -37,7 +37,7 @@ module XCTECSharp
       bld.add('builder.ToTable("' + XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) + '", "dbo");')
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet || var.genSet
           bld.add('builder.Property(e => e.' + XCTECSharp::Utils.instance.get_styled_function_name(var.name) + ')')
         else

@@ -16,7 +16,7 @@ module XCTETypescript
       className = Utils.instance.get_styled_class_name(cls.getUName)
       urlName = Utils.instance.getStyledUrlName(cls.getUName)
 
-      bld.startFunction('listing(req: FilteredPageReqTpl<' + className + '>): Observable<FilteredPageRespTpl<' + className + '>>')
+      bld.start_function('listing(req: FilteredPageReqTpl<' + className + '>): Observable<FilteredPageRespTpl<' + className + '>>')
       bld.add 'let params = new HttpParams();'
       bld.separate
       bld.add 'params = params.append("pageNum", req.pageNum);'

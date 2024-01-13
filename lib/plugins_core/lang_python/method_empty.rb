@@ -39,7 +39,7 @@ module XCTEPython
         rend.add('# return:: ')
       end
 
-      rend.startFunction('def ' + Utils.instance.get_styled_function_name(fun.name))
+      rend.start_function('def ' + Utils.instance.get_styled_function_name(fun.name))
 
       # Function body framework
 
@@ -47,13 +47,13 @@ module XCTEPython
 
       for param in (0..(fun.parameters.vars.size - 1))
         if param != 0
-          rend.sameLine(', ')
+          rend.same_line(', ')
         end
 
-        rend.sameLine(Utils.instance.getParamDec(fun.parameters.vars[param]))
+        rend.same_line(Utils.instance.getParamDec(fun.parameters.vars[param]))
       end
 
-      rend.sameLine(')')
+      rend.same_line(')')
       rend.add
 
       if fun.returnValue.vtype != 'void'

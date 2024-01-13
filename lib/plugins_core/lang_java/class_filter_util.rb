@@ -30,19 +30,19 @@ module XCTEJava
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
 
       render_package_start(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -61,11 +61,11 @@ module XCTEJava
     def genFileContent(cls, bld)
       cfg = UserSettings.instance
 
-      bld.startClass('public class Filter')
+      bld.start_class('public class Filter')
 
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

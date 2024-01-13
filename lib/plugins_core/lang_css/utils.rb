@@ -22,7 +22,7 @@ module XCTECss
     def getParamDec(var)
       pDec = String.new
 
-      pDec << getTypeName(var.vtype)
+      pDec << get_type_name(var.vtype)
 
       pDec << ' ' << var.name
 
@@ -47,7 +47,7 @@ module XCTECss
       end
 
       vDec << get_styled_variable_name(var)
-      vDec << ': ' + getTypeName(var)
+      vDec << ': ' + get_type_name(var)
 
       if var.arrayElemCount.to_i > 0 && var.vtype != 'String'
         vDec << '[' + getSizeConst(var) << ']'
@@ -68,7 +68,7 @@ module XCTECss
     end
 
     # Get a type name for a variable
-    def getTypeName(var)
+    def get_type_name(var)
       typeName = getSingleItemTypeName(var)
 
       if !var.listType.nil?
@@ -99,7 +99,7 @@ module XCTECss
 
       baseTypeName = ''
       if !var.vtype.nil?
-        baseTypeName = @langProfile.getTypeName(var.vtype)
+        baseTypeName = @langProfile.get_type_name(var.vtype)
       else
         baseTypeName = CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
       end
@@ -110,12 +110,12 @@ module XCTECss
     end
 
     def getListTypeName(listTypeName)
-      return @langProfile.getTypeName(listTypeName)
+      return @langProfile.get_type_name(listTypeName)
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,
@@ -138,7 +138,7 @@ module XCTECss
 
     # process variable group
     def renderReactiveFormGroup(_cls, bld, vGroup, isDisabled)
-      bld.sameLine('this.fb.group({')
+      bld.same_line('this.fb.group({')
       bld.indent
 
       for var in vGroup.vars
@@ -159,7 +159,7 @@ module XCTECss
                   renderReactiveFormGroup(otherClass, bld, group, isDisabled)
                 end
               else
-                bld.sameLine("[''],")
+                bld.same_line("[''],")
               end
             else
               bld.add(Utils.instance.get_styled_variable_name(var) + ': this.fb.array(),')

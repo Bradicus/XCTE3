@@ -34,13 +34,13 @@ module XCTERuby
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
-      genFileComment(cls, bld)
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -48,7 +48,7 @@ module XCTERuby
       srcFiles
     end
 
-    def genFileComment(cls, bld)
+    def gen_file_comment(cls, bld)
       renderGlobalComment(cls.genCfg, bld)
 
       bld.separate
@@ -67,7 +67,7 @@ module XCTERuby
       bld.separate
 
       for inc in cls.includes
-        bld.add("require '" << inc.path << inc.name << '.' << Utils.instance.getExtension('body'))
+        bld.add("require '" << inc.path << inc.name << '.' << Utils.instance.get_extension('body'))
       end
 
       bld.separate
@@ -82,7 +82,7 @@ module XCTERuby
         Log.error("Ruby doesn't support multiple inheritance")
       end
 
-      bld.startClass('class ' + getClassName(cls) + inheritFrom)
+      bld.start_class('class ' + getClassName(cls) + inheritFrom)
 
       accessors = Accessors.new
       # Do automatic static array size declairations at top of class
@@ -94,7 +94,7 @@ module XCTERuby
 
       bld.separate
 
-      bld.startFunction 'def initialize'
+      bld.start_function 'def initialize'
       # Do automatic static array size declairations at top of class
       process_var_group(cls, bld, cls.model.varGroup)
 
@@ -105,7 +105,7 @@ module XCTERuby
         process_function(cls, bld, fun)
       end
 
-      bld.endClass
+      bld.end_class
       render_namespace_ends(cls, bld)
     end
 
@@ -124,7 +124,7 @@ module XCTERuby
       return unless accList.length > 0
 
       bld.add(accName + ' :')
-      bld.sameLine(get_accessor_var_list(accList).join(', :'))
+      bld.same_line(get_accessor_var_list(accList).join(', :'))
     end
 
     def get_accessor_var_list(accList)
@@ -144,7 +144,7 @@ module XCTERuby
         when CodeElem::ELEM_VARIABLE
           bld.add(Utils.instance.getVarDec(var))
         when CodeElem::ELEM_COMMENT
-          bld.sameLine(Utils.instance.getComment(var))
+          bld.same_line(Utils.instance.getComment(var))
         when CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end

@@ -13,13 +13,13 @@ module XCTEHtml
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls) + '.component')
-      bld.lfExtension = Utils.instance.getExtension('body')
-      # genFileComment(cls, bld)
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
+      bld.lfExtension = Utils.instance.get_extension('body')
+      # gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -79,31 +79,31 @@ module XCTEHtml
         end
       end
 
-      bld.startBlock('<nav class="navbar navbar-expand-lg navbar-light bg-light">')
-      bld.startBlock('<div class="container-fluid">')
+      bld.start_block('<nav class="navbar navbar-expand-lg navbar-light bg-light">')
+      bld.start_block('<div class="container-fluid">')
 
-      bld.startBlock '<div class="collapse navbar-collapse" id="navbarContent">'
-      bld.startBlock('<ul class="navbar-nav">')
+      bld.start_block '<div class="collapse navbar-collapse" id="navbarContent">'
+      bld.start_block('<ul class="navbar-nav">')
 
       for fNode in rootNode.children
-        bld.startBlock '<li class="nav-item" ngbDropdown>'
+        bld.start_block '<li class="nav-item" ngbDropdown>'
         bld.add '<a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button"> ' + fNode.name + ' </a>'
 
-        bld.startBlock('<div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">')
+        bld.start_block('<div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">')
         for cNode in fNode.children
           bld.add '<a ngbDropdownItem routerLink="' + cNode.link + '">' + cNode.name + '</a>'
         end
-        bld.endBlock '</div>'
-        bld.endBlock '</li>'
+        bld.end_block '</div>'
+        bld.end_block '</li>'
       end
       #      for group in cls.model.groups
       #        process_var_group_menu(cls, bld, group)
       #      end
-      bld.endBlock('</ul>')
-      bld.endBlock('</div>')
-      bld.endBlock('</div>')
+      bld.end_block('</ul>')
+      bld.end_block('</div>')
+      bld.end_block('</div>')
 
-      bld.endBlock('</nav>')
+      bld.end_block('</nav>')
 
       bld.add
     end
@@ -124,9 +124,9 @@ module XCTEHtml
         if var.elementId == CodeElem::ELEM_VARIABLE
           varName = Utils.instance.get_styled_variable_name(var)
 
-          bld.startBlock('<li class="nav-item">')
+          bld.start_block('<li class="nav-item">')
           bld.add('<a class="nav-link active" aria-current="page" href="#">' + var.name + '</a>')
-          bld.endBlock('</li>')
+          bld.end_block('</li>')
         end
         for group in vGroup.varGroups
           process_var_group_body(cls, bld, group)

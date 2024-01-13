@@ -51,13 +51,13 @@ module XCTEJava
       bld.iadd 'consumes = MediaType.APPLICATION_JSON_VALUE, '
       bld.iadd 'produces = MediaType.APPLICATION_JSON_VALUE)'
 
-      bld.startFunction('public ResponseEntity<Boolean> Delete' + className +
+      bld.start_function('public ResponseEntity<Boolean> Delete' + className +
                         '(' + params.join(', ') + ')')
 
       bld.add 'var dataItem = ' + dataStoreName + '.findById(item.id);'
       bld.separate
 
-      bld.startBlock 'if (dataItem.isPresent())'
+      bld.start_block 'if (dataItem.isPresent())'
       if !cls.dataClass.nil?
         bld.add mapperName + '.map(item, dataItem.get());'
         bld.add(dataStoreName + '.delete(dataItem.get());')
@@ -70,9 +70,9 @@ module XCTEJava
         bld.add 'return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);'
       end
 
-      bld.midBlock('else')
+      bld.mid_block('else')
       bld.add 'return null;'
-      bld.endBlock
+      bld.end_block
 
       bld.endFunction
     end

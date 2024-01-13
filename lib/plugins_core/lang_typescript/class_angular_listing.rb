@@ -19,22 +19,22 @@ module XCTETypescript
 
     def getFileName(cls)
       if !cls.featureGroup.nil?
-        Utils.instance.getStyledFileName(cls.getUName + '.component')
+        Utils.instance.get_styled_file_name(cls.getUName + '.component')
       else
-        Utils.instance.getStyledFileName(cls.getUName + '.component')
+        Utils.instance.get_styled_file_name(cls.getUName + '.component')
       end
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
       bld.lfName = getFileName(cls)
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -46,7 +46,7 @@ module XCTETypescript
       cls.addInclude('@angular/core', 'Component, OnInit')
       cls.addInclude('@angular/router', 'Routes, RouterModule, ActivatedRoute')
       cls.addInclude('rxjs', 'Observable', 'lib')
-      cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(cls.model.name),
+      cls.addInclude('shared/dto/model/' + Utils.instance.get_styled_file_name(cls.model.name),
                      Utils.instance.get_styled_class_name(cls.model.name))
 
       cls.addInclude('shared/paging/filtered-page-req-tpl', 'FilteredPageReqTpl')
@@ -66,7 +66,7 @@ module XCTETypescript
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
@@ -74,12 +74,12 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.getStyledFileName(cls.getUName)
+      filePart = Utils.instance.get_styled_file_name(cls.getUName)
 
       clsVar = CodeNameStyling.getStyled(get_unformatted_class_name(cls), Utils.instance.langProfile.variableNameStyle)
 
       standard_class_name = Utils.instance.get_styled_class_name(cls.model.name)
-      routeName = Utils.instance.getStyledFileName(cls.getUName)
+      routeName = Utils.instance.get_styled_file_name(cls.getUName)
 
       bld.add('@Component({')
       bld.indent
@@ -91,7 +91,7 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startBlock('export class ' + getClassName(cls) + ' implements OnInit ')
+      bld.start_block('export class ' + getClassName(cls) + ' implements OnInit ')
 
       bld.add('public pageObv: Observable<FilteredPageRespTpl<' + standard_class_name + '>> = new Observable<FilteredPageRespTpl<' + standard_class_name + '>>;')
       bld.add('public page: FilteredPageRespTpl<' + standard_class_name + '> = new FilteredPageRespTpl<' + standard_class_name + '>;')
@@ -108,10 +108,10 @@ module XCTETypescript
       bld.separate
 
       constructorParams = []
-      userServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_store_service')
+      userServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
       Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
       constructorParams.push('private route: ActivatedRoute')
-      bld.startFunctionParamed('constructor', constructorParams)
+      bld.start_function_paramed('constructor', constructorParams)
 
       if cls.model.data_filter.search.columns.length > 0
         subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search)
@@ -122,59 +122,59 @@ module XCTETypescript
         bld.separate
       end
 
-      bld.endBlock
+      bld.end_block
 
       bld.separate
 
       searchNames = load_search_names(cls)
 
-      bld.startBlock('ngOnInit()')
+      bld.start_block('ngOnInit()')
       bld.add 'this.updatePageData();'
-      bld.endBlock
+      bld.end_block
 
       bld.separate
 
-      bld.startBlock('getVisiblePageCount()')
+      bld.start_block('getVisiblePageCount()')
       bld.add('return Math.min((this.page?.pageCount ?? 0, 10));')
-      bld.endBlock
+      bld.end_block
 
       bld.separate
 
-      bld.startBlock('updatePageData()')
+      bld.start_block('updatePageData()')
       bld.add('this.pageObv = ' + 'this.' + Utils.instance.get_styled_variable_name(userServiceVar) + '.listing(this.pageReq);')
-      bld.startBlock 'this.pageObv.subscribe((p) =>  '
+      bld.start_block 'this.pageObv.subscribe((p) =>  '
       bld.add 'this.page = p;'
       bld.add 'this.pageReq.pageNum = this.page.pageNum;'
       bld.add 'this.pageReq.pageSize = this.page.pageSize;'
-      bld.endBlock ');'
-      bld.endBlock
+      bld.end_block ');'
+      bld.end_block
 
-      bld.startBlock('goToPage(pageNum: number)')
+      bld.start_block('goToPage(pageNum: number)')
       bld.add('this.pageReq.pageNum = pageNum;')
       bld.add 'this.updatePageData();'
-      bld.endBlock
+      bld.end_block
 
-      bld.startBlock('goToPreviousPage()')
+      bld.start_block('goToPreviousPage()')
       bld.add 'if (this.pageReq.pageNum > 0)'
       bld.iadd 'this.goToPage(this.pageReq.pageNum - 1);'
-      bld.endBlock
+      bld.end_block
 
-      bld.startBlock('goToNextPage()')
+      bld.start_block('goToNextPage()')
       bld.add 'if (this.pageReq.pageNum < this.page.pageCount - 1)'
       bld.iadd 'this.goToPage(this.pageReq.pageNum + 1);'
-      bld.endBlock
+      bld.end_block
 
-      bld.startBlock 'sortBy(colName: string)'
-      bld.startBlock 'if (colName === this.pageReq.sortBy)'
+      bld.start_block 'sortBy(colName: string)'
+      bld.start_block 'if (colName === this.pageReq.sortBy)'
       bld.add 'this.pageReq.sortAsc = !this.pageReq.sortAsc;'
-      bld.midBlock 'else'
+      bld.mid_block 'else'
       bld.add 'this.pageReq.sortBy = colName;'
       bld.add 'this.pageReq.sortAsc = true;'
-      bld.endBlock
+      bld.end_block
       bld.add 'this.updatePageData();'
-      bld.endBlock
+      bld.end_block
 
-      bld.startBlock('onSearch(event: any)')
+      bld.start_block('onSearch(event: any)')
       bld.add 'this.pageReq.searchValue = event.target.value;'
 
       if !cls.model.data_filter.search.columns.empty?
@@ -182,7 +182,7 @@ module XCTETypescript
         bld.add 'this.' + subjectVar.name + '.next(event.target.value);'
       end
 
-      bld.endBlock
+      bld.end_block
 
       bld.separate
 
@@ -190,12 +190,12 @@ module XCTETypescript
         if !act.trigger.nil?
           triggerFun = Utils.instance.get_styled_function_name('on ' + act.trigger)
           if act.trigger == 'delete'
-            bld.startBlock(triggerFun + '(item: ' + standard_class_name + ')')
+            bld.start_block(triggerFun + '(item: ' + standard_class_name + ')')
             bld.add 'this.' + Utils.instance.get_styled_variable_name(userServiceVar) + '.' + act.trigger + '(item)'
-            bld.endBlock
+            bld.end_block
           else
-            bld.startBlock(triggerFun + '(item: ' + standard_class_name + ')')
-            bld.endBlock
+            bld.start_block(triggerFun + '(item: ' + standard_class_name + ')')
+            bld.end_block
           end
         end
       end
@@ -203,7 +203,7 @@ module XCTETypescript
       # Generate code for functions
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
 
     def load_search_names(cls)

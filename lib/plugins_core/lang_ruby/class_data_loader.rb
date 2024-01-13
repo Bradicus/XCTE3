@@ -13,17 +13,17 @@ module XCTERuby
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       #      process_dependencies(cls, bld)
       #      render_dependencies(cls, bld)
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -32,21 +32,21 @@ module XCTERuby
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      bld.startClass('class ' + getClassName(cls))
+      bld.start_class('class ' + getClassName(cls))
 
       bld.separate
       # Generate code for class variables
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(->(var) {}))
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(->(var) {}))
 
       bld.separate
       # Generate code for functions
       render_functions(cls, bld)
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

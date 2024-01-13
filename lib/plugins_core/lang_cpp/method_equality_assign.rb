@@ -23,12 +23,12 @@ module XCTECpp
       eqString = String.new
 
       bld.add(Utils.instance.get_styled_class_name(cls.getUName))
-      bld.sameLine('(const ' + Utils.instance.get_styled_class_name(cls.getUName))
-      bld.sameLine('& src' + Utils.instance.get_styled_class_name(cls.getUName) + ');')
+      bld.same_line('(const ' + Utils.instance.get_styled_class_name(cls.getUName))
+      bld.same_line('& src' + Utils.instance.get_styled_class_name(cls.getUName) + ');')
 
       bld.add('const ' + Utils.instance.get_styled_class_name(cls.getUName))
-      bld.sameLine('& operator=' + '(const ' + Utils.instance.get_styled_class_name(cls.getUName))
-      bld.sameLine('& src' + Utils.instance.get_styled_class_name(cls.getUName) + ");\n")
+      bld.same_line('& operator=' + '(const ' + Utils.instance.get_styled_class_name(cls.getUName))
+      bld.same_line('& src' + Utils.instance.get_styled_class_name(cls.getUName) + ");\n")
     end
 
     def process_dependencies(cls, bld, funItem); end
@@ -42,18 +42,18 @@ module XCTECpp
 
       # First add copy constructor
       bld.genMultiComment(['Copy constructor'])
-      bld.startFunction(styledCName + ' :: ' + styledCName + '(const ' + styledCName + '& src' + styledCName + ')')
+      bld.start_function(styledCName + ' :: ' + styledCName + '(const ' + styledCName + '& src' + styledCName + ')')
       bld.add('operator=(src' + styledCName + ');')
       bld.endFunction
 
       bld.genMultiComment(['Sets this object equal to incoming object'])
       bld.add('const ' + styledCName)
-      bld.sameLine('& ' + styledCName + ' :: operator=' + '(const ' + styledCName)
-      bld.sameLine('& src' + styledCName + ')')
+      bld.same_line('& ' + styledCName + ' :: operator=' + '(const ' + styledCName)
+      bld.same_line('& src' + styledCName + ')')
       bld.add('{')
       bld.indent
 
-      #    if cls.hasAnArray
+      #    if cls.has_an_array
       #      bld.add("    unsigned int i;"))
       #    end
 
@@ -62,17 +62,17 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         fmtVarName = Utils.instance.get_styled_variable_name(var)
         if !var.isStatic # Ignore static variables
           if Utils.instance.is_primitive(var)
             if var.arrayElemCount.to_i > 0 # Array of primitives
               bld.add('memcpy(' + fmtVarName + ', ' + 'src' + styledCName + '.' + fmtVarName + ', ')
-              bld.sameLine('sizeof(' + Utils.instance.getTypeName(var) + ') * ' + Utils.instance.getSizeConst(var))
-              bld.sameLine(');')
+              bld.same_line('sizeof(' + Utils.instance.get_type_name(var) + ') * ' + Utils.instance.getSizeConst(var))
+              bld.same_line(');')
             else
               bld.add(fmtVarName + ' = ' + 'src' + styledCName + '.')
-              bld.sameLine(fmtVarName + ';')
+              bld.same_line(fmtVarName + ';')
             end
           elsif var.arrayElemCount > 0 # Not a primitive
             if !longArrayFound
@@ -82,8 +82,8 @@ module XCTECpp
             bld.add('for (i = 0; i < ' + Utils.instance.getSizeConst(var) + '; i++)')
             bld.indent
             bld.add(fmtVarName + '[i] = ')
-            bld.sameLine('src' + styledCName + '.')
-            bld.sameLine(fmtVarName + "[i];\n")
+            bld.same_line('src' + styledCName + '.')
+            bld.same_line(fmtVarName + "[i];\n")
             bld.unindent # Array of objects
           else
             bld.add(fmtVarName + ' = src' + styledCName + '.' + fmtVarName + ';')

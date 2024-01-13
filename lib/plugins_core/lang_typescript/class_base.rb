@@ -9,8 +9,8 @@ module XCTETypescript
       return Utils.instance
     end
 
-    def getStyledFileName(uName)
-      return Utils.instance.getStyledFileName(uName)
+    def get_styled_file_name(uName)
+      return Utils.instance.get_styled_file_name(uName)
     end
 
     def get_styled_class_name(uName)

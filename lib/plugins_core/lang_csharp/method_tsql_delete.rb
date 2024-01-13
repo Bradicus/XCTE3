@@ -27,13 +27,13 @@ module XCTECSharp
       identVar = cls.model.getIdentityVar
 
       if identVar
-        bld.startClass('public void Delete(' + Utils.instance.getParamDec(identVar.getParam) +
+        bld.start_class('public void Delete(' + Utils.instance.getParamDec(identVar.getParam) +
                        ', SqlConnection conn, SqlTransaction trans = null)')
       end
 
       get_body(cls, bld, fun)
 
-      bld.endClass
+      bld.end_class
     end
 
     def get_declairation(cls, bld, _fun)
@@ -67,18 +67,18 @@ module XCTECSharp
 
       bld.add
 
-      bld.startBlock('try')
-      bld.startBlock('using(SqlCommand cmd = new SqlCommand(sql, conn))')
+      bld.start_block('try')
+      bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
       bld.add('cmd.Transaction = trans;')
       bld.add
       bld.add('cmd.Parameters.AddWithValue("@' + identParamName +
               '", ' + identParamName + ');')
-      bld.endBlock
-      bld.endBlock
-      bld.startBlock('catch(Exception e)')
+      bld.end_block
+      bld.end_block
+      bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Error deleting ' + cls.getUName + ' with ' +
               identVar.name + ' = "' + ' + ' + identParamName + ', e);')
-      bld.endBlock
+      bld.end_block
     end
   end
 end

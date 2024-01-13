@@ -25,7 +25,7 @@ module XCTECSharp
       'i ' + parentPlug.get_unformatted_class_name(cls.parentElem)
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       if cls.parentElem.is_a?(CodeStructure::CodeElemClassSpec)
@@ -39,7 +39,7 @@ module XCTECSharp
 
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.get_styled_class_name(cls.name)
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfExtension = Utils.instance.get_extension('body')
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -64,7 +64,7 @@ module XCTECSharp
       Utils.instance.genUses(cls.uses, bld)
 
       # Process namespace items
-      bld.startBlock('namespace ' << cls.namespace.get('.')) if cls.namespace.hasItems?
+      bld.start_block('namespace ' << cls.namespace.get('.')) if cls.namespace.hasItems?
 
       classDec = cls.model.visibility + ' interface ' + Utils.instance.get_styled_class_name(cls.name)
 
@@ -76,14 +76,14 @@ module XCTECSharp
         end
       end
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
-      bld.endClass
+      bld.end_class
 
       # Process namespace items
       return unless cls.namespace.hasItems?
 
-      bld.endBlock(' // namespace ' + cls.namespace.get('.'))
+      bld.end_block(' // namespace ' + cls.namespace.get('.'))
       bld.add
     end
   end

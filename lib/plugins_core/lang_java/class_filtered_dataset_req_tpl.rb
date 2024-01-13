@@ -32,16 +32,16 @@ module XCTEJava
       headerString = String.new
 
       bld.separate
-      bld.startClass('public class ' + getClassName(cls) + '<T>')
+      bld.start_class('public class ' + getClassName(cls) + '<T>')
 
       model = InternalClassModelManager.findModel('page request')
 
       # Generate class variables
-      eachVar(uevParams.wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))
       }))
 
-      bld.endClass
+      bld.end_class
     end
   end
 end

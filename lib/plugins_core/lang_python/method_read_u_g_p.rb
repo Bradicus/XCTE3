@@ -25,7 +25,7 @@ class XCTEPython::MethodReadUGP < XCTEPlugin
     readDef << 'def read' + "(ugsr)\n"
     readDef << "\n"
 
-    if codeClass.hasAnArray
+    if codeClass.has_an_array
       readDef << "    unsigned int i\n\n"
     end
 

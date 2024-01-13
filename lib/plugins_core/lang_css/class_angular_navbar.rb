@@ -20,13 +20,13 @@ module XCTECss
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls) + '.component')
-      bld.lfExtension = Utils.instance.getExtension('body')
-      genFileComment(cls, bld)
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
+      bld.lfExtension = Utils.instance.get_extension('body')
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -35,7 +35,7 @@ module XCTECss
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld); end

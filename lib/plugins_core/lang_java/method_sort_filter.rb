@@ -34,16 +34,16 @@ module XCTEJava
     end
 
     def get_body(_cls, bld, _fun)
-      bld.startFunction('public static Sort getSort(String sortBy, Boolean sortAsc)')
+      bld.start_function('public static Sort getSort(String sortBy, Boolean sortAsc)')
       bld.add 'Sort sort = null;'
-      bld.startBlock('if (sortBy != null)')
+      bld.start_block('if (sortBy != null)')
       bld.add 'sort = Sort.by(sortBy);'
-      bld.startBlock('if (sortAsc == true)')
+      bld.start_block('if (sortAsc == true)')
       bld.add 'sort = sort.ascending();'
-      bld.midBlock 'else'
+      bld.mid_block 'else'
       bld.add 'sort = sort.descending();'
-      bld.endBlock
-      bld.endBlock
+      bld.end_block
+      bld.end_block
       bld.add 'return sort;'
       bld.endFunction
     end

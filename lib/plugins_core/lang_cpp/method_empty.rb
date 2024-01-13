@@ -32,7 +32,7 @@ module XCTECpp
 
       eDecl << 'const ' if fun.returnValue.isConst
 
-      eDecl << Utils.instance.getTypeName(fun.returnValue) << ' '
+      eDecl << Utils.instance.get_type_name(fun.returnValue) << ' '
       eDecl << fun.name << '('
 
       for param in (0..(fun.parameters.vars.size - 1))
@@ -73,7 +73,7 @@ module XCTECpp
       # Function body framework
       funDec << 'const ' if fun.returnValue.isConst
 
-      funDec << Utils.instance.getTypeName(fun.returnValue) + ' '
+      funDec << Utils.instance.get_type_name(fun.returnValue) + ' '
       funDec << Utils.instance.get_styled_class_name(cls.getUName) + ' :: '
       funDec << Utils.instance.get_styled_function_name(fun.name) << '('
 
@@ -87,7 +87,7 @@ module XCTECpp
 
       funDec << ' const' if fun.isConst
 
-      bld.startFunction(funDec)
+      bld.start_function(funDec)
 
       bld.add('return();') if fun.returnValue.vtype != 'void'
 

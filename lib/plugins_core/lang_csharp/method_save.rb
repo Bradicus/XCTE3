@@ -25,7 +25,7 @@ module XCTECSharp
       bld.add('/// Save all components of this object')
       bld.add('///')
 
-      bld.startFunction('public void Save()')
+      bld.start_function('public void Save()')
 
       get_body(cls, bld, fun)
 

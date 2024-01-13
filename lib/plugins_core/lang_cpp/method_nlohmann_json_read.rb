@@ -46,9 +46,9 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.is_primitive(var) && !Utils.instance.getTypeName(var).end_with?('Type')
-          # cls.addInclude(var.namespace, Utils.instance.getTypeName(var) )
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        if !Utils.instance.is_primitive(var) && !Utils.instance.get_type_name(var).end_with?('Type')
+          # cls.addInclude(var.namespace, Utils.instance.get_type_name(var) )
           cls.addInclude(cls.namespace.get('/'), Utils.instance.getClassName(var) + 'JsonEngine')
         end
       }))
@@ -63,10 +63,10 @@ module XCTECpp
       Utils.instance.getStandardClassInfo(cls)
 
       classDef = String.new
-      classDef << Utils.instance.getTypeName(codeFun.returnValue) << ' ' <<
+      classDef << Utils.instance.get_type_name(codeFun.returnValue) << ' ' <<
         Utils.instance.get_styled_class_name(cls.name) << ' :: ' << 'read(const nlohmann::json& json, ' +
                                                                     cls.standardClassType + '& item)'
-      bld.startClass(classDef)
+      bld.start_class(classDef)
 
       get_body(cls, bld, codeFun)
 
@@ -76,7 +76,7 @@ module XCTECpp
     def get_body(cls, bld, _codeFun)
       conDef = String.new
 
-      bld.startBlock('if (json.is_null() == false)')
+      bld.start_block('if (json.is_null() == false)')
 
       for bc in cls.standardClass.baseClasses
         bClass = ClassModelManager.findClass(bc.name, 'standard')
@@ -84,10 +84,10 @@ module XCTECpp
       end
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.isStatic
           curVarName = Utils.instance.get_styled_variable_name(var)
-          curVarType = Utils.instance.getTypeName(var)
+          curVarType = Utils.instance.get_type_name(var)
           curVarClass = ClassModelManager.findVarClass(var)
 
           isEnum = !curVarClass.nil? && curVarClass.plugName == 'enum'
@@ -96,16 +96,16 @@ module XCTECpp
             if !var.isList
               if !isEnum
                 bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
-                        ' = json["' + curVarName + '"].get<' + Utils.instance.getTypeName(var) + '>();')
+                        ' = json["' + curVarName + '"].get<' + Utils.instance.get_type_name(var) + '>();')
               else
                 bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
-                        ' = json["' + curVarName + '"].get<' + Utils.instance.getTypeName(var) + '>();')
+                        ' = json["' + curVarName + '"].get<' + Utils.instance.get_type_name(var) + '>();')
               end
             else
               bld.add('item.' + curVarName + '.clear();')
-              bld.startBlock('for (auto child : json["' + curVarName + '"])')
+              bld.start_block('for (auto child : json["' + curVarName + '"])')
               bld.add('item.' + curVarName + '.push_back(child.get<' + Utils.instance.getBaseTypeName(var) + '>());')
-              bld.endBlock
+              bld.end_block
             end
           elsif !var.isList
             bld.add(
@@ -113,9 +113,9 @@ module XCTECpp
                 'json["' + curVarName + '"], item.' + curVarName + ');'
             )
           else
-            bld.startBlock('if (json.contains("' + curVarName + '"))')
+            bld.start_block('if (json.contains("' + curVarName + '"))')
 
-            bld.startBlock('for (auto aJson : json["' + curVarName + '"])')
+            bld.start_block('for (auto aJson : json["' + curVarName + '"])')
 
             if var.isPointer(1)
               bld.add(Utils.instance.getSingleItemTypeName(var) + ' newVar(new ' + Utils.instance.getBaseTypeName(var) + '());')
@@ -127,13 +127,13 @@ module XCTECpp
 
             bld.add('item.' + curVarName + '.push_back(newVar);')
 
-            bld.endBlock
-            bld.endBlock
+            bld.end_block
+            bld.end_block
           end
         end
       }))
 
-      bld.endBlock
+      bld.end_block
     end
   end
 end

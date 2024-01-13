@@ -20,7 +20,7 @@ module XCTERuby
     end
 
     def getClassName(var)
-      return @langProfile.getTypeName(var.vtype) if !var.vtype.nil?
+      return @langProfile.get_type_name(var.vtype) if !var.vtype.nil?
 
       return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
     end
@@ -29,7 +29,7 @@ module XCTERuby
     def getParamDec(var)
       pDec = String.new
 
-      pDec << getTypeName(var.vtype)
+      pDec << get_type_name(var.vtype)
 
       pDec << ' ' << var.name
 
@@ -68,8 +68,8 @@ module XCTERuby
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,

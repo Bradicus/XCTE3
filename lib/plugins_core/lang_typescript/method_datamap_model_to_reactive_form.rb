@@ -9,9 +9,9 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, bld, _funItem)
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
-          Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_data_map_service')
+          Utils.instance.try_add_include_for_var(cls, var, 'class_angular_data_map_service')
         end
       }))
     end
@@ -20,10 +20,10 @@ module XCTETypescript
     def get_definition(cls, bld, _fun)
       clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
 
-      bld.startFunction('populate(formGroup: FormGroup, src: ' + Utils.instance.get_styled_class_name(cls.model.name) + '): void')
+      bld.start_function('populate(formGroup: FormGroup, src: ' + Utils.instance.get_styled_class_name(cls.model.name) + '): void')
 
-      bld.startBlock('if (src != null)')
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      bld.start_block('if (src != null)')
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)
           vName = Utils.instance.get_styled_variable_name(var)
           # bld.add('formGroup.get("' + vName + '")?.markAsTouched()')
@@ -40,7 +40,7 @@ module XCTETypescript
           else
             varCls = ClassModelManager.findVarClass(var, 'class_angular_data_map_service')
             if !varCls.nil?
-              vService = Utils.instance.createVarFor(varCls, 'class_angular_data_map_service')
+              vService = Utils.instance.create_var_for(varCls, 'class_angular_data_map_service')
 
               if !vService.nil?
                 fgName = "formGroup.get('" + Utils.instance.get_styled_variable_name(var) + "') as FormGroup"
@@ -52,7 +52,7 @@ module XCTETypescript
           end
         end
       }))
-      bld.endBlock
+      bld.end_block
 
       bld.endFunction
     end

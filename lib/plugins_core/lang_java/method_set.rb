@@ -25,8 +25,8 @@ module XCTEJava
 
       varName = Utils.instance.get_styled_variable_name(var)
       bld.add('public void ' + Utils.instance.get_styled_function_name('set ' + var.name))
-      bld.sameLine('(' + Utils.instance.getTypeName(var) + ' ' + varName)
-      bld.sameLine(")\t{ this." + varName + ' = ' + varName + '; }')
+      bld.same_line('(' + Utils.instance.get_type_name(var) + ' ' + varName)
+      bld.same_line(")\t{ this." + varName + ' = ' + varName + '; }')
     end
   end
 end

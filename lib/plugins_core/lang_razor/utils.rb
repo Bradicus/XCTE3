@@ -25,7 +25,7 @@ module XCTERazor
 
       vDec << '[' + CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle) + ']'
 
-      tName = getTypeName(var)
+      tName = get_type_name(var)
 
       if tName != var.vtype
         vDec << ' ' + tName
@@ -40,7 +40,7 @@ module XCTERazor
     end
 
     # Get a parameter declaration for a method parameter
-    def getTypeName(var)
+    def get_type_name(var)
       if var.vtype == 'String'
         return('TEXT') if var.arrayElemCount > 9999
 
@@ -53,12 +53,12 @@ module XCTERazor
 
       end
 
-      return @langProfile.getTypeName(var.vtype)
+      return @langProfile.get_type_name(var.vtype)
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     # Returns the version of this name styled for this language

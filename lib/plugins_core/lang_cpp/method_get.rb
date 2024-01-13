@@ -24,8 +24,8 @@ module XCTECpp
 
       funName = Utils.instance.get_styled_function_name('get ' + varSec.name)
       varName = Utils.instance.get_styled_variable_name(varSec)
-      bld.add('const ' + Utils.instance.getTypeName(varSec) + '& ' + funName)
-      bld.sameLine("() const\t{ return(" + varName + '); };')
+      bld.add('const ' + Utils.instance.get_type_name(varSec) + '& ' + funName)
+      bld.same_line("() const\t{ return(" + varName + '); };')
     end
 
     # This method has no body

@@ -16,17 +16,17 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName + '.module')
+      Utils.instance.get_styled_file_name(cls.getUName + '.module')
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
       bld.lfName = getFileName(cls)
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfExtension = Utils.instance.get_extension('body')
 
-      fPath = getStyledFileName(cls.model.name)
+      fPath = get_styled_file_name(cls.model.name)
       cName = get_styled_class_name(cls.model.name)
 
       process_dependencies(cls, bld)
@@ -34,7 +34,7 @@ module XCTETypescript
 
       bld.separate
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -49,7 +49,7 @@ module XCTETypescript
       cls.addInclude('@angular/router', 'RouterModule, Routes')
 
       if !cls.model.findClassModel('class_angular_module_routing').nil?
-        cls.addInclude(getStyledFileName(cls.getUName) + '/' + getStyledFileName(cls.getUName + '.routing.module'),
+        cls.addInclude(get_styled_file_name(cls.getUName) + '/' + get_styled_file_name(cls.getUName + '.routing.module'),
                        get_styled_class_name(cls.getUName + ' routing module'))
       end
 
@@ -60,7 +60,7 @@ module XCTETypescript
            otherCls.plugName.start_with?('class_angular_reactive_view') ||
            otherCls.plugName.start_with?('class_angular_listing')
           plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
-          cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + '/' + plug.getFileName(otherCls),
+          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
                          plug.getClassName(otherCls))
         end
       end
@@ -68,13 +68,13 @@ module XCTETypescript
       super
 
       # Generate class variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_module') if !Utils.instance.is_primitive(var)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        Utils.instance.try_add_include_for_var(cls, var, 'class_angular_module') if !Utils.instance.is_primitive(var)
       }))
     end
 
     # Returns the code for the content for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
@@ -123,14 +123,14 @@ module XCTETypescript
       bld.unindent
 
       bld.add('})')
-      bld.startClass('export class ' + getClassName(cls))
+      bld.start_class('export class ' + getClassName(cls))
 
       # Generate code for functions
       for fun in cls.functions
         process_function(cls, bld, fun)
       end
 
-      bld.endClass
+      bld.end_class
     end
 
     # process variable group

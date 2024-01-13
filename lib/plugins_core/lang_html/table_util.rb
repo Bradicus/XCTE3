@@ -50,7 +50,7 @@ module XCTEHtml
       colCount = 0
 
       if !embedded && paging
-        Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+        Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
           if Utils.instance.is_primitive(var) && !var.isList
             tHeadRow.children.push(HtmlNode.new('th')
               .add_text(var.getDisplayName)
@@ -76,7 +76,7 @@ module XCTEHtml
         tBodyRow.add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
       end
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var) && !var.isList
           puts var.getUType.downcase
           if var.getUType.downcase.start_with? 'date'
@@ -125,10 +125,10 @@ module XCTEHtml
 
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/view/{{item.id}}">View</a></td>')
       # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.getUName()) + '/edit/{{item.id}}">Edit</a></td>')
-      # bld.endBlock("</tr>")
-      # bld.endBlock("</tbody>")
+      # bld.end_block("</tr>")
+      # bld.end_block("</tbody>")
 
-      # bld.endBlock("</table>")
+      # bld.end_block("</table>")
     end
 
     def load_search_names(cls)
@@ -224,7 +224,7 @@ module XCTEHtml
       optClass = ClassModelManager.findVarClass(optionsVar)
       listVarName = Utils.instance.get_styled_variable_name(optionsVar)
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)
           tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName))
         end
@@ -238,7 +238,7 @@ module XCTEHtml
       tBodyRow = HtmlNode.new('tr')
                          .add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)
           td = HtmlNode.new('td')
           ##            .add_text("{{" + iteratorName + "." + Utils.instance.get_styled_variable_name(var) + "}}")

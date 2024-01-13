@@ -40,7 +40,7 @@ class XCTECpp::MethodGetString < XCTEPlugin
     methodString << 'std::string ' << codeClass.name << " :: getString() const\n"
     methodString << "{\n"
 
-    if codeClass.hasAnArray
+    if codeClass.has_an_array
       methodString << "    unsigned int i;\n\n"
     end
 

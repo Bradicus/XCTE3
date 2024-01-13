@@ -32,18 +32,18 @@ module XCTECpp
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName)
-      bld.lfExtension = Utils.instance.getExtension('header')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      bld.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.getStyledFileName(cls.getUName)
-      cppFile.lfExtension = Utils.instance.getExtension('body')
+      cppFile.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      cppFile.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
 
@@ -95,13 +95,13 @@ module XCTECpp
       render_namespace_start(cls, bld)
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
           bld.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
         end
       }))
 
-      bld.separate if Utils.instance.hasAnArray(cls)
+      bld.separate if Utils.instance.has_an_array?(cls)
 
       for pd in cls.preDefs
         bld.add('class ' + pd + ';')
@@ -121,7 +121,7 @@ module XCTECpp
 
       classDec += ' : ' + inheritFrom.join(', ') if inheritFrom.length > 0
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
       bld.indent
 
@@ -173,7 +173,7 @@ module XCTECpp
           if funItem.formatText == "\n"
             bld.add
           else
-            bld.sameLine(funItem.formatText)
+            bld.same_line(funItem.formatText)
           end
         end
       end
@@ -188,7 +188,7 @@ module XCTECpp
       bld.add
       bld.add('//-XCTE Custom Code Area')
 
-      bld.endClass
+      bld.end_class
 
       render_namespace_end(cls, bld)
 
@@ -197,7 +197,7 @@ module XCTECpp
 
     # process variable group
     def process_header_var_group(cls, bld, _vGroup, _vis)
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.visibility != @activeVisibility
           @activeVisibility = var.visibility
           bld.unindent
@@ -243,19 +243,19 @@ module XCTECpp
       render_namespace_start(cls, bld)
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isStatic
-          bld.add(Utils.instance.getTypeName(var) << ' ')
-          bld.sameLine(Utils.instance.get_styled_class_name(cls.getUName) << ' :: ')
-          bld.sameLine(Utils.instance.get_styled_variable_name(var))
+          bld.add(Utils.instance.get_type_name(var) << ' ')
+          bld.same_line(Utils.instance.get_styled_class_name(cls.getUName) << ' :: ')
+          bld.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array
-            bld.sameLine('[' + Utils.instance.getSizeConst(var) << ']')
+            bld.same_line('[' + Utils.instance.getSizeConst(var) << ']')
           elsif !var.defaultValue.nil?
-            bld.sameLine(' = ' + var.defaultValue)
+            bld.same_line(' = ' + var.defaultValue)
           end
 
-          bld.sameLine(';')
+          bld.same_line(';')
         end
       }))
 

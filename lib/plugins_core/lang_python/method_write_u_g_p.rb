@@ -24,7 +24,7 @@ class XCTEPython::MethodWriteUGP < XCTEPlugin
     writeDef << 'def write' + "(ugsw)\n"
     writeDef << "\n"
 
-    if codeClass.hasAnArray
+    if codeClass.has_an_array
       writeDef << "    unsigned int i\n\n"
     end
 

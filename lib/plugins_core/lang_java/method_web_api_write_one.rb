@@ -33,7 +33,7 @@ module XCTEJava
               ' Post' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id);')
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, _bld, fun)
       if !fun.role.nil?
         cls.addUse('org.springframework.security.access.prepost.PreAuthorize')
       end
@@ -61,7 +61,7 @@ module XCTEJava
       bld.iadd 'consumes = MediaType.APPLICATION_JSON_VALUE, '
       bld.iadd 'produces = MediaType.APPLICATION_JSON_VALUE)'
 
-      bld.startFunction('public ResponseEntity<' + className +
+      bld.start_function('public ResponseEntity<' + className +
                         '> Post' + className +
                         '(' + params.join(', ') + ')')
 

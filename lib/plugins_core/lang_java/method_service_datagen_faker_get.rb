@@ -13,7 +13,7 @@ module XCTEJava
       # process class variables
 
       className = Utils.instance.get_styled_class_name(cls.model.name)
-      bld.startFunction('void populateRandom(Faker faker, ' + className + ' item)')
+      bld.start_function('void populateRandom(Faker faker, ' + className + ' item)')
 
       genPopulate(cls, bld, 'item.')
 
@@ -23,7 +23,7 @@ module XCTEJava
     def process_dependencies(cls, _bld, _fun)
       cls.addUse('com.github.javafaker.Faker')
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if var.getUType().downcase == 'datetime'
           cls.addUse('java.util.concurrent.TimeUnit')
         end
@@ -32,7 +32,7 @@ module XCTEJava
 
     # process variable group
     def genPopulate(cls, bld, name = '')
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         varName = Utils.instance.get_styled_variable_name(var)
 
         if Utils.instance.is_primitive(var)
@@ -45,7 +45,7 @@ module XCTEJava
           # elsif !var.isList
           #   varCls = ClassModelManager.findVarClass(var, 'data_gen')
           #   if !varCls.nil?
-          #     vService = Utils.instance.createVarFor(varCls, 'class_angular_data_gen_service')
+          #     vService = Utils.instance.create_var_for(varCls, 'class_angular_data_gen_service')
 
           #     if !vService.nil?
           #       srcName = 'item.' + Utils.instance.get_styled_variable_name(var)

@@ -58,14 +58,14 @@ module XCTEJava
       bld.iadd 'consumes = MediaType.APPLICATION_JSON_VALUE, '
       bld.iadd 'produces = MediaType.APPLICATION_JSON_VALUE)'
 
-      bld.startFunction('public ResponseEntity<' + className +
+      bld.start_function('public ResponseEntity<' + className +
                         '> Put' + className +
                         '(' + params.join(', ') + ')')
 
       bld.add 'var dataItem = ' + dataStoreName + '.findById(item.id);'
       bld.separate
 
-      bld.startBlock 'if (dataItem.isPresent())'
+      bld.start_block 'if (dataItem.isPresent())'
       if !cls.dataClass.nil?
         bld.add mapperName + '.map(item, dataItem.get());'
         bld.add(Utils.instance.get_styled_class_name(dataClass.getUName) + ' savedItem = ' + dataStoreName + '.saveAndFlush(dataItem.get());')
@@ -78,9 +78,9 @@ module XCTEJava
         bld.add 'return new ResponseEntity<' + className + '>(savedItem, HttpStatus.CREATED);'
       end
 
-      bld.midBlock('else')
+      bld.mid_block('else')
       bld.add 'return null;'
-      bld.endBlock
+      bld.end_block
 
       bld.endFunction
     end

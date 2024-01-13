@@ -25,13 +25,13 @@ module XCTECSharp
       bld.add('/// Update the record for this model')
       bld.add('///')
 
-      bld.startClass('public void Update(' +
+      bld.start_class('public void Update(' +
                      Utils.instance.get_styled_class_name(cls.getUName) +
                      ' o, SqlConnection conn, SqlTransaction trans)')
 
       get_body(cls, bld, fun)
 
-      bld.endClass
+      bld.end_class
     end
 
     def get_declairation(cls, bld, _fun)
@@ -56,7 +56,7 @@ module XCTECSharp
       cls.model.getNonIdentityVars(varArray)
       for var in varArray
         if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.sameLine(separater)
+          bld.same_line(separater)
           bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) +
                   '] = @' + Utils.instance.get_styled_variable_name(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
@@ -78,20 +78,20 @@ module XCTECSharp
 
       bld.add
 
-      bld.startBlock('try')
-      bld.startBlock('using(SqlCommand cmd = new SqlCommand(sql, conn))')
+      bld.start_block('try')
+      bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
       bld.add('cmd.Transaction = trans;')
 
       Utils.instance.addParameters(varArray, cls, bld)
 
       bld.add
       bld.add('cmd.ExecuteScalar();')
-      bld.endBlock
-      bld.endBlock
-      bld.startBlock('catch(Exception e)')
+      bld.end_block
+      bld.end_block
+      bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Error updating ' + cls.getUName + ' with ' +
               varArray[0].name + ' = "' + ' + o.' + CodeNameStyling.stylePascal(varArray[0].name) + ', e);')
-      bld.endBlock(';')
+      bld.end_block(';')
     end
   end
 end

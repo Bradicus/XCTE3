@@ -16,17 +16,17 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      getStyledFileName(cls.getUName + '.routing.module')
+      get_styled_file_name(cls.getUName + '.routing.module')
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
       bld.lfName = getFileName(cls)
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfExtension = Utils.instance.get_extension('body')
 
-      fPath = getStyledFileName(cls.model.name)
+      fPath = get_styled_file_name(cls.model.name)
       cName = get_styled_class_name(cls.model.name)
 
       process_dependencies(cls, bld)
@@ -34,7 +34,7 @@ module XCTETypescript
 
       bld.separate
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -55,7 +55,7 @@ module XCTETypescript
              otherCls.plugName.start_with?('class_angular_reactive_view') ||
              otherCls.plugName.start_with?('class_angular_listing')
             plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
-            cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + '/' + plug.getFileName(otherCls),
+            cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
                            plug.getClassName(otherCls))
           end
         end
@@ -66,7 +66,7 @@ module XCTETypescript
            otherCls.plugName.start_with?('class_angular_reactive_view') ||
            otherCls.plugName.start_with?('class_angular_listing')
           plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
-          cls.addInclude(Utils.instance.getStyledPathName(otherCls.path) + '/' + plug.getFileName(otherCls),
+          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
                          plug.getClassName(otherCls))
         end
       end
@@ -75,7 +75,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
@@ -83,7 +83,7 @@ module XCTETypescript
       bld.indent
       bld.add('{')
       bld.indent
-      bld.add("path: '" + getStyledFileName(cls.getUName) + "', ")
+      bld.add("path: '" + get_styled_file_name(cls.getUName) + "', ")
       bld.add('children: [ ')
 
       pathLines = []
@@ -120,14 +120,14 @@ module XCTETypescript
       bld.iadd('exports: [RouterModule]')
 
       bld.add('})')
-      bld.startClass('export class ' + getClassName(cls))
+      bld.start_class('export class ' + getClassName(cls))
 
       # Generate code for functions
       for fun in cls.functions
         process_function(cls, bld, fun)
       end
 
-      bld.endClass
+      bld.end_class
     end
 
     def addPathsForClass(_cls, _bld, otherCls, pathLines)
@@ -160,7 +160,7 @@ module XCTETypescript
         if var.elementId == CodeElem::ELEM_VARIABLE
           bld.add(getVarDec(var))
         elsif var.elementId == CodeElem::ELEM_COMMENT
-          bld.sameLine(getComment(var))
+          bld.same_line(getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
           bld.add(var.formatText)
         end
@@ -207,7 +207,7 @@ module XCTETypescript
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
-          fPath = getStyledFileName(var.getUType + '')
+          fPath = get_styled_file_name(var.getUType + '')
           cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))
         end
       end

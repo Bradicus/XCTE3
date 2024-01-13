@@ -25,7 +25,7 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def getFileName(cls)
-    get_default_utils.getStyledFileName(get_unformatted_class_name(cls))
+    get_default_utils.get_styled_file_name(get_unformatted_class_name(cls))
   end
 
   def is_primitive(var)
@@ -33,7 +33,7 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def hasList(cls)
-    eachVar(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+    each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
       true if var.isList
     }))
 
@@ -41,7 +41,7 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def render_functions(cls, bld)
-    get_default_utils.eachFun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+    get_default_utils.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, fun.name)
         if !templ.nil?

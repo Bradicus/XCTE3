@@ -8,71 +8,70 @@
 # This plugin creates an empty method with the specified function name
 # and parameters
 
-require "code_elem_model.rb"
-require "lang_file.rb"
+require 'code_elem_model'
+require 'lang_file'
 
-require "x_c_t_e_plugin.rb"
-require "plugins_core/lang_java/x_c_t_e_java.rb"
+require 'x_c_t_e_plugin'
+require 'plugins_core/lang_java/x_c_t_e_java'
 
 class XCTEJava::MethodEmpty < XCTEPlugin
   def initialize
-    @name = "method_empty"
-    @language = "java"
+    @name = 'method_empty'
+    @language = 'java'
     @category = XCTEPlugin::CAT_METHOD
   end
 
   # Returns definition string for an empty method
-  def get_definition(fun, bld, cfg)
-
+  def get_definition(fun, bld, _cfg)
     # Skeleton of comment block
-    bld.add("/**")
-    bld.add("* ")
+    bld.add('/**')
+    bld.add('* ')
 
     for param in fun.parameters
-      bld.add("* @param " + param.name)
+      bld.add('* @param ' + param.name)
     end
 
-    if fun.returnValue.vtype != "void"
-      bld.add("* \n" + indent + "* @return ")
+    if fun.returnValue.vtype != 'void'
+      bld.add("* \n" + indent + '* @return ')
     end
 
-    bld.add("*/")
+    bld.add('*/')
 
     bld.add
 
     # Function body framework
     if fun.isStatic
-      bld.sameLine("static ")
+      bld.same_line('static ')
     end
 
     if fun.returnValue.isConst
-      bld.sameLine("const ")
+      bld.same_line('const ')
     end
 
-    bld.sameLine(XCTEJava::Utils::getTypeName(fun.returnValue.vtype) << " ")
-    bld.sameLine(fun.name << "(")
+    bld.same_line(XCTEJava::Utils.get_type_name(fun.returnValue.vtype) << ' ')
+    bld.same_line(fun.name << '(')
 
     for param in (0..(fun.parameters.size - 1))
       if param != 0
-        bld.sameLine(", ")
+        bld.same_line(', ')
       end
 
-      bld.sameLine(XCTEJava::Utils::getParamDec(fun.parameters[param]))
+      bld.same_line(XCTEJava::Utils.getParamDec(fun.parameters[param]))
     end
 
-    bld.sameLine(")")
+    bld.same_line(')')
 
     bld.separate
 
-    bld.add("{")
+    bld.add('{')
 
-    if fun.returnValue.vtype != "void"
-      bld.iadd("return();")
+    if fun.returnValue.vtype != 'void'
+      bld.iadd('return();')
     end
 
-    bld.add("}")
+    bld.add('}')
   end
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodEmpty.new)
+XCTEPlugin.registerPlugin(XCTEJava::MethodEmpty.new)

@@ -7,26 +7,26 @@
 #
 # This class renders a block of code
 
-require "source_renderer.rb"
+require 'source_renderer'
 
 class SourceRendererBraceDelim < SourceRenderer
-  def initialize()
+  def initialize
     super
 
-    @blockDelimOpen = "{"
-    @blockDelimClose = "}"
+    @blockDelimOpen = '{'
+    @blockDelimClose = '}'
 
     @hangingFunctionBraces = false
     @hangingCodeBlockBraces = true
   end
 
-  def midBlock(line)
-    if (@hangingCodeBlockBraces)
-      endBlock(" " + line + " " + @blockDelimOpen)
+  def mid_block(line)
+    if @hangingCodeBlockBraces
+      end_block(' ' + line + ' ' + @blockDelimOpen)
       indent
     else
-      endBlock()
-      startBlock(line)
+      end_block()
+      start_block(line)
     end
   end
 end

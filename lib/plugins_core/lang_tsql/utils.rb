@@ -35,7 +35,7 @@ module XCTETSql
         vDec << '[' << CodeNameStyling.getStyled(vPrevix + var.name, @langProfile.variableNameStyle) << ']'
       end
 
-      tName = getTypeName(var)
+      tName = get_type_name(var)
 
       if tName != var.vtype
         vDec << ' ' + tName
@@ -50,7 +50,7 @@ module XCTETSql
     end
 
     # Get a parameter declaration for a method parameter
-    def getTypeName(var)
+    def get_type_name(var)
       if is_primitive(var)
         if var.vtype == 'String'
           return('VARCHAR(MAX)') if var.arrayElemCount > 9999
@@ -68,16 +68,16 @@ module XCTETSql
       elsif var.hasOneToOneRelation
         refClass = ClassModelManager.findVarClass(var)
         if !refClass.nil?
-          return @langProfile.getTypeName(refClass.model.getIdentityVar.vtype)
+          return @langProfile.get_type_name(refClass.model.getIdentityVar.vtype)
         end
       end
 
-      return @langProfile.getTypeName(var.vtype)
+      return @langProfile.get_type_name(var.vtype)
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     # Returns the version of this name styled for this language

@@ -30,13 +30,13 @@ module XCTERuby
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
-      genFileComment(cls, bld)
+      bld.lfName = lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -44,7 +44,7 @@ module XCTERuby
       srcFiles
     end
 
-    def genFileComment(cls, bld)
+    def gen_file_comment(cls, bld)
       bld.add('# Author:: ' + UserSettings.instance.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
 
       if !UserSettings.instance.codeCompany.nil? && UserSettings.instance.codeCompany.size > 0
@@ -68,7 +68,7 @@ module XCTERuby
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
       for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.getExtension('body') + "'")
+        bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.get_extension('body') + "'")
       end
 
       bld.add if !cls.includes.empty?
@@ -76,13 +76,13 @@ module XCTERuby
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          bld.startBlock('module ' << nsItem)
+          bld.start_block('module ' << nsItem)
         end
       end
 
-      bld.startClass('class ' + Utils.instance.get_styled_class_name(cls.getUName) + ' < XCTEPlugin')
+      bld.start_class('class ' + Utils.instance.get_styled_class_name(cls.getUName) + ' < XCTEPlugin')
 
-      bld.startFunction('def initialize')
+      bld.start_function('def initialize')
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
       bld.add('@language = "' + cls.xmlElement.attributes['lang'] + '"')
       bld.add('@category = XCTEPlugin::CAT_METHOD')
@@ -91,44 +91,44 @@ module XCTERuby
       bld.add
 
       bld.add('# Returns the code for the content for this function')
-      bld.startFunction('def get_definition(cls, bld, fun)')
+      bld.start_function('def get_definition(cls, bld, fun)')
 
       bld.add('# process class variables')
 
       bld.add('# Generate code for class variables')
-      bld.add('eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|')
+      bld.add('each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|')
 
-      bld.startBlock('if !var.isStatic   # Ignore static variables')
-      bld.startBlock('if Utils.instance.is_primitive(var)')
-      bld.startBlock("if var.arrayElemCount.to_i > 0\t# Array of primitives)")
-      bld.add('bld.startBlock("for i in 0..@" << var.name << ".size")')
+      bld.start_block('if !var.isStatic   # Ignore static variables')
+      bld.start_block('if Utils.instance.is_primitive(var)')
+      bld.start_block("if var.arrayElemCount.to_i > 0\t# Array of primitives)")
+      bld.add('bld.start_block("for i in 0..@" << var.name << ".size")')
       bld.add('bld.add(var.name + "[i] = src" + cls.name + "[i]")')
-      bld.add('bld.endBlock')
+      bld.add('bld.end_block')
 
-      bld.midBlock('else')
+      bld.mid_block('else')
       bld.add('bld.add(var.name + " = " + "src" + cls.name + "." + var.name)')
-      bld.endBlock
+      bld.end_block
 
-      bld.midBlock('else')
-      bld.startBlock("if var.arrayElemCount > 0\t# Array of objects")
-      bld.add('bld.startBlock("for i in 0..@" << var.name << ".size")')
+      bld.mid_block('else')
+      bld.start_block("if var.arrayElemCount > 0\t# Array of objects")
+      bld.add('bld.start_block("for i in 0..@" << var.name << ".size")')
       bld.add('bld.add(var.name << "[i] = src" << cls.name << "[i]")')
-      bld.add('bld.endBlock')
+      bld.add('bld.end_block')
 
-      bld.midBlock('else')
+      bld.mid_block('else')
       bld.add('bld.add(var.name + " = " + "src" + cls.name + "." + var.name)')
-      bld.endBlock
-      bld.endBlock
-      bld.endBlock
+      bld.end_block
+      bld.end_block
+      bld.end_block
 
       bld.add('}))')
-      bld.endBlock
-      bld.endBlock
+      bld.end_block
+      bld.end_block
 
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.nsList
-          bld.endBlock
+          bld.end_block
         end
       end
 

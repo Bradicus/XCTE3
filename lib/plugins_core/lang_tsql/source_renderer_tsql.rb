@@ -1,25 +1,24 @@
 ##
 
-# 
+#
 # Copyright XCTE Contributors
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This class renders C++ code
 
-require 'source_renderer.rb'
+require 'source_renderer'
 
 class SourceRendererTSql < SourceRenderer
-
-  def initialize()
+  def initialize
     super
 
     @blockDelimOpen = ''
     @blockDelimClose = ''
-    @indentChars = "  "
+    @indentChars = '  '
   end
 
-  def midBlock(line)
+  def mid_block(line)
     iadd(-1, line)
   end
 
@@ -30,14 +29,13 @@ class SourceRendererTSql < SourceRenderer
     end
     add(' *@')
   end
-  
-  def endFunction(afterClose="")
-    endBlock(afterClose)
+
+  def endFunction(afterClose = '')
+    end_block(afterClose)
     add
   end
-  
-  def endClass(afterClose="")
-    endBlock("" + afterClose)
+
+  def end_class(afterClose = '')
+    end_block('' + afterClose)
   end
 end
-    

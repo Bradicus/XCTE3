@@ -17,21 +17,21 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      return Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
+      return Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
     end
 
     def getFilePath(_cls)
       return 'shared/services'
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
-      fPath = Utils.instance.getStyledFileName(cls.model.name)
+      fPath = Utils.instance.get_styled_file_name(cls.model.name)
       cName = Utils.instance.get_styled_class_name(cls.model.name)
       # Eventaully switch to finding standard class and using path from there
       cls.addInclude('shared/dto/model/' + fPath, cName)
@@ -41,7 +41,7 @@ module XCTETypescript
 
       bld.separate
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -56,30 +56,30 @@ module XCTETypescript
       cls.addInclude('@faker-js/faker', 'faker')
 
       # Include variable interfaces
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var)
           varCls = ClassModelManager.findVarClass(var, 'standard')
-          cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(var.getUType),
+          cls.addInclude('shared/dto/model/' + Utils.instance.get_styled_file_name(var.getUType),
                          Utils.instance.get_styled_class_name(var.getUType))
         end
       }))
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
-          Utils.instance.tryAddIncludeForVar(cls, var, 'class_angular_data_gen_service')
+          Utils.instance.try_add_include_for_var(cls, var, 'class_angular_data_gen_service')
         end
       }))
     end
 
     # Returns the code for the content for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
-      bld.startBlock('@Injectable(')
+      bld.start_block('@Injectable(')
       bld.add("providedIn: 'root',")
-      bld.endBlock(')')
-      bld.startClass('export class ' + getClassName(cls))
+      bld.end_block(')')
+      bld.start_class('export class ' + getClassName(cls))
 
       bld.add('private apiUrl=environment.apiUrl;')
       # bld.add("private dataExpires: Number = 600; // Seconds")
@@ -87,18 +87,18 @@ module XCTETypescript
 
       constructorParams = []
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           varCls = ClassModelManager.findVarClass(var, 'class_angular_data_gen_service')
           if !varCls.nil?
-            vService = Utils.instance.createVarFor(varCls, 'class_angular_data_gen_service')
+            vService = Utils.instance.create_var_for(varCls, 'class_angular_data_gen_service')
             Utils.instance.addParamIfAvailable(constructorParams, vService)
           end
         end
       }))
 
       bld.separate
-      bld.startBlock('constructor(' + constructorParams.uniq.join(', ') + ')')
+      bld.start_block('constructor(' + constructorParams.uniq.join(', ') + ')')
       bld.endFunction
 
       # Generate code for functions
@@ -106,7 +106,7 @@ module XCTETypescript
         process_function(cls, bld, fun)
       end
 
-      bld.endClass
+      bld.end_class
     end
 
     def process_function(cls, bld, fun)

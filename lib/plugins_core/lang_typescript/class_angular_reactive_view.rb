@@ -17,20 +17,20 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      Utils.instance.getStyledFileName(cls.getUName + '.component')
+      Utils.instance.get_styled_file_name(cls.getUName + '.component')
     end
 
     def getFilePath(cls)
       cls.namespace.get('/')
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName + '.component')
-      bld.lfExtension = Utils.instance.getExtension('body')
-      # genFileComment(cls, bld)
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '.component')
+      bld.lfExtension = Utils.instance.get_extension('body')
+      # gen_file_comment(cls, bld)
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
 
@@ -47,27 +47,27 @@ module XCTETypescript
       cls.addInclude('@angular/router', 'ActivatedRoute')
       cls.addInclude('rxjs', 'Observable, of', 'lib')
 
-      cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(cls.model.name),
+      cls.addInclude('shared/dto/model/' + Utils.instance.get_styled_file_name(cls.model.name),
                      Utils.instance.get_styled_class_name(cls.model.name))
 
       IncludeUtil.init('class_angular_data_store_service').wModel(cls.model).addTo(cls)
       IncludeUtil.init('class_angular_data_gen_service').wModel(cls.model).addTo(cls)
       IncludeUtil.init('class_angular_data_map_service').wModel(cls.model).addTo(cls)
 
-      eachVar(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+      each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var)
-          cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(var.getUType),
+          cls.addInclude('shared/dto/model/' + Utils.instance.get_styled_file_name(var.getUType),
                          Utils.instance.get_styled_class_name(var.getUType))
         end
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
-          cls.addInclude('shared/dto/model/' + Utils.instance.getStyledFileName(optVar.getUType),
+          cls.addInclude('shared/dto/model/' + Utils.instance.get_styled_file_name(optVar.getUType),
                          Utils.instance.get_styled_class_name(optVar.getUType))
 
           bCls = ClassModelManager.findClass(cls.model.name, 'standard')
-          optStoreVar = Utils.instance.createVarFor(bCls, 'class_angular_data_store_service')
-          Utils.instance.tryAddIncludeForVar(bCls, optVar, 'class_angular_data_store_service')
-          Utils.instance.tryAddIncludeForVar(cls, optVar, 'class_angular_data_store_service')
+          optStoreVar = Utils.instance.create_var_for(bCls, 'class_angular_data_store_service')
+          Utils.instance.try_add_include_for_var(bCls, optVar, 'class_angular_data_store_service')
+          Utils.instance.try_add_include_for_var(cls, optVar, 'class_angular_data_store_service')
         end
       }))
 
@@ -81,13 +81,13 @@ module XCTETypescript
     def genFileContent(cls, bld)
       bld.add
 
-      selectorName = Utils.instance.getStyledFileName(cls.getUName)
-      filePart = Utils.instance.getStyledFileName(cls.getUName)
+      selectorName = Utils.instance.get_styled_file_name(cls.getUName)
+      filePart = Utils.instance.get_styled_file_name(cls.getUName)
 
       clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
-      storeServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_store_service')
-      dataGenServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_gen_service')
-      userPopulateServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_map_service')
+      storeServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
+      dataGenServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service')
+      userPopulateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')
 
       bld.add('@Component({')
       bld.indent
@@ -99,7 +99,7 @@ module XCTETypescript
 
       bld.add
 
-      bld.startBlock('export class ' + getClassName(cls) + ' implements OnInit ')
+      bld.start_block('export class ' + getClassName(cls) + ' implements OnInit ')
       bld.add('public item: ' + Utils.instance.get_styled_class_name(cls.model.name) + ' = new ' + Utils.instance.get_styled_class_name(cls.model.name) + '();')
       bld.separate
 
@@ -107,7 +107,7 @@ module XCTETypescript
       process_var_group(cls, bld, cls.model.varGroup)
 
       # Generate any selection list variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
           bld.add(Utils.instance.getVarDec(optVar))
@@ -124,7 +124,7 @@ module XCTETypescript
       Utils.instance.addParamIfAvailable(constructorParams, userPopulateServiceVar)
 
       # Generate any selection list variable parameters for data stores
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
           optCls = ClassModelManager.findClass(var.selectFrom, 'standard')
@@ -133,7 +133,7 @@ module XCTETypescript
           elsif optCls.nil?
             Log.error('No ts_interface class for var: ' + var.name)
           else
-            dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, 'class_angular_data_store_service')
+            dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service')
             if !dataStoreOptServiceVar.nil?
               Utils.instance.addParamIfAvailable(constructorParams, dataStoreOptServiceVar)
             else
@@ -145,11 +145,11 @@ module XCTETypescript
 
       constructorParams.push('private route: ActivatedRoute')
 
-      bld.startFunctionParamed('constructor', constructorParams)
-      bld.endBlock
+      bld.start_function_paramed('constructor', constructorParams)
+      bld.end_block
 
       bld.separate
-      bld.startBlock('ngOnInit()')
+      bld.start_block('ngOnInit()')
       bld.add('this.route.paramMap.subscribe(params => {')
       bld.indent
       bld.add("let idVal = params.get('id');")
@@ -162,21 +162,21 @@ module XCTETypescript
 
       bld.separate
 
-      bld.startBlock('if (!this.item?.id)')
+      bld.start_block('if (!this.item?.id)')
 
       bld.add('this.item = new ' + Utils.instance.get_styled_class_name(cls.model.name) + ';')
       # bld.add("this." + Utils.instance.get_styled_variable_name(dataGenServiceVar) + ".initData(this.item);")
-      bld.midBlock 'else'
-      bld.startBlock 'this.' + Utils.instance.get_styled_variable_name(storeServiceVar) + '.detail(this.item.id).subscribe(data => {'
+      bld.mid_block 'else'
+      bld.start_block 'this.' + Utils.instance.get_styled_variable_name(storeServiceVar) + '.detail(this.item.id).subscribe(data => {'
       bld.add 'this.item = data;'
       bld.add 'this.populate();'
-      bld.endBlock '});'
-      bld.endBlock
+      bld.end_block '});'
+      bld.end_block
       bld.unindent
       bld.add('});')
 
       # Load any selection lists needed
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
           reqVar = Utils.instance.getOptionsReqVarFor(var)
@@ -186,7 +186,7 @@ module XCTETypescript
           elsif optCls.nil?
             Log.error('No ts_interface class for var: ' + var.name)
           else
-            dataStoreOptServiceVar = Utils.instance.createVarFor(optCls, 'class_angular_data_store_service')
+            dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service')
             if !dataStoreOptServiceVar.nil?
               bld.add('this.' + Utils.instance.get_styled_variable_name(optVar) + ' = this.' +
                       Utils.instance.get_styled_variable_name(dataStoreOptServiceVar) + '.listing(this.' + Utils.instance.get_styled_variable_name(reqVar) + ');')
@@ -199,11 +199,11 @@ module XCTETypescript
 
       bld.separate
       bld.add('this.populate();')
-      bld.endBlock
+      bld.end_block
 
       render_functions(cls, bld)
 
-      bld.endBlock
+      bld.end_block
     end
 
     # process variable group

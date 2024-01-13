@@ -102,7 +102,7 @@ module DataProcessing
         # project.singleFile = "map gen settings"
 
         if project.singleFile.nil? || project.singleFile == plan.model.name
-          srcFiles = language[plan.plugName].genSourceFiles(plan)
+          srcFiles = language[plan.plugName].gen_source_files(plan)
 
           for srcFile in srcFiles
             foundStart = false

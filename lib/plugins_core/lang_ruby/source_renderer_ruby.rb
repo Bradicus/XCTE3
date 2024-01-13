@@ -19,7 +19,7 @@ class SourceRendererRuby < SourceRenderer
     @hangingFunctionStart = true
   end
 
-  def midBlock(line)
+  def mid_block(line)
     iadd(-1, line)
   end
 end

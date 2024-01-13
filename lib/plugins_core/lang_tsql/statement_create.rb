@@ -23,14 +23,14 @@ module XCTETSql
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTSql.new
-      bld.lfName = Utils.instance.getStyledFileName(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = Utils.instance.get_extension('body')
 
-      genFileComment(cls, bld)
+      gen_file_comment(cls, bld)
       genFileContent(cls, bld)
 
       srcFiles << bld
@@ -39,7 +39,7 @@ module XCTETSql
     end
 
     # Returns the code for the comment for this class
-    def genFileComment(cls, bld); end
+    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def genFileContent(cls, bld)
@@ -50,26 +50,26 @@ module XCTETSql
       bld.indent
 
       # Generate code for class variables
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.hasManyToManyRelation
-          bld.sameLine(', ') if !first
+          bld.same_line(', ') if !first
           first = false
 
           varDec = XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix)
           bld.add(varDec) if !varDec.nil? && varDec.strip.length > 0
 
-          bld.sameLine(" default '" << var.defaultValue << "'") if !var.defaultValue.nil?
+          bld.same_line(" default '" << var.defaultValue << "'") if !var.defaultValue.nil?
         end
       }))
 
       primKeys = []
 
-      eachVar(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         primKeys << '[' + Utils.instance.get_styled_variable_name(var, cls.varPrefix) + ']' if var.isPrimary == true
       }))
 
       if primKeys.length > 0
-        bld.sameLine(',')
+        bld.same_line(',')
         bld.add('PRIMARY KEY (' + primKeys.join(', ') + ')')
       end
 

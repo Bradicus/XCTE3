@@ -7,15 +7,15 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin.rb"
-require "code_name_styling.rb"
-require "plugins_core/lang_java/utils.rb"
+require 'x_c_t_e_plugin'
+require 'code_name_styling'
+require 'plugins_core/lang_java/utils'
 
 module XCTEJava
   class MethodPagerequestFilter < XCTEPlugin
     def initialize
-      @name = "method_pagerequest_filter"
-      @language = "java"
+      @name = 'method_pagerequest_filter'
+      @language = 'java'
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -24,29 +24,29 @@ module XCTEJava
       get_body(cls, bld, fun)
     end
 
-    def get_declairation(cls, bld, fun)
-      bld.add("PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)")
+    def get_declairation(_cls, bld, _fun)
+      bld.add('PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)')
     end
 
     def process_dependencies(cls, bld, fun)
     end
 
-    def get_body(cls, bld, fun)
-      bld.startFunction("public static PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)")
+    def get_body(_cls, bld, _fun)
+      bld.start_function('public static PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)')
 
-      bld.add "PageRequest pageRequest = null;"
+      bld.add 'PageRequest pageRequest = null;'
 
-      bld.startBlock("if (pageNum != null && pageSize > 0)")
-      bld.add "pageRequest = PageRequest.of(pageNum, pageSize);"
-      bld.midBlock "else"
-      bld.add "pageRequest = PageRequest.of(0, Integer.MAX_VALUE);"
-      bld.endBlock
+      bld.start_block('if (pageNum != null && pageSize > 0)')
+      bld.add 'pageRequest = PageRequest.of(pageNum, pageSize);'
+      bld.mid_block 'else'
+      bld.add 'pageRequest = PageRequest.of(0, Integer.MAX_VALUE);'
+      bld.end_block
 
-      bld.startBlock("if (sort != null)")
-      bld.add "pageRequest = pageRequest.withSort(sort);"
-      bld.endBlock
+      bld.start_block('if (sort != null)')
+      bld.add 'pageRequest = pageRequest.withSort(sort);'
+      bld.end_block
 
-      bld.add "return pageRequest;"
+      bld.add 'return pageRequest;'
 
       bld.endFunction
     end
@@ -54,4 +54,4 @@ module XCTEJava
 end
 
 # Now register an instance of our plugin
-XCTEPlugin::registerPlugin(XCTEJava::MethodPagerequestFilter.new)
+XCTEPlugin.registerPlugin(XCTEJava::MethodPagerequestFilter.new)

@@ -53,17 +53,17 @@ module XCTECSharp
         params << Utils.instance.getParamDec(pkey)
       end
 
-      bld.startFunction('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
+      bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
                         ' Get' + Utils.instance.get_styled_class_name(cls.getUName) +
                         '(' + params.join(', ') + ')')
 
-      bld.startBlock('using (SqlConnection conn = new SqlConnection())')
+      bld.start_block('using (SqlConnection conn = new SqlConnection())')
       bld.add('I' + engineName + ' eng = new ' + engineName + '();')
 
       bld.add('var obj = eng.RetrieveOneById(id, conn);')
       bld.add('return obj;')
 
-      bld.endBlock
+      bld.end_block
     end
   end
 end

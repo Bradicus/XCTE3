@@ -1,5 +1,5 @@
-require "plugins_core/lang_ruby/utils.rb"
-require "x_c_t_e_class_base.rb"
+require 'plugins_core/lang_ruby/utils'
+require 'x_c_t_e_class_base'
 
 # This class contains functions that may be usefull in any type of class
 module XCTERuby
@@ -10,8 +10,8 @@ module XCTERuby
 
     def render_namespace_starts(cls, bld)
       for ns in cls.namespace.nsList
-        styledNs = get_default_utils().getStyledNamespaceName(ns)
-        bld.startBlock("module " + styledNs)
+        styledNs = get_default_utils().get_styled_namespace_name(ns)
+        bld.start_block('module ' + styledNs)
       end
     end
 
@@ -20,12 +20,12 @@ module XCTERuby
 
       bld.separate
 
-      #bld.add("##")
+      # bld.add("##")
     end
 
     def render_namespace_ends(cls, bld)
       for ns in cls.namespace.nsList
-        bld.endBlock
+        bld.end_block
       end
     end
   end

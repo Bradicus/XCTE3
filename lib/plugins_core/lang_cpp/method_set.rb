@@ -26,8 +26,8 @@ module XCTECpp
       varName = Utils.instance.get_styled_variable_name(varSec)
       inVarName = CodeNameStyling.getStyled('new ' + varSec.name, Utils.instance.langProfile.variableNameStyle)
       bld.add('void ' + funName)
-      bld.sameLine('(' + Utils.instance.getTypeName(varSec) + ' ' + inVarName)
-      bld.sameLine(")\t{ " + varName + ' = ' + inVarName + '; };')
+      bld.same_line('(' + Utils.instance.get_type_name(varSec) + ' ' + inVarName)
+      bld.same_line(")\t{ " + varName + ' = ' + inVarName + '; };')
     end
 
     # Returns definition string for this class's set method

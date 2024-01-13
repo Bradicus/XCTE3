@@ -10,20 +10,20 @@ module XCTERuby
     def get_definition(cls, bld, _fun)
       # process class variables
       # Generate code for class variables
-      eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.isStatic # Ignore static variables
           if Utils.instance.is_primitive(var)
             if var.arrayElemCount.to_i > 0	# Array of primitives)
-              bld.startBlock('for i in 0..@' << var.name << '.size')
+              bld.start_block('for i in 0..@' << var.name << '.size')
               bld.add(var.name + '[i] = src' + cls.name + '[i]')
-              bld.endBlock
+              bld.end_block
             else
               bld.add(var.name + ' = ' + 'src' + cls.name + '.' + var.name)
             end
           elsif var.arrayElemCount > 0
-            bld.startBlock('for i in 0..@' << var.name << '.size')
+            bld.start_block('for i in 0..@' << var.name << '.size')
             bld.add(var.name << '[i] = src' << cls.name << '[i]')
-            bld.endBlock	# Array of objects
+            bld.end_block	# Array of objects
           else
             bld.add(var.name + ' = ' + 'src' + cls.name + '.' + var.name)
           end

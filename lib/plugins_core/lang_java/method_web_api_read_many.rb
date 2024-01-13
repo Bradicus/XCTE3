@@ -97,13 +97,13 @@ module XCTEJava
 
       bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
-      bld.startFunctionParamed('public ' + @returnType + ' Get' +
+      bld.start_function_paramed('public ' + @returnType + ' Get' +
                                Utils.instance.get_styled_class_name(cls.getUName) + 's', params)
 
       bld.add 'Sort sort = null;'
-      bld.startBlock 'if (sortBy.length() > 0 && sortBy.length() > 0)'
+      bld.start_block 'if (sortBy.length() > 0 && sortBy.length() > 0)'
       bld.add 'sort = Filter.getSort(sortBy, sortAsc);'
-      bld.endBlock
+      bld.end_block
 
       bld.separate
 

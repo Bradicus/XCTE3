@@ -25,7 +25,7 @@ module XCTECSharp
       bld.add('/// Web API get single ' + cls.getUName)
       bld.add('///')
 
-      bld.startFunction('public ' + Utils.instance.get_styled_class_name(cls.getUName) + ' Get' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id)')
+      bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.getUName) + ' Get' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id)')
 
       get_body(cls, bld, fun)
 
@@ -49,7 +49,7 @@ module XCTECSharp
 
       bld.add(cls.xmlElement)
 
-      bld.endBlock
+      bld.end_block
     end
   end
 end

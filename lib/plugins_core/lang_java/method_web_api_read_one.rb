@@ -51,7 +51,7 @@ module XCTEJava
 
       bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName) + '/{id}")')
 
-      bld.startFunction('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
+      bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
                         ' Get' + Utils.instance.get_styled_class_name(cls.getUName) +
                         '(' + params.join(', ') + ')')
 
@@ -59,11 +59,11 @@ module XCTEJava
       bld.separate
 
       if !cls.dataClass.nil?
-        bld.startBlock 'if (item.isPresent())'
+        bld.start_block 'if (item.isPresent())'
         bld.add 'var mappedItem = new ' + Utils.instance.get_styled_class_name(cls.getUName) + '();'
         bld.add(mapperName + '.map(item.get(), mappedItem);')
         bld.add('return mappedItem;')
-        bld.endBlock
+        bld.end_block
 
         bld.add 'return null;'
       else

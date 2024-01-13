@@ -43,9 +43,9 @@ class SourceRenderer
       end
     elsif line.is_a?(String)
       if line.length > 0
-        @lines.push(getIndent << line)
+        @lines.push(get_indent << line)
       else
-        @lines.push(getIndent << line)
+        @lines.push(get_indent << line)
       end
     else
       raise TypeError, 'invalid type ' + line.inspect
@@ -53,10 +53,10 @@ class SourceRenderer
   end
 
   def iadd(count = 1, line)
-    @lines.push(getIndent(count) << line)
+    @lines.push(get_indent(count) << line)
   end
 
-  def sameLine(line)
+  def same_line(line)
     @lines.last << line
   end
 
@@ -68,13 +68,13 @@ class SourceRenderer
   end
 
   # if the last line isn't a blank line, add one for separation
-  def separateIf(condition)
+  def seperate_if(condition)
     return unless condition && @lines.count > 0 && !@lines.last.strip.empty?
 
     add
   end
 
-  def getIndent(extraIndent = 0)
+  def get_indent(extraIndent = 0)
     totalIndent = ''
     for i in 0..(@indentLevel + extraIndent - 1)
       totalIndent += @indentChars
@@ -92,66 +92,66 @@ class SourceRenderer
     outStr
   end
 
-  def endBlock(afterClose = '')
+  def end_block(afterClose = '')
     unindent
 
     if !@lines.last.strip.empty?
       add(@blockDelimClose + afterClose)
     else
       @lines.last.strip!
-      sameLine(getIndent + @blockDelimClose + afterClose)
+      same_line(get_indent + @blockDelimClose + afterClose)
     end
 
     separate
   end
 
-  def startFunction(functionDeclairation)
-    startDelimedChunk(functionDeclairation, @hangingFunctionStart)
+  def start_function(functionDeclairation)
+    start_delimed_chunk(functionDeclairation, @hangingFunctionStart)
   end
 
-  def startFunctionParamed(functionName, paramList)
+  def start_function_paramed(functionName, paramList)
     oneLiner = paramList.join(', ')
     if oneLiner.length > 100
       paramStr = "\n"
 
       (0..paramList.length - 1).each do |i|
         if i < paramList.length - 1
-          paramStr += getIndent(2) + paramList[i] + ',' + "\n"
+          paramStr += get_indent(2) + paramList[i] + ',' + "\n"
         else
-          paramStr += getIndent(2) + paramList[i]
+          paramStr += get_indent(2) + paramList[i]
         end
       end
 
-      startDelimedChunk(functionName + '(' + paramStr + ')', @hangingFunctionStart)
+      start_delimed_chunk(functionName + '(' + paramStr + ')', @hangingFunctionStart)
     else
-      startDelimedChunk(functionName + '(' + oneLiner + ')', @hangingFunctionStart)
+      start_delimed_chunk(functionName + '(' + oneLiner + ')', @hangingFunctionStart)
     end
   end
 
   def endFunction
-    endBlock
+    end_block
   end
 
-  def startClass(classDeclairation)
-    startDelimedChunk(classDeclairation, @hangingFunctionStart)
+  def start_class(classDeclairation)
+    start_delimed_chunk(classDeclairation, @hangingFunctionStart)
   end
 
-  def endClass(afterClose = '')
-    endBlock(afterClose)
+  def end_class(afterClose = '')
+    end_block(afterClose)
   end
 
-  def startBlock(statement)
-    startDelimedChunk(statement, @hangingBlockStart)
+  def start_block(statement)
+    start_delimed_chunk(statement, @hangingBlockStart)
   end
 
-  def startDelimedChunk(statement = '', hanging = true)
+  def start_delimed_chunk(statement = '', hanging = true)
     statement += ' ' if statement != '' && @blockDelimOpen.length > 0 && hanging
 
     if hanging
-      @lines.push(getIndent + statement + @blockDelimOpen)
+      @lines.push(get_indent + statement + @blockDelimOpen)
     else
-      @lines.push(getIndent + statement)
-      @lines.push(getIndent + @blockDelimOpen)
+      @lines.push(get_indent + statement)
+      @lines.push(get_indent + @blockDelimOpen)
     end
     indent
   end

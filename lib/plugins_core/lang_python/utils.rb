@@ -7,7 +7,7 @@
 #
 # This class contains utility functions for a language
 
-require 'lang_profile.rb'
+require 'lang_profile'
 require 'utils_base'
 
 module XCTEPython
@@ -22,9 +22,9 @@ module XCTEPython
     def getParamDec(var)
       pDec = String.new
 
-      pDec << getTypeName(var);
+      pDec << get_type_name(var)
 
-      pDec << " " << var.name;
+      pDec << ' ' << var.name
 
       return pDec
     end
@@ -34,33 +34,33 @@ module XCTEPython
       vDec = String.new
 
       if var.isStatic
-        vDec << ""
+        vDec << ''
       end
 
-      vDec << "" << var.name;
+      vDec << '' << var.name
 
       if var.arrayElemCount.to_i > 0
-        vDec << " = []"
+        vDec << ' = []'
       end
 
-      if var.comment != nil
-        vDec << "\t# " << var.comment;
+      if !var.comment.nil?
+        vDec << "\t# " << var.comment
       end
 
-      vDec << "\n";
+      vDec << "\n"
 
       return vDec
     end
 
     # Returns a size constant for the specified variable
     def getSizeConst(var)
-      return "ARRAYSZ_" << var.name.upcase
+      return 'ARRAYSZ_' << var.name.upcase
     end
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
     def getComment(var)
-      return "# " << var.text << " \n"
+      return '# ' << var.text << " \n"
     end
   end
 end

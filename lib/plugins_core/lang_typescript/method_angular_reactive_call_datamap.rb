@@ -15,11 +15,11 @@ module XCTETypescript
     def get_definition(cls, bld, _fun)
       itemVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
       clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
-      populateServiceVar = Utils.instance.createVarFor(cls, 'class_angular_data_map_service')
+      populateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')
 
       return unless !clsVar.nil? && !populateServiceVar.nil?
 
-      bld.startFunction('populate(): void')
+      bld.start_function('populate(): void')
       bld.add('this.' + Utils.instance.get_styled_variable_name(populateServiceVar) +
               '.populate(this.' + clsVar + ' as FormGroup, this.item);')
 

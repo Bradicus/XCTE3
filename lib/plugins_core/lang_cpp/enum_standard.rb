@@ -30,14 +30,14 @@ module XCTECpp
       cls.getUName
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       cls.setName(get_unformatted_class_name(cls))
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.getStyledFileName(cls.getUName)
-      bld.lfExtension = Utils.instance.getExtension('header')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      bld.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
@@ -90,12 +90,12 @@ module XCTECpp
 
       classDec = 'enum class ' + Utils.instance.get_styled_class_name(cls.getUName)
 
-      bld.startBlock(classDec)
+      bld.start_block(classDec)
       enums = []
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        enumDec = Utils.instance.getStyledEnumName(var.name)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        enumDec = Utils.instance.get_styled_enum_name(var.name)
         enumDec += ' = ' + var.defaultValue if !var.defaultValue.nil?
         enums.push(enumDec)
       }))
@@ -106,12 +106,12 @@ module XCTECpp
           bld.add(enum)
           first = false
         else
-          bld.sameLine(',')
+          bld.same_line(',')
           bld.add(enum)
         end
       end
 
-      bld.endBlock(';')
+      bld.end_block(';')
 
       render_namespace_end(cls, bld)
 

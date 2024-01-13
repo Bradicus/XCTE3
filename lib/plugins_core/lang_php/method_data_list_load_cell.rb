@@ -43,7 +43,7 @@ module XCTEPhp
             outCode.iadd(3, '$cellString; break;')
           else
             outCode.iadd(3, 'case ' << varNum.to_s << ": $this->dataSet['" << var.name << "'] = ")
-            outCode.sameLine('new ' << var.vtype << '($cellString); break;')
+            outCode.same_line('new ' << var.vtype << '($cellString); break;')
           end
 
           varNum += 1

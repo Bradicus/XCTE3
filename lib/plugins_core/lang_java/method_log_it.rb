@@ -33,13 +33,13 @@ class XCTEJava::MethodLogIt < XCTEPlugin
     bld.add('void logIt(PrintStream pStream, String indent, boolean logChildren)')
     bld.add('{')
 
-    if cls.hasAnArray
+    if cls.has_an_array
       bld.add("int i;\n")
     end
 
     bld.add('pStream.println(indent + " -- ' << cls.name << ' begin -- ");')
 
-    eachVar(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+    each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
       if var.elementId == CodeElem::ELEM_VARIABLE
         if var.isPointer
           if var.arrayElemCount > 0
@@ -51,20 +51,20 @@ class XCTEJava::MethodLogIt < XCTEPlugin
             else
               bld.add('pStream.println(indent + "' << var.name << ': ");')
 
-              bld.startBlock('if (logChildren)')
-              bld.startBlock('for (i = 0; i < ' << var.name + '.length; i++)')
+              bld.start_block('if (logChildren)')
+              bld.start_block('for (i = 0; i < ' << var.name + '.length; i++)')
               bld.add(var.name << "[i].logIt(outStr,  indent + \"  \");\n")
               bld.add('pStream.println();')
-              bld.endBlock
-              bld.endBlock
+              bld.end_block
+              bld.end_block
             end
           elsif XCTECpp::Utils.is_primitive(var) # Not an array
             bld.add('pStream.println(indent + "' << var.name << ': " + ' << var.name << ');')
           else
             bld.add('pStream.println(indent + "Object ' << var.name << ': ");')
-            bld.startBlock('if (logChildren)')
+            bld.start_block('if (logChildren)')
             bld.add(var.name << '.logIt(outStr,  indent + "  ");')
-            bld.endBlock
+            bld.end_block
           end
         else
           # bld.add("pStream.println(indent + " << varSec.name << ");")
@@ -74,7 +74,7 @@ class XCTEJava::MethodLogIt < XCTEPlugin
 
     bld.add('pStream.println(indent + " -- ' << cls.name << ' end -- ");')
 
-    bld.endBlock
+    bld.end_block
 
     return logItString
   end

@@ -40,7 +40,7 @@ module XCTECpp
 
       classDef = String.new
       classDef << Utils.instance.get_styled_class_name(cls.getUName) << ' :: ' << Utils.instance.get_styled_class_name(cls.getUName) << '()'
-      bld.startClass(classDef)
+      bld.start_class(classDef)
 
       get_body(cls, bld, funItem)
 
@@ -51,17 +51,17 @@ module XCTECpp
       conDef = String.new
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.defaultValue.nil?
           bld.add(Utils.instance.get_styled_variable_name(var) << ' = ')
 
           if var.vtype == 'String'
-            bld.sameLine('"' << var.defaultValue << '";')
+            bld.same_line('"' << var.defaultValue << '";')
           else
-            bld.sameLine(var.defaultValue << ';')
+            bld.same_line(var.defaultValue << ';')
           end
 
-          bld.sameLine("\t// " << var.comment) if !var.comment.nil?
+          bld.same_line("\t// " << var.comment) if !var.comment.nil?
 
           bld.add
         end

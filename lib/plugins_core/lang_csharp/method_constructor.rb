@@ -24,11 +24,11 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
 
     standard_class_name = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
 
-    bld.startClass(standard_class_name + '()')
+    bld.start_class(standard_class_name + '()')
 
     get_body(cls, bld, fun)
 
-    bld.endClass
+    bld.end_class
   end
 
   def get_declairation(cls, bld, _fun)
@@ -48,12 +48,12 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
         bld.add(var.name << ' = ')
 
         if var.vtype == 'String'
-          bld.sameLine('"' << var.defaultValue << '";')
+          bld.same_line('"' << var.defaultValue << '";')
         else
-          bld.sameLine(var.defaultValue << ';')
+          bld.same_line(var.defaultValue << ';')
         end
 
-        bld.sameLine("\t// " << var.comment) if !var.comment.nil?
+        bld.same_line("\t// " << var.comment) if !var.comment.nil?
 
         bld.add
       end

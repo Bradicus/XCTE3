@@ -28,7 +28,7 @@ module XCTETypescript
       typeName = String.new
 
       vDec << get_styled_variable_name(var)
-      vDec << ': ' + getTypeName(var)
+      vDec << ': ' + get_type_name(var)
 
       vDec << '[]' if var.arrayElemCount.to_i > 0 && var.vtype != 'String'
 
@@ -62,7 +62,7 @@ module XCTETypescript
       vDec << 'static ' if var.isStatic
 
       vDec << get_styled_variable_name(var)
-      vDec << ': ' + getTypeName(var)
+      vDec << ': ' + get_type_name(var)
 
       if !var.defaultValue.nil?
         if var.getUType.downcase == 'string'
@@ -97,7 +97,7 @@ module XCTETypescript
     end
 
     # Get a type name for a variable
-    def getTypeName(var)
+    def get_type_name(var)
       typeName = getSingleItemTypeName(var)
 
       typeName = apply_template(var.templates[0], typeName) if var.isList
@@ -119,7 +119,7 @@ module XCTETypescript
     end
 
     def apply_template(tpl, curTypeName)
-      tplType = @langProfile.getTypeName(tpl.name)
+      tplType = @langProfile.get_type_name(tpl.name)
       if tpl.name.downcase == 'list'
         typeName = curTypeName + '[]'
       else
@@ -135,7 +135,7 @@ module XCTETypescript
 
       baseTypeName = ''
       if !var.vtype.nil?
-        baseTypeName = @langProfile.getTypeName(var.vtype)
+        baseTypeName = @langProfile.get_type_name(var.vtype)
       else
         baseTypeName = CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
       end
@@ -144,12 +144,12 @@ module XCTETypescript
     end
 
     def getListTypeName(listTypeName)
-      @langProfile.getTypeName(listTypeName)
+      @langProfile.get_type_name(listTypeName)
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      @langProfile.getExtension(eType)
+    def get_extension(eType)
+      @langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,
@@ -170,10 +170,10 @@ module XCTETypescript
 
     # process variable group
     def renderReactiveFormGroup(cls, bld, _vGroup, isDisabled, separator = ';')
-      bld.sameLine('new FormGroup({')
+      bld.same_line('new FormGroup({')
       bld.indent
 
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if is_primitive(var)
           hasMult = var.isList
           if !var.isList
@@ -189,14 +189,14 @@ module XCTETypescript
               if !var.selectFrom.nil?
                 bld.add(get_styled_variable_name(var, '', ' id') + ': ')
                 idVar = cls.model.getIdentityVar
-                bld.sameLine(getFormcontrolType(idVar, idVar.getUType, '', isDisabled) + ',')
+                bld.same_line(getFormcontrolType(idVar, idVar.getUType, '', isDisabled) + ',')
               else
                 bld.add(get_styled_variable_name(var) + ': ')
                 renderReactiveFormGroup(otherClass, bld, otherClass.model.varGroup, isDisabled, ',')
               end
             else
               bld.add(get_styled_variable_name(var) + ': ')
-              bld.sameLine("new FormControl(''),")
+              bld.same_line("new FormControl(''),")
             end
           else
             bld.add(get_styled_variable_name(var) + ': new FormArray([]),')
@@ -272,7 +272,7 @@ module XCTETypescript
       uniqueList = clsList.uniq
 
       for c in uniqueList
-        bld.sameLine(',') if !firstLine
+        bld.same_line(',') if !firstLine
 
         bld.iadd(c)
         firstLine = false

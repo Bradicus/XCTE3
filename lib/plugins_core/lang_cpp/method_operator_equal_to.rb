@@ -24,7 +24,7 @@ module XCTECpp
       eqString = String.new
 
       bld.add('bool operator==' << '(const ' << cls.name)
-      bld.sameLine(eqString << ' src' << cls.name << ') const;')
+      bld.same_line(eqString << ' src' << cls.name << ') const;')
 
       return eqString
     end
@@ -40,17 +40,17 @@ module XCTECpp
       bld.add('/**')
       bld.add('* Sets this object equal to incoming object')
       bld.add('*/')
-      bld.startClass('bool ' + cls.name + ' :: operator==' + '(const ' + cls.name + ' src' + cls.name + ') const')
+      bld.start_class('bool ' + cls.name + ' :: operator==' + '(const ' + cls.name + ' src' + cls.name + ') const')
 
       bld.add('return(')
       bld.indent
 
       # Process variables
-      Utils.instance.eachVar(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.isStatic && Utils.instance.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Array of primitives
           bld.add(seperator << Utils.instance.get_styled_variable_name(var) << ' == ')
-          bld.sameLine('src' << cls.name << '.')
-          bld.sameLine(Utils.instance.get_styled_variable_name(var))
+          bld.same_line('src' << cls.name << '.')
+          bld.same_line(Utils.instance.get_styled_variable_name(var))
 
           seperator = '&& '
         end
@@ -59,7 +59,7 @@ module XCTECpp
       bld.unindent
 
       bld.add(');')
-      bld.endBlock
+      bld.end_block
     end
   end
 end

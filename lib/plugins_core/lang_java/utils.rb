@@ -25,7 +25,7 @@ module XCTEJava
     def getParamDec(var)
       pDec = String.new
 
-      pDec << getTypeName(var)
+      pDec << get_type_name(var)
 
       pDec << ' ' << get_styled_variable_name(var)
 
@@ -44,7 +44,7 @@ module XCTEJava
 
       vDec << 'virtual ' if var.isVirtual
 
-      vDec << getTypeName(var)
+      vDec << get_type_name(var)
 
       vDec << ' '
 
@@ -62,11 +62,11 @@ module XCTEJava
     #   fType = ""
 
     #   if (var.templateType != nil)
-    #     fType << var.templateType << "<" << self.getTypeName(var) << ">"
+    #     fType << var.templateType << "<" << self.get_type_name(var) << ">"
     #   elsif (var.listType != nil)
-    #     fType << var.listType << "<" << self.getTypeName(var) << ">"
+    #     fType << var.listType << "<" << self.get_type_name(var) << ">"
     #   else
-    #     fType << self.getTypeName(var)
+    #     fType << self.get_type_name(var)
     #   end
     # end
 
@@ -74,20 +74,20 @@ module XCTEJava
       fType = ''
 
       if !var.templateType.nil?
-        fType += var.templateType + '<' + getTypeName(var) + '>'
+        fType += var.templateType + '<' + get_type_name(var) + '>'
       elsif !var.listType.nil?
-        fType += var.listType + '<' + getTypeName(var) + '>'
+        fType += var.listType + '<' + get_type_name(var) + '>'
       else
-        fType += getTypeName(var)
+        fType += get_type_name(var)
       end
     end
 
     # Return the language type based on the generic type
-    def getTypeName(var)
+    def get_type_name(var)
       typeName = getSingleItemTypeName(var)
 
       if var.templates.length > 0 && var.templates[0].isCollection
-        tplType = @langProfile.getTypeName(var.templates[0].name)
+        tplType = @langProfile.get_type_name(var.templates[0].name)
         typeName = tplType + '<' + typeName + '>'
       end
 
@@ -114,7 +114,7 @@ module XCTEJava
     # Return the language type based on the generic type
     def getBaseTypeName(var)
       nsPrefix = ''
-      langType = @langProfile.getTypeName(var.getUType)
+      langType = @langProfile.get_type_name(var.getUType)
 
       if !var.utype.nil? # Only unformatted name needs styling
         baseTypeName = CodeNameStyling.getStyled(langType, @langProfile.classNameStyle)
@@ -134,10 +134,10 @@ module XCTEJava
     def getObjTypeName(var)
       return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle) if var.vtype.nil?
 
-      objType = getType(var.vtype + 'obj')
+      objType = get_type(var.vtype + 'obj')
       return objType.langType if !objType.nil?
 
-      return @langProfile.getTypeName(var.vtype)
+      return @langProfile.get_type_name(var.vtype)
     end
 
     # Returns a size constant for the specified variable
@@ -146,8 +146,8 @@ module XCTEJava
     end
 
     # Get the extension for a file type
-    def getExtension(eType)
-      return @langProfile.getExtension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,
@@ -174,7 +174,7 @@ module XCTEJava
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
-          fPath = getStyledFileName(var.getUType + '')
+          fPath = get_styled_file_name(var.getUType + '')
           cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))
         end
       end
@@ -235,7 +235,7 @@ module XCTEJava
     def add_class_injection(toCls, fromCls, plugName)
       varClass = fromCls.model.findClassModelByPluginName(plugName)
       if !varClass.nil?
-        var = createVarFor(varClass, plugName)
+        var = create_var_for(varClass, plugName)
         var.visibility = 'private'
 
         if !var.nil?
@@ -252,10 +252,10 @@ module XCTEJava
 
       if !filtered_class.dataClass.nil?
         data_class = ClassModelManager.findClass(filtered_class.dataClass.model_name, filtered_class.dataClass.plugin_name)
-        pageReqVar = createVarFor(data_class, data_class.plugName)
+        pageReqVar = create_var_for(data_class, data_class.plugName)
       else
         data_class = cls
-        pageReqVar = createVarFor(data_class, 'class_jpa_entity')
+        pageReqVar = create_var_for(data_class, 'class_jpa_entity')
       end
 
       throw('could not find class_jpa_entity for ' + data_class.model.name) if pageReqVar.nil?

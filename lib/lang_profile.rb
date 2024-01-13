@@ -71,7 +71,7 @@ class LangProfile
     raise('Function name style must be defined in type map for ' + name)
   end
 
-  def getExtension(extType)
+  def get_extension(extType)
     for fType in @fileTypes
       if fType.fType == extType
         return fType.fExtension
@@ -81,7 +81,7 @@ class LangProfile
     return nil
   end
 
-  def getTypeName(gType)
+  def get_type_name(gType)
     for tMap in @typeMaps
       if tMap.genericType == gType
         return tMap.langType if tMap.tplType.nil?
@@ -94,7 +94,7 @@ class LangProfile
     return gType # If it can't find it just return the type
   end
 
-  def getType(genericType)
+  def get_type(genericType)
     for tMap in @typeMaps
       if tMap.genericType == genericType && (!tMap.autoInclude.nil? && !tMap.autoInclude.name.nil?)
         return tMap

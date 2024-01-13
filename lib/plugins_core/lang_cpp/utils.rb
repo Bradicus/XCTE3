@@ -26,7 +26,7 @@ module XCTECpp
 
       pDec += 'const ' if var.isConst
 
-      pDec += getTypeName(var)
+      pDec += get_type_name(var)
 
       pDec += '&' if var.passBy.upcase == 'REFERENCE'
       pDec += '*' if var.isPointer
@@ -47,7 +47,7 @@ module XCTECpp
 
       vDec += 'static ' if var.isStatic
 
-      vDec += getTypeName(var)
+      vDec += get_type_name(var)
 
       vDec += '*' if var.isPointer
 
@@ -80,11 +80,11 @@ module XCTECpp
     end
 
     # Return the language type based on the generic type
-    def getTypeName(var)
+    def get_type_name(var)
       typeName = getSingleItemTypeName(var)
 
       if var.templates.length > 0 && var.templates[0].isCollection
-        tplType = @langProfile.getTypeName(var.templates[0].name)
+        tplType = @langProfile.get_type_name(var.templates[0].name)
         typeName = tplType + '<' + typeName + '>'
       end
 
@@ -107,7 +107,7 @@ module XCTECpp
     # Return the language type based on the generic type
     def getBaseTypeName(var)
       nsPrefix = ''
-      langType = @langProfile.getTypeName(var.getUType)
+      langType = @langProfile.get_type_name(var.getUType)
 
       if !var.utype.nil? # Only unformatted name needs styling
         baseTypeName = CodeNameStyling.getStyled(langType, @langProfile.classNameStyle)
@@ -124,7 +124,7 @@ module XCTECpp
     end
 
     def getClassName(var)
-      return @langProfile.getTypeName(var.vtype) if !var.vtype.nil?
+      return @langProfile.get_type_name(var.vtype) if !var.vtype.nil?
 
       return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
     end
@@ -161,7 +161,7 @@ module XCTECpp
     end
 
     def getListTypeName(listTypeName)
-      return @langProfile.getTypeName(listTypeName)
+      return @langProfile.get_type_name(listTypeName)
     end
 
     def getComment(var)

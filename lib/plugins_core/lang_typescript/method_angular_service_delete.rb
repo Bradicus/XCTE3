@@ -13,7 +13,7 @@ module XCTETypescript
       className = Utils.instance.get_styled_class_name(cls.getUName)
       urlName = Utils.instance.getStyledUrlName(cls.getUName)
 
-      bld.startFunction('delete(item: any): any')
+      bld.start_function('delete(item: any): any')
       bld.add('return this.httpClient.delete<' + className + '>(`${this.apiUrl}/' + urlName + '/${item.id}`);')
       bld.endFunction
     end

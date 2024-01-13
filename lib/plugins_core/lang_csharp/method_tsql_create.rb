@@ -26,7 +26,7 @@ module XCTECSharp
       bld.add('/// If you are not using ambient transactions, trans must be defined!')
       bld.add('///')
 
-      bld.startFunction('public void Create(' +
+      bld.start_function('public void Create(' +
                         XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName) +
                         ' o, SqlConnection conn, SqlTransaction trans = null)')
 
@@ -68,8 +68,8 @@ module XCTECSharp
 
       bld.add
 
-      bld.startBlock('try')
-      bld.startBlock('using(SqlCommand cmd = new SqlCommand(sql, conn))')
+      bld.start_block('try')
+      bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
       bld.add('cmd.Transaction = trans;')
 
       Utils.instance.addNonIdentityParams(cls, bld)
@@ -84,12 +84,12 @@ module XCTECSharp
                 ' = Convert.To' + identVar.vtype + '(newId);')
       end
 
-      bld.endBlock
-      bld.endBlock
-      bld.startBlock('catch(Exception e)')
+      bld.end_block
+      bld.end_block
+      bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Error inserting ' +
               XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) + ' into database", e);')
-      bld.endBlock(';')
+      bld.end_block(';')
     end
   end
 end

@@ -39,7 +39,7 @@ module XCTECpp
       bld.add('void ' << cls.getUName() << ' :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const')
       bld.add('{')
 
-      if cls.model.hasAnArray
+      if cls.model.has_an_array
         bld.add('    unsigned int i;')
       end
 

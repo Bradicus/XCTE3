@@ -22,7 +22,7 @@ module XCTECSharp
       return Utils.instance.get_styled_class_name(cls.getUName + ' engine')
     end
 
-    def genSourceFiles(cls)
+    def gen_source_files(cls)
       srcFiles = []
 
       cls.setName(Utils.instance.get_styled_class_name(cls.getUName + ' engine test'))
@@ -32,7 +32,7 @@ module XCTECSharp
 
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.get_styled_class_name(cls.name)
-      bld.lfExtension = Utils.instance.getExtension('body')
+      bld.lfExtension = Utils.instance.get_extension('body')
 
       genFileContent(cls, bld)
 
@@ -54,11 +54,11 @@ module XCTECSharp
       bld.add('[TestClass]')
       classDec = cls.model.visibility + ' class ' + Utils.instance.get_styled_class_name(cls.name)
 
-      bld.startClass(classDec)
+      bld.start_class(classDec)
 
       templ.get_definition(cls, bld)
 
-      bld.endClass
+      bld.end_class
 
       Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end

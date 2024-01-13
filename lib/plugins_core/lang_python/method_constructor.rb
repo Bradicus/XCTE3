@@ -24,7 +24,7 @@ module XCTEPython
 
       rend.add('# Initializer')
 
-      rend.startFunction('def __init__(self)')
+      rend.start_function('def __init__(self)')
 
       varArray = []
       cls.model.getAllVarsFor(varArray)
@@ -35,13 +35,13 @@ module XCTEPython
             rend.add('self.' << Utils.instance.get_styled_variable_name(var) + ' = ')
 
             if var.vtype == 'String'
-              rend.sameLine('"' + var.defaultValue + '"')
+              rend.same_line('"' + var.defaultValue + '"')
             else
-              rend.sameLine(var.defaultValue)
+              rend.same_line(var.defaultValue)
             end
 
             if !var.comment.nil?
-              rend.sameLine("\t# " + var.comment)
+              rend.same_line("\t# " + var.comment)
             end
 
             rend.add
@@ -51,7 +51,7 @@ module XCTEPython
         end
       end
 
-      rend.endBlock('# init')
+      rend.end_block('# init')
     end
   end
 end

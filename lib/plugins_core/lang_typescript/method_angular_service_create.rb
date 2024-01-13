@@ -13,7 +13,7 @@ module XCTETypescript
       className = Utils.instance.get_styled_class_name(cls.getUName)
       urlName = Utils.instance.getStyledUrlName(cls.getUName)
 
-      bld.startFunction('create(item: any): Observable<' + className + '>')
+      bld.start_function('create(item: any): Observable<' + className + '>')
       bld.add('return this.httpClient.post<' + className + '>(`${this.apiUrl}/' + urlName + '`, item);')
       bld.endFunction
     end
