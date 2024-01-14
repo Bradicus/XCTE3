@@ -22,9 +22,9 @@ module DataLoading
   class ClassLoader
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml, modelManager)
-      if !genC.classGroupRef.nil?
-        genC.featureGroup = genC.classGroupRef.featureGroup
-        genC.variant = genC.classGroupRef.variant
+      if !genC.class_group_ref.nil?
+        genC.featureGroup = genC.class_group_ref.featureGroup
+        genC.variant = genC.class_group_ref.variant
       end
 
       genC.xmlElement = genCXml
@@ -40,10 +40,10 @@ module DataLoading
       genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['interface_namespace'])
       genC.interfacePath = genCXml.attributes['interface_path']
       genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['test_namespace'])
-      genC.testPath = AttributeUtil.loadAttribute(genCXml, 'test_path', pComponent)
+      genC.testPath = AttributeLoader.init.xml(genCXml).names('test_path').get
       genC.language = genCXml.attributes['language']
       genC.path = AttributeLoader.init.xml(genCXml).names('path').model(genC.model).cls(genC).get
-      genC.varPrefix = AttributeUtil.loadAttribute(genCXml, 'var_prefix', pComponent)
+      genC.varPrefix = AttributeLoader.init.xml(genCXml).names('var_prefix').get
 
       # Add base namespace to class namespace lists
       if !pComponent.nil? && !pComponent.namespace.nsList.empty?
@@ -199,27 +199,17 @@ module DataLoading
       end
     end
 
-    def self.loadTemplateAttribute(var, varXml, attribName, language)
-      tpls = AttributeUtil.loadAttribute(varXml, attribName, language)
-
-      tplItems = tpls.split(',')
-      for tplItem in tplItems
-        tplC = CodeStructure::CodeElemTemplate.new(tplItem.strip)
-        var.templates.push(tplC)
-      end
-    end
-
     # Loads a comment from an XML comment node
     def self.loadCommentNode(parXML, section)
       comNode = CodeElemComment.new(parXML.attributes['text'])
-      comNode.AttributeUtil.loadAttributes(parXML)
+      comNode.loadAttributes(parXML)
       section << comNode
     end
 
     # Loads a br format element from an XML br node
     def self.loadBRNode(brXML, section)
       brk = CodeElemFormat.new("\n")
-      brk.AttributeUtil.loadAttributes(brXML)
+      brk.loadAttributes(brXML)
       section << brk
     end
 

@@ -32,7 +32,7 @@
 		<var name="standardClassType"	type="String" default="" />
 		<var name="customCode"			type="String" default="" />
 		<var name="dataClass"			type="String" default="" />
-		<var name="classGroupRef"		type="String" default="nil" />
+		<var name="class_group_ref"		type="String" default="nil" />
 		<var name="cgName"			type="String" default="nil" />
 		<var name="variant"			type="String" default="nil" />
 		<var name="featureGroup"			type="String" default="nil" />

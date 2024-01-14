@@ -20,7 +20,7 @@ module CodeStructure
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
                   :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
-                  :genCfg, :injections, :dataClass, :featureGroup, :variant, :classGroupRef, :actions, :data_class_for
+                  :genCfg, :injections, :dataClass, :featureGroup, :variant, :class_group_ref, :actions, :data_class_for
 
     def initialize(parentElem, model, pComp, _isStatic)
       super(parentElem)
@@ -54,7 +54,7 @@ module CodeStructure
       @standardClassType = nil
       @customCode = nil
       @dataClass = nil
-      @classGroupRef = nil
+      @class_group_ref = nil
       @cgName = nil
       @variant = nil
       @featureGroup = nil

@@ -33,8 +33,8 @@ module DataLoading
       model.xmlElement = xmlDoc.root
 
       xmlDoc.root.elements.each('derived') do |derived|
-        model.derivedFrom = AttributeUtil.loadAttribute(derived, 'from', pComponent)
-        model.modelSet = AttributeUtil.loadAttribute(derived, 'model_set', pComponent)
+        model.derivedFrom = AttributeLoader.init(xmlDoc.root).names('from').get
+        model.modelSet = AttributeLoader.init(xmlDoc.root).names('model_set').get
         Log.error('No model set for derived class in ' + mdoel.name) if model.modelSet.nil?
       end
 
@@ -75,7 +75,7 @@ module DataLoading
         if !cGroup.nil?
           cGroup.xmlElement.elements.each('gen_class') do |genCXML|
             cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
-            cls.classGroupRef = cgRef
+            cls.class_group_ref = cgRef
             cls.loadAttributes(genCXML)
 
             if cls.langInclude.length > 0
