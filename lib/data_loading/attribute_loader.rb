@@ -12,11 +12,10 @@ require "log"
 
 module DataLoading
   class AttributeLoader
-    attr_accessor :value, :model, :clsGen, :xml
 
     @names = Array.new
-    @model = nil
-    @clsGen = nil
+    @dmodel = nil
+    @cls_gen = nil
     @xml = nil
     @default = nil
     @inheritable = false
@@ -71,13 +70,13 @@ module DataLoading
       return self
     end
 
-    def model(model)
-      @model = model
+    def model(dmodel)
+      @dmodel = dmodel
       return self
     end
 
-    def cls(clsGen)
-      @clsGen = clsGen
+    def cls(cls_gen)
+      @cls_gen = cls_gen
       return self
     end
 
@@ -111,7 +110,7 @@ module DataLoading
         end
         if atr != nil
           if ActiveComponent.get() != nil
-            value = processBuildVars(atr)
+            value = process_build_vars(atr)
             if @arrayDelim != nil
               value = value.split(@arrayDelim)
 
@@ -154,7 +153,7 @@ module DataLoading
       end
     end
 
-    def processBuildVars(value)
+    def process_build_vars(value)
       newVal = value
 
       for bv in ActiveComponent.get().buildVars
@@ -162,24 +161,24 @@ module DataLoading
         newVal = newVal.gsub("{" + bv.name + "}", bv.value)
       end
 
-      if @model != nil
-        newVal = newVal.gsub("!{ModelName}", @model.name)
+      if @dmodel != nil
+        newVal = newVal.gsub("!{ModelName}", @dmodel.name)
       end
 
-      if @clsGen != nil && @clsGen.featureGroup != nil
-        newVal = newVal.gsub("!{FeatureGroup}", @clsGen.featureGroup)
+      if @cls_gen != nil && @cls_gen.featureGroup != nil
+        newVal = newVal.gsub("!{FeatureGroup}", @cls_gen.featureGroup)
       else
         newVal = newVal.gsub("!{FeatureGroup}", "")
       end
 
-      if @clsGen != nil && @clsGen.variant != nil
-        newVal = newVal.gsub("!{ClassGroupVariant}", @clsGen.variant)
+      if @cls_gen != nil && @cls_gen.variant != nil
+        newVal = newVal.gsub("!{ClassGroupVariant}", @cls_gen.variant)
       else
         newVal = newVal.gsub("!{ClassGroupVariant}", "")
       end
 
-      if @clsGen != nil && @clsGen.classGroupRef != nil && @clsGen.classGroupRef.name != nil
-        newVal = newVal.gsub("!{ClassGroupName}", @clsGen.classGroupRef.name)
+      if @cls_gen != nil && @cls_gen.class_group_ref != nil && @cls_gen.class_group_ref.name != nil
+        newVal = newVal.gsub("!{ClassGroupName}", @cls_gen.class_group_ref.name)
       else
         newVal = newVal.gsub("!{ClassGroupName}", "")
       end

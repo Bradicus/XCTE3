@@ -217,7 +217,7 @@ module XCTEJava
       plugNameClass = ClassModelManager.findClass(classRef.model_name, classRef.plugin_name)
 
       if plugNameClass.nil?
-        Log.error('unable to find class by ref ')
+        Log.error('unable to find class by ref: ' + classRef.model_name + " - " + classRef.plugin_name)
       else
         cls.addUse(plugNameClass.namespace.get('.') + '.*')
       end

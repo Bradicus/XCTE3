@@ -24,12 +24,9 @@ module DataLoading
       curVar.utype = AttributeLoader.init().xml(varXML).names("utype").get()
       curVar.visibility = AttributeLoader.init().xml(varXML).names("visibility").default(curVar.visibility).get()
       curVar.passBy = AttributeLoader.init().xml(varXML).names("passby").default(curVar.passBy).get()
-      if AttributeUtil.hasAttribute(varXML, "set")
-        AttributeLoader.init().xml(varXML).names("set").isTplAttrib().get(curVar)
-      end
-      if AttributeUtil.hasAttribute(varXML, "tpl")
-        AttributeLoader.init().xml(varXML).names("tpl").isTplAttrib().get(curVar)
-      end
+      AttributeLoader.init().xml(varXML).names("set").isTplAttrib().get(curVar)
+      AttributeLoader.init().xml(varXML).names("tpl").isTplAttrib().get(curVar)
+
       curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
       curVar.isConst = varXML.attributes.get_attribute("const") != nil
       curVar.isStatic = varXML.attributes.get_attribute("static") != nil
@@ -45,18 +42,14 @@ module DataLoading
       curVar.displayName = varXML.attributes["display"]
       curVar.selectFrom = varXML.attributes["select_from"]
       curVar.isOptionsList = (varXML.attributes["options"] == "true")
-      curVar.relation = AttributeUtil.loadAttribute(varXML, "rel", pComp)
-      curVar.storeIn = AttributeUtil.loadAttribute(varXML, "store_in", pComp)
+      curVar.relation = AttributeLoader.init().xml(varXML).names("rel").get
+      curVar.storeIn = AttributeLoader.init().xml(varXML).names("store_in").get
 
-      curVar.required = AttributeUtil.loadInheritableAttribute(varXML, "required", pComp, "false") == "true"
-      curVar.readonly = AttributeUtil.loadInheritableAttribute(varXML, "readonly", pComp, "false") == "true"
+      curVar.required = AttributeLoader.init().xml(varXML).names("required").default("false").doInherit().get == "true"
+      curVar.readonly = AttributeLoader.init().xml(varXML).names("readonly").default("false").doInherit().get == "true"
 
-      if (varXML.attributes.get_attribute("attribs"))
-        AttributeUtil.loadAttribNode(curVar, varXML.attributes["attribs"])
-      end
-
-      curVar.genGet = AttributeUtil.loadInheritableAttribute(varXML, "genGet", pComp, curVar.genGet) == "true"
-      curVar.genSet = AttributeUtil.loadInheritableAttribute(varXML, "genSet", pComp, curVar.genSet) == "true"
+      AttributeLoader.init().xml(varXML).names("genGet").default(curVar.genGet).doInherit().get == "true"
+      AttributeLoader.init().xml(varXML).names("genSet").default(curVar.genGet).doInherit().get == "true"
 
       curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = varXML.attributes["default"]
