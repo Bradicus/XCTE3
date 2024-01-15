@@ -78,7 +78,7 @@ module XCTEHtml
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var) && !var.isList
-          puts var.getUType.downcase
+
           if var.getUType.downcase.start_with? 'date'
             tBodyRow.add_child(HtmlNode.new('td')
               .add_text('{{' + iteratorName + '.' + Utils.instance.get_styled_variable_name(var) + " | date:'medium'}}"))

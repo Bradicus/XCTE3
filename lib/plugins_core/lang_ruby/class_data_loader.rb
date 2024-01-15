@@ -24,7 +24,7 @@ module XCTERuby
       #      render_dependencies(cls, bld)
 
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -35,8 +35,8 @@ module XCTERuby
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
-      bld.start_class('class ' + getClassName(cls))
+    def gen_body_content(cls, bld)
+      bld.start_class('class ' + get_class_name(cls))
 
       bld.separate
       # Generate code for class variables

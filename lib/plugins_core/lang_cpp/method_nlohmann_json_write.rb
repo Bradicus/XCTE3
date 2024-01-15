@@ -92,7 +92,7 @@ module XCTECpp
             bld.add('json["' + curVarName + '"] = (int)item.' + curVarName + ';')
           elsif !var.isList
             bld.add(
-              Utils.instance.getClassName(var) + 'JsonEngine::write(json["' + curVarName + '"]' + ', item.' + curVarName + ');'
+              Utils.instance.get_class_name(var) + 'JsonEngine::write(json["' + curVarName + '"]' + ', item.' + curVarName + ');'
             )
           else
             bld.add('nlohmann::json ' + curVarName + 'Node;')
@@ -100,9 +100,9 @@ module XCTECpp
             bld.start_block('for (auto const& val: item.' + curVarName + ')')
             bld.add('nlohmann::json newNode;')
             if var.isPointer(1)
-              bld.add(Utils.instance.getClassName(var) + 'JsonEngine::write(newNode, *val);')
+              bld.add(Utils.instance.get_class_name(var) + 'JsonEngine::write(newNode, *val);')
             else
-              bld.add(Utils.instance.getClassName(var) + 'JsonEngine::write(newNode, val);')
+              bld.add(Utils.instance.get_class_name(var) + 'JsonEngine::write(newNode, val);')
             end
             bld.add(curVarName + 'Node.push_back(newNode);')
             bld.end_block

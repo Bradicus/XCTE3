@@ -31,7 +31,7 @@ class IncludeUtil
     clsGen = @mdl.findClassModel(@pName)
 
     if clsPlug != nil && clsGen != nil
-      tgtClass.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
+      tgtClass.addInclude(clsPlug.get_dependency_path(clsGen), clsPlug.get_class_name(clsGen))
     end
   end
 end

@@ -37,7 +37,7 @@ module XCTERuby
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -71,7 +71,7 @@ module XCTERuby
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       for inc in cls.includes
         bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.get_extension('body') + "'")
       end
@@ -85,7 +85,7 @@ module XCTERuby
         end
       end
 
-      bld.start_class('class ' + getClassName(cls) + ' < ClassBase')
+      bld.start_class('class ' + get_class_name(cls) + ' < ClassBase')
 
       bld.start_function('def initialize')
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
@@ -113,7 +113,7 @@ module XCTERuby
       bld.add('render_dependencies(cls, bld)')
       bld.separate
       bld.add('gen_file_comment(cls, bld)')
-      bld.add('genFileContent(cls, bld)')
+      bld.add('gen_body_content(cls, bld)')
       bld.add
       bld.add('srcFiles << bld')
       bld.add
@@ -128,9 +128,9 @@ module XCTERuby
       bld.add
 
       bld.add('# Returns the code for the content for this class')
-      bld.start_function('def genFileContent(cls, bld)')
+      bld.start_function('def gen_body_content(cls, bld)')
 
-      bld.add('bld.start_class("class " + getClassName(cls))')
+      bld.add('bld.start_class("class " + get_class_name(cls))')
       bld.separate
       bld.add('bld.separate')
 
@@ -167,7 +167,7 @@ module XCTERuby
 
       prefix += '::' if prefix.size > 0
 
-      bld.add('XCTEPlugin::registerPlugin(' + prefix + getClassName(cls) + '.new)')
+      bld.add('XCTEPlugin::registerPlugin(' + prefix + get_class_name(cls) + '.new)')
     end
   end
 end

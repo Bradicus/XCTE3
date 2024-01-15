@@ -25,75 +25,50 @@ module XCTECSharp
       cls.getUName + ' controller'
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'Controller')
-      bld.lfExtension = Utils.instance.get_extension('body')
-      genFileContent(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
+    def process_dependencies(cls, bld)
+      cls.addUse('System.Data.SqlClient')
     end
 
-    # Returns the code for the content for this class
-    def genFileContent(cls, bld)
-      # Add in any dependencies required by functions
-      for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
-          if !templ.nil?
-            templ.process_dependencies(cls, bld, fun)
-          else
-            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-          end
+    def gen_file_comment(cls, bld)
+      cfg = UserSettings.instance
+
+      bld.add('/**')
+      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+
+      bld.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+
+      bld.add("*\n* " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
+
+      bld.add('*')
+
+      if !cls.description.nil?
+        cls.description.each_line do |descLine|
+          bld.add('* ' << descLine.chomp) if descLine.strip.size > 0
         end
       end
 
-      cls.addUse('System.Data.SqlClient')
+      bld.add('*/')
+    end
 
-      Utils.instance.genUses(cls.uses, bld)
-      Utils.instance.genNamespaceStart(cls.namespace, bld)
+    # Returns the code for the content for this class
+    def gen_body_content(cls, bld)
 
-      classDec = cls.model.visibility + ' class ' + getClassName(cls) + 'Controller'
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls) + 'Controller'
 
       classDec << ' : ApiController'
 
-      for par in (0..cls.baseClassModelManager.size)
+      for par in (0..cls.baseClasses.size)
         if !cls.baseClasses[par].nil?
           classDec << ', ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
         end
       end
 
       bld.start_class(classDec)
+      bld.separate
 
-      bld.add if cls.functions.length > 0
+      render_functions(cls, bld)
 
-      # Generate code for functions
-      for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
-            if !templ.nil?
-              templ.get_definition(cls, bld, fun)
-            else
-              puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin('csharp', 'method_empty')
-            if !templ.nil?
-              templ.get_definition(cls, bld)
-            else
-              # puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-            end
-          end
-        end
-      end # class  + cls.getUName()
       bld.end_class
-
-      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

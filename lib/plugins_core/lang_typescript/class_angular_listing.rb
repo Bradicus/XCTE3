@@ -35,7 +35,7 @@ module XCTETypescript
       process_dependencies(cls, bld)
 
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -69,7 +69,7 @@ module XCTETypescript
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       render_dependencies(cls, bld)
 
       bld.add
@@ -91,7 +91,7 @@ module XCTETypescript
 
       bld.separate
 
-      bld.start_block('export class ' + getClassName(cls) + ' implements OnInit ')
+      bld.start_block('export class ' + get_class_name(cls) + ' implements OnInit ')
 
       bld.add('public pageObv: Observable<FilteredPageRespTpl<' + standard_class_name + '>> = new Observable<FilteredPageRespTpl<' + standard_class_name + '>>;')
       bld.add('public page: FilteredPageRespTpl<' + standard_class_name + '> = new FilteredPageRespTpl<' + standard_class_name + '>;')

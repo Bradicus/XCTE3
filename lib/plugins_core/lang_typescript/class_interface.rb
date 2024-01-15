@@ -24,7 +24,7 @@ module XCTETypescript
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -43,9 +43,9 @@ module XCTETypescript
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       bld.separate
-      bld.start_block('export interface ' + getClassName(cls))
+      bld.start_block('export interface ' + get_class_name(cls))
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.getVarDec(var))

@@ -76,12 +76,12 @@ module XCTECSharp
 
       bld.add
 
-      identVar = cls.model.getIdentityVar
+      ident_var = cls.model.getIdentityVar
 
-      if !identVar.nil?
+      if !ident_var.nil?
         bld.add('var newId = cmd.ExecuteScalar();')
-        bld.add('o.' + Utils.instance.get_styled_variable_name(identVar) +
-                ' = Convert.To' + identVar.vtype + '(newId);')
+        bld.add('o.' + Utils.instance.get_styled_variable_name(ident_var) +
+                ' = Convert.To' + ident_var.vtype + '(newId);')
       end
 
       bld.end_block

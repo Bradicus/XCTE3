@@ -49,7 +49,7 @@ module XCTECpp
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !Utils.instance.get_type_name(var).end_with?('Type')
           # cls.addInclude(var.namespace, Utils.instance.get_type_name(var) )
-          cls.addInclude(cls.namespace.get('/'), Utils.instance.getClassName(var) + 'JsonEngine')
+          cls.addInclude(cls.namespace.get('/'), Utils.instance.get_class_name(var) + 'JsonEngine')
         end
       }))
     end
@@ -109,7 +109,7 @@ module XCTECpp
             end
           elsif !var.isList
             bld.add(
-              'if (json.contains("' + curVarName + '")) ' + Utils.instance.getClassName(var) + 'JsonEngine::read(' +
+              'if (json.contains("' + curVarName + '")) ' + Utils.instance.get_class_name(var) + 'JsonEngine::read(' +
                 'json["' + curVarName + '"], item.' + curVarName + ');'
             )
           else
@@ -119,10 +119,10 @@ module XCTECpp
 
             if var.isPointer(1)
               bld.add(Utils.instance.getSingleItemTypeName(var) + ' newVar(new ' + Utils.instance.getBaseTypeName(var) + '());')
-              bld.add(Utils.instance.getClassName(var) + 'JsonEngine::read(aJson, *newVar);')
+              bld.add(Utils.instance.get_class_name(var) + 'JsonEngine::read(aJson, *newVar);')
             else
               bld.add(Utils.instance.getSingleItemTypeName(var) + ' newVar;')
-              bld.add(Utils.instance.getClassName(var) + 'JsonEngine::read(aJson, newVar);')
+              bld.add(Utils.instance.get_class_name(var) + 'JsonEngine::read(aJson, newVar);')
             end
 
             bld.add('item.' + curVarName + '.push_back(newVar);')

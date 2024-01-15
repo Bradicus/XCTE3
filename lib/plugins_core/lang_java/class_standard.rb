@@ -30,26 +30,6 @@ module XCTEJava
       cls.getUName
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
-
-      process_dependencies(cls, bld)
-
-      render_package_start(cls, bld)
-      render_dependencies(cls, bld)
-
-      gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
-    end
-
     def process_dependencies(cls, bld)
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
@@ -87,10 +67,10 @@ module XCTEJava
     end
 
     # Returns the code for the header for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       cfg = UserSettings.instance
 
-      bld.start_class('public class ' << getClassName(cls))
+      bld.start_class('public class ' << get_class_name(cls))
 
       bld.separate if Utils.instance.has_an_array?(cls)
 

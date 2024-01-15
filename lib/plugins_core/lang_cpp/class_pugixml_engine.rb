@@ -51,7 +51,7 @@ module XCTECpp
 
     def genHeaderComment(cls, hFile)
       hFile.add('/**')
-      hFile.add('* @class ' + getClassName(cls))
+      hFile.add('* @class ' + get_class_name(cls))
 
       hFile.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
@@ -107,7 +107,7 @@ module XCTECpp
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          hFile.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
+          hFile.add('#define ' << Utils.instance.get_size_const(var) << ' ' << var.arrayElemCount.to_s)
         end
       }))
 
@@ -210,7 +210,7 @@ module XCTECpp
           cppGen.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array
-            cppGen.same_line('[' + Utils.instance.getSizeConst(var) << ']')
+            cppGen.same_line('[' + Utils.instance.get_size_const(var) << ']')
           end
 
           cppGen.same_line(';')

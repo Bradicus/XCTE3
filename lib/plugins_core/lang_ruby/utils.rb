@@ -19,7 +19,7 @@ module XCTERuby
       super('ruby')
     end
 
-    def getClassName(var)
+    def get_class_name(var)
       return @langProfile.get_type_name(var.vtype) if !var.vtype.nil?
 
       return CodeNameStyling.getStyled(var.utype, @langProfile.classNameStyle)
@@ -44,7 +44,7 @@ module XCTERuby
 
       vDec << '@' << get_styled_variable_name(var)
 
-      vDec << ' = Array.new(' << getSizeConst(var) << ')' if var.arrayElemCount.to_i > 0
+      vDec << ' = Array.new(' << get_size_const(var) << ')' if var.arrayElemCount.to_i > 0
 
       if !var.defaultValue.nil?
         vDec << ' = '
@@ -63,7 +63,7 @@ module XCTERuby
     end
 
     # Returns a size constant for the specified variable
-    def getSizeConst(var)
+    def get_size_const(var)
       return 'ARRAYSZ_' << var.name.upcase
     end
 

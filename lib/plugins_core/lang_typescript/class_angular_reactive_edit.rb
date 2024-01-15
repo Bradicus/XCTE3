@@ -34,7 +34,7 @@ module XCTETypescript
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
 
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -78,7 +78,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       bld.add
 
       selectorName = Utils.instance.get_styled_file_name(cls.getUName)
@@ -99,7 +99,7 @@ module XCTETypescript
 
       bld.add
 
-      bld.start_block('export class ' + getClassName(cls) + ' implements OnInit ')
+      bld.start_block('export class ' + get_class_name(cls) + ' implements OnInit ')
       bld.add('item: ' + Utils.instance.get_styled_class_name(cls.model.name) + ' = new ' + Utils.instance.get_styled_class_name(cls.model.name) + '();')
       bld.separate
 

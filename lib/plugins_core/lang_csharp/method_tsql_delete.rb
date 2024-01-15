@@ -24,10 +24,10 @@ module XCTECSharp
       bld.add('/// Delete the record for the model with this id')
       bld.add('///')
 
-      identVar = cls.model.getIdentityVar
+      ident_var = cls.model.getIdentityVar
 
-      if identVar
-        bld.start_class('public void Delete(' + Utils.instance.getParamDec(identVar.getParam) +
+      if ident_var
+        bld.start_class('public void Delete(' + Utils.instance.getParamDec(ident_var.getParam) +
                        ', SqlConnection conn, SqlTransaction trans = null)')
       end
 
@@ -37,11 +37,11 @@ module XCTECSharp
     end
 
     def get_declairation(cls, bld, _fun)
-      identVar = cls.model.getIdentityVar
+      ident_var = cls.model.getIdentityVar
 
-      return unless identVar
+      return unless ident_var
 
-      bld.add('void Delete(' + Utils.instance.getParamDec(identVar.getParam) +
+      bld.add('void Delete(' + Utils.instance.getParamDec(ident_var.getParam) +
               ', SqlConnection conn, SqlTransaction trans = null);')
     end
 
@@ -53,32 +53,30 @@ module XCTECSharp
       conDef = String.new
       varArray = []
 
-      identVar = cls.model.getIdentityVar
+      ident_var = cls.model.getIdentityVar
 
-      return unless identVar
+      if ident_var
+        identParamName = Utils.instance.get_styled_variable_name(ident_var.getParam)
 
-      identParamName = Utils.instance.get_styled_variable_name(identVar.getParam)
+        bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) +
+                ' WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.varPrefix) +
+                '] = @' + identParamName + '";')
 
-      cls.model.getAllVarsFor(varArray)
+        bld.add
 
-      bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) +
-              ' WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(identVar, cls.varPrefix) +
-              '] = @' + identParamName + '";')
-
-      bld.add
-
-      bld.start_block('try')
-      bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
-      bld.add('cmd.Transaction = trans;')
-      bld.add
-      bld.add('cmd.Parameters.AddWithValue("@' + identParamName +
-              '", ' + identParamName + ');')
-      bld.end_block
-      bld.end_block
-      bld.start_block('catch(Exception e)')
-      bld.add('throw new Exception("Error deleting ' + cls.getUName + ' with ' +
-              identVar.name + ' = "' + ' + ' + identParamName + ', e);')
-      bld.end_block
+        bld.start_block('try')
+        bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
+        bld.add('cmd.Transaction = trans;')
+        bld.add
+        bld.add('cmd.Parameters.AddWithValue("@' + identParamName +
+                '", ' + identParamName + ');')
+        bld.end_block
+        bld.end_block
+        bld.start_block('catch(Exception e)')
+        bld.add('throw new Exception("Error deleting ' + cls.getUName + ' with ' +
+                ident_var.name + ' = "' + ' + ' + identParamName + ', e);')
+        bld.end_block
+      end
     end
   end
 end

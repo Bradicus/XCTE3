@@ -59,7 +59,7 @@ class XCTECpp::MethodOperatorMinusEquals < XCTEPlugin
                 eqString << "    unsigned int i;\n\n"
                 longArrayFound = true
               end
-              eqString << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(var)
+              eqString << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(var)
               eqString << "; i++)\n        "
               eqString << '        ' << var.name << '[i] -= '
               eqString << 'src' + codeClass.name << '.'

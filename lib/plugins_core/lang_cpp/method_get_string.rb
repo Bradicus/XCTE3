@@ -55,14 +55,14 @@ class XCTECpp::MethodGetString < XCTEPlugin
           if varSec.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(varSec)
               methodString << '    outStr << "' << varSec.name << ': {";'
-              methodString << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(varSec) << "; i++)\n"
+              methodString << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) << "; i++)\n"
               methodString << '        outStr << '
               methodString << varSec.name << "[i] << \"  \";\n"
               methodString << "    outStr << \"}\"\n\n"
             else
               methodString << '    outStr << indent << "' << varSec.name << ': [";'
 
-              methodString << '        for (i = 0; i < ' << XCTECpp::Utils.getSizeConst(varSec) + "; i++)\n"
+              methodString << '        for (i = 0; i < ' << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
               methodString << '            ' << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
               methodString << "        outStr << \" ] \";\n\n"
             end

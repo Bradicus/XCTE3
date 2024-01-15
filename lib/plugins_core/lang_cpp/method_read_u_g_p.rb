@@ -48,11 +48,11 @@ class XCTECpp::MethodReadUGP < XCTEPlugin
         elsif !varSec.isPointer
           if varSec.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(varSec)
-              readDef << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(varSec) + "; i++)\n"
+              readDef << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
               readDef << '        ugsr -> read' << XCTECpp::Utils.getTypeAbbrev(varSec)
               readDef << '(' << varSec.name << "[i]);\n\n"
             else
-              readDef << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(varSec) + "; i++)\n"
+              readDef << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
               readDef << '        ' + varSec.name << "[i].read(ugsr);\n\n"
             end
           elsif XCTECpp::Utils.is_primitive(varSec) # Not an array

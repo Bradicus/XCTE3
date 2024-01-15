@@ -61,7 +61,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
               bld.add('memcpy(' << fmtVarName << ', ')
               bld.same_line('src' << styledCName << '.')
               bld.same_line(fmtVarName << ', ')
-              bld.same_line('sizeof(' + Utils.instance.get_type_name(var.vtype) << ') * ' << Utils.instance.getSizeConst(var))
+              bld.same_line('sizeof(' + Utils.instance.get_type_name(var.vtype) << ') * ' << Utils.instance.get_size_const(var))
               bld.same_line(');')
             else
               bld.add(fmtVarName << ' = src' << styledCName << '.' << fmtVarName << ';')
@@ -72,7 +72,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
               bld.add
               longArrayFound = true
             end
-            bld.start_block('for (i = 0; i < ' << Utils.instance.getSizeConst(var) << '; i++)')
+            bld.start_block('for (i = 0; i < ' << Utils.instance.get_size_const(var) << '; i++)')
             bld.add(fmtVarName + '[i] = src' + styledCName + '.' + '[i];')
             bld.end_block # Array of objects
           else

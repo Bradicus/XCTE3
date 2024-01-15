@@ -37,7 +37,7 @@ module XCTETypescript
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -80,13 +80,13 @@ module XCTETypescript
     end
 
     # Returns the code for the header for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       headerString = String.new
 
       bld.separate
 
       bld.separate
-      bld.start_class('export class ' + getClassName(cls))
+      bld.start_class('export class ' + get_class_name(cls))
 
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

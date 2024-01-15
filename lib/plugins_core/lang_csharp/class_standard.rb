@@ -23,37 +23,10 @@ module XCTECSharp
       cls.getUName
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
-      genFileContent(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
-    end
-
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
-      # Add in any dependencies required by functions
-      for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
-          if !templ.nil?
-            templ.process_dependencies(cls, bld, fun)
-          else
-            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-          end
-        end
-      end
+    def gen_body_content(cls, bld)
 
-      Utils.instance.genUses(cls.uses, bld)
-      Utils.instance.genNamespaceStart(cls.namespace, bld)
-
-      classDec = cls.model.visibility + ' class ' + getClassName(cls)
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
 
       for par in (0..cls.baseClasses.size)
         if par == 0 && !cls.baseClasses[par].nil?
@@ -76,8 +49,6 @@ module XCTECSharp
       render_functions(cls, bld)
 
       bld.end_class
-
-      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

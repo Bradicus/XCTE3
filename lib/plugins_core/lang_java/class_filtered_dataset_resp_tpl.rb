@@ -33,11 +33,11 @@ module XCTEJava
     end
 
     # Returns the code for the header for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       headerString = String.new
 
       bld.separate
-      bld.start_class('public class ' + getClassName(cls) + '<T>')
+      bld.start_class('public class ' + get_class_name(cls) + '<T>')
 
       model = InternalClassModelManager.findModel('page response')
 

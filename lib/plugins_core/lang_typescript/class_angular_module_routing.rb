@@ -35,7 +35,7 @@ module XCTETypescript
       bld.separate
 
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -56,7 +56,7 @@ module XCTETypescript
              otherCls.plugName.start_with?('class_angular_listing')
             plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
             cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
-                           plug.getClassName(otherCls))
+                           plug.get_class_name(otherCls))
           end
         end
       end
@@ -67,7 +67,7 @@ module XCTETypescript
            otherCls.plugName.start_with?('class_angular_listing')
           plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
           cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
-                         plug.getClassName(otherCls))
+                         plug.get_class_name(otherCls))
         end
       end
 
@@ -78,7 +78,7 @@ module XCTETypescript
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       bld.add('const routes: Routes = [')
       bld.indent
       bld.add('{')
@@ -120,7 +120,7 @@ module XCTETypescript
       bld.iadd('exports: [RouterModule]')
 
       bld.add('})')
-      bld.start_class('export class ' + getClassName(cls))
+      bld.start_class('export class ' + get_class_name(cls))
 
       # Generate code for functions
       for fun in cls.functions
@@ -135,21 +135,21 @@ module XCTETypescript
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_edit')
         editPath = plug.get_relative_route(otherCls, 'edit')
 
-        compName = plug.getClassName(otherCls)
-        # compName = getClassName(cls)
+        compName = plug.get_class_name(otherCls)
+        # compName = get_class_name(cls)
         pathLines.push("{ path: '" + editPath.join('/') + "/:id', component: " + compName + ' },')
       elsif otherCls.plugName.start_with? 'class_angular_reactive_view'
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_view')
         viewPath = plug.get_relative_route(otherCls, 'view')
 
-        compName = plug.getClassName(otherCls)
-        # compName = getClassName(cls)
+        compName = plug.get_class_name(otherCls)
+        # compName = get_class_name(cls)
         pathLines.push("{ path: '" + viewPath.join('/') + "/:id', component: " + compName + ' },')
       elsif otherCls.plugName == 'class_angular_listing'
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_listing')
 
         listPath = plug.get_relative_route(otherCls, 'listing')
-        compName = plug.getClassName(otherCls)
+        compName = plug.get_class_name(otherCls)
         pathLines.push("{ path: '" + listPath.join('/') + "', component: " + compName + ' },')
       end
     end

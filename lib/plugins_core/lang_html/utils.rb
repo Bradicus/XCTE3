@@ -37,7 +37,7 @@ module XCTEHtml
     end
 
     # Return formatted class name
-    def getClassName(var)
+    def get_class_name(var)
       if !var.vtype.nil?
         return @langProfile.get_type_name(var.vtype)
       else

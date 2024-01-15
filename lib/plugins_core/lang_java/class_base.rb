@@ -8,24 +8,19 @@ module XCTEJava
       Utils.instance
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
+    def get_source_renderer
+      return SourceRendererJava.new
+    end
 
-      bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
+    def render_namespace_start(cls, bld)
+      # Process namespace items
+      return unless cls.namespace.hasItems?
 
-      process_dependencies(cls, bld)
+      bld.add('package ' + cls.namespace.get('.') + ';')
+      bld.separate
+    end
 
-      render_package_start(cls, bld)
-      render_dependencies(cls, bld)
-
-      gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
+    def render_namespace_end(cls, bld)
     end
 
     def process_dependencies(cls, bld)
@@ -73,14 +68,6 @@ module XCTEJava
       bld.seperate_if(cls.uses.length > 0)
     end
 
-    def render_package_start(cls, bld)
-      # Process namespace items
-      return unless cls.namespace.hasItems?
-
-      bld.add('package ' + cls.namespace.get('.') + ';')
-      bld.separate
-    end
-
     def render_header_var_group_getter_setters(cls, bld)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
@@ -99,7 +86,7 @@ module XCTEJava
       headerString = String.new
 
       bld.add('/**')
-      bld.add('* @class ' + getClassName(cls))
+      bld.add('* @class ' + get_class_name(cls))
 
       bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 

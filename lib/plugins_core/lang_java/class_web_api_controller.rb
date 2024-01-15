@@ -25,26 +25,6 @@ module XCTEJava
       cls.getUName + ' controller'
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererJava.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
-
-      process_dependencies(cls, bld)
-
-      render_package_start(cls, bld)
-      render_dependencies(cls, bld)
-
-      gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
-    end
-
     def gen_file_comment(_cls, bld)
       bld.add('/**')
       bld.add('* Web API controller')
@@ -65,7 +45,7 @@ module XCTEJava
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       # Add in any dependencies required by functions
       Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
         if fun.isTemplate
@@ -78,7 +58,7 @@ module XCTEJava
         end
       }))
 
-      classDec = cls.model.visibility + ' class ' + getClassName(cls)
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
 
       for par in (0..cls.baseClasses.size)
         if !cls.baseClasses[par].nil?

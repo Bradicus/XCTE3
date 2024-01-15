@@ -161,7 +161,7 @@ class UtilsBase
 
     return unless !clsPlug.nil? && !clsGen.nil?
 
-    cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(cls))
+    cls.addInclude(clsPlug.get_dependency_path(clsGen), clsPlug.get_class_name(cls))
   end
 
   # Add an include if there's a class model defined for it
@@ -171,7 +171,7 @@ class UtilsBase
 
     return unless !clsPlug.nil? && !clsGen.nil? && !is_self_reference(cls, var, clsPlug)
 
-    cls.addInclude(clsPlug.getDependencyPath(clsGen), clsPlug.getClassName(clsGen))
+    cls.addInclude(clsPlug.get_dependency_path(clsGen), clsPlug.get_class_name(clsGen))
   end
 
   def is_self_reference(cls, var, clsPlug)

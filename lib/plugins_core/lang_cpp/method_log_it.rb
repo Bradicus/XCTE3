@@ -54,7 +54,7 @@ module XCTECpp
             if varSec.arrayElemCount > 0
               if Utils.instance.is_primitive(varSec)
                 bld.add('    outStr << indent << "' << varSec.name << ': ";')
-                bld.add("\n    for (i = 0; i < " << Utils.instance.getSizeConst(varSec) << '; i++)')
+                bld.add("\n    for (i = 0; i < " << Utils.instance.get_size_const(varSec) << '; i++)')
                 bld.add('        outStr << ')
                 bld.add(varSec.name << '[i] << "  ";')
                 bld.add("    outStr << std::endl;\n")
@@ -62,7 +62,7 @@ module XCTECpp
                 bld.add('    outStr << indent << "' << varSec.name << ': ";')
 
                 bld.add("\n    if (logChildren) {")
-                bld.add('        for (i = 0; i < ' << Utils.instance.getSizeConst(varSec) + '; i++)')
+                bld.add('        for (i = 0; i < ' << Utils.instance.get_size_const(varSec) + '; i++)')
                 bld.add('            ' << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n")
                 bld.add("        outStr << std::endl;\n")
               end

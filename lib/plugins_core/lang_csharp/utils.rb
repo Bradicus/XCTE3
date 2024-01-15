@@ -124,12 +124,17 @@ module XCTECSharp
       return @langProfile.get_type_name(var.vtype)
     end
 
-    def addClassInclude(cls, plugName)
-      cls.addUse(cls.model.findClassModelByPluginName(plugName).namespace.get('.'))
+    def add_class_include(cls, plugName)
+      cls_model = cls.model.findClassModelByPluginName(plugName)
+      if !cls_model.nil?
+        cls.addUse(cls.model.findClassModelByPluginName(plugName).namespace.get('.'))
+      else
+        Log.warn("Unabled to find class plugin " + plugName + ' for ' + cls.model.name)
+      end
     end
 
     # Returns a size constant for the specified variable
-    def getSizeConst(var)
+    def get_size_const(var)
       return 'ARRAYSZ_' << var.name.upcase
     end
 
@@ -287,20 +292,6 @@ module XCTECSharp
           bld.add
         end
       end
-    end
-
-    def genNamespaceStart(namespace, bld)
-      # Process namespace items
-      return unless namespace.hasItems?
-
-      bld.start_block('namespace ' << namespace.get('.'))
-    end
-
-    def genNamespaceEnd(namespace, bld)
-      return unless namespace.hasItems?
-
-      bld.end_block(' // namespace ' + namespace.get('.'))
-      bld.add
     end
 
     def getLangugageProfile

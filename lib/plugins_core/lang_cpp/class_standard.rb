@@ -97,7 +97,7 @@ module XCTECpp
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          bld.add('#define ' << Utils.instance.getSizeConst(var) << ' ' << var.arrayElemCount.to_s)
+          bld.add('#define ' << Utils.instance.get_size_const(var) << ' ' << var.arrayElemCount.to_s)
         end
       }))
 
@@ -250,7 +250,7 @@ module XCTECpp
           bld.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array
-            bld.same_line('[' + Utils.instance.getSizeConst(var) << ']')
+            bld.same_line('[' + Utils.instance.get_size_const(var) << ']')
           elsif !var.defaultValue.nil?
             bld.same_line(' = ' + var.defaultValue)
           end

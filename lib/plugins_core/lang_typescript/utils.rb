@@ -47,7 +47,7 @@ module XCTETypescript
       pDec = String.new
       pDec << CodeNameStyling.getStyled(plug.get_unformatted_class_name(cls), @langProfile.variableNameStyle) << ': '
 
-      pDec << plug.getClassName(cls)
+      pDec << plug.get_class_name(cls)
 
       pDec
     end
@@ -92,7 +92,7 @@ module XCTETypescript
     end
 
     # Returns a size constant for the specified variable
-    def getSizeConst(var)
+    def get_size_const(var)
       'ARRAYSZ_' << var.name.upcase
     end
 
@@ -260,7 +260,7 @@ module XCTETypescript
       for otherCls in otherClasses
         if otherCls.plugName == classType
           plug = XCTEPlugin.findClassPlugin(language, classType)
-          clsList.push(plug.getClassName(otherCls))
+          clsList.push(plug.get_class_name(otherCls))
         end
       end
     end

@@ -18,11 +18,13 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
-      return 'i ' + cls.getUName unless cls.parentElem.is_a?(CodeStructure::CodeElemClassSpec)
-
-      parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plugName)
-      'i ' + parentPlug.get_unformatted_class_name(cls.parentElem)
+    def get_unformatted_class_name(cls)
+      if (cls.parentElem.is_a?(CodeStructure::CodeElemClassSpec))
+        parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plugName)
+        return 'i ' + parentPlug.get_unformatted_class_name(cls.parentElem)
+      else
+        return cls.getUName + ' engine'
+      end
     end
 
     def gen_source_files(cls)
@@ -40,7 +42,7 @@ module XCTECSharp
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.get_styled_class_name(cls.name)
       bld.lfExtension = Utils.instance.get_extension('body')
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -48,7 +50,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate

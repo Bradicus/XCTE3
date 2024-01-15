@@ -47,11 +47,11 @@ class XCTECpp::MethodWriteUGP < XCTEPlugin
         elsif !varSec.isPointer
           if varSec.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(varSec)
-              writeDef << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(varSec) + "; i++)\n"
+              writeDef << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
               writeDef << '        ugsw -> write' << XCTECpp::Utils.getTypeAbbrev(varSec)
               writeDef << '(' << varSec.name << "[i]);\n\n"
             else
-              writeDef << "\n    for (i = 0; i < " << XCTECpp::Utils.getSizeConst(varSec) + "; i++)\n"
+              writeDef << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
               writeDef << '        ' + varSec.name << "[i].write(ugsw);\n\n"
             end
           elsif XCTECpp::Utils.is_primitive(varSec) # Not an array

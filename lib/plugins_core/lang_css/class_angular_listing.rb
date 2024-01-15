@@ -1,19 +1,16 @@
 require 'plugins_core/lang_css/utils'
+require 'plugins_core/lang_css/class_base'
 require 'x_c_t_e_plugin'
 
 ##
 # Class:: ClassAngularListing
 #
 module XCTECss
-  class ClassAngularListing < XCTEPlugin
+  class ClassAngularListing < ClassBase
     def initialize
       @name = 'class_angular_listing'
       @language = 'css'
       @category = XCTEPlugin::CAT_CLASS
-    end
-
-    def getClassName(cls)
-      Utils.instance.get_styled_class_name(get_unformatted_class_name(cls))
     end
 
     def get_unformatted_class_name(cls)
@@ -27,7 +24,7 @@ module XCTECss
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -38,7 +35,7 @@ module XCTECss
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld); end
+    def gen_body_content(cls, bld); end
   end
 end
 

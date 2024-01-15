@@ -38,8 +38,8 @@ module XCTECSharp
     def process_dependencies(cls, _bld, _fun)
       cls.addUse('System.Collections.Generic', 'List')
       cls.addUse('System.Web.Http', 'ApiController')
-      Utils.instance.addClassInclude(cls, 'standard')
-      Utils.instance.addClassInclude(cls, 'tsql_data_store')
+      Utils.instance.add_class_include(cls, 'standard')
+      Utils.instance.add_class_include(cls, 'tsql_data_store')
     end
 
     def get_body(cls, bld, _fun)

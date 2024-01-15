@@ -67,11 +67,11 @@ module XCTECSharp
 
       bld.unindent
 
-      identVar = cls.model.getIdentityVar
+      ident_var = cls.model.getIdentityVar
 
-      if identVar
-        bld.add('WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(identVar, cls.varPrefix) +
-                '] = @' + Utils.instance.get_styled_variable_name(identVar) + '";')
+      if ident_var
+        bld.add('WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.varPrefix) +
+                '] = @' + Utils.instance.get_styled_variable_name(ident_var) + '";')
       else
         bld.add('WHERE' + '";')
       end

@@ -26,17 +26,17 @@ module XCTECSharp
     def gen_source_files(cls)
       srcFiles = []
 
-      cls.setName(getClassName(cls))
+      cls.setName(get_class_name(cls))
 
       if cls.interfaceNamespace.hasItems?
         cls.addUse(cls.interfaceNamespace.get('.'), 'I' + get_unformatted_class_name(cls))
-        Utils.instance.addClassInclude(cls, 'standard')
+        Utils.instance.add_class_include(cls, 'standard')
       end
 
       bld = SourceRendererCSharp.new
       bld.lfName = cls.name
       bld.lfExtension = Utils.instance.get_extension('body')
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -44,10 +44,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
-      Utils.instance.genFunctionDependencies(cls, bld)
-      Utils.instance.genUses(cls.uses, bld)
-      Utils.instance.genNamespaceStart(cls.namespace, bld)
+    def gen_body_content(cls, bld)
 
       classDec = cls.model.visibility + ' class ' + cls.name
 
@@ -73,8 +70,6 @@ module XCTECSharp
       render_functions(cls, bld)
 
       bld.end_class
-
-      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

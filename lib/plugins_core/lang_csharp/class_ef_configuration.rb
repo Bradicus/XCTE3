@@ -19,52 +19,19 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def getClassName(cls)
+    def get_class_name(cls)
       return Utils.instance.get_styled_class_name(cls.getUName + ' configuration')
-    end
-
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + ' configuration')
-      bld.lfExtension = Utils.instance.get_extension('body')
-
-      process_dependencies(cls, bld)
-
-      genFileContent(cls, bld)
-
-      srcFiles << bld
-
-      return srcFiles
     end
 
     def process_dependencies(cls, _bld)
       cls.addUse('Microsoft.EntityFrameworkCore')
       cls.addUse('Microsoft.EntityFrameworkCore.Metadata.Builders')
-      Utils.instance.addClassInclude(cls, 'standard')
+      Utils.instance.add_class_include(cls, 'standard')
     end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
-      # Add in any dependencies required by functions
-      # for fun in cls.functions
-      #   if fun.elementId == CodeElem::ELEM_FUNCTION
-      #     if fun.isTemplate
-      #       templ = XCTEPlugin::findMethodPlugin("csharp", fun.name)
-      #       if templ != nil
-      #         templ.process_dependencies(cls, bld, fun)
-      #       else
-      #         puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
-      #       end
-      #     end
-      #   end
-      # end
-
-      Utils.instance.genUses(cls.uses, bld)
-      Utils.instance.genNamespaceStart(cls.namespace, bld)
-
-      classDec = cls.model.visibility + ' class ' + getClassName(cls) + ' : IEntityTypeConfiguration<' + Utils.instance.get_styled_class_name(cls.getUName) + '>'
+    def gen_body_content(cls, bld)
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls) + ' : IEntityTypeConfiguration<' + Utils.instance.get_styled_class_name(cls.getUName) + '>'
 
       for par in (0..cls.baseClassModelManager.size)
         if par == 0 && !cls.baseClasses[par].nil?
@@ -80,8 +47,6 @@ module XCTECSharp
       render_functions(cls, bld)
 
       bld.end_class
-
-      Utils.instance.genNamespaceEnd(cls.namespace, bld)
     end
   end
 end

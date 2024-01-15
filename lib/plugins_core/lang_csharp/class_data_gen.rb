@@ -1,13 +1,13 @@
 ##
 # Class:: ClassTsqlDataGen
 #
-module XCTEJava
+module XCTECSharp
   class ClassTsqlDataGen < ClassBase
     def initialize
       super
 
       @name = 'data_gen'
-      @language = 'java'
+      @language = 'csharp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -16,8 +16,6 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, cls, 'class_jpa_entity')
-
       super
     end
 
@@ -49,4 +47,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin.registerPlugin(XCTEJava::ClassTsqlDataGen.new)
+XCTEPlugin.registerPlugin(XCTECSharp::ClassTsqlDataGen.new)

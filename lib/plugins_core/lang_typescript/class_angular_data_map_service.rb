@@ -41,7 +41,7 @@ module XCTETypescript
       bld.separate
 
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -79,11 +79,11 @@ module XCTETypescript
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       bld.start_block('@Injectable(')
       bld.add("providedIn: 'root',")
       bld.end_block(')')
-      bld.start_class('export class ' + getClassName(cls))
+      bld.start_class('export class ' + get_class_name(cls))
 
       constructorParams = []
 

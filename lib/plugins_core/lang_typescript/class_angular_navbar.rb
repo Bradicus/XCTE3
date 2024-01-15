@@ -28,7 +28,7 @@ module XCTETypescript
       render_dependencies(cls, bld)
 
       gen_file_comment(cls, bld)
-      genFileContent(cls, bld)
+      gen_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -43,7 +43,7 @@ module XCTETypescript
     def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def genFileContent(cls, bld)
+    def gen_body_content(cls, bld)
       filePart = Utils.instance.get_styled_file_name(cls.getUName)
 
       bld.start_class('class NavNode')
@@ -67,7 +67,7 @@ module XCTETypescript
       bld.unindent
       bld.add('})')
 
-      bld.start_class('export class ' + getClassName(cls))
+      bld.start_class('export class ' + get_class_name(cls))
 
       bld.add('public navNode:NavNode = new NavNode("", null);')
       bld.add 'collapsed = true;'

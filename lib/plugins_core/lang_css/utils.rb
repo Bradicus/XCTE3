@@ -50,7 +50,7 @@ module XCTECss
       vDec << ': ' + get_type_name(var)
 
       if var.arrayElemCount.to_i > 0 && var.vtype != 'String'
-        vDec << '[' + getSizeConst(var) << ']'
+        vDec << '[' + get_size_const(var) << ']'
       end
 
       vDec << ';'
@@ -63,7 +63,7 @@ module XCTECss
     end
 
     # Returns a size constant for the specified variable
-    def getSizeConst(var)
+    def get_size_const(var)
       return 'ARRAYSZ_' << var.name.upcase
     end
 

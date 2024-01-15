@@ -68,7 +68,7 @@ module XCTECpp
           if Utils.instance.is_primitive(var)
             if var.arrayElemCount.to_i > 0 # Array of primitives
               bld.add('memcpy(' + fmtVarName + ', ' + 'src' + styledCName + '.' + fmtVarName + ', ')
-              bld.same_line('sizeof(' + Utils.instance.get_type_name(var) + ') * ' + Utils.instance.getSizeConst(var))
+              bld.same_line('sizeof(' + Utils.instance.get_type_name(var) + ') * ' + Utils.instance.get_size_const(var))
               bld.same_line(');')
             else
               bld.add(fmtVarName + ' = ' + 'src' + styledCName + '.')
@@ -79,7 +79,7 @@ module XCTECpp
               bld.add('    unsigned int i;')
               longArrayFound = true
             end
-            bld.add('for (i = 0; i < ' + Utils.instance.getSizeConst(var) + '; i++)')
+            bld.add('for (i = 0; i < ' + Utils.instance.get_size_const(var) + '; i++)')
             bld.indent
             bld.add(fmtVarName + '[i] = ')
             bld.same_line('src' + styledCName + '.')

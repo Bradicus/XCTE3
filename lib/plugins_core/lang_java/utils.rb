@@ -141,7 +141,7 @@ module XCTEJava
     end
 
     # Returns a size constant for the specified variable
-    def getSizeConst(var)
+    def get_size_const(var)
       return CodeNameStyling.getStyled('max len ' + var.name, @langProfile.constNameStyle)
     end
 

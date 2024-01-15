@@ -1,5 +1,6 @@
 require "lang_profile"
 require "singleton"
+require "log"
 
 class LangProfiles
   include Singleton
@@ -43,7 +44,7 @@ class LangProfiles
         end
       end
     else
-      puts "ERROR loadin language profile path: " + path
+      Log.error "ERROR loadin language profile path: " + path
     end
   end
 end
