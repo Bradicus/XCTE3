@@ -16,7 +16,7 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, cls, 'class_jpa_entity')
+      Utils.instance.requires_class_type(cls, cls, 'class_db_entity')
 
       super
     end

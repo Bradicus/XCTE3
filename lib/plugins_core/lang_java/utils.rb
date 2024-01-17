@@ -255,10 +255,10 @@ module XCTEJava
         pageReqVar = create_var_for(data_class, data_class.plugName)
       else
         data_class = cls
-        pageReqVar = create_var_for(data_class, 'class_jpa_entity')
+        pageReqVar = create_var_for(data_class, 'class_db_entity')
       end
 
-      throw('could not find class_jpa_entity for ' + data_class.model.name) if pageReqVar.nil?
+      throw('could not find class_db_entity for ' + data_class.model.name) if pageReqVar.nil?
 
       pageReqVar.templates.push(CodeStructure::CodeElemTemplate.new('Page'))
       fun.returnValue = pageReqVar

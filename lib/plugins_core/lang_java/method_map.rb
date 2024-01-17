@@ -88,7 +88,7 @@ module XCTEJava
         Log.missingClassRef(@fromRef) if @fromParam.cls.nil?
         Log.missingClassRef(@toRef) if @toParam.cls.nil?
       else
-        Utils.instance.requires_class_type(cls, @toParam.cls, 'class_jpa_entity')
+        Utils.instance.requires_class_type(cls, @toParam.cls, 'class_db_entity')
         Utils.instance.requires_class_type(cls, @fromParam.cls, 'standard')
       end
     end

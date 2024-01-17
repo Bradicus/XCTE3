@@ -10,21 +10,20 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_java/utils'
-require 'plugins_core/lang_java/x_c_t_e_java'
-require 'plugins_core/lang_java/class_base'
+require 'plugins_core/lang_csharp/utils'
+require 'plugins_core/lang_csharp/class_base'
 require 'code_elem'
 require 'code_elem_parent'
 require 'code_elem_model'
 require 'lang_file'
 
-module XCTEJava
-  class ClassJpaEntity < ClassBase
+module XCTECSharp
+  class ClassDbEntity < ClassBase
     def initialize
       super
 
-      @name = 'class_jpa_entity'
-      @language = 'java'
+      @name = 'class_db_entity'
+      @language = 'csharp'
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -33,7 +32,8 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      cls.addUse('jakarta.persistence.*')
+      cls.addUse('Microsoft.EntityFrameworkCore')
+      cls.addUse('Microsoft.EntityFrameworkCore.Metadata.Builders')
       super
     end
 
@@ -43,13 +43,11 @@ module XCTEJava
       clsName = get_class_name(cls)
       tableName = XCTESql::Utils.instance.getStyledTableName(cls.getUName)
 
-      bld.add('@Entity')
-      bld.add('@Table(name="' + tableName + '")') if tableName != clsName
       bld.start_class('public class ' + clsName)
 
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          bld.add('public static final int ' + Utils.instance.get_size_const(var) + ' = ' << var.arrayElemCount.to_s + ';')
+          bld.add('public const int ' + Utils.instance.get_size_const(var) + ' = ' << var.arrayElemCount.to_s + ';')
         end
       }))
 
@@ -58,21 +56,8 @@ module XCTEJava
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.name == 'id'
-          bld.add('@Id')
-          bld.add('@GeneratedValue(strategy=GenerationType.SEQUENCE)')
           bld.add(Utils.instance.getVarDec(var))
         else
-          if !var.relation.nil?
-            if var.relation.start_with? 'many-to-many'
-              bld.add('@ManyToMany(cascade = CascadeType.ALL)')
-            elsif var.relation.start_with? 'many-to-one'
-              bld.add('@ManyToOne(cascade = CascadeType.ALL)')
-            elsif var.relation.start_with? 'one-to-many'
-              bld.add('@OneToMany(cascade = CascadeType.ALL)')
-            elsif var.relation.start_with? 'one-to-one'
-              bld.add('@OneToOne(cascade = CascadeType.ALL)')
-            end
-          end
           bld.add(Utils.instance.getVarDec(var))
         end
       }))
@@ -80,11 +65,10 @@ module XCTEJava
       bld.separate
 
       render_functions(cls, bld)
-      render_header_var_group_getter_setters(cls, bld)
 
       bld.end_class
     end
   end
 end
 
-XCTEPlugin.registerPlugin(XCTEJava::ClassJpaEntity.new)
+XCTEPlugin.registerPlugin(XCTECSharp::ClassDbEntity.new)

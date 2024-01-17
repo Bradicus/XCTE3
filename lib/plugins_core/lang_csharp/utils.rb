@@ -135,15 +135,16 @@ module XCTECSharp
 
     # Returns a size constant for the specified variable
     def get_size_const(var)
-      return 'ARRAYSZ_' << var.name.upcase
+      return 'ARRAYSZ_' << CodeNameStyling.getStyled(var.name, 'UNDERSCORE_UPPER')
     end
 
     # Returns the version of this name styled for this language
     def get_styled_variable_name(var, varPrefix = '')
-      unless var.is_a?(CodeStructure::CodeElemVariable)
+      if !var.is_a?(CodeStructure::CodeElemVariable)
         return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
+      elsif !var.genGet.nil? || !var.genSet.nil?
+        return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle)
       end
-      return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle) if var.genGet || var.genSet
 
       return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
     end
@@ -175,6 +176,13 @@ module XCTECSharp
       return '0'
     end
 
+    def requires_other_class_type(cls, plugName)
+      plugNameClass = cls.model.findClassModelByPluginName(plugName)
+      return if cls.namespace.same?(plugNameClass.namespace)
+
+      cls.addUse(plugNameClass.namespace.get('.'))
+    end
+
     def getDataListInfo(classXML)
       dInfo = {}
 
@@ -183,17 +191,6 @@ module XCTECSharp
       end
 
       return(dInfo)
-    end
-
-    # generate use list for file
-    def genUses(useList, bld)
-      for use in useList
-        bld.add('using ' + use.namespace.get('.') + ';')
-      end
-
-      return if useList.empty?
-
-      bld.add
     end
 
     def genFunctionDependencies(cls, bld)

@@ -31,7 +31,10 @@ module XCTECSharp
 
       bld.start_class(classDec)
 
-      templ.get_definition(cls, bld)
+      # Process variables
+      each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        XCTECSharp::Utils.instance.getVarDec(var)
+      }))
 
       bld.end_class
     end

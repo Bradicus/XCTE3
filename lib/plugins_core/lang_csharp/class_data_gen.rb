@@ -17,6 +17,8 @@ module XCTECSharp
 
     def process_dependencies(cls, bld)
       super
+
+      Utils.instance.requires_other_class_type(cls, 'class_db_entity')
     end
 
     # Returns the code for the comment for this class

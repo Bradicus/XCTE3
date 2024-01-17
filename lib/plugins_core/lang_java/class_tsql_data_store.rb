@@ -16,7 +16,7 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, cls, 'class_jpa_entity')
+      Utils.instance.requires_class_type(cls, cls, 'class_db_entity')
       cls.addUse('org.springframework.data.jpa.repository.*')
       cls.addUse('org.springframework.data.domain.Page')
       cls.addUse('org.springframework.data.domain.PageRequest')
@@ -45,7 +45,7 @@ module XCTEJava
 
       bld.separate
 
-      data_class = cls.model.findClassModelByPluginName('class_jpa_entity')
+      data_class = cls.model.findClassModelByPluginName('class_db_entity')
 
       if !data_class.nil?
         related_classes = ClassModelManager.find_classes_with_data_model(data_class)

@@ -21,11 +21,8 @@ module XCTECSharp
     end
 
     def process_dependencies(cls, _bld, _fun)
-      cls.addUse('Faker.*')
+      cls.addUse('Bogus')
 
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
-
-      }))
     end
 
     # process variable group

@@ -19,6 +19,8 @@ require 'x_c_t_e_plugin'
 module XCTECSharp
   class EnumStandard < XCTEPlugin
     def initialize
+      super
+
       @name = 'enum'
       @language = 'csharp'
       @category = XCTEPlugin::CAT_CLASS
