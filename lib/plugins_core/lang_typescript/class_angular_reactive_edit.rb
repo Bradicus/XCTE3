@@ -166,6 +166,7 @@ module XCTETypescript
       bld.start_block('if (!this.item?.id)')
 
       bld.add('this.item = new ' + Utils.instance.get_styled_class_name(cls.model.name) + ';')
+      bld.add 'this.populate();'
       # bld.add("this." + Utils.instance.get_styled_variable_name(dataGenServiceVar) + ".initData(this.item);")
       bld.mid_block 'else'
       bld.start_block 'this.' + Utils.instance.get_styled_variable_name(storeServiceVar) + '.detail(this.item.id).subscribe(data => {'
