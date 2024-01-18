@@ -221,7 +221,7 @@ module XCTETypescript
         editPath = editPlugin.get_full_route(cls, 'edit')
 
         if editPath != nil
-          bld.add 'this.router.navigate(["' + editPath.split('/').drop(1).unshift('/').join('",", newItem.id') + '"]);'
+          bld.add 'this.router.navigate(["' + editPath.split('/').drop(1).unshift('/').join('","') + '", newItem.id]);'
         else
           bld.add 'this.item = newItem;'
         end
