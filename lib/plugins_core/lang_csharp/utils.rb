@@ -125,9 +125,9 @@ module XCTECSharp
     end
 
     def add_class_include(cls, plugName)
-      cls_model = cls.model.findClassModelByPluginName(plugName)
+      cls_model = cls.model.findClassSpecByPluginName(plugName)
       if !cls_model.nil?
-        cls.addUse(cls.model.findClassModelByPluginName(plugName).namespace.get('.'))
+        cls.addUse(cls.model.findClassSpecByPluginName(plugName).namespace.get('.'))
       else
         Log.warn("Unabled to find class plugin " + plugName + ' for ' + cls.model.name)
       end
@@ -177,7 +177,7 @@ module XCTECSharp
     end
 
     def requires_other_class_type(cls, plugName)
-      plugNameClass = cls.model.findClassModelByPluginName(plugName)
+      plugNameClass = cls.model.findClassSpecByPluginName(plugName)
       return if cls.namespace.same?(plugNameClass.namespace)
 
       cls.addUse(plugNameClass.namespace.get('.'))
@@ -317,7 +317,7 @@ module XCTECSharp
 
     # Retrieve the standard version of this model's class
     def getStandardClassInfo(cls)
-      cls.standardClass = cls.model.findClassModelByPluginName('standard')
+      cls.standardClass = cls.model.findClassSpecByPluginName('standard')
 
       if cls.standardClass.namespace.hasItems?
         ns = cls.standardClass.namespace.get('.') + '.'

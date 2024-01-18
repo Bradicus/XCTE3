@@ -44,7 +44,7 @@ module XCTETypescript
     def process_dependencies(cls, bld)
       cls.addInclude('@angular/core', 'Component, OnInit, Input')
       cls.addInclude('@angular/forms', 'ReactiveFormsModule, FormControl, FormGroup, FormArray, Validators')
-      cls.addInclude('@angular/router', 'ActivatedRoute')
+      cls.addInclude('@angular/router', 'ActivatedRoute, Router')
       cls.addInclude('rxjs', 'Observable, of', 'lib')
 
       cls.addInclude('shared/dto/model/' + Utils.instance.get_styled_file_name(cls.model.name),
@@ -144,6 +144,7 @@ module XCTETypescript
       }))
 
       constructorParams.push('private route: ActivatedRoute')
+      constructorParams.push('private router: Router')
 
       bld.start_function_paramed('constructor', constructorParams)
       bld.end_block
@@ -210,7 +211,14 @@ module XCTETypescript
         bld.start_block('if (this.' + clsVar + ".controls['id'].value === null || !(this." + clsVar + ".controls['id'].value > 0))")
       end
       bld.start_block('this.' + Utils.instance.get_styled_variable_name(storeServiceVar) + '.create(this.' + clsVar + '.value).subscribe(newItem => ')
-      bld.add 'this.item = newItem;'
+      listingSpec = cls.model.findClassSpecByPluginName('class_angular_listing')
+      listingPlugin = XCTEPlugin.findClassPlugin('typescript', 'class_angular_listing')
+      if listingSpec != nil && listingPlugin != nil
+        listPath = listingPlugin.get_full_route(listingSpec, 'listing')
+        bld.add 'this.router.navigate(["' + listPath.split('/').drop(1).unshift('/').join('","') + '"]);'
+      else
+        bld.add 'this.item = newItem;'
+      end
       bld.end_block ');'
       bld.mid_block('else')
       bld.start_block('this.' + Utils.instance.get_styled_variable_name(storeServiceVar) + '.update(this.' + clsVar + '.value).subscribe(newItem => ')

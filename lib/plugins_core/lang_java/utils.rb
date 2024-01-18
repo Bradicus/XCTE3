@@ -195,14 +195,14 @@ module XCTEJava
     end
 
     def requires_other_class_type(cls, _otherCls, plugName)
-      plugNameClass = cls.model.findClassModelByPluginName(plugName)
+      plugNameClass = cls.model.findClassSpecByPluginName(plugName)
       return if cls.namespace.same?(plugNameClass.namespace)
 
       cls.addUse(plugNameClass.namespace.get('.') + '.*')
     end
 
     def requires_class_type(cls, fromCls, plugName)
-      plugNameClass = fromCls.model.findClassModelByPluginName(plugName)
+      plugNameClass = fromCls.model.findClassSpecByPluginName(plugName)
 
       if plugNameClass.nil?
         Log.error('unable to find class by type ' + plugName)
@@ -233,7 +233,7 @@ module XCTEJava
     end
 
     def add_class_injection(toCls, fromCls, plugName)
-      varClass = fromCls.model.findClassModelByPluginName(plugName)
+      varClass = fromCls.model.findClassSpecByPluginName(plugName)
       if !varClass.nil?
         var = create_var_for(varClass, plugName)
         var.visibility = 'private'

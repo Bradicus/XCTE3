@@ -25,7 +25,7 @@ module XCTEJava
       bld.add('* Web API get many ' + cls.getUName)
       bld.add('*/')
 
-      @dsClass = cls.model.findClassModelByPluginName('class_data_set')
+      @dsClass = cls.model.findClassSpecByPluginName('class_data_set')
 
       if !@dsClass.nil?
         @returnType = Utils.instance.get_styled_class_name(@dsClass.getUName)
@@ -42,7 +42,7 @@ module XCTEJava
       cls.addUse('org.springframework.data.domain.Page')
       cls.addUse('com.example.demo.dto.FilteredPageRespTpl')
 
-      @dsClass = cls.model.findClassModelByPluginName('class_data_set')
+      @dsClass = cls.model.findClassSpecByPluginName('class_data_set')
 
       Utils.instance.requires_class_type(cls, cls, 'class_data_set') if !@dsClass.nil?
 

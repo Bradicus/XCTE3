@@ -45,7 +45,7 @@ module XCTEJava
 
       bld.separate
 
-      data_class = cls.model.findClassModelByPluginName('class_db_entity')
+      data_class = cls.model.findClassSpecByPluginName('class_db_entity')
 
       if !data_class.nil?
         related_classes = ClassModelManager.find_classes_with_data_model(data_class)
