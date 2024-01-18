@@ -217,7 +217,14 @@ module XCTETypescript
         listPath = listingPlugin.get_full_route(listingSpec, 'listing')
         bld.add 'this.router.navigate(["' + listPath.split('/').drop(1).unshift('/').join('","') + '"]);'
       else
-        bld.add 'this.item = newItem;'
+        editPlugin = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_edit')
+        editPath = editPlugin.get_full_route(cls, 'edit')
+
+        if editPath != nil
+          bld.add 'this.router.navigate(["' + editPath.split('/').drop(1).unshift('/').join('","') + '"]);'
+        else
+          bld.add 'this.item = newItem;'
+        end
       end
       bld.end_block ');'
       bld.mid_block('else')
