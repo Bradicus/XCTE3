@@ -23,7 +23,7 @@ module XCTETypescript
     end
 
     # Get a parameter declaration for a method parameter
-    def getParamDec(var)
+    def get_param_dec(var)
       vDec = String.new
       typeName = String.new
 
@@ -40,7 +40,7 @@ module XCTETypescript
     def addParamIfAvailable(params, var)
       return if var.nil?
 
-      params.push('private ' + getParamDec(var))
+      params.push('private ' + get_param_dec(var))
     end
 
     def getParamDecForClass(cls, plug)
@@ -62,7 +62,12 @@ module XCTETypescript
       vDec << 'static ' if var.isStatic
 
       vDec << get_styled_variable_name(var)
+
       vDec << ': ' + get_type_name(var)
+
+      if var.nullable
+        vDec << ' | null'
+      end
 
       if !var.defaultValue.nil?
         if var.getUType.downcase == 'string'
@@ -70,18 +75,20 @@ module XCTETypescript
         else
           vDec << ' = ' << var.defaultValue << ''
         end
-      elsif var.getUType.downcase == 'string'
-        vDec << ' = ""'
-      elsif var.getUType.downcase == 'boolean'
-        vDec << ' = false'
-      elsif Types.instance.inCategory(var, 'time')
-        vDec << ' = new Date()'
-      elsif var.isList
-        vDec << ' = []'
-      elsif !is_primitive(var)
-        vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '()'
-      else
-        vDec << ' = 0'
+      elsif var.construct
+        if var.isList
+          vDec << ' = []'
+        elsif var.getUType.downcase == 'string'
+          vDec << ' = ""'
+        elsif var.getUType.downcase == 'boolean'
+          vDec << ' = false'
+        elsif Types.instance.inCategory(var, 'time')
+          vDec << ' = new Date()'
+        elsif !is_primitive(var)
+          vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '()'
+        else
+          vDec << ' = 0'
+        end
       end
 
       vDec << ';'

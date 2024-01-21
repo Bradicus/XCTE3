@@ -27,7 +27,7 @@ module XCTECSharp
       ident_var = cls.model.getIdentityVar
 
       if ident_var
-        bld.start_class('public void Delete(' + Utils.instance.getParamDec(ident_var.getParam) +
+        bld.start_class('public void Delete(' + Utils.instance.get_param_dec(ident_var.getParam) +
                        ', SqlConnection conn, SqlTransaction trans = null)')
       end
 
@@ -41,7 +41,7 @@ module XCTECSharp
 
       return unless ident_var
 
-      bld.add('void Delete(' + Utils.instance.getParamDec(ident_var.getParam) +
+      bld.add('void Delete(' + Utils.instance.get_param_dec(ident_var.getParam) +
               ', SqlConnection conn, SqlTransaction trans = null);')
     end
 

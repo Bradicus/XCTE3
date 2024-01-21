@@ -38,7 +38,7 @@ module XCTECpp
       for param in (0..(fun.parameters.vars.size - 1))
         eDecl << ', ' if param != 0
 
-        eDecl << Utils.instance.getParamDec(fun.parameters.vars[param])
+        eDecl << Utils.instance.get_param_dec(fun.parameters.vars[param])
       end
 
       eDecl << ')'
@@ -80,7 +80,7 @@ module XCTECpp
       for param in (0..(fun.parameters.vars.size - 1))
         funDec << ', ' if param != 0
 
-        funDec << Utils.instance.getParamDec(fun.parameters.vars[param])
+        funDec << Utils.instance.get_param_dec(fun.parameters.vars[param])
       end
 
       funDec << ')'

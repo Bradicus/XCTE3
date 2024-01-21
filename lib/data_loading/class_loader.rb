@@ -42,7 +42,7 @@ module DataLoading
       genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['test_namespace'])
       genC.testPath = AttributeLoader.init.xml(genCXml).names('test_path').get
       genC.language = genCXml.attributes['language']
-      genC.path = AttributeLoader.init.xml(genCXml).names('path').model(genC.model).cls(genC).get
+      genC.path = AttributeLoader.init.xml(genCXml).names('path').model(genC.model).cls(genC).default('').get
       genC.varPrefix = AttributeLoader.init.xml(genCXml).names('var_prefix').get
 
       # Add base namespace to class namespace lists

@@ -6,9 +6,6 @@
 # root directory
 #
 # This class generates source files for jpa entity classes,
-# those being regualar classes for now, vs possible library specific
-# class generators, such as a wxWidgets class generator or a Fox Toolkit
-# class generator for example
 
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/class_base'
@@ -41,7 +38,7 @@ module XCTECSharp
     def gen_body_content(cls, bld)
       bld.separate
       clsName = get_class_name(cls)
-      tableName = XCTESql::Utils.instance.getStyledTableName(cls.getUName)
+      tableName = get_sql_util(cls).getStyledClassName(cls.getUName)
 
       bld.start_class('public class ' + clsName)
 

@@ -22,7 +22,7 @@ module XCTECSharp
     end
 
     # Get a parameter declaration for a method parameter
-    def getParamDec(var)
+    def get_param_dec(var)
       pDec = String.new
 
       pDec << get_type_name(var)

@@ -13,7 +13,7 @@ require 'lang_profile_type_map'
 class LangProfile
   attr_accessor :name, :fileTypes, :typeMaps, :variableNameStyle,
                 :functionNameStyle, :classNameStyle, :fileNameStyle,
-                :enumNameStyle, :constNameStyle
+                :enumNameStyle, :constNameStyle, :directoryNameStyle
 
   def initialize # Defined in the initialize method of child classes
     @fileTypes = []  # Array of LangProfileFileType
@@ -23,6 +23,7 @@ class LangProfile
     @classNameStyle = nil
     @functionNameStyle = nil
     @fileNameStyle = nil
+    @directoryNameStyle = nil
     @enumNameStyle = nil
     @constNameStyle = nil
   end
@@ -52,6 +53,7 @@ class LangProfile
       @classNameStyle = styling.attributes['class']
       @functionNameStyle = styling.attributes['function']
       @fileNameStyle = styling.attributes['file']
+      @directoryNameStyle = styling.attributes['directory']
       @enumNameStyle = styling.attributes['enum']
       @constNameStyle = styling.attributes['const']
     end

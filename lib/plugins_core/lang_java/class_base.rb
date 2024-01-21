@@ -12,6 +12,14 @@ module XCTEJava
       return SourceRendererJava.new
     end
 
+    def get_sql_util(cls)
+      if cls.model.findClassSpecByPluginName('tsql_data_store') != nil
+        return XCTETSql::Utils.instance
+      else
+        return XCTESql::Utils.instance
+      end
+    end
+
     def gen_source_files(cls)
       srcFiles = []
 

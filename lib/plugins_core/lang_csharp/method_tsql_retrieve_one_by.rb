@@ -38,7 +38,7 @@ module XCTECSharp
       paramNames = []
 
       fun.variableReferences.each do |param|
-        paramDec << Utils.instance.getParamDec(param.getParam)
+        paramDec << Utils.instance.get_param_dec(param.getParam)
         paramNames << Utils.instance.get_styled_variable_name(param)
       end
 

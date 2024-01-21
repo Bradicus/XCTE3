@@ -50,7 +50,7 @@ module XCTECSharp
       cls.model.getPrimaryKeyVars(pkeys)
       params = []
       for pkey in pkeys
-        params << Utils.instance.getParamDec(pkey)
+        params << Utils.instance.get_param_dec(pkey)
       end
 
       bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.getUName) +

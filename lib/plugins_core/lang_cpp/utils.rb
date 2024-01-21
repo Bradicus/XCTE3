@@ -21,7 +21,7 @@ module XCTECpp
     end
 
     # Get a parameter declaration for a method parameter
-    def getParamDec(var)
+    def get_param_dec(var)
       pDec = String.new
 
       pDec += 'const ' if var.isConst

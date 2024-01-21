@@ -13,7 +13,7 @@ require 'utils_base'
 module XCTEPhp
   class Utils < UtilsBase
     # Get a parameter declaration for a method parameter
-    def self.getParamDec(var)
+    def self.get_param_dec(var)
       pDec = String.new
 
       pDec << get_type_name(var.vtype)

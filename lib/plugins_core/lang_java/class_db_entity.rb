@@ -41,10 +41,12 @@ module XCTEJava
     def gen_body_content(cls, bld)
       bld.separate
       clsName = get_class_name(cls)
-      tableName = XCTESql::Utils.instance.getStyledTableName(cls.getUName)
+      tableName = get_sql_util(cls).get_styled_class_name(cls.getUName)
 
       bld.add('@Entity')
-      bld.add('@Table(name="' + tableName + '")') if tableName != clsName
+      if tableName != clsName
+        bld.add('@Table(name="' + tableName + '")')
+      end
       bld.start_class('public class ' + clsName)
 
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

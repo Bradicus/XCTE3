@@ -1,5 +1,5 @@
-require 'name_compare'
 require 'class_and_plug'
+require 'managers/name_compare'
 
 class RefFinder
   def self.find_class_by_type(lang, uType)

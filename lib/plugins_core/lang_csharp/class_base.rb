@@ -16,6 +16,14 @@ module XCTECSharp
     def gen_file_comment(cls, bld)
     end
 
+    def get_sql_util(cls)
+      if cls.model.findClassSpecByPluginName('tsql_data_store') != nil
+        return XCTETSql::Utils.instance
+      else
+        return XCTESql::Utils.instance
+      end
+    end
+
     def render_namespace_start(cls, bld)
       return unless cls.namespace.hasItems?
       bld.start_block('namespace ' << cls.namespace.get('.'))

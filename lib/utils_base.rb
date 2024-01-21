@@ -72,8 +72,8 @@ class UtilsBase
   end
 
   # Returns the version of this file name styled for this language
-  def get_styled_path_name(pathName)
-    CodeNameStyling.getStyled(pathName, @langProfile.fileNameStyle)
+  def get_styled_directory_name(pathName)
+    CodeNameStyling.getStyled(pathName, @langProfile.directoryNameStyle)
   end
 
   # Get the extension for a file type

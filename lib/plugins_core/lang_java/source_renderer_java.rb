@@ -35,7 +35,7 @@ class SourceRendererJava < SourceRendererBraceDelim
     end
 
     for pVar in fun.parameters.vars
-      paramStrings.push(get_utils.getParamDec(pVar))
+      paramStrings.push(get_utils.get_param_dec(pVar))
     end
 
     typeName = get_utils.get_type_name(fun.returnValue)

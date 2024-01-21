@@ -46,7 +46,7 @@ module XCTEJava
       idVar = cls.model.getIdentityVar
 
       if !idVar.nil?
-        params << '@PathVariable("' + Utils.instance.get_styled_variable_name(idVar) + '") ' + Utils.instance.getParamDec(idVar)
+        params << '@PathVariable("' + Utils.instance.get_styled_variable_name(idVar) + '") ' + Utils.instance.get_param_dec(idVar)
       end
 
       bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName) + '/{id}")')

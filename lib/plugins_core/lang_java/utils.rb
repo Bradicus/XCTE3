@@ -22,7 +22,7 @@ module XCTEJava
     end
 
     # Get a parameter declaration for a method parameter
-    def getParamDec(var)
+    def get_param_dec(var)
       pDec = String.new
 
       pDec << get_type_name(var)
@@ -270,8 +270,8 @@ module XCTEJava
       fun.add_param(pageVar)
 
       if needs_custom_query? filtered_class.model.data_filter
-        tableVar = CodeNameStyling.getStyled(data_class.model.name, XCTETSql::Utils.instance.langProfile.variableNameStyle)
-        talbeName = CodeNameStyling.getStyled(data_class.model.name, XCTETSql::Utils.instance.langProfile.classNameStyle)
+        tableVar = CodeNameStyling.getStyled(data_class.model.name, get_sql_util(cls).langProfile.variableNameStyle)
+        talbeName = CodeNameStyling.getStyled(data_class.model.name, get_sql_util(cls).langProfile.classNameStyle)
         query = 'SELECT ' + tableVar + ' FROM ' + talbeName + ' ' + tableVar + ' WHERE '
 
         if !filtered_class.model.data_filter.static_filters.empty?

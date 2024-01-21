@@ -155,6 +155,7 @@ module DataLoading
       tNode.language = tNodeXml.attributes['language']
       tNode.tplPath = tNodeXml.attributes['tpl_path']
       tNode.dest = tNodeXml.attributes['dest']
+      tNode.ignore_namespace = tNodeXml.attributes['ignore_namespace'] == 'true'
 
       tNodeXml.elements.each('head_comment') do |fwNode|
         tNode.headerComment = fwNode.text.strip!()

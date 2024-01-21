@@ -27,23 +27,6 @@ module XCTETypescript
       cls.getUName
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
-
-      process_dependencies(cls, bld)
-      render_dependencies(cls, bld)
-      gen_file_comment(cls, bld)
-      gen_body_content(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
-    end
-
     def process_dependencies(cls, bld)
       super
 

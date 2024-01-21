@@ -54,7 +54,7 @@ class XCTERuby::MethodEmpty < XCTEPlugin
         eDef << ", "
       end
 
-      eDef << XCTERuby::Utils::getParamDec(fun.parameters[param])
+      eDef << XCTERuby::Utils::get_param_dec(fun.parameters[param])
     end
 
     eDef << ")"

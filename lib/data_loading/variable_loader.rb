@@ -27,6 +27,8 @@ module DataLoading
       AttributeLoader.init().xml(varXML).names("set").isTplAttrib().get(curVar)
       AttributeLoader.init().xml(varXML).names("tpl").isTplAttrib().get(curVar)
 
+      curVar.construct = AttributeLoader.init().xml(varXML).names("construct").doInherit().get() == 'true'
+
       curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
       curVar.isConst = varXML.attributes.get_attribute("const") != nil
       curVar.isStatic = varXML.attributes.get_attribute("static") != nil

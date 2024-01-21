@@ -50,7 +50,7 @@ module XCTEPython
           rend.same_line(', ')
         end
 
-        rend.same_line(Utils.instance.getParamDec(fun.parameters.vars[param]))
+        rend.same_line(Utils.instance.get_param_dec(fun.parameters.vars[param]))
       end
 
       rend.same_line(')')

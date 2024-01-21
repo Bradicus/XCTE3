@@ -9,6 +9,26 @@ module XCTETypescript
       return Utils.instance
     end
 
+    def get_source_renderer
+      return SourceRendererTypescript.new
+    end
+
+    def render_namespace_start(cls, bld)
+      if !ActiveComponent.get().ignore_namespace
+        for ns in cls.namespace.nsList
+          bld.start_block('export namespace ' + get_default_utils().get_styled_namespace_name(ns))
+        end
+      end
+    end
+
+    def render_namespace_end(cls, bld)
+      if !ActiveComponent.get().ignore_namespace
+        for ns in cls.namespace.nsList
+          bld.end_block
+        end
+      end
+    end
+
     def get_styled_file_name(uName)
       return Utils.instance.get_styled_file_name(uName)
     end
@@ -91,7 +111,7 @@ module XCTETypescript
           path += incPaths.join('/')
         end
 
-        bld.add('import { ' + inc.name + " } from '" + path + "';")
+        bld.add('import { ' + inc.name + " } from '" + get_default_utils().get_styled_directory_name(path) + "';")
       end
     end
   end

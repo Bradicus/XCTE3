@@ -56,7 +56,7 @@ class XCTEJava::MethodEmpty < XCTEPlugin
         bld.same_line(', ')
       end
 
-      bld.same_line(XCTEJava::Utils.getParamDec(fun.parameters[param]))
+      bld.same_line(XCTEJava::Utils.get_param_dec(fun.parameters[param]))
     end
 
     bld.same_line(')')
