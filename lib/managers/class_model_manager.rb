@@ -20,6 +20,8 @@ class ClassModelManager
       end
     end
 
+    Log.warn("could not find class with model: " + modelName.to_s + "  plugin: " + classPlugName.to_s)
+
     return nil
   end
 

@@ -72,7 +72,7 @@ class UtilsBase
   end
 
   # Returns the version of this file name styled for this language
-  def get_styled_directory_name(pathName)
+  def get_styled_path_name(pathName)
     CodeNameStyling.getStyled(pathName, @langProfile.directoryNameStyle)
   end
 
@@ -155,13 +155,29 @@ class UtilsBase
   end
 
   # Add an include if there's a class model defined for it
-  def try_add_include_for(cls, plugName)
+  def try_add_include_for_class_ref(to_cls, cls_ref)
+    bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
+
+    if !bc_cls_spec.nil?
+      get_default_utils().try_add_include_for(to_cls, bc_cls_spec, bc.plugin_name)
+    else
+      Log.warn 'Could not find class for class ref ' + bc.model_name.to_s + " " + bc.plugin_name.to_s
+    end
+  end
+
+  # Add an include if there's a class model defined for it
+  def try_add_include_for(to_cls, for_cls, plugName)
     clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
-    clsGen = cls.model.findClassModel(plugName)
 
-    return unless !clsPlug.nil? && !clsGen.nil?
+    if !clsPlug.nil?
+      for_cls_spec = for_cls.model.findClassModel(plugName)
 
-    cls.addInclude(clsPlug.get_dependency_path(clsGen), clsPlug.get_class_name(cls))
+      if !for_cls_spec.nil?
+        to_cls.addInclude(clsPlug.get_dependency_path(for_cls_spec), clsPlug.get_class_name(for_cls_spec))
+      end
+    else
+      Log.warn "[try_add_include_for] Couldn't find class plugin: " + plugName.to_s
+    end
   end
 
   # Add an include if there's a class model defined for it

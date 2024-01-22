@@ -38,7 +38,7 @@ module XCTECSharp
     def gen_body_content(cls, bld)
       bld.separate
       clsName = get_class_name(cls)
-      tableName = get_sql_util(cls).getStyledClassName(cls.getUName)
+      tableName = Utils.instance.get_sql_util(cls).get_styled_class_name(cls.getUName)
 
       bld.start_class('public class ' + clsName)
 

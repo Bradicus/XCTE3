@@ -24,6 +24,10 @@ module CodeStructure
       @varGroups = []
     end
 
+    def add_var(var)
+      @vars << var
+    end
+
     def has_bool_param?
       for var in vars
         if var.getUType().downcase == 'boolean'

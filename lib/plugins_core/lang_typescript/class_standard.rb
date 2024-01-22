@@ -68,8 +68,7 @@ module XCTETypescript
 
       bld.separate
 
-      bld.separate
-      bld.start_class('export class ' + get_class_name(cls))
+      render_class_start(cls, bld)
 
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

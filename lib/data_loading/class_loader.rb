@@ -51,15 +51,13 @@ module DataLoading
       end
 
       genCXml.elements.each('base_class') do |bcXml|
-        baseClass = CodeStructure::CodeElemClassSpec.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
-        baseClass.name = bcXml.attributes['name']
-        baseClass.namespace = NamespaceUtil.loadNamespaces(bcXml, pComponent)
+        baseClass = ClassRefLoader.loadClassRef(bcXml, genCXml, pComponent)
 
-        bcXml.elements.each('tpl_param') do |tplXml|
-          tplParam = CodeStructure::CodeElemClassSpec.new(CodeStructure::CodeElemModel.new, nil, pComponent, false)
-          tplParam.name = tplXml.attributes['name']
-          baseClass.templateParams << tplParam
-        end
+        # bcXml.elements.each('tpl_param') do |tplXml|
+        #   tplParam = CodeStructure::CodeElemClassRef.new(bcXml, pComponent)
+        #   tplParam.name = tplXml.attributes['name']
+        #   baseClass.templateParams << tplParam
+        # end
 
         genC.baseClasses << baseClass
       end
@@ -161,7 +159,7 @@ module DataLoading
       tmpFunXML.elements.each('var_ref') do |refXml|
         ref = genC.findVar(refXml.attributes['name'])
         if ref
-          fun.variableReferences << ref
+          fun.parameters.add_var ref
         end
       end
     end

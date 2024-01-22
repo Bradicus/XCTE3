@@ -112,6 +112,8 @@ class XCTEPlugin
       return plug if plug.name == pluginName
     end
 
+    Log.warn("could not find plugin: " + pluginName.to_s)
+
     nil
   end
 

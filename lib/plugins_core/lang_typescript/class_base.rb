@@ -29,6 +29,28 @@ module XCTETypescript
       end
     end
 
+    def render_class_start(cls, bld)
+      base_classes = ''
+      if cls.baseClasses.length > 0
+        base_classes += " extends "
+        first = true
+
+        for bc in cls.baseClasses
+
+          bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
+          bc_plugin = XCTEPlugin::findClassPlugin(cls.language, bc.plugin_name)
+
+          if !first
+            base_classes += ', '
+          end
+          base_classes += bc_plugin.get_class_name(bc_cls_spec)
+          first = false
+        end
+      end
+
+      bld.start_class('export class ' + get_class_name(cls) + base_classes)
+    end
+
     def get_styled_file_name(uName)
       return Utils.instance.get_styled_file_name(uName)
     end
@@ -63,24 +85,6 @@ module XCTETypescript
       return '/' + (route + get_relative_route(cls, actionName)).join('/')
     end
 
-    def process_dependencies(cls, bld)
-      # Generate dependency code for functions
-      for fun in cls.functions
-        process_fuction_dependencies(cls, bld, fun)
-      end
-    end
-
-    def process_fuction_dependencies(cls, bld, fun)
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
-
-      templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
-      if !templ.nil?
-        templ.process_dependencies(cls, bld)
-      else
-        # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-      end
-    end
-
     def render_dependencies(cls, bld)
       cls.includes.sort_by! do |x|
         [x.path, x.name]
@@ -111,7 +115,7 @@ module XCTETypescript
           path += incPaths.join('/')
         end
 
-        bld.add('import { ' + inc.name + " } from '" + get_default_utils().get_styled_directory_name(path) + "';")
+        bld.add('import { ' + inc.name + " } from '" + get_default_utils().get_styled_path_name(path) + "';")
       end
     end
   end

@@ -6,7 +6,7 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, _bld)
+    def process_dependencies(cls, _bld, fun)
       cls.addInclude('shared/paging/filtered-page-req-tpl', 'FilteredPageReqTpl')
       cls.addInclude('shared/paging/filtered-page-resp-tpl', 'FilteredPageRespTpl')
     end

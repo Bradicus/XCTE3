@@ -35,10 +35,20 @@ class XCTEClassBase < XCTEPlugin
         if !templ.nil?
           templ.process_dependencies(cls_spec, bld, fun)
         else
-          puts 'ERROR no plugin for function: ' + fun.name + '   language: java'
+          Log.warn 'ERROR no plugin for function: ' + fun.name + '   language: ' + cls_spec.language
         end
       end
     }))
+
+    for bc in cls_spec.baseClasses
+      bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
+
+      if !bc_cls_spec.nil?
+        get_default_utils().try_add_include_for(cls_spec, bc_cls_spec, bc.plugin_name)
+      else
+        Log.warn 'Could not find class for base class ref ' + bc.model_name.to_s + " " + bc.plugin_name.to_s
+      end
+    end
   end
 
   def gen_source_files(cls)

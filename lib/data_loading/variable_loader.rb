@@ -54,7 +54,7 @@ module DataLoading
       AttributeLoader.init().xml(varXML).names("genSet").default(curVar.genGet).doInherit().get == "true"
 
       curVar.comment = varXML.attributes["comm"]
-      curVar.defaultValue = varXML.attributes["default"]
+      curVar.defaultValue = AttributeLoader.init().xml(varXML).names("default").doInherit().get
 
       # puts "[ElemClass::loadVariable] loaded variable: " << curVar.name
 

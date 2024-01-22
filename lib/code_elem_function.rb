@@ -13,7 +13,7 @@ module CodeStructure
   class CodeElemFunction < CodeElem
     attr_accessor :name, :description, :visibility, :parameters, :isConst,
                   :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue,
-                  :variableReferences, :annotations, :role
+                  :annotations, :role
 
     def initialize(parentElem)
       super(parentElem)
@@ -21,7 +21,6 @@ module CodeStructure
       @elementId = CodeElem::ELEM_FUNCTION
 
       @parameters = CodeElemVarGroup.new # Array of CodeElemVariable
-      @variableReferences = [] # Array of variables
       @isConst = false
       @isStatic = false
       @isVirtual = false

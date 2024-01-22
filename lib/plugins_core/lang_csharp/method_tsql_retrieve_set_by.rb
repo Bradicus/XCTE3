@@ -37,7 +37,7 @@ module XCTECSharp
       paramDec = []
       paramNames = []
 
-      fun.variableReferences.each do |param|
+      fun.parameters.vars.each do |param|
         paramDec << XCTECSharp::Utils.instance.get_param_dec(param.getParam)
         paramNames << XCTECSharp::Utils.instance.get_styled_variable_name(param)
       end
@@ -67,7 +67,7 @@ module XCTECSharp
       bld.indent
 
       whereItems = []
-      fun.variableReferences.each do |param|
+      fun.parameters.vars.each do |param|
         whereCondition =
           '[' + XCTETSql::Utils.instance.get_styled_variable_name(param, cls.varPrefix) +
           '] = @' + XCTETSql::Utils.instance.get_styled_variable_name(param.getParam)
@@ -84,7 +84,7 @@ module XCTECSharp
       bld.start_block('try')
       bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
 
-      fun.variableReferences.each do |param|
+      fun.parameters.vars.each do |param|
         bld.add('cmd.Parameters.AddWithValue(' +
                 '"@' + XCTETSql::Utils.instance.get_styled_variable_name(param) +
                 '", ' + XCTECSharp::Utils.instance.get_styled_variable_name(param.getParam) + ');')

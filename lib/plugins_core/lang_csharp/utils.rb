@@ -21,6 +21,14 @@ module XCTECSharp
       super('csharp')
     end
 
+    def get_sql_util(cls)
+      if cls.model.findClassSpecByPluginName('tsql_data_store') != nil
+        return XCTETSql::Utils.instance
+      else
+        return XCTESql::Utils.instance
+      end
+    end
+
     # Get a parameter declaration for a method parameter
     def get_param_dec(var)
       pDec = String.new
