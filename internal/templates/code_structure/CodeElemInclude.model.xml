@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="code elem class ref">
+<model name="code elem include">
 
 	<description>
 	Code Element - Class Reference
@@ -10,9 +10,9 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-	  <var name="namespaces"	type="CodeElemNamespace" set="List" />
-	  <var name="plugName"		type="string"	default="null" />
-	  <var name="pluginName"	type="string"	default="null" />
+	  <var name="path"		type="string"	default="null" />
+	  <var name="name"		type="string"	default="null" />
+	  <var name="type"	type="string"	default="null" />
 	</var_group>		
 	
 </model>

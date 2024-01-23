@@ -5,10 +5,10 @@
 	Code Element
 	</description>
 
-	<gen_class type="standard" ns="code element" >
+	<gen_class type="standard" ns="code structure" path="code structure" >
 	</gen_class>
 
-	<var_group genGet="true" genSet="true">		
+	<var_group genGet="true" genSet="true" default="null" >		
 		<var name="name"			type="String" />        
         <var name="versionMin"			type="String" />        
         <var name="versionMax"			type="String" />        

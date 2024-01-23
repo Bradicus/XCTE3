@@ -5,10 +5,10 @@
 	Ruby accessor
 	</description>
 				
-	<gen_class type="standard" ns="XCTERuby" >
+	<gen_class type="standard" ns="lang profles.ruby" path="lang profiles/ruby" >
 	</gen_class>
 
-	<var_group genGet="true" genSet="true">
+	<var_group genGet="true" genSet="true" construct="true">
 		<var name="has get"		type="String" />
 		<var name="has set"		type="String" />
 	</var_group>		

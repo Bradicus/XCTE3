@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem use">
+
+	<description>
+	Code Element - Use
+	</description>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true" >
+	  <var name="namespace"	type="CodeElemNamespace" />
+	</var_group>		
+	
+</model>

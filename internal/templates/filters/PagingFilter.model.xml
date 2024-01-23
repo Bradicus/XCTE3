@@ -5,13 +5,13 @@
 	Filters data set down to current page
 	</description>
 				
-	<gen_class type="standard" >
+	<gen_class type="standard" ns="filters" path="filters" construct="true">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true">
-		<var name="page sizes"	type="int32" set="List" default = "[]"/>
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="page sizes"	type="Int32" set="List" />
 		<var name="pager"		type="string" default="none" />
-		<var name="page size default"	type="int32"  default="10" />
+		<var name="page size default"	type="Int32"  default="10" />
 	</var_group>		
 	
 </model>

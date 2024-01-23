@@ -5,37 +5,36 @@
 	Class specification
 	</description>
 
-	<gen_class type="standard" ns="code structure" >
+	<gen_class type="standard" ns="code structure" path="code structure">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true">
-		<var name="elementId"		type="String" default="CodeElem::ELEM_CLASS_GEN" />
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="element id"		type="String" default="CodeElem::ELEM_CLASS_GEN" />
 		<var name="model"			type="String" default="model" />
 		<var name="path"			type="String" default="" />
-		<var name="genCfg"			utype="project component" default="pComp" />		
+		<var name="namespace"		utype="code elem namespace" />		
 		<var name="language"		type="String" default="nil" />
-		<var name="includes"		type="code elem include" set="List" />
-		<var name="uses"			type="code elem use" set="List" />
+		<var name="includes"		utype="code elem include" set="List" />
+		<var name="uses"			utype="code elem use" set="List" />
+		<var name="gen cfg"			utype="project elem" nullable="true" default="null" />		
 		<var name="functions"		utype="code elem function" set="List" />
-		<var name="baseClasses"		utype="code elem class gen" set="List" />
-		<var name="interfaces"		utype="code elem interface" set="List" />
+		<var name="base classes"	utype="code elem class spec" set="List" />
+		<var name="interfaces"		utype="code elem class spec" set="List" />
 		<var name="injections"		utype="code elem variable" set="List" />
-		<var name="namespace"		utype="code elem namespace" default="CodeElemNamespace.new" />
-		<var name="interfaceNamespace"	utype="code elem namespace" default="CodeElemNamespace.new" />
-		<var name="testNamespace"	utype="code elem namespace" default="CodeElemNamespace.new" />
-		<var name="templateParams"	utype="code elem class gen" set="List" />
-		<var name="varPrefix"		type="String" default="" />
-		<var name="preDefs"			type="String" set="List" />
-		<var name="path"			type="String" default="" />
-		<var name="filePath"			type="String" default="" />
-		<var name="standardClass"		type="String" default="" />
-		<var name="standardClassType"	type="String" default="" />
-		<var name="customCode"			type="String" default="" />
-		<var name="dataClass"			type="String" default="" />
-		<var name="class_group_ref"		type="String" default="nil" />
-		<var name="cgName"			type="String" default="nil" />
-		<var name="variant"			type="String" default="nil" />
-		<var name="featureGroup"			type="String" default="nil" />
+		<var name="interface namespace"	utype="code elem namespace" />
+		<var name="test namespace"	utype="code elem namespace" />
+		<var name="template params"	utype="code elem class spec" set="List" />
+		<var name="var prefix"		type="String" default="" />
+		<var name="pre defs"			type="String" set="List" />
+		<var name="file path"			type="String" default="" />
+		<var name="standard class"		type="String" default="" />
+		<var name="standard class type"	type="String" default="" />
+		<var name="custom code"			type="String" default="" />
+		<var name="data class"			type="String" default="" />
+		<var name="class group ref"		type="String" nullable="true" default="null" />
+		<var name="class group name"	type="String" nullable="true" default="null" />
+		<var name="variant"				type="String" nullable="true" default="null" />
+		<var name="feature group"		type="String" nullable="true" default="null" />
 	</var_group>
 
 </model>

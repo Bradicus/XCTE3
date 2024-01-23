@@ -161,7 +161,7 @@ module XCTERuby
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('ruby', fun.name)
         if !templ.nil?
-          bld.add(templ.get_definition(cls, cfg))
+          bld.add(templ.get_definition(cls, ActiveComponent.get(), fun))
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
         end

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="attribute" >
+
+	<description>
+	Code Element
+	</description>
+
+	<gen_class type="standard" ns="data loading" path="data loading">
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true">
+		
+		<var name="name"			type="String" />
+		<var name="value"			type="String" />
+		
+	</var_group>
+
+</model>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="source renderer" >
+
+	<description>
+	Parameters to each val function in utilities
+	</description>
+
+	<gen_class type="standard" ns="plugin base" path="plugin base">
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="indent level"	type="Int32" default="0" />
+		<var name="indent chars"	type="string" default="    " />
+		<var name="lines"	type="string" set="list" />
+		<var name="block delim open"	type="string" default="{" />
+		<var name="block delim close"	type="string" default="}" />
+		<var name="hanging function start"		type="Boolean" default="false" />
+		<var name="hanging block start"		type="Boolean" default="true" />
+		<var name="line ending"	type="string" default="\n" />
+	</var_group>
+
+</model>

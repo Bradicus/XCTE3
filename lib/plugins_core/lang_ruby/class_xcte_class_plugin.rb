@@ -89,7 +89,7 @@ module XCTERuby
 
       bld.start_function('def initialize')
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
-      bld.add('@language = "' + cls.xmlElement.attributes['lang'] + '"')
+      bld.add('@language = "' + cls.language + '"')
       bld.add('@category = XCTEPlugin::CAT_CLASS')
       bld.add('@author = "' + UserSettings.instance.codeAuthor + '"') if UserSettings.instance.codeAuthor
       bld.endFunction
@@ -105,7 +105,7 @@ module XCTERuby
       bld.add('srcFiles = Array.new')
       bld.separate
       bld.add('bld = SourceRenderer' +
-              CodeNameStyling.getStyled(cls.xmlElement.attributes['lang'], 'PASCAL_CASE') + '.new')
+              CodeNameStyling.getStyled(cls.language, 'PASCAL_CASE') + '.new')
       bld.add('bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))')
       bld.add("bld.lfExtension = Utils.instance.get_extension('body')")
       bld.separate

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem var group">
+
+	<description>
+	Code Element - Class Reference
+	</description>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="element id"	type="string"   default="CodeElem::ELEM_VAR_GROUP" />
+		<var name="name"	type="string"/>
+
+		<var name="vars"	utype="code elem variable" set="List" />
+		<var name="var groups"	utype="code elem var group" set="List" />
+	</var_group>	
+	
+      <!-- @returnValue.vtype = 'void' -->
+	
+</model>

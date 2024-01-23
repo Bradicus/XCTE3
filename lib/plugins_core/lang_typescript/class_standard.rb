@@ -64,8 +64,6 @@ module XCTETypescript
 
     # Returns the code for the header for this class
     def gen_body_content(cls, bld)
-      headerString = String.new
-
       bld.separate
 
       render_class_start(cls, bld)
@@ -76,6 +74,7 @@ module XCTETypescript
       }))
 
       bld.separate
+
       # Generate code for functions
       render_functions(cls, bld)
 

@@ -5,10 +5,10 @@
 	HTML node
 	</description>
 
-	<gen_class type="standard" ns="XCTEHtml" >
+	<gen_class type="standard" ns="plugins.html" path="plugins/html" >
 	</gen_class>
 
-	<var_group genGet="true" genSet="true">		
+	<var_group genGet="true" genSet="true" construct="true">		
 		<var name="name"		type="String" />
 		<var name="classAttrib"	set="List"		type="String" />  
         <var name="attribs"		set="List"		type="String" />      

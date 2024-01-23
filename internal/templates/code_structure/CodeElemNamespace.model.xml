@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem namespace">
+
+	<description>
+	Code Element - Use
+	</description>
+
+	<var_group genGet="true" genSet="true" construct="true" >
+	  <var name="nsList"	type="String" set="List" />
+	</var_group>	
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+	</gen_class>	
+	
+</model>

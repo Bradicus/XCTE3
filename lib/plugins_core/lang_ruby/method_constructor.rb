@@ -8,53 +8,35 @@
 # This plugin creates a constructor for a class
 
 require 'x_c_t_e_plugin.rb'
+require 'plugins_core/lang_ruby/utils'
 require 'plugins_core/lang_ruby/x_c_t_e_ruby.rb'
 
-class XCTERuby::MethodConstructor < XCTEPlugin
+module XCTERuby
+  class MethodConstructor < XCTEPlugin
 
-  def initialize
-    @name = "method_constructor"
-    @language = "ruby"
-    @category = XCTEPlugin::CAT_METHOD
-  end
-
-  # Returns definition string for this class's constructor
-  def get_definition(codeClass, cfg)
-    conDef = String.new
-    indent = "    "
-
-    conDef << indent << "# Constructor\n"
-
-    conDef << indent << "def initialize()\n"
-
-    varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
-
-    for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
-        if var.defaultValue != nil
-          conDef << indent << "    @" << var.name << " = "
-
-          if var.vtype == "String"
-            conDef << "\"" << var.defaultValue << "\""
-          else
-            conDef << var.defaultValue << ""
-          end
-
-          if var.comment != nil
-            conDef << "\t# " << var.comment
-          end
-
-          conDef << "\n"
-        end
-      end
+    def initialize
+      @name = "method_constructor"
+      @language = "ruby"
+      @category = XCTEPlugin::CAT_METHOD
     end
 
-    conDef << indent << "end  # initialize\n\n";
+    # Returns the code for the content for this function
+    def get_definition(cls, bld, fun)
+      param_str = ''
 
-    return(conDef);
+      for param in fun.parameters.vars
+        param_str += get_default_util().get_param_dec(param)
+      end
+
+      bld.start_class(Utils.instance.get_styled_class_name(cls) + "(" + param_str + ")")
+
+
+      each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      }))
+
+      bld.end_class
+    end
   end
-
 end
 
 # Now register an instance of our plugin

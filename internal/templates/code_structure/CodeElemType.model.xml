@@ -5,7 +5,7 @@
 	Code Element Types
 	</description>
 				
-	<gen_class type="enum">
+	<gen_class type="enum" ns="code structure" path="code structure">
 	</gen_class>
 
 	<var_group>

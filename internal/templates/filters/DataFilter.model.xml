@@ -5,14 +5,14 @@
 	Filters request for sets of data
 	</description>
 				
-	<gen_class type="standard" >
+	<gen_class type="standard" ns="filters" path="filters">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true">
-		<var name="paging"	utype="paging filter" ns="filters" default="PagingFilter.new" />
-		<var name="search"	utype="search filters" ns="filters" set="List" default="[]" />
-		<var name="sort"	utype="sort filter" ns="filters" default="SortFilter.new" />
-		<var name="static filter"	utype="static filter" ns="filters" default="StaticFilter.new" />
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="paging"	utype="paging filter" ns="filters" />
+		<var name="searches" utype="search filter" ns="filters" set="List" />
+		<var name="sort"	utype="sort filter" ns="filters" />
+		<var name="static filter"	utype="static filter" ns="filters" />
 	</var_group>		
 	
 </model>

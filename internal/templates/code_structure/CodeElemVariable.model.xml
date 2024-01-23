@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model name="code elem variable">
 
-	<gen_class type="standard" >
+	<gen_class type="standard" ns="code structure" path="code structure">
 		<description>
 			This class stores information on variables in a model.
 		</description>
+
+		<function name="method_constructor" >
+			<param name="element id" />
+		</function>
 	</gen_class>
 				
-	<var_group virtual="true" genGet="true" genSet="true">
+	<var_group virtual="true" genGet="true" genSet="true" construct="true">
 		<var name="vtype" 		 type="String" />
 		<var name="templateType" type="String" />
-		<var name="defaultValue" type="String" />
-		<var name="comment" default = "" type="String" />
+		<var name="defaultValue" type="String" default="null" />
+		<var name="construct" type="Boolean" default="false" />
+		<var name="comment" type="String" />
 		<var name="is virtual" default = "false" type="Boolean" />
 		<var name="is const" default = "false" type="Boolean" />
 		<var name="is static" default = "false" type="Boolean" />
@@ -23,8 +28,7 @@
 		<var name="identity" default = "null" type="String" />
 		<var name="is primary" default = "false" type="Boolean" />
 		<var name="list type" default = "nil" type="String" />
-		<var name="array elem count" default = "0" type="Int32" />
-		
+		<var name="array elem count" default = "0" type="Int32" />		
 	</var_group>
 
 </model>

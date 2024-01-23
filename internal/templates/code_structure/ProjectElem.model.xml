@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="project elem">
+
+	<description>
+	Code Element - Class Reference
+	</description>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="element id"	type="string"   default="CodeElem::ELEM_PROJECT" />
+		<var name="build type"	type="string"	default="null" />
+		<var name="template folders"	type="string" set="List" />
+		<var name="lang profile paths"	type="string" set="List" />
+		<var name="include folders"	type="string"	set="List" />
+		<var name="library folders"	type="string"	set="List" />
+		<var name="single file"	type="string"	default="null" />
+		<var name="generators"	utype="project elem generator"	set="List" />
+	</var_group>	
+	
+</model>

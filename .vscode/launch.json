@@ -22,6 +22,14 @@
         },
         {
             "type": "rdbg",
+            "name": "Internal",
+            "request": "launch",
+            "args": [],
+            "cwd": "/home/brad/XCTE3/internal",
+            "script": "${workspaceRoot}/bin/xcte3.rb"
+        },
+        {
+            "type": "rdbg",
             "name": "Attach with rdbg",
             "request": "attach"
         }

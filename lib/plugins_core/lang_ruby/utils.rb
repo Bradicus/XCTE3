@@ -81,9 +81,9 @@ module XCTERuby
     # Get type for a class
     def getClassTypeName(cls)
       nsPrefix = ''
-      nsPrefix = cls.namespace.get('::') + '::' if cls.namespace.hasItems?
+      nsPrefix = cls.namespaces.join('::') + '::' if cls.namespaces.hasItems?
 
-      baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
+      baseTypeName = CodeNameStyling.getStyled(cls.model_name, @langProfile.classNameStyle)
       baseTypeName = nsPrefix + baseTypeName
 
       return baseTypeName

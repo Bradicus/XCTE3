@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem function">
+
+	<description>
+	Code Element - Class Reference
+	</description>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="element id"	type="string"   default="CodeElem::ELEM_FUNCTION" />
+		<var name="parameters"	utype="code elem var group"/>
+
+		<var name="is const"	type="Boolean"	default="false" />
+		<var name="is static"	type="Boolean"	default="false" />
+		<var name="is virtual"	type="Boolean"	default="false" />
+		<var name="is inline"	type="Boolean"	default="false" />
+		<var name="is template"	type="Boolean"	default="false" />
+
+		<var name="annotations"	type="string" set="List" />
+		<var name="returnValue"	utype="code elem variable" default="new CodeElemVariable(self)" />
+	</var_group>	
+	
+      <!-- @returnValue.vtype = 'void' -->
+	
+</model>

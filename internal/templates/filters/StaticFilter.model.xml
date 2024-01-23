@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="sort filter" >
+<model name="static filter" >
 
 	<description>
-	Orders data set based on sort and order
+	Filter that is applied on every request
 	</description>
 				
 	<gen_class type="standard" ns="filters" path="filters">
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="default sort column"		type="string" />
-		<var name="default sort direction"	type="string" />
-		<var name="sortable columns"		type="string" set="List" />
+		<var name="column"  type="string" />
+		<var name="value"	type="string" />
 	</var_group>		
 	
 </model>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="code elem template" >
+<model name="project elem external dependency" >
 
 	<description>
 	Code Element for Templates or in some languages arrays
@@ -9,9 +9,8 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">		
-		<var name="name"			type="string" />        
-        <var name="is pointer tpl"	type="boolean" default="false" />        
-        <var name="is collection"	type="boolean" default="false" />
+		<var name="name"	type="string" />        
+        <var name="version"	type="string" />   
 	</var_group>
 
 </model>
