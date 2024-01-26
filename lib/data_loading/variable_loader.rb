@@ -58,7 +58,7 @@ module DataLoading
 
       # puts "[ElemClass::loadVariable] loaded variable: " << curVar.name
 
-      parentElem.vars << curVar
+      parentElem.add_var curVar
     end
   end
 end

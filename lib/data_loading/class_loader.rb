@@ -79,7 +79,7 @@ module DataLoading
 
       genCXml.elements.each('function') do |funXml|
         newFun = CodeStructure::CodeElemFunction.new(genC)
-        loadTemplateFunctionNode(genC, newFun, funXml)
+        loadTemplateFunctionNode(genC, newFun, funXml, pComponent)
         genC.functions << newFun
       end
 
@@ -147,7 +147,7 @@ module DataLoading
     end
 
     # Loads a template function element from an XML template function node
-    def self.loadTemplateFunctionNode(genC, fun, tmpFunXML)
+    def self.loadTemplateFunctionNode(genC, fun, tmpFunXML, pComponent)
       fun.loadAttributes(tmpFunXML)
       fun.name = tmpFunXML.attributes['name']
       fun.role = AttributeLoader.init.xml(tmpFunXML).names('role').cls(genC).get
@@ -156,11 +156,8 @@ module DataLoading
       fun.isInline = (tmpFunXML.attributes['inline'] == 'true')
 
       varArray = []
-      tmpFunXML.elements.each('var_ref') do |refXml|
-        ref = genC.findVar(refXml.attributes['name'])
-        if ref
-          fun.parameters.add_var ref
-        end
+      tmpFunXML.elements.each('param') do |refXml|
+        VariableLoader.loadVariableNode(refXml, fun, pComponent)
       end
     end
 

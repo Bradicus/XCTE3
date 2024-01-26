@@ -97,17 +97,8 @@ module DataLoading
     def loadAttrib(xml, var = nil)
       for atrName in @names
         # Check for language specific version of attrib
+        atr = get_attribute(xml, atrName)
 
-        if ActiveComponent.get() != nil
-          atr = xml.attributes[atrName + "-" + ActiveComponent.get().language]
-        else
-          atr = nil
-        end
-
-        if (atr == nil)
-          # Check for regular version of attrib
-          atr = xml.attributes[atrName]
-        end
         if atr != nil
           if ActiveComponent.get() != nil
             value = process_build_vars(atr)
@@ -151,6 +142,20 @@ module DataLoading
 
         return @default
       end
+    end
+
+    def get_attribute(aXml, name)
+      atr = nil
+      if ActiveComponent.get() != nil
+        atr = aXml.attributes[name + "-" + ActiveComponent.get().language]
+      end
+
+      if (atr == nil)
+        # Check for regular version of attrib
+        atr = aXml.attributes[name]
+      end
+
+      return atr
     end
 
     def process_build_vars(value)

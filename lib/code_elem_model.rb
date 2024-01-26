@@ -43,6 +43,10 @@ module CodeStructure
       ret.classes = @classes.map(&:clone)
     end
 
+    def add_var(var)
+      varGroup.vars << var
+    end
+
     #
     # Finds a class that this model has by type name
     #

@@ -31,6 +31,11 @@ module CodeStructure
       @returnValue.vtype = 'void'
     end
 
+
+    def add_var(var)
+      parameters.vars.push(var)
+    end
+
     def add_param(param)
       parameters.vars.push(param)
     end
