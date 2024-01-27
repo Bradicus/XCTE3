@@ -9,7 +9,7 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="elementId"		type="String" />
+		<var name="element id"		type="String" />
 		<var name="name"			type="String" />
 		<var name="display name"		type="String" />
 		<var name="description"		type="String" />

@@ -20,7 +20,7 @@
 		<var name="is template"	type="Boolean"	default="false" />
 
 		<var name="annotations"	type="string" set="List" />
-		<var name="returnValue"	utype="code elem variable" default="new CodeElemVariable(self)" />
+		<var name="returnValue"	utype="code elem variable" default="new CodeElemVariable(this)" />
 	</var_group>	
 	
       <!-- @returnValue.vtype = 'void' -->

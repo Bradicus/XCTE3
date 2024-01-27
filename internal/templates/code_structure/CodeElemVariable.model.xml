@@ -6,8 +6,10 @@
 			This class stores information on variables in a model.
 		</description>
 
+		<base_class cname="code elem" plugin="standard" />
+
 		<function name="method_constructor" >
-			<param name="element id" />
+			<param name="parentElem" utype="code elem" />
 		</function>
 	</gen_class>
 				
@@ -27,6 +29,10 @@
 		<var name="nullable" default = "false" type="Boolean" />
 		<var name="identity" default = "null" type="String" />
 		<var name="is primary" default = "false" type="Boolean" />
+		<var name="select from" default = "false" type="Boolean" />
+		<var name="is options list" default = "false" type="Boolean" />
+		<var name="templates" utype="code elem template" set="List" />
+		<var name="attribs" type="String" set="List" />
 		<var name="list type" default = "nil" type="String" />
 		<var name="array elem count" default = "0" type="Int32" />		
 	</var_group>

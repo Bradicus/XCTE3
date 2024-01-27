@@ -31,7 +31,7 @@
 		<var name="standard class type"	type="String" default="" />
 		<var name="custom code"			type="String" default="" />
 		<var name="data class"			type="String" default="" />
-		<var name="class group ref"		type="String" nullable="true" default="null" />
+		<var name="class group ref"		utype="code elem class ref" nullable="true" default="null" />
 		<var name="class group name"	type="String" nullable="true" default="null" />
 		<var name="variant"				type="String" nullable="true" default="null" />
 		<var name="feature group"		type="String" nullable="true" default="null" />

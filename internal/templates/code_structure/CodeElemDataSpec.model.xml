@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem data spec">
+
+	<description>
+	Code Element - Class Reference
+	</description>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" construct="true">
+		<var name="element id"	type="string"   default="CodeElem::ELEM_MODEL" />
+		<var name="classes"		utype="code elem class spec" set="List" />
+		<var name="var group"		utype="code elem var group" />
+		
+		<var name="xml file name"	type="string" />
+		<var name="model set"		type="string" />
+
+		<var name="feature group"	type="string" />
+		<var name="data filter"		utype="data filter" />
+	</var_group>	
+	
+      <!-- @returnValue.vtype = 'void' -->
+	
+</model>

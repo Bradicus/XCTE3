@@ -17,6 +17,7 @@
 		<var name="include folders"	type="string"	set="List" />
 		<var name="library folders"	type="string"	set="List" />
 		<var name="single file"	type="string"	default="null" />
+		<var name="dest"	type="string"	default="null" note="Output directory" />
 		<var name="generators"	utype="project elem generator"	set="List" />
 	</var_group>	
 	
