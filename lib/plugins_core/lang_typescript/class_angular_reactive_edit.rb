@@ -1,12 +1,14 @@
-require 'plugins_core/lang_typescript/class_base'
+require 'plugins_core/lang_typescript/class_angular_component'
 require 'include_util'
 
 ##
 # Class:: ClassAngularReactiveEdit
 #
 module XCTETypescript
-  class ClassAngularReactiveEdit < ClassBase
+  class ClassAngularReactiveEdit < ClassAngularComponent
     def initialize
+      super
+      
       @name = 'class_angular_reactive_edit'
       @language = 'typescript'
       @category = XCTEPlugin::CAT_CLASS

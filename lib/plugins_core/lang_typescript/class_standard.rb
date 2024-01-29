@@ -9,6 +9,7 @@
 # class generator for example
 
 require 'plugins_core/lang_typescript/utils'
+require 'plugins_core/lang_typescript/class_base'
 require 'plugins_core/lang_typescript/x_c_t_e_typescript'
 require 'code_elem'
 require 'code_elem_parent'
@@ -36,7 +37,7 @@ module XCTETypescript
       }))
     end
 
-    def gen_file_comment(cls, bld)
+    def rendeer_class_comment(cls, bld)
       cfg = UserSettings.instance
       headerString = String.new
 
@@ -58,14 +59,10 @@ module XCTETypescript
       end
 
       bld.add('*/')
-
-      headerString
     end
 
     # Returns the code for the header for this class
     def gen_body_content(cls, bld)
-      bld.separate
-
       render_class_start(cls, bld)
 
       # Generate class variables

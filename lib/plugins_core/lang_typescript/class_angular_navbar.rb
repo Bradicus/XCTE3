@@ -3,11 +3,15 @@
 #
 require 'active_component'
 require 'navigation_node'
+
 require 'managers/project_plan_manager'
+require 'plugins_core/lang_typescript/class_angular_component'
 
 module XCTETypescript
-  class ClassAngularNavbar < ClassBase
+  class ClassAngularNavbar < ClassAngularComponent
     def initialize
+      super
+      
       @name = 'class_angular_navbar'
       @language = 'typescript'
       @category = XCTEPlugin::CAT_CLASS
@@ -17,30 +21,9 @@ module XCTETypescript
       cls.getUName + ' component'
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '.component')
-      bld.lfExtension = Utils.instance.get_extension('body')
-
-      process_dependencies(cls, bld)
-      render_dependencies(cls, bld)
-
-      gen_file_comment(cls, bld)
-      gen_body_content(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
-    end
-
     def process_dependencies(cls, _bld)
       cls.addInclude('@angular/core', 'Component')
     end
-
-    # Returns the code for the comment for this class
-    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def gen_body_content(cls, bld)

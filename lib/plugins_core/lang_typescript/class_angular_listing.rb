@@ -1,11 +1,12 @@
-require 'plugins_core/lang_typescript/class_base'
+
+require 'plugins_core/lang_typescript/class_angular_component'
 require 'include_util'
 
 ##
 # Class:: ClassAngularListing
 #
 module XCTETypescript
-  class ClassAngularListing < ClassBase
+  class ClassAngularListing < ClassAngularComponent
     def initialize
       super
       @name = 'class_angular_listing'
@@ -64,9 +65,6 @@ module XCTETypescript
       #   process_var_dependencies(cls, bld, group)
       # end
     end
-
-    # Returns the code for the comment for this class
-    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def gen_body_content(cls, bld)

@@ -15,4 +15,15 @@ class SourceRendererTypescript < SourceRendererBraceDelim
 
     @hangingFunctionStart = true
   end
+
+  def comment_file(file_comm)
+    add '/* '
+
+    fc = file_comm.strip
+
+    for line in fc.split("\n")
+      add  '* ' + line.rstrip
+    end
+    add '*/'
+  end
 end

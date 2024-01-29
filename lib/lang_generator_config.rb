@@ -5,7 +5,7 @@ require "code_elem_namespace.rb"
 #
 
 class LangGeneratorConfig
-  attr_accessor :language, :tplPath, :dest, :namespace, :xDeps, :buildVars, :headerComment, :ignore_namespace
+  attr_accessor :language, :tplPath, :dest, :namespace, :xDeps, :buildVars, :file_comment, :ignore_namespace
 
   def initialize
     @language
@@ -14,7 +14,7 @@ class LangGeneratorConfig
     @namespace = CodeStructure::CodeElemNamespace.new
     @xDeps = Array.new
     @buildVars = Array.new
-    @headerComment = ""
+    @file_comment = ""
     @ignore_namespace = false
   end
 

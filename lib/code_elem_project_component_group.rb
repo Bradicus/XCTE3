@@ -11,11 +11,12 @@ require "code_elem.rb"
 
 module CodeStructure
   class CodeElemProjectComponentGroup < CodeElem
-    attr_accessor :name, :components, :subGroups
+    attr_accessor :name, :components, :subGroups, :file_comment
 
     def initialize
       @elementId = ELEM_PROJECT_COMPONENT_GROUP
       @name = ""
+      @file_comment
 
       @components = Array.new
       @subGroups = Array.new

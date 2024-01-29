@@ -23,11 +23,12 @@ module CodeStructure
   class ElemProject < CodeElem
     attr_accessor :classType, :includes, :parentsList,
       :variableSection, :functionSection, :componentGroup, :buildType,
-      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths, :singleFile
+      :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths, :singleFile, :file_comment
 
     def initialize
       @elementId = CodeElem::ELEM_PROJECT
       @buildType
+      @file_comment
       @templateFolders = Array.new
       @outputLanguages
       @type = String.new

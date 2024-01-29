@@ -75,9 +75,6 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this class
-    def gen_file_comment(cls, bld); end
-
-    # Returns the code for the content for this class
     def gen_body_content(cls, bld)
       bld.add('const routes: Routes = [')
       bld.indent

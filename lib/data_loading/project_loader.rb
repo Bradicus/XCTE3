@@ -25,9 +25,13 @@ module DataLoading
       end
       project.buildType = xmlDoc.root.attributes['build_type']
 
-      project.xmlElement = xmlDoc.root
+      project.xmlElement = xmlDoc.root      
 
       xmlDoc.elements.each('project') do |prj|
+        prj.elements.each('file_comment') do |desc|
+          project.file_comment = desc.text
+        end
+
         loadComponentGroup(project, project.componentGroup, prj)
       end
     end
@@ -45,6 +49,9 @@ module DataLoading
       xmlGroup.elements.each('DESCRIPTION') do |desc|
         groupNode.description = desc.text
       end
+
+      
+
       # xmlGroup.elements.each("template_dir") { |tplDir|
       #   newTDir = CodeElemTemplateDirectory.new
       #   loadTemplateNode(newTDir, tplDir)
@@ -157,7 +164,7 @@ module DataLoading
       tNode.dest = tNodeXml.attributes['dest']
       tNode.ignore_namespace = tNodeXml.attributes['ignore_namespace'] == 'true'
 
-      tNodeXml.elements.each('head_comment') do |fwNode|
+      tNodeXml.elements.each('file_comment') do |fwNode|
         tNode.headerComment = fwNode.text.strip!()
       end
 

@@ -13,6 +13,35 @@ module XCTETypescript
       return SourceRendererTypescript.new
     end
 
+    def gen_source_files(cls)
+      srcFiles = []
+
+      bld = SourceRendererTypescript.new
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      bld.lfExtension = Utils.instance.get_extension('body')
+
+      gen_file_comment(cls, bld)
+      bld.separate
+      process_dependencies(cls, bld)
+      render_dependencies(cls, bld)
+
+      bld.separate
+      rendeer_class_comment(cls, bld)
+      gen_body_content(cls, bld)
+
+      srcFiles << bld
+
+      srcFiles
+    end
+
+    def gen_file_comment(cls, bld)
+      if ActiveComponent.get().file_comment != nil && ActiveComponent.get().file_comment.length > 0
+        bld.comment_file(ActiveComponent.get().file_comment)
+      elsif ActiveProject.get().file_comment != nil && ActiveProject.get().file_comment.length > 0
+        bld.comment_file(ActiveProject.get().file_comment)
+      end
+    end
+
     def render_namespace_start(cls, bld)
       if !ActiveComponent.get().ignore_namespace
         for ns in cls.namespace.nsList

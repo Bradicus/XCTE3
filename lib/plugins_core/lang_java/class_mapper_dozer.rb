@@ -21,9 +21,6 @@ module XCTEJava
       super
     end
 
-    # Returns the code for the comment for this class
-    def gen_file_comment(cls, bld); end
-
     # Returns the code for the content for this class
     def gen_body_content(cls, bld)
       idVar = cls.model.getFilteredVars(->(var) { var.name == 'id' })

@@ -5,7 +5,6 @@ require 'params/utils_each_fun_params'
 # Class:: ClassAngularReactivePopulateService
 #
 require 'plugins_core/lang_typescript/class_base'
-require 'plugins_core/lang_typescript/class_base'
 
 module XCTETypescript
   class ClassAngularDatamapService < ClassBase
@@ -74,9 +73,6 @@ module XCTETypescript
         end
       end
     end
-
-    # Returns the code for the content for this class
-    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def gen_body_content(cls, bld)

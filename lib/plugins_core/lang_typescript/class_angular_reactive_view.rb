@@ -1,12 +1,14 @@
-require 'plugins_core/lang_typescript/class_base'
+require 'plugins_core/lang_typescript/class_angular_component'
 require 'include_util'
 
 ##
 # Class:: ClassAngularReactiveView
 #
 module XCTETypescript
-  class ClassAngularReactiveView < ClassBase
+  class ClassAngularReactiveView < ClassAngularComponent
     def initialize
+      super
+      
       @name = 'class_angular_reactive_view'
       @language = 'typescript'
       @category = XCTEPlugin::CAT_CLASS

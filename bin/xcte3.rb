@@ -32,6 +32,7 @@ require "types.rb"
 require "run_settings"
 require "project_plan"
 require "active_component"
+require "active_project"
 require "lang_profiles"
 require "managers/class_model_manager"
 require "managers/internal_class_model_manager"
@@ -50,6 +51,7 @@ end
 # Main
 options = ARGV
 prj = CodeStructure::ElemProject.new
+ActiveProject.set(prj)
 
 (0..options.length / 2 - 1).each do |i|
   if (options[i] == "-f")

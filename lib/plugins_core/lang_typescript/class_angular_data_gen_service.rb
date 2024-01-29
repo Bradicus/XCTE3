@@ -5,7 +5,7 @@
 require 'plugins_core/lang_typescript/class_base'
 
 module XCTETypescript
-  class ClassAngularDataGenService < ClassBase
+  class ClassAngularDataGenService < ClassAngularComponent
     def initialize
       @name = 'class_angular_data_gen_service'
       @language = 'typescript'
@@ -70,9 +70,6 @@ module XCTETypescript
         end
       }))
     end
-
-    # Returns the code for the content for this class
-    def gen_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def gen_body_content(cls, bld)
