@@ -30,7 +30,7 @@ module XCTETSql
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
 
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld

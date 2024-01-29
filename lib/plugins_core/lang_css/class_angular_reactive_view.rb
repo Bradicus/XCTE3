@@ -23,7 +23,7 @@ module XCTECss
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld
@@ -32,7 +32,7 @@ module XCTECss
     end
 
     # Returns the code for the comment for this class
-    def gen_file_comment(cls, bld); end
+    def render_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def gen_body_content(cls, bld); end

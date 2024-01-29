@@ -63,7 +63,7 @@ class XCTEClassBase < XCTEPlugin
     render_dependencies(cls, bld)
     render_namespace_start(cls, bld)
 
-    gen_file_comment(cls, bld)
+    render_file_comment(cls, bld)
     gen_body_content(cls, bld)
 
     render_namespace_end(cls, bld)
@@ -71,6 +71,14 @@ class XCTEClassBase < XCTEPlugin
     srcFiles << bld
 
     return srcFiles
+  end
+  
+  def render_file_comment(cls, bld)
+    if ActiveComponent.get().file_comment != nil && ActiveComponent.get().file_comment.length > 0
+      bld.comment_file(ActiveComponent.get().file_comment)
+    elsif ActiveProject.get().file_comment != nil && ActiveProject.get().file_comment.length > 0
+      bld.comment_file(ActiveProject.get().file_comment)
+    end
   end
 
   def get_dependency_path(cls)

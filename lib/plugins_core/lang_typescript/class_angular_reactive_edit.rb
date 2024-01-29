@@ -32,7 +32,7 @@ module XCTETypescript
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
-      # gen_file_comment(cls, bld)
+      # render_file_comment(cls, bld)
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
 

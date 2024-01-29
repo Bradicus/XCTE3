@@ -29,7 +29,7 @@ module XCTECSharp
       cls.addUse('System.Data.SqlClient')
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       cfg = UserSettings.instance
 
       bld.add('/**')

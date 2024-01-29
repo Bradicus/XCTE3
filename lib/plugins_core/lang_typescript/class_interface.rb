@@ -23,7 +23,7 @@ module XCTETypescript
       bld.lfExtension = Utils.instance.get_extension('body')
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld
@@ -40,7 +40,7 @@ module XCTETypescript
       }))
     end
 
-    def gen_file_comment(cls, bld); end
+    def render_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
     def gen_body_content(cls, bld)

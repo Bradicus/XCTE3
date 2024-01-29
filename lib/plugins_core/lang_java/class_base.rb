@@ -32,7 +32,7 @@ module XCTEJava
       render_namespace_start(cls, bld)
       render_dependencies(cls, bld)
 
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       render_namespace_end(cls, bld)
@@ -111,7 +111,7 @@ module XCTEJava
       }))
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       cfg = UserSettings.instance
       headerString = String.new
 

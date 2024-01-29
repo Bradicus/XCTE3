@@ -41,7 +41,7 @@ module XCTETypescript
 
       bld.separate
 
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld

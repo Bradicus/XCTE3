@@ -45,7 +45,7 @@ module XCTEJava
       super
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       cfg = UserSettings.instance
 
       bld.add('/**')

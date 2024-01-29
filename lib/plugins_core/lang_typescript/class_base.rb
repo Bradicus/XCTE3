@@ -17,10 +17,10 @@ module XCTETypescript
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '')
       bld.lfExtension = Utils.instance.get_extension('body')
 
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       bld.separate
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
@@ -34,7 +34,7 @@ module XCTETypescript
       srcFiles
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       if ActiveComponent.get().file_comment != nil && ActiveComponent.get().file_comment.length > 0
         bld.comment_file(ActiveComponent.get().file_comment)
       elsif ActiveProject.get().file_comment != nil && ActiveProject.get().file_comment.length > 0

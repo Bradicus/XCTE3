@@ -25,7 +25,7 @@ module XCTEJava
       cls.getUName + ' controller'
     end
 
-    def gen_file_comment(_cls, bld)
+    def render_file_comment(_cls, bld)
       bld.add('/**')
       bld.add('* Web API controller')
       bld.add('*/')

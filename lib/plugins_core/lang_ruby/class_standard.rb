@@ -40,7 +40,7 @@ module XCTERuby
       bld = SourceRendererRuby.new
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld
@@ -48,7 +48,7 @@ module XCTERuby
       srcFiles
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       renderGlobalComment(cls.genCfg, bld)
 
       bld.separate

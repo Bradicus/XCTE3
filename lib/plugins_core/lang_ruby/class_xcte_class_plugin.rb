@@ -36,7 +36,7 @@ module XCTERuby
       bld = SourceRendererRuby.new
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld
@@ -44,7 +44,7 @@ module XCTERuby
       srcFiles
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       bld.add('##')
       bld.add('# Class:: ' + cls.name)
 
@@ -112,7 +112,7 @@ module XCTERuby
       bld.add('process_dependencies(cls, bld)')
       bld.add('render_dependencies(cls, bld)')
       bld.separate
-      bld.add('gen_file_comment(cls, bld)')
+      bld.add('render_file_comment(cls, bld)')
       bld.add('gen_body_content(cls, bld)')
       bld.add
       bld.add('srcFiles << bld')
@@ -122,7 +122,7 @@ module XCTERuby
       bld.add
 
       bld.add('# Returns the code for the comment for this class')
-      bld.start_function('def gen_file_comment(cls, bld)')
+      bld.start_function('def render_file_comment(cls, bld)')
       bld.add
       bld.endFunction
       bld.add

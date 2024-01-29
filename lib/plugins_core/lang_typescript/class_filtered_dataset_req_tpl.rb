@@ -9,6 +9,7 @@
 # class generator for example
 
 require 'plugins_core/lang_typescript/utils'
+require 'plugins_core/lang_typescript/class_base'
 require 'plugins_core/lang_typescript/x_c_t_e_typescript'
 require 'code_elem'
 require 'code_elem_parent'
@@ -36,7 +37,7 @@ module XCTETypescript
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
-      gen_file_comment(cls, bld)
+      render_file_comment(cls, bld)
       gen_body_content(cls, bld)
 
       srcFiles << bld
@@ -44,7 +45,7 @@ module XCTETypescript
       srcFiles
     end
 
-    def gen_file_comment(cls, bld)
+    def render_file_comment(cls, bld)
       cfg = UserSettings.instance
       headerString = String.new
 
