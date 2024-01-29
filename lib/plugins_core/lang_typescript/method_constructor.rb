@@ -24,13 +24,13 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def get_definition(cls, bld, fun)
-      param_str = ''
+      params = []
 
       for param in fun.parameters.vars
-        param_str += Utils.instance.get_param_dec(param)
+        params.push Utils.instance.get_param_dec(param)
       end
 
-      bld.start_class("constructor(" + param_str + ")")
+      bld.start_class("constructor(" + params.join(', ') + ")")
 
       if cls.baseClasses.length > 0
         bld.add 'super();'
@@ -52,6 +52,12 @@ module XCTETypescript
       end
 
       each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        for param in fun.parameters.vars
+          if param.name == var.name
+            varName = Utils.instance.get_styled_variable_name(param)
+            bld.add "this." + varName + " = " + varName + ";"
+          end
+        end
       }))
 
       bld.end_class

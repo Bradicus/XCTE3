@@ -79,7 +79,11 @@ module XCTETypescript
         if var.isList
           vDec << ' = []'
         elsif var.getUType.downcase == 'string'
-          vDec << ' = ""'
+          if var.nullable
+            vDec << ' = null'
+          else
+            vDec << ' = ""'
+          end
         elsif var.getUType.downcase == 'boolean'
           vDec << ' = false'
         elsif Types.instance.inCategory(var, 'time')
