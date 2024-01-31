@@ -24,8 +24,8 @@ module XCTETypescript
       render_dependencies(cls, bld)
 
       bld.separate
-      rendeer_class_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_class_comment(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 

@@ -22,7 +22,7 @@ module XCTEHtml
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
       # render_file_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -30,7 +30,7 @@ module XCTEHtml
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       nested = (cls.xmlElement.attributes['nested'] == 'true')
       contentNode = Utils.instance.make_node(cls.genCfg, 'div')
 

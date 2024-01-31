@@ -22,7 +22,7 @@ module XCTEJava
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       idVar = cls.model.getFilteredVars(->(var) { var.name == 'id' })
 
       bld.add '@Mapper'

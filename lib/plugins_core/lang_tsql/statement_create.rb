@@ -31,7 +31,7 @@ module XCTETSql
       bld.lfExtension = Utils.instance.get_extension('body')
 
       render_file_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -39,7 +39,7 @@ module XCTETSql
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       sqlCDef = []
       first = true
 

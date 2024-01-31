@@ -42,7 +42,7 @@ module XCTECSharp
       bld = SourceRendererCSharp.new
       bld.lfName = Utils.instance.get_styled_class_name(cls.name)
       bld.lfExtension = Utils.instance.get_extension('body')
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -50,7 +50,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
         if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate

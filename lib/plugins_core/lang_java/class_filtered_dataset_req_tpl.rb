@@ -28,7 +28,7 @@ module XCTEJava
     end
 
     # Returns the code for the header for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       headerString = String.new
 
       bld.separate

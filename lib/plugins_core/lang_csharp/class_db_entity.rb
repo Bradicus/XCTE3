@@ -35,7 +35,7 @@ module XCTECSharp
     end
 
     # Returns the code for the header for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       bld.separate
       clsName = get_class_name(cls)
       tableName = Utils.instance.get_sql_util(cls).get_styled_class_name(cls.getUName)

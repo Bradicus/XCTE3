@@ -37,7 +37,7 @@ module XCTERuby
       bld.lfName = lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
       render_file_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -66,7 +66,7 @@ module XCTERuby
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       for inc in cls.includes
         bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.get_extension('body') + "'")
       end

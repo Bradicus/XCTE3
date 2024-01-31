@@ -24,7 +24,7 @@ module XCTECss
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
       render_file_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -32,7 +32,7 @@ module XCTECss
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld); end
+    def render_body_content(cls, bld); end
   end
 end
 

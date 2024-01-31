@@ -8,6 +8,7 @@
 		function="CAMEL_CASE" 
 		file="DASH_LOWER"
 		directory="DASH_LOWER"
+		enum="UNDERSCORE_UPPER" 
 		const = "UNDERSCORE_UPPER" />
 
 	<FILE_TYPES>

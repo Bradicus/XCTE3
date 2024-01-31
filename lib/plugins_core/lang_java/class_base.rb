@@ -33,7 +33,7 @@ module XCTEJava
       render_dependencies(cls, bld)
 
       render_file_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       render_namespace_end(cls, bld)
 

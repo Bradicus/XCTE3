@@ -34,35 +34,12 @@ module XCTETypescript
       # Generate class variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         Utils.instance.try_add_include_for_var(cls, var, 'standard') if !Utils.instance.is_primitive(var)
+        Utils.instance.try_add_include_for_var(cls, var, 'enum') if !Utils.instance.is_primitive(var)
       }))
     end
 
-    def rendeer_class_comment(cls, bld)
-      cfg = UserSettings.instance
-      headerString = String.new
-
-      bld.add('/**')
-      bld.add('* @class ' + cls.name)
-
-      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
-
-      bld.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
-
-      bld.add("*\n* " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
-
-      bld.add('* ')
-
-      if !cls.description.nil?
-        cls.description.each_line do |descLine|
-          bld.add('* ' << descLine.chomp) if descLine.strip.size > 0
-        end
-      end
-
-      bld.add('*/')
-    end
-
     # Returns the code for the header for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       render_class_start(cls, bld)
 
       # Generate class variables

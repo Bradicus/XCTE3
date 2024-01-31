@@ -36,7 +36,7 @@ module XCTECSharp
       bld = SourceRendererCSharp.new
       bld.lfName = cls.name
       bld.lfExtension = Utils.instance.get_extension('body')
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -44,7 +44,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
 
       classDec = cls.model.visibility + ' class ' + cls.name
 

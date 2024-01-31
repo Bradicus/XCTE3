@@ -36,7 +36,7 @@ module XCTETypescript
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
 
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -80,7 +80,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       bld.add
 
       selectorName = Utils.instance.get_styled_file_name(cls.getUName)

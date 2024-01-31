@@ -45,7 +45,7 @@ module XCTEJava
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       # Add in any dependencies required by functions
       Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
         if fun.isTemplate

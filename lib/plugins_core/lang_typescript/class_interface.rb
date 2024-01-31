@@ -24,7 +24,7 @@ module XCTETypescript
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
       render_file_comment(cls, bld)
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -43,7 +43,7 @@ module XCTETypescript
     def render_file_comment(cls, bld); end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       bld.separate
       bld.start_block('export interface ' + get_class_name(cls))
 

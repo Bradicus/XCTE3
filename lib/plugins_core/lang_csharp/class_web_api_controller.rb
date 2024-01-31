@@ -51,7 +51,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
 
       classDec = cls.model.visibility + ' class ' + get_class_name(cls) + 'Controller'
 

@@ -31,7 +31,7 @@ module XCTERazor
       bld = SourceRendererRazor.new
       bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
       bld.lfExtension = 'cshtml'
-      gen_body_content(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
 
@@ -39,7 +39,7 @@ module XCTERazor
     end
 
     # Returns definition string for this class's constructor
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       sqlCDef = []
       first = true
 

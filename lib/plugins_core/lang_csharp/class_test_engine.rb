@@ -23,7 +23,7 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def gen_body_content(cls, bld)
+    def render_body_content(cls, bld)
       templ = XCTEPlugin.findMethodPlugin('csharp', 'method_test_engine')
 
       bld.add('[TestClass]')
