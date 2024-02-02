@@ -165,7 +165,7 @@ module DataLoading
       tNode.ignore_namespace = tNodeXml.attributes['ignore_namespace'] == 'true'
 
       tNodeXml.elements.each('file_comment') do |fwNode|
-        tNode.headerComment = fwNode.text.strip!()
+        tNode.file_comment = fwNode.text.strip!()
       end
 
       if tNode.dest.nil?

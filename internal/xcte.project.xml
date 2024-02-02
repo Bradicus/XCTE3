@@ -1,34 +1,34 @@
 <project>
   <generate tpl_path="templates" dest="./gen/ruby" language="ruby">
-    <head_comment>
+    <file_comment>
 Copyright XCTE Contributors
 This file is released under the zlib/libpng license, see license.txt in the
 root directory
-    </head_comment>    
+    </file_comment>    
   </generate>
   
   <generate tpl_path="clibs_templates" dest="./gen/clibs/java" language="java">
-    <head_comment>
+    <file_comment>
 Copyright XCTE Contributors
 This file is released under the zlib/libpng license, see license.txt in the
 root directory
-    </head_comment>    
+    </file_comment>    
   </generate>
   
   <generate tpl_path="clibs_templates" dest="./gen/clibs/typescript" language="typescript">
-    <head_comment>
+    <file_comment>
 Copyright XCTE Contributors
 This file is released under the zlib/libpng license, see license.txt in the
 root directory
-    </head_comment>    
+    </file_comment>    
   </generate>
   
   <generate tpl_path="clibs_templates" dest="./gen/clibs/csharp" language="csharp">
-    <head_comment>
+    <file_comment>
 Copyright XCTE Contributors
 This file is released under the zlib/libpng license, see license.txt in the
 root directory
-    </head_comment>    
+    </file_comment>    
   </generate>
   
 </project>

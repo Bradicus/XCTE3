@@ -14,6 +14,30 @@ module XCTERuby
       return SourceRendererRuby.new
     end
     
+
+  def gen_source_files(cls)
+    srcFiles = []
+
+    bld = get_source_renderer()
+    bld.lfName = get_default_utils().get_styled_file_name(get_unformatted_class_name(cls))
+    bld.lfExtension = get_default_utils().get_extension('body')
+
+    process_dependencies(cls, bld)
+
+    render_file_comment(cls, bld)
+    
+    render_dependencies(cls, bld)
+    render_namespace_start(cls, bld)
+
+    render_body_content(cls, bld)
+
+    render_namespace_end(cls, bld)
+
+    srcFiles << bld
+
+    return srcFiles
+  end
+
     def render_namespace_start(cls, bld)
       for ns in cls.namespace.nsList
         styledNs = get_default_utils().get_styled_namespace_name(ns)
