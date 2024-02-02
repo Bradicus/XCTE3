@@ -22,7 +22,7 @@ module XCTEJava
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       bld.add('/*')
       bld.add('* Web API get single ' + cls.getUName)
       bld.add('*/')

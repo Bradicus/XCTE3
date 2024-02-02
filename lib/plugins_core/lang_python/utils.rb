@@ -30,7 +30,7 @@ module XCTEPython
     end
 
     # Returns variable declaration for the specified variable
-    def getVarDec(var)
+    def get_var_dec(var)
       vDec = String.new
 
       if var.isStatic

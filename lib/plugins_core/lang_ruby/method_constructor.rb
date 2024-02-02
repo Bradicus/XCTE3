@@ -7,29 +7,33 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
 require 'plugins_core/lang_ruby/utils'
+require 'plugins_core/lang_ruby/class_base'
 require 'plugins_core/lang_ruby/x_c_t_e_ruby.rb'
 
 module XCTERuby
-  class MethodConstructor < XCTEPlugin
+  class MethodConstructor < ClassBase
 
     def initialize
+      super 
       @name = "method_constructor"
       @language = "ruby"
       @category = XCTEPlugin::CAT_METHOD
     end
 
+    def get_unformatted_class_name(cls)
+      cls.getUName
+    end
+
     # Returns the code for the content for this function
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       param_str = ''
 
       for param in fun.parameters.vars
-        param_str += get_default_util().get_param_dec(param)
+        param_str += get_default_utils().get_param_dec(param)
       end
 
-      bld.start_class(Utils.instance.get_styled_class_name(cls) + "(" + param_str + ")")
-
+      bld.start_class("def initialize(" + param_str + ")")
 
       each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
       }))

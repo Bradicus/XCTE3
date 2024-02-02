@@ -51,7 +51,7 @@ module XCTECpp
     end
 
     # Returns definition string for an empty method
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       # Skeleton of comment block
       bld.add('/**')
       bld.add('* ')

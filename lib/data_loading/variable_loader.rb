@@ -50,8 +50,8 @@ module DataLoading
       curVar.required = AttributeLoader.init().xml(varXML).names("required").default("false").doInherit().get == "true"
       curVar.readonly = AttributeLoader.init().xml(varXML).names("readonly").default("false").doInherit().get == "true"
 
-      AttributeLoader.init().xml(varXML).names("genGet").default(curVar.genGet).doInherit().get == "true"
-      AttributeLoader.init().xml(varXML).names("genSet").default(curVar.genGet).doInherit().get == "true"
+      curVar.genGet = AttributeLoader.init().xml(varXML).names("genGet").default(curVar.genGet).doInherit().get == "true"
+      curVar.genSet = AttributeLoader.init().xml(varXML).names("genSet").default(curVar.genSet).doInherit().get == "true"
 
       curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = AttributeLoader.init().xml(varXML).names("default").doInherit().get

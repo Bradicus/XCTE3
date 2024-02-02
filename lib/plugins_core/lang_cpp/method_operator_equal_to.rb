@@ -33,7 +33,7 @@ module XCTECpp
     end
 
     # Returns definition string for this class's equality assignment operator
-    def get_definition(cls, bld, _funItem)
+    def render_function(cls, bld, _funItem)
       longArrayFound = false
       seperator = ''
 

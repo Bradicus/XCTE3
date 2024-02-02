@@ -41,7 +41,7 @@ module XCTECSharp
     end
 
     # Returns variable declaration for the specified variable
-    def getVarDec(var)
+    def get_var_dec(var)
       vDec = String.new
 
       vDec << var.visibility << ' '
@@ -281,14 +281,14 @@ module XCTECSharp
           if fun.isTemplate
             templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
             if !templ.nil?
-              templ.get_definition(cls, fun, nil, bld)
+              templ.render_function(cls, fun, nil, bld)
             else
               puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end
           else # Must be empty function
             templ = XCTEPlugin.findMethodPlugin('csharp', 'method_empty')
             if !templ.nil?
-              templ.get_definition(cls, fun, nil, bld)
+              templ.render_function(cls, fun, nil, bld)
             else
               # puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
             end

@@ -23,7 +23,7 @@ module XCTEPython
     end
 
     # Returns definition string for an empty method
-    def get_definition(_cls, fun, rend)
+    def render_function(_cls, fun, rend)
       indent = String.new('    ')
 
       # Skeleton of comment block

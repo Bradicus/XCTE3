@@ -88,7 +88,7 @@ module XCTETypescript
 
       # Generate class variables
       each_var(uevParams.wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        bld.add(Utils.instance.getVarDec(var))
+        bld.add(Utils.instance.get_var_dec(var))
       }))
 
       bld.end_class

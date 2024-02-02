@@ -22,7 +22,7 @@ class XCTECpp::MethodWriteUGP < XCTEPlugin
   end
 
   # Returns definition string for this class's UGP write method
-  def get_definition(codeClass, _cfg)
+  def render_function(codeClass, _cfg)
     writeDef = String.new
 
     writeDef << "/**\n* Writes this object from a stream\n*/\n"

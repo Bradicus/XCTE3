@@ -19,7 +19,7 @@ class XCTEPhp::MethodGenPDOSQLUpdate < XCTEPlugin
   end
   
   # Returns definition string for this class' constructor
-  def get_definition(codeClass, outCode)
+  def render_function(codeClass, outCode)
     
     outCode.indent
                 

@@ -19,7 +19,7 @@ class XCTEPhp::MethodLoadCell < XCTEPlugin
   end
   
   # Returns definition string for this class's constructor
-  def get_definition(codeClass, outCode)
+  def render_function(codeClass, outCode)
     outCode.indent
 
     outCode.add("/**")

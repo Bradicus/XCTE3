@@ -62,7 +62,7 @@ module XCTEJava
         if var.name == 'id'
           bld.add('@Id')
           bld.add('@GeneratedValue(strategy=GenerationType.SEQUENCE)')
-          bld.add(Utils.instance.getVarDec(var))
+          bld.add(Utils.instance.get_var_dec(var))
         else
           if !var.relation.nil?
             if var.relation.start_with? 'many-to-many'
@@ -75,7 +75,7 @@ module XCTEJava
               bld.add('@OneToOne(cascade = CascadeType.ALL)')
             end
           end
-          bld.add(Utils.instance.getVarDec(var))
+          bld.add(Utils.instance.get_var_dec(var))
         end
       }))
 

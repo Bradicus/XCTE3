@@ -20,7 +20,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       bld.add('///')
       bld.add('/// Update the record for this model')
       bld.add('///')

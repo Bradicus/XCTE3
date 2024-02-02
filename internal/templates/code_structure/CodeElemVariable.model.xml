@@ -16,7 +16,7 @@
 	<var_group virtual="true" genGet="true" genSet="true" construct="true">
 		<var name="vtype" 		 type="String" />
 		<var name="templateType" type="String" />
-		<var name="defaultValue" type="String" default="null" />
+		<var name="defaultValue" type="String" nullable="true" />
 		<var name="construct" type="Boolean" default="false" />
 		<var name="comment" type="String" />
 		<var name="is virtual" default = "false" type="Boolean" />
@@ -27,13 +27,13 @@
 		<var name="gen set" default = "false" type="Boolean" />
 		<var name="gen get" default = "false" type="Boolean" />
 		<var name="nullable" default = "false" type="Boolean" />
-		<var name="identity" default = "null" type="String" />
+		<var name="identity" nullable="true" type="String" />
 		<var name="is primary" default = "false" type="Boolean" />
 		<var name="select from" default = "false" type="Boolean" />
 		<var name="is options list" default = "false" type="Boolean" />
 		<var name="templates" utype="code elem template" set="List" />
 		<var name="attribs" type="String" set="List" />
-		<var name="list type" default = "nil" type="String" />
+		<var name="list type" type="String" nullable="true" />
 		<var name="array elem count" default = "0" type="Int32" />		
 	</var_group>
 

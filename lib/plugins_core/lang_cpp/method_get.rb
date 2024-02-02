@@ -29,7 +29,7 @@ module XCTECpp
     end
 
     # This method has no body
-    def get_definition(codeClass, bld)
+    def render_function(codeClass, bld)
     end
   end
 end

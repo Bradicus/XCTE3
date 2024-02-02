@@ -115,14 +115,14 @@ class XCTEClassBase < XCTEPlugin
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, fun.name)
         if !templ.nil?
-          templ.get_definition(cls, bld, fun)
+          templ.render_function(cls, bld, fun)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
         end
       else # Must be empty function
         templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, 'method_empty')
         if !templ.nil?
-          templ.get_definition(cls, bld, fun)
+          templ.render_function(cls, bld, fun)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
         end

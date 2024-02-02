@@ -31,7 +31,7 @@ module XCTECpp
     end
 
     # Returns definition string for this class's set method
-    def get_definition(codeClass, bld)
+    def render_function(codeClass, bld)
     end
   end
 end

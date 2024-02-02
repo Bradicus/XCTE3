@@ -85,94 +85,48 @@ module XCTERuby
       bld.start_class('class ' + get_class_name(cls) + inheritFrom)
 
       accessors = Accessors.new
-      # Do automatic static array size declairations at top of class
-      process_var_accessors(accessors, cls, bld, cls.model.varGroup)
 
-      add_accessors('attr_accessor', accessors.both, bld)
-      add_accessors('attr_attr_reader', accessors.readers, bld)
-      add_accessors('attr_attr_writer', accessors.writers, bld)
+      # Render accessors
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|        
+        if var.genGet || var.genSet
+          accessors.add(Accessor.new(var, var.genGet, var.genSet)) 
+        end
+      }))
+
+      render_accessors('attr_accessor', accessors.both, bld)
+      render_accessors('attr_attr_reader', accessors.readers, bld)
+      render_accessors('attr_attr_writer', accessors.writers, bld)
 
       bld.separate
 
-      bld.start_function 'def initialize'
-      # Do automatic static array size declairations at top of class
-      process_var_group(cls, bld, cls.model.varGroup)
+      # Generate class variables
+      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        bld.add(Utils.instance.get_var_dec(var))
+      }))
 
-      bld.endFunction
+      bld.separate
 
       # Generate code for functions
-      for fun in cls.functions
-        process_function(cls, bld, fun)
-      end
+      render_functions(cls, bld)
 
       bld.end_class
       render_namespace_ends(cls, bld)
     end
 
-    # process variable group
-    def process_var_accessors(accessors, cls, bld, vGroup)
-      for var in vGroup.vars
-        accessors.add(Accessor.new(var, var.genGet, var.genSet)) if var.genGet || var.genSet
-
-        for group in vGroup.varGroups
-          process_var_accessors(accessors, cls, bld, group)
-        end
-      end
-    end
-
-    def add_accessors(accName, accList, bld)
+    def render_accessors(accName, accList, bld)
       return unless accList.length > 0
 
-      bld.add(accName + ' :')
-      bld.same_line(get_accessor_var_list(accList).join(', :'))
+      bld.render_wrappable_list(accName, get_accessor_var_list(accList), ", ")
     end
 
     def get_accessor_var_list(accList)
       vList = []
 
       for acc in accList
-        vList.push(Utils.instance.get_styled_variable_name(acc.var))
+        vList.push(':' + Utils.instance.get_styled_variable_name(acc.var))
       end
 
       vList
-    end
-
-    # process variable group
-    def process_var_group(cls, bld, vGroup)
-      for var in vGroup.vars
-        case var.elementId
-        when CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
-        when CodeElem::ELEM_COMMENT
-          bld.same_line(Utils.instance.getComment(var))
-        when CodeElem::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-
-        for group in vGroup.varGroups
-          process_var_group(cls, bld, group)
-        end
-      end
-    end
-
-    def process_function(cls, bld, fun)
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
-
-      if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin('ruby', fun.name)
-        if !templ.nil?
-          bld.add(templ.get_definition(cls, ActiveComponent.get(), fun))
-        else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
-        end
-      else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin('ruby', 'method_empty')
-        if !templ.nil?
-          bld.add(templ.get_definition(fun, cfg))
-        else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'ruby
-        end
-      end
     end
   end
 end

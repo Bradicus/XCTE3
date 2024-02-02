@@ -17,7 +17,7 @@ class XCTEPython::MethodWriteUGP < XCTEPlugin
   end
 
   # Returns definition string for this class's UGP write method
-  def get_definition(codeClass, _cfg)
+  def render_function(codeClass, _cfg)
     writeDef = String.new
 
     writeDef << "# Writes this object to a stream\n"

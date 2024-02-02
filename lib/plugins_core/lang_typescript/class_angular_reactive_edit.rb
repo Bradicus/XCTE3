@@ -112,9 +112,9 @@ module XCTETypescript
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
-          bld.add(Utils.instance.getVarDec(optVar))
+          bld.add(Utils.instance.get_var_dec(optVar))
           reqVar = Utils.instance.getOptionsReqVarFor(var)
-          bld.add(Utils.instance.getVarDec(reqVar))
+          bld.add(Utils.instance.get_var_dec(reqVar))
         end
       }))
 

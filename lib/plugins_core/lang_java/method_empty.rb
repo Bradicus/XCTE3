@@ -22,7 +22,7 @@ class XCTEJava::MethodEmpty < XCTEPlugin
   end
 
   # Returns definition string for an empty method
-  def get_definition(fun, bld, _cfg)
+  def render_function(fun, bld, _cfg)
     # Skeleton of comment block
     bld.add('/**')
     bld.add('* ')

@@ -16,7 +16,7 @@ module XCTERuby
     end
 
     def renderGlobalComment(pComponent, bld)
-      get_default_utils().render_block_comment(pComponent.headerComment, bld)
+      get_default_utils().render_block_comment(pComponent.file_comment, bld)
 
       bld.separate
 

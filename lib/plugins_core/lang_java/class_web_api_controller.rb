@@ -81,7 +81,7 @@ module XCTEJava
 
       for inj in cls.injections
         bld.add('@Autowired')
-        bld.add(Utils.instance.getVarDec(inj))
+        bld.add(Utils.instance.get_var_dec(inj))
       end
 
       mapperName = 'mapper'

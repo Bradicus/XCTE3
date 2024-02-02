@@ -53,9 +53,9 @@ module XCTECSharp
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.name == 'id'
-          bld.add(Utils.instance.getVarDec(var))
+          bld.add(Utils.instance.get_var_dec(var))
         else
-          bld.add(Utils.instance.getVarDec(var))
+          bld.add(Utils.instance.get_var_dec(var))
         end
       }))
 

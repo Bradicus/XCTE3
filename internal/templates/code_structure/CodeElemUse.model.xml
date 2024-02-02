@@ -10,7 +10,7 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true" >
-	  <var name="namespace"	type="CodeElemNamespace" />
+	  <var name="namespace"	utype="code elem namespace" />
 	</var_group>		
 	
 </model>

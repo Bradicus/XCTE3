@@ -20,7 +20,7 @@ module XCTEJava
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       @fromParam = load_param(cls, fun, 'fromClass')
       @toParam = load_param(cls, fun, 'toClass')
 

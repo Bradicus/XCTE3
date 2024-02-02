@@ -7,7 +7,7 @@ module XCTERuby
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld, _fun)
+    def render_function(cls, bld, _fun)
       # process class variables
       # Generate code for class variables
       each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

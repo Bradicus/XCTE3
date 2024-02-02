@@ -23,7 +23,7 @@ module XCTETypescript
     def process_dependencies(cls, bld, fun); end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       params = []
 
       for param in fun.parameters.vars

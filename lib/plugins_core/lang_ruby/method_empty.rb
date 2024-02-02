@@ -23,7 +23,7 @@ class XCTERuby::MethodEmpty < XCTEPlugin
   end
 
   # Returns definition string for an empty method
-  def get_definition(fun, cfg)
+  def render_function(fun, cfg)
     eDef = String.new
 
     indent = String.new("    ")

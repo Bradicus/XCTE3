@@ -16,7 +16,7 @@ module XCTEPhp
       @author = "Brad Ottoson"
     end
 
-    def get_definition(codeClass, outCode)
+    def render_function(codeClass, outCode)
 
       outCode.add("/**")
       outCode.add("* Diplays html for this classes data ")

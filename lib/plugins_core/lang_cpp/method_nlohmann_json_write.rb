@@ -44,7 +44,7 @@ module XCTECpp
       end
     end
 
-    def get_definition(cls, bld, codeFun)
+    def render_function(cls, bld, codeFun)
       bld.add('/**')
       bld.add('* Writes this classes primitives to a json element')
       bld.add('*/')

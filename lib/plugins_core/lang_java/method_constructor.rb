@@ -18,7 +18,7 @@ class XCTEJava::MethodConstructor < XCTEPlugin
   end
 
   # Returns definition string for this class's constructor
-  def get_definition(cls, bld, _cfg)
+  def render_function(cls, bld, _cfg)
     bld.add('/**')
     bld.add('* Constructor')
     bld.add('*/')

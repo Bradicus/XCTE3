@@ -140,7 +140,7 @@ module XCTECpp
       # Generate class variables
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        hFile.add(Utils.instance.getVarDec(var)) if var.arrayElemCount > 0
+        hFile.add(Utils.instance.get_var_dec(var)) if var.arrayElemCount > 0
       }))
 
       hFile.add if cls.functions.length > 0
@@ -227,14 +227,14 @@ module XCTECpp
 
             Log.debug('processing template for function ' + fun.name)
             if !templ.nil?
-              templ.get_definition(cls, fun, cppGen) if !fun.isInline
+              templ.render_function(cls, fun, cppGen) if !fun.isInline
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end
           else # Must be empty function
             templ = XCTEPlugin.findMethodPlugin('cpp', 'method_empty')
             if !templ.nil?
-              templ.get_definition(cls, fun, cppGen) if !fun.isInline
+              templ.render_function(cls, fun, cppGen) if !fun.isInline
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end

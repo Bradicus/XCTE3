@@ -24,7 +24,7 @@ class XCTEPhp::MethodGet < XCTEPlugin
   end
 
   # Returns definition string for this class's set method
-  def get_definition(codeClass, cfg)
+  def render_function(codeClass, cfg)
     readDef = String.new
     varArray = Array.new
     codeClass.getAllVarsFor(varArray);

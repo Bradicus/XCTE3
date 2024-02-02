@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem template path">
+
+	<description>
+	Code Element - Use
+	</description>
+
+	<var_group genGet="true" genSet="true" construct="true" >
+	    <var name="element id"	utype="code elem type" default="CodeElemType.ELEM_TEMPLATE_DIRECTORY" />		
+		<var name="path"	type="String" />
+		<var name="dest"	type="String" />
+
+		<var name="languages"	type="String" set="List" />
+		<var name="is static"	type="Boolean" default="true" />
+		<var name="namespace"	utype="code elem namespace" />
+	</var_group>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
+
+		<function name="method_constructor" >
+			<param name="name" type="String" nullable="true" />
+			<param name="path" type="String" nullable="true" />
+			<param name="dest" type="String" nullable="true" />
+			<param name="namespace" utype="code elem namespace" />
+		</function>
+	</gen_class>
+
+</model>

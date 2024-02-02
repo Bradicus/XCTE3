@@ -33,7 +33,7 @@ module XCTECpp
     def process_dependencies(cls, bld, funItem); end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, funItem)
+    def render_function(cls, bld, funItem)
       bld.add('/**')
       bld.add('* Constructor')
       bld.add('*/')

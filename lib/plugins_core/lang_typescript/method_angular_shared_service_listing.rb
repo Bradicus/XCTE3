@@ -12,7 +12,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld, _fun)
+    def render_function(cls, bld, _fun)
       className = Utils.instance.get_styled_class_name(cls.getUName)
       urlName = Utils.instance.getStyledUrlName(cls.getUName)
       dataServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')

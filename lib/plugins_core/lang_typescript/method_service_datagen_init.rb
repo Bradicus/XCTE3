@@ -11,7 +11,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld)
+    def render_function(cls, bld)
       clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
       clsName = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
       clsIntf = Utils.instance.create_var_for(cls, 'standard')

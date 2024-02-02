@@ -20,7 +20,7 @@ module XCTEJava
     end
 
     # Returns declairation string for this class's set method
-    def get_definition(var, bld)
+    def render_function(var, bld)
       return unless var.genGet == true && !var.isPointer
 
       varName = Utils.instance.get_styled_variable_name(var)

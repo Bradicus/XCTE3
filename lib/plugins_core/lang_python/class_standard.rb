@@ -100,14 +100,14 @@ module XCTEPython
           if fun.isTemplate
             templ = XCTEPlugin.findMethodPlugin('python', fun.name)
             if !templ.nil?
-              templ.get_definition(cls, fun, rend)
+              templ.render_function(cls, fun, rend)
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
             end
           else # Must be empty function
             templ = XCTEPlugin.findMethodPlugin('python', 'method_empty')
             if !templ.nil?
-              templ.get_definition(cls, fun, rend)
+              templ.render_function(cls, fun, rend)
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
             end

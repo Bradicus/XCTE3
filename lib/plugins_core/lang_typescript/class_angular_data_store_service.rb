@@ -71,7 +71,7 @@ module XCTETypescript
     def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
         if var.elementId == CodeElem::ELEM_VARIABLE
-          bld.add(Utils.instance.getVarDec(var))
+          bld.add(Utils.instance.get_var_dec(var))
         elsif var.elementId == CodeElem::ELEM_COMMENT
           bld.same_line(Utils.instance.getComment(var))
         elsif var.elementId == CodeElem::ELEM_FORMAT
@@ -91,14 +91,14 @@ module XCTETypescript
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
         if !templ.nil?
-          templ.get_definition(cls, bld)
+          templ.render_function(cls, bld)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end
       else # Must be empty function
         templ = XCTEPlugin.findMethodPlugin('typescript', 'method_empty')
         if !templ.nil?
-          templ.get_definition(fun, cfg)
+          templ.render_function(fun, cfg)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end

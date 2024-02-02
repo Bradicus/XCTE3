@@ -28,7 +28,7 @@ class XCTECpp::MethodDestructor < XCTEPlugin
   end
   
   # Returns definition string for this class's destructor
-  def get_definition(codeClass, cfg)
+  def render_function(codeClass, cfg)
     desDef = String.new
     
     desDef << "/**\n"

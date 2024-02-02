@@ -48,7 +48,7 @@ module XCTETypescript
       bld.start_block('export interface ' + get_class_name(cls))
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        bld.add(Utils.instance.getVarDec(var))
+        bld.add(Utils.instance.get_var_dec(var))
       }))
 
       bld.end_block

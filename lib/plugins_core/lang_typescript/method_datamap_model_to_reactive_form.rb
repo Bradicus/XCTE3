@@ -17,7 +17,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld, _fun)
+    def render_function(cls, bld, _fun)
       clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
 
       bld.start_function('populate(formGroup: FormGroup, src: ' + Utils.instance.get_styled_class_name(cls.model.name) + '): void')

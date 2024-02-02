@@ -20,7 +20,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, funCb)
+    def render_function(cls, bld, funCb)
       bld.add('///')
       bld.add('/// Create new record for this model')
       bld.add('/// If you are not using ambient transactions, trans must be defined!')

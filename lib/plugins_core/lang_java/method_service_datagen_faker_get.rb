@@ -9,7 +9,7 @@ module XCTEJava
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld, _fun)
+    def render_function(cls, bld, _fun)
       # process class variables
 
       className = Utils.instance.get_styled_class_name(cls.model.name)

@@ -18,7 +18,7 @@ class XCTEPython::MethodLogIt < XCTEPlugin
   end
 
   # Returns definition string for this class's logIt method
-  def get_definition(codeClass, _cfg)
+  def render_function(codeClass, _cfg)
     logItString = String.new
     indent = String.new('')
 

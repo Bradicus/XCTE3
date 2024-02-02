@@ -34,7 +34,7 @@ module XCTECpp
     def process_dependencies(cls, bld, funItem); end
 
     # Returns definition string for this class's equality assignment operator
-    def get_definition(cls, bld, _funItem)
+    def render_function(cls, bld, _funItem)
       eqString = String.new
       longArrayFound = false
 

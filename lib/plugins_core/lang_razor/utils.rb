@@ -20,7 +20,7 @@ module XCTERazor
     end
 
     # Returns variable declaration for the specified variable
-    def getVarDec(var, varPrefix = '')
+    def get_var_dec(var, varPrefix = '')
       vDec = String.new
 
       vDec << '[' + CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle) + ']'

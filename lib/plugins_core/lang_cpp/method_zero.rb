@@ -30,7 +30,7 @@ class XCTECpp::MethodZero < XCTEPlugin
   end
 
   # Returns definition string for this class's equality assignment operator
-  def get_definition(codeClass, _cfg)
+  def render_function(codeClass, _cfg)
     eqString = String.new
     seperator = ''
     longArrayFound = false

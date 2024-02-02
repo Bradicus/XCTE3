@@ -91,7 +91,7 @@ module XCTERuby
       bld.add
 
       bld.add('# Returns the code for the content for this function')
-      bld.start_function('def get_definition(cls, bld, fun)')
+      bld.start_function('def render_function(cls, bld, fun)')
 
       bld.add('# process class variables')
 

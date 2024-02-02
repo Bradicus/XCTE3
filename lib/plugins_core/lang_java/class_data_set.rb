@@ -78,7 +78,7 @@ module XCTEJava
 
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        bld.add(Utils.instance.getVarDec(var))
+        bld.add(Utils.instance.get_var_dec(var))
       }))
 
       bld.separate

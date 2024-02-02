@@ -7,7 +7,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld)
+    def render_function(cls, bld)
       # process class variables
       for group in cls.model.groups
         process_var_group(cls, bld, group)

@@ -21,7 +21,7 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
   def get_declaration(_codeClass, bld)
     bld.add('##')
     bld.add('# This class generates a definition for this function')
-    bld.start_class('def get_definition(codeClass, bld)')
+    bld.start_class('def render_function(codeClass, bld)')
     bld.add('varArray = Array.new')
     bld.add('codeClass.getAllVarsFor(varArray)')
     bld.add
@@ -44,7 +44,7 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
   end
 
   # Returns definition string for this class's set method
-  def get_definition(codeClass, bld)
+  def render_function(codeClass, bld)
   end
 end
 

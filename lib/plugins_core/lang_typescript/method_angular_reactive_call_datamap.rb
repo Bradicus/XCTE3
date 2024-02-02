@@ -12,7 +12,7 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def get_definition(cls, bld, _fun)
+    def render_function(cls, bld, _fun)
       itemVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
       clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
       populateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')

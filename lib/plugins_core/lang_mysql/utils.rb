@@ -19,7 +19,7 @@ module XCTEMySql
     end
 
     # Returns variable declaration for the specified variable
-    def self.getVarDec(var)
+    def self.get_var_dec(var)
       vDec = String.new
 
       vDec << '`' << var.name << '` '

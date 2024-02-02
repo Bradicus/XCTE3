@@ -20,7 +20,7 @@ module XCTEJava
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, fun)
+    def render_function(cls, bld, fun)
       get_body(cls, bld, fun)
     end
 

@@ -20,7 +20,7 @@ module XCTETSql
     end
 
     # Returns variable declaration for the specified variable
-    def getVarDec(var, varPrefix)
+    def get_var_dec(var, varPrefix)
       vDec = String.new
       if varPrefix.nil?
         vPrevix = ''

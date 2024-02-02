@@ -23,7 +23,7 @@ class XCTECpp::MethodReadUGP < XCTEPlugin
   end
 
   # Returns definition string for this class's UGP read method
-  def get_definition(codeClass, _cfg)
+  def render_function(codeClass, _cfg)
     readDef = String.new
 
     readDef << "/**\n* Reads this object from a stream\n*/\n"

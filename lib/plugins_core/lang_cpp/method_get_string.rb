@@ -31,7 +31,7 @@ class XCTECpp::MethodGetString < XCTEPlugin
   end
 
   # Returns definition string for this class's logIt method
-  def get_definition(codeClass, _cfg)
+  def render_function(codeClass, _cfg)
     methodString = String.new
 
     methodString << "/**\n* Returns a string representing object data\n"

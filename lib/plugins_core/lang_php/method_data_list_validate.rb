@@ -17,7 +17,7 @@ module XCTEPhp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(listCodeClass, cfg)
+    def render_function(listCodeClass, cfg)
       outCode.indent
 
       listInfo = XCTEPhp::Utils::getDataListInfo(listCodeClass.xmlElement)

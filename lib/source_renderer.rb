@@ -19,6 +19,7 @@ class SourceRenderer
     @blockDelimClose = '}'
     @hangingFunctionStart = false
     @hangingBlockStart = true
+    @max_line_length = 100
 
     # Ruby will use encoding specified when the file was opened, don't need this
     # if (OS.windows?)
@@ -111,7 +112,7 @@ class SourceRenderer
 
   def start_function_paramed(functionName, paramList)
     oneLiner = paramList.join(', ')
-    if oneLiner.length > 100
+    if oneLiner.length > max_line_length
       paramStr = "\n"
 
       (0..paramList.length - 1).each do |i|
@@ -125,6 +126,34 @@ class SourceRenderer
       start_delimed_chunk(functionName + '(' + paramStr + ')', @hangingFunctionStart)
     else
       start_delimed_chunk(functionName + '(' + oneLiner + ')', @hangingFunctionStart)
+    end
+  end
+
+  def render_wrappable_list(line_start, item_list, separator)
+    oneLiner = line_start + item_list.join(separator)
+    if oneLiner.length <= @max_line_length
+      add oneLiner
+    else
+      item_str = line_start + " "
+
+      (0..item_list.length - 1).each do |i|
+        if i < item_list.length - 1
+          test_str = item_str + item_list[i] + separator
+        else
+          test_str = item_str + item_list[i]
+        end
+
+        if (test_str.length > @max_line_length)
+          add item_str
+          item_str = get_indent(2)
+        else
+          item_str = test_str
+        end
+      end
+
+      if item_str.strip.length > 0
+        add item_str
+      end
     end
   end
 

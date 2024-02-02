@@ -19,7 +19,7 @@ class XCTECpp::MethodProcessRow < XCTEPlugin
   end
   
   # Returns definition string for this class's UGP read method
-  def get_definition(codeClass, cfg)
+  def render_function(codeClass, cfg)
     readDef = String.new
     indent = "    ";
         

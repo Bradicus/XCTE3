@@ -102,11 +102,11 @@ module XCTEJava
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
           templ = XCTEPlugin.findMethodPlugin('java', 'method_get')
-          templ.get_definition(var, bld) if !templ.nil?
+          templ.render_function(var, bld) if !templ.nil?
         end
         if var.genSet
           templ = XCTEPlugin.findMethodPlugin('java', 'method_set')
-          templ.get_definition(var, bld) if !templ.nil?
+          templ.render_function(var, bld) if !templ.nil?
         end
       }))
     end

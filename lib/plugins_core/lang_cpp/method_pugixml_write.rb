@@ -37,7 +37,7 @@ module XCTECpp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld, codeFun)
+    def render_function(cls, bld, codeFun)
       bld.add('/**')
       bld.add("* Write this class' data to an xml element")
       bld.add('*/')

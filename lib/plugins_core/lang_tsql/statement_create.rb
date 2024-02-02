@@ -52,7 +52,7 @@ module XCTETSql
           bld.same_line(', ') if !first
           first = false
 
-          varDec = XCTETSql::Utils.instance.getVarDec(var, cls.varPrefix)
+          varDec = XCTETSql::Utils.instance.get_var_dec(var, cls.varPrefix)
           bld.add(varDec) if !varDec.nil? && varDec.strip.length > 0
 
           bld.same_line(" default '" << var.defaultValue << "'") if !var.defaultValue.nil?

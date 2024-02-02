@@ -98,14 +98,14 @@ class XCTEPhp::ClassStandard < XCTEPlugin
         if fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('php', fun.name)
           if !templ.nil?
-            templ.get_definition(codeClass, outCode)
+            templ.render_function(codeClass, outCode)
           else
             # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
           end
         else # Must be empty function
           templ = XCTEPlugin.findMethodPlugin('php', 'method_empty')
           if !templ.nil?
-            templ.get_definition(fun, outCode)
+            templ.render_function(fun, outCode)
           else
             # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
           end

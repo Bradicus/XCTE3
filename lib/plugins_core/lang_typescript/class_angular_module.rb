@@ -157,14 +157,14 @@ module XCTETypescript
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
         if !templ.nil?
-          templ.get_definition(cls, bld)
+          templ.render_function(cls, bld)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end
       else # Must be empty function
         templ = XCTEPlugin.findMethodPlugin('typescript', 'method_empty')
         if !templ.nil?
-          templ.get_definition(fun, cfg)
+          templ.render_function(fun, cfg)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end

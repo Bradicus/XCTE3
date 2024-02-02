@@ -23,7 +23,7 @@ class XCTEPhp::MethodSetEntity < XCTEPlugin
   end
 
   # Returns definition string for this class's set method
-  def get_definition(codeClass, outCode)
+  def render_function(codeClass, outCode)
     varArray = []
     codeClass.getAllVarsFor(varArray)
 

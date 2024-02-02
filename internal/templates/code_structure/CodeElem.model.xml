@@ -9,14 +9,15 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="element id"		type="String" />
-		<var name="name"			type="String" />
-		<var name="display name"		type="String" />
-		<var name="description"		type="String" />
-		<var name="visibility"		type="String" />
-		<var name="parent elem"		utype="code elem" />
-		<var name="data node"		utype="data node" ns="data node" nullable="true" default="null" />
-		<var name="os include"		type="String" set="List" comm="What os's this node is limited to" />		
+		<var name="element id"		utype="code elem type" nullable="true" default="null" />
+		<var name="name"			type="String" nullable = "true" />
+		<var name="display name"	type="String" nullable = "true" />
+		<var name="description"		type="String" nullable = "true" />
+		<var name="visibility"		type="String" nullable = "true" />
+		<var name="parent elem"		utype="code elem"  nullable="true" default="null" />
+		<var name="data node"		utype="data node" ns="data node" nullable="true" default="null"  />		
+		<var name="lang only"		type="String" set="List" comm="What languages this node is limited to" />		
+		<var name="os only"			type="String" set="List" comm="What os's this node is limited to" />		
 	</var_group>
 
 </model>

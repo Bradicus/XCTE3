@@ -18,7 +18,7 @@ class XCTEJava::MethodLogIt < XCTEPlugin
   end
 
   # Returns definition string for this class's logIt method
-  def get_definition(cls, _cfg)
+  def render_function(cls, _cfg)
     logItString = String.new
     indent = String.new('')
 

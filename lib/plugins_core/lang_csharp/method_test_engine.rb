@@ -21,7 +21,7 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, bld)
+    def render_function(cls, bld)
       bld.add('///')
       bld.add('/// Constructor')
       bld.add('///')
@@ -97,7 +97,7 @@ module XCTECSharp
         if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
           if !templ.nil?
-            templ.get_definition(cls, bld, fun)
+            templ.render_function(cls, bld, fun)
           else
             puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
           end

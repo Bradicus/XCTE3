@@ -40,7 +40,7 @@ module XCTECSharp
 
       # Process variables
       each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        XCTECSharp::Utils.instance.getVarDec(var)
+        XCTECSharp::Utils.instance.get_var_dec(var)
       }))
 
       bld.add if cls.functions.length > 0

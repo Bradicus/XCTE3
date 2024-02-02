@@ -205,7 +205,7 @@ module XCTECpp
           bld.indent
         end
 
-        bld.add(Utils.instance.getVarDec(var))
+        bld.add(Utils.instance.get_var_dec(var))
       }))
     end
 
@@ -269,14 +269,14 @@ module XCTECpp
 
             Log.debug('processing template for function ' + fun.name)
             if !templ.nil?
-              templ.get_definition(cls, bld, fun) if !fun.isInline
+              templ.render_function(cls, bld, fun) if !fun.isInline
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end
           else # Must be empty function
             templ = XCTEPlugin.findMethodPlugin('cpp', 'method_empty')
             if !templ.nil?
-              templ.get_definition(cls, bld, fun) if !fun.isInline
+              templ.render_function(cls, bld, fun) if !fun.isInline
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end

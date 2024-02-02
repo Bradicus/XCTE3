@@ -10,7 +10,7 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="element id"	type="string"   default="CodeElem::ELEM_FUNCTION" />
+		<var name="element id"	utype="code elem type"   default="CodeElemType.ELEM_FUNCTION" />
 		<var name="parameters"	utype="code elem var group"/>
 
 		<var name="is const"	type="Boolean"	default="false" />

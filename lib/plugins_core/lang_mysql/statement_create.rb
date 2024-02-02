@@ -37,7 +37,7 @@ module XCTEMySql
         if var.elementId == CodeElem::ELEM_VARIABLE
           codeLine = ", "
 
-          codeLine << XCTESql::Utils::getVarDec(var)
+          codeLine << XCTESql::Utils::get_var_dec(var)
 
           if var.defaultValue != nil
             codeLine << " default '" << var.defaultValue << "'"

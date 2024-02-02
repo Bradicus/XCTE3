@@ -29,7 +29,7 @@ module XCTERuby
     def get_param_dec(var)
       pDec = String.new
 
-      pDec << get_type_name(var.vtype)
+      pDec << get_type_name(var)
 
       pDec << ' ' << var.name
 
@@ -37,7 +37,7 @@ module XCTERuby
     end
 
     # Returns variable declaration for the specified variable
-    def getVarDec(var)
+    def get_var_dec(var)
       vDec = String.new
 
       vDec << '@' if var.isStatic
@@ -51,10 +51,24 @@ module XCTERuby
         if var.vtype == 'String'
           vDec << '"' << var.defaultValue << '"'
         else
-          vDec << var.defaultValue << ''
+          if (var.defaultValue == "null")
+            vDec << 'nil'
+          else
+            vDec << var.defaultValue 
+          end
         end
       elsif var.isList
         vDec << ' = []'
+      elsif var.construct
+        vDec << ' = '
+
+        if var.nullable
+          vDec << 'nil'
+        elsif var.vtype == 'String'
+            vDec << '""'
+        else
+          vDec << '0'
+        end
       end
 
       vDec << "\t# " << var.comment if !var.comment.nil?

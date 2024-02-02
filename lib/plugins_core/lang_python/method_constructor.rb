@@ -19,7 +19,7 @@ module XCTEPython
     end
 
     # Returns definition string for this class's constructor
-    def get_definition(cls, _fun, rend)
+    def render_function(cls, _fun, rend)
       conDef = String.new
 
       rend.add('# Initializer')

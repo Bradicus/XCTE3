@@ -10,15 +10,15 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="language"	type="string" />
-		<var name="template folder"	type="string" />
-		<var name="ouput folder"	type="string" />
-		<var name="file note"	type="string" />
+		<var name="language"	type="string" nullable = "true"/>
+		<var name="template folders"	type="string" set="List" />
+		<var name="ouput folder"	type="string" nullable = "true" />
+		<var name="file note"		type="string" nullable = "true" />
 		<var name="ignore namespace"	type="Boolean" />
 		<var name="build vars"		utype="code elem build var"	set="List" />	
 		<var name="base namespace"	utype="code elem namespace" />
 		<var name="external dependencies"	utype="project elem external dependency" set="List" />		
-		<var name="logger"	type="string"	default="null" />		
+		<var name="logger"	type="string"	nullable = "true" />		
 		<var name="include folders"	type="string"	set="List" />
 		<var name="library folders"	type="string"	set="List" />		
 	</var_group>	

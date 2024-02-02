@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="type mgr" >
+
+	<description>
+	Code Element
+	</description>
+
+	<var_group genGet="true" genSet="true" construct="true">		
+		<var name="types"		    utype="type" set="List" />		
+	</var_group>
+
+	<gen_class type="standard" path="data loading">
+    
+		<empty_function name="in category" >
+			<parameters>
+				<var name="dataVar"	    utype="code elem variable" />
+				<var name="category"	type="String" />
+			</parameters>
+		</empty_function>
+	</gen_class>
+
+</model>
