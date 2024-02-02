@@ -8,11 +8,10 @@
 # This plugin creates a constructor for a class
 
 require 'plugins_core/lang_ruby/utils'
-require 'plugins_core/lang_ruby/class_base'
-require 'plugins_core/lang_ruby/x_c_t_e_ruby.rb'
+require 'plugins_core/lang_ruby/x_c_t_e_ruby'
 
 module XCTERuby
-  class MethodConstructor < ClassBase
+  class MethodConstructor < XCTEPlugin
 
     def initialize
       super 
@@ -25,12 +24,15 @@ module XCTERuby
       cls.getUName
     end
 
+    def process_dependencies(cls, bld, fun)
+    end
+
     # Returns the code for the content for this function
     def render_function(cls, bld, fun)
       param_str = ''
 
       for param in fun.parameters.vars
-        param_str += get_default_utils().get_param_dec(param)
+        param_str += Utils.instance.get_param_dec(param)
       end
 
       bld.start_class("def initialize(" + param_str + ")")

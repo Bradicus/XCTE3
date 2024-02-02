@@ -33,6 +33,7 @@ class XCTEClassBase < XCTEPlugin
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin(cls_spec.language, fun.name)
         if !templ.nil?
+          Log.info "processing fun: " + fun.name
           templ.process_dependencies(cls_spec, bld, fun)
         else
           Log.warn 'ERROR no plugin for function: ' + fun.name + '   language: ' + cls_spec.language

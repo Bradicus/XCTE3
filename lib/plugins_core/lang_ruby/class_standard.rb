@@ -34,46 +34,8 @@ module XCTERuby
       cls.getUName
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      bld = SourceRendererRuby.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
-      render_file_comment(cls, bld)
-      render_body_content(cls, bld)
-
-      srcFiles << bld
-
-      srcFiles
-    end
-
-    def render_file_comment(cls, bld)
-      renderGlobalComment(cls.genCfg, bld)
-
-      bld.separate
-
-      bld.add('#')
-
-      return if cls.description.nil?
-
-      cls.description.each_line do |descLine|
-        bld.add('# ' + descLine.chomp) if descLine.strip.size > 0
-      end
-    end
-
     # Returns the code for the header for this class
     def render_body_content(cls, bld)
-      bld.separate
-
-      for inc in cls.includes
-        bld.add("require '" << inc.path << inc.name << '.' << Utils.instance.get_extension('body'))
-      end
-
-      bld.separate
-
-      render_namespace_starts(cls, bld)
-
       inheritFrom = ''
 
       inheritFrom = ' < ' + Utils.instance.getClassTypeName(cls.baseClasses[0]) if cls.baseClasses.length > 0
@@ -110,7 +72,6 @@ module XCTERuby
       render_functions(cls, bld)
 
       bld.end_class
-      render_namespace_ends(cls, bld)
     end
 
     def render_accessors(accName, accList, bld)

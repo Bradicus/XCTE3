@@ -10,6 +10,7 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
+require 'x_c_t_e_plugin'
 require 'plugins_core/lang_ruby/utils'
 require 'plugins_core/lang_ruby/source_renderer_ruby'
 require 'plugins_core/lang_ruby/x_c_t_e_ruby'

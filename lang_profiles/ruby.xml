@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LANGUAGE_DEFS>
 
-	<STYLING namespace="PASCAL_CASE" variable="UNDERSCORE_LOWER" class="PASCAL_CASE" function="CAMEL_CASE" file="UNDERSCORE_LOWER" />
+	<STYLING 
+		namespace="PASCAL_CASE" 
+		variable="UNDERSCORE_LOWER" 
+		class="PASCAL_CASE" 
+		function="CAMEL_CASE" 
+		file="UNDERSCORE_LOWER"
+		directory="UNDERSCORE_LOWER" />
 
 	<FILE_TYPES>
 		<FILE_TYPE type="body" extension="rb" />
