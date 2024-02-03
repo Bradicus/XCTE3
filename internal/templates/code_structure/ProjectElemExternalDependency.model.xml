@@ -9,8 +9,8 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">		
-		<var name="name"	type="string" />        
-        <var name="version"	type="string" />   
+		<var name="name"	type="String" />        
+        <var name="version"	type="String" />   
 	</var_group>
 
 </model>

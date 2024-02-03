@@ -9,8 +9,8 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="column"  type="string" />
-		<var name="value"	type="string" />
+		<var name="column"  type="String" />
+		<var name="value"	type="String" />
 	</var_group>		
 	
 </model>

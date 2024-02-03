@@ -10,7 +10,7 @@
 
 	<var_group genGet="true" genSet="true" construct="true">
 		<var name="page sizes"	type="Int32" set="List" />
-		<var name="pager"		type="string" default="none" />
+		<var name="pager"		type="String" default="none" />
 		<var name="page size default"	type="Int32"  default="10" />
 	</var_group>		
 	

@@ -11,7 +11,7 @@
 
 	<var_group genGet="true" genSet="true" construct="true">
 		<var name="element id"	utype="code elem type"   default="CodeElemType.ELEM_VAR_GROUP" />
-		<var name="name"	type="string" nullable="true" />
+		<var name="name"	type="String" nullable="true" />
 
 		<var name="vars"	utype="code elem variable" set="List" />
 		<var name="var groups"	utype="code elem var group" set="List" />

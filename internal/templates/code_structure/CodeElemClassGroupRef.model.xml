@@ -10,9 +10,9 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true" >
-	  <var name="name"	type="string" nullable="true" />
-	  <var name="for"	type="string"	nullable="true" />
-	  <var name="featureGroup"	type="string"	nullable="true" />
+	  <var name="name"	type="String" nullable="true" />
+	  <var name="for"	type="String"	nullable="true" />
+	  <var name="featureGroup"	type="String"	nullable="true" />
 	</var_group>		
 	
 </model>

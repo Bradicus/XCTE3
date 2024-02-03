@@ -65,7 +65,9 @@ module XCTERuby
         if var.nullable
           vDec << 'nil'
         elsif var.vtype == 'String'
-            vDec << '""'
+          vDec << '""'
+        elsif !is_primitive(var)
+          vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '()'
         else
           vDec << '0'
         end

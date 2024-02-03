@@ -11,13 +11,13 @@
 
 	<var_group genGet="true" genSet="true" construct="true">
 		<var name="element id"	utype="code elem type"   default="CodeElemType.ELEM_PROJECT" />
-		<var name="build type"	type="string"	 nullable="true" />
-		<var name="template folders"	type="string" nullable="true" />
-		<var name="lang profile paths"	type="string" set="List" />
-		<var name="include folders"	type="string"	set="List" />
-		<var name="library folders"	type="string"	set="List" />
-		<var name="single file"	type="string" nullable="true"	 />
-		<var name="dest"	type="string"	 nullable="true" note="Output directory" />
+		<var name="build type"	type="String"	 nullable="true" />
+		<var name="template folders"	type="String" nullable="true" />
+		<var name="lang profile paths"	type="String" set="List" />
+		<var name="include folders"	type="String"	set="List" />
+		<var name="library folders"	type="String"	set="List" />
+		<var name="single file"	type="String" nullable="true"	 />
+		<var name="dest"	type="String"	 nullable="true" note="Output directory" />
 		<var name="generators"	utype="project elem generator"	set="List" />
 	</var_group>	
 	

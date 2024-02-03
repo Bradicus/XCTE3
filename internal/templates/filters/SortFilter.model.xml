@@ -9,9 +9,9 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
-		<var name="default sort column"		type="string" />
-		<var name="default sort direction"	type="string" />
-		<var name="sortable columns"		type="string" set="List" />
+		<var name="default sort column"		type="String" />
+		<var name="default sort direction"	type="String" />
+		<var name="sortable columns"		type="String" set="List" />
 	</var_group>		
 	
 </model>
