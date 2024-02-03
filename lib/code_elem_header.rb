@@ -7,14 +7,14 @@
 #
 # This class stores data for the header
 
-require 'code_elem.rb'
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemHeader < CodeElem
+  class CodeElemHeader < CodeStructure::CodeElem
      attr_accessor :name, :path, :case
 
     def initialize
-      @elementId = ELEM_HEADER;
+      @element_id = ELEM_HEADER;
       @name = String.new
       @path = String.new
       @case

@@ -40,7 +40,7 @@ class XCTEJava::MethodLogIt < XCTEPlugin
     bld.add('pStream.println(indent + " -- ' << cls.name << ' begin -- ");')
 
     each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if var.isPointer
           if var.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(var)

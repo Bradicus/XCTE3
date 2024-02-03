@@ -8,13 +8,13 @@
 # This class stores information for the parent code structure
 # read in from an xml file
 
-require 'code_elem.rb'
- 
-class CodeElemParent < CodeElem
+require 'code_structure/code_elem'
+
+class CodeElemParent < CodeStructure::CodeElem
   attr_accessor :name, :visibility
   
   def initialize(name, visibility)
-    @elementId = CodeElem::ELEM_PARENT
+    @element_id = CodeStructure::CodeElemTypes::ELEM_PARENT
 
     if name != nil
       @name = name

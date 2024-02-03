@@ -52,6 +52,10 @@ module XCTERuby
 
       bld.start_class("def initialize(" + param_set.join(", ") + ")")
 
+      if cls.baseClasses.length > 0
+        bld.add 'super'
+      end
+
       each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         for param in fun.parameters.vars
           if var.name == param.name

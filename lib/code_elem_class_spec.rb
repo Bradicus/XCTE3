@@ -8,14 +8,14 @@
 # This class stores information for the parent code structure
 # read in from an xml file
 
-require 'code_elem'
 require 'code_elem_include'
 require 'code_elem_use'
 require 'code_elem_namespace'
 require 'filters/data_filter'
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemClassSpec < CodeElem
+  class CodeElemClassSpec < CodeStructure::CodeElem
     attr_accessor :functions, :namespace, :plugName, :interfaceNamespace, :interfacePath,
                   :testNamespace, :testPath, :templateParams,
                   :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
@@ -23,9 +23,10 @@ module CodeStructure
                   :genCfg, :injections, :dataClass, :featureGroup, :variant, :class_group_ref, :actions, :data_class_for
 
     def initialize(parentElem, model, pComp, _isStatic)
-      super(parentElem)
+      
+    super(CodeStructure::CodeElemTypes::ELEM_CLASS_GEN, parentElem)
 
-      @elementId = CodeElem::ELEM_CLASS_GEN
+      @element_id = CodeStructure::CodeElemTypes::ELEM_CLASS_GEN
       @name = nil
       @className = nil # Override name for generated class
 
@@ -136,6 +137,14 @@ module CodeStructure
       end
 
       return nil
+    end
+
+    def get_function(funName)      
+      Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun| 
+        if fun.name == funName
+          return fun
+        end
+      }));
     end
   end
 end

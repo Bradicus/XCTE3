@@ -17,7 +17,7 @@ module XCTETypescript
     # process variable group
     def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if !var.isStatic # Ignore static variables
             if Utils.instance.is_primitive(var)
               if var.arrayElemCount.to_i > 0 # Array of primitives)
@@ -35,9 +35,9 @@ module XCTETypescript
               bld.add(var.name + ' = ' + 'src' + codeClass.name + '.' + var.name)
             end
           end
-        elsif var.elementId == CodeElem::ELEM_COMMENT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           bld.add(XCTECpp::Utils.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end
       end

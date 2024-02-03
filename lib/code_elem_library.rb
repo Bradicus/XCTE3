@@ -12,7 +12,7 @@ module CodeStructure
      attr_accessor :name, :path
 
     def initialize(name, path)
-      @elementId = CodeElem::ELEM_LIBRARY;
+      @element_id = CodeStructure::CodeElemTypes::ELEM_LIBRARY;
 
       if name != nil
         @name = name

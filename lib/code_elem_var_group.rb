@@ -8,16 +8,15 @@
 # This class stores information for the variable group code structure
 # read in from an xml file
 
-require 'code_elem'
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemVarGroup < CodeElem
+  class CodeElemVarGroup < CodeStructure::CodeElem
     attr_accessor :name, :vars, :varGroups
 
     def initialize
-      super
+      super(CodeStructure::CodeElemTypes::ELEM_VAR_GROUP, nil)
 
-      @elementId = CodeElem::ELEM_VAR_GROUP
       @name = String.new
 
       @vars = []

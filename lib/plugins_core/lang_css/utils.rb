@@ -142,7 +142,7 @@ module XCTECss
       bld.indent
 
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if Utils.instance.is_primitive(var)
             if var.isList
               bld.add(Utils.instance.get_styled_variable_name(var) + ": [''],")

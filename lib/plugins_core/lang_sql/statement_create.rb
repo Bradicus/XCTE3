@@ -34,7 +34,7 @@ module XCTESql
       cls.getAllVarsFor(varArray);
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           codeLine = ", "
 
           codeLine << XCTESql::Utils::get_var_dec(var)

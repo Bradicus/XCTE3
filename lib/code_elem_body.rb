@@ -8,14 +8,16 @@
 # This class stores information on the body file component of
 # a project
 
+require 'code_structure/code_elem'
+
 module CodeStructure
-  class CodeElemBody < CodeElem
+  class CodeElemBody < CodeStructure::CodeElem
     attr_accessor :name, :path, :case
 
     def initialize
       super
 
-      @elementId = CodeElem::ELEM_BODY
+      @element_id = CodeStructure::CodeElemTypes::ELEM_BODY
     end
 
     def getObjFileName

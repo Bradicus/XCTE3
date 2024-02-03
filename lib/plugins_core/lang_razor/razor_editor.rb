@@ -57,7 +57,7 @@ module XCTERazor
     def processVarGroup(cls, bld, varGroup)
       for grp in varGroup
         for var in grp.vars
-          if var.elementId == CodeElem::ELEM_VARIABLE
+          if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
             if var.vtype == 'String'
               bld.add('<input type="text" name="' +
                       XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + '" value="model.' +

@@ -12,7 +12,7 @@
 
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/class_base'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 

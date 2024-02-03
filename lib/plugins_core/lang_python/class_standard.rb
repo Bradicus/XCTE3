@@ -12,7 +12,7 @@
 
 require 'plugins_core/lang_python/utils'
 require 'plugins_core/lang_python/x_c_t_e_python'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'code_elem_model'
 require 'lang_file'
@@ -87,7 +87,7 @@ module XCTEPython
       cls.model.getAllVarsFor(varArray)
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.isStatic == true
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic == true
           rend.add(Utils.instance.get_styled_variable_name(var))
         end
       end
@@ -96,7 +96,7 @@ module XCTEPython
 
       # Generate code for functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin.findMethodPlugin('python', fun.name)
             if !templ.nil?

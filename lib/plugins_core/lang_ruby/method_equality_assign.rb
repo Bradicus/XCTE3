@@ -37,7 +37,7 @@ class XCTERuby::MethodEqualityAssign < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !var.isStatic # Ignore static variables
           if XCTECpp::Utils.is_primitive(var)
             if var.arrayElemCount.to_i > 0	# Array of primitives
@@ -60,9 +60,9 @@ class XCTERuby::MethodEqualityAssign < XCTEPlugin
           end
         end
 
-      elsif var.elementId == CodeElem::ELEM_COMMENT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         eqString << '    ' << XCTECpp::Utils.getComment(var)
-      elsif var.elementId == CodeElem::ELEM_FORMAT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         eqString << var.formatText
       end
     end

@@ -20,7 +20,7 @@ module DataLoading
         cgRef.name = AttributeLoader.init(xmlNode).names("name").get()
         cgRef.variant = AttributeLoader.init(xmlNode).names("variant").get()
         cgRef.featureGroup = AttributeLoader.init(xmlNode).names("feature_group").get()
-        cgRef.xmlElement = xmlNode
+        cgRef.data_node = xmlNode
       end
     end
   end

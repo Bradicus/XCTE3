@@ -12,7 +12,7 @@
 
 require 'plugins_core/lang_php/utils'
 require 'plugins_core/lang_php/x_c_t_e_php'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 
@@ -92,7 +92,7 @@ class XCTEPhp::ClassModel < XCTEPlugin
 
     # Generate code for functions
     for fun in codeClass.functionSection
-      if fun.elementId == CodeElem::ELEM_FUNCTION
+      if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
         if fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('php', fun.name)
           if !templ.nil?

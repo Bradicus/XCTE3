@@ -8,13 +8,13 @@
 # This class stores information for the include code structure
 # read in from an xml file
  
-require 'code_elem.rb'
+require 'code_structure/code_elem'
 
-class CodeElemInclude < CodeElem
+class CodeElemInclude < CodeStructure::CodeElem
   attr_accessor :itype, :path
   
   def initialize(path, name = nil, itype = '"')
-    @elementId = CodeElem::ELEM_INCLUDE
+    super(CodeStructure::CodeElemTypes::ELEM_INCLUDE, nil)
 
     if name != nil
       @name = name

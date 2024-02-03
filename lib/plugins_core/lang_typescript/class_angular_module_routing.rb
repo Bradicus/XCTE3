@@ -154,11 +154,11 @@ module XCTETypescript
     # process variable group
     def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           bld.add(get_var_dec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           bld.same_line(getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end
         for group in vGroup.varGroups
@@ -170,7 +170,7 @@ module XCTETypescript
     # process variable group
     def process_var_group_imports(_cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
           editClass = varCls.model.findClassModel('class_angular_reactive_edit')
           bld.iadd(get_styled_class_name(editClass.model.name + ' module') + ',') if !editClass.nil?
@@ -181,7 +181,7 @@ module XCTETypescript
     def process_function(cls, bld, fun)
       bld.separate
 
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
@@ -202,7 +202,7 @@ module XCTETypescript
 
     def process_var_dependencies(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
           fPath = get_styled_file_name(var.getUType + '')
           cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))

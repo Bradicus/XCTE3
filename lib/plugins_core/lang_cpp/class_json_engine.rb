@@ -10,7 +10,7 @@
 require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/method_empty'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'

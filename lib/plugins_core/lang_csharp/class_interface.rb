@@ -5,7 +5,7 @@
 
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/source_renderer_csharp'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -53,7 +53,7 @@ module XCTECSharp
     def render_body_content(cls, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)

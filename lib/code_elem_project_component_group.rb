@@ -7,14 +7,14 @@
 #
 # This class stores data for the project components
 
-require "code_elem.rb"
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemProjectComponentGroup < CodeElem
+  class CodeElemProjectComponentGroup < CodeStructure::CodeElem
     attr_accessor :name, :components, :subGroups, :file_comment
 
     def initialize
-      @elementId = ELEM_PROJECT_COMPONENT_GROUP
+      super(CodeStructure::CodeElemTypes::ELEM_PROJECT_COMPONENT_GROUP, nil)
       @name = ""
       @file_comment
 

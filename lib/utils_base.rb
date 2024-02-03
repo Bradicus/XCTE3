@@ -110,11 +110,11 @@ class UtilsBase
   # Run a function on each variable in a variable group and subgroups
   def each_var_grp(vGroup, bld, separateGroups, varFun, bgCb, agCb)
     for var in vGroup.vars
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         varFun.call(var)
-      elsif !bld.nil? && var.elementId == CodeElem::ELEM_COMMENT
+      elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         bld.same_line(getComment(var))
-      elsif !bld.nil? && var.elementId == CodeElem::ELEM_FORMAT
+      elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         bld.add(var.formatText)
       end
     end
@@ -130,21 +130,21 @@ class UtilsBase
   # Run a function on each function in a class
   def each_fun(params)
     for clsFun in params.cls.functions
-      if clsFun.elementId == CodeElem::ELEM_FUNCTION
+      if clsFun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
         params.bld.separate
 
         params.funCb.call(clsFun) if clsFun.isTemplate
-      elsif funItem.elementId == CodeElem::ELEM_COMMENT
+      elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         bld.add(Utils.instance.getComment(funItem))
-      elsif funItem.elementId == CodeElem::ELEM_FORMAT
+      elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         if funItem.formatText == "\n"
           bld.add
         else
           bld.same_line(funItem.formatText)
         end
-      elsif funItem.elementId == CodeElem::ELEM_COMMENT
+      elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         bld.add(getComment(funItem))
-      elsif funItem.elementId == CodeElem::ELEM_FORMAT
+      elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         if funItem.formatText == "\n"
           bld.add
         else

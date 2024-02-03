@@ -35,7 +35,7 @@ module XCTEPhp
       varNum = 0
 
       #      for var in codeClass.variableSection
-      #        if var.elementId == CodeElem::ELEM_VARIABLE
+      #        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
       #
       #            if XCTEPhp::Utils::is_primitive(var)
       #              conDef << "            case " << varNum.to_s << ": $this->dataSet['" << var.name << "'] = "

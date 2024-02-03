@@ -25,7 +25,7 @@ module DataLoading
       end
       project.buildType = xmlDoc.root.attributes['build_type']
 
-      project.xmlElement = xmlDoc.root      
+      project.data_node = xmlDoc.root      
 
       xmlDoc.elements.each('project') do |prj|
         prj.elements.each('file_comment') do |desc|

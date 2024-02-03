@@ -33,7 +33,7 @@ class XCTERuby::MethodOperatorEqualTo < XCTEPlugin
     eqString << "    return(\n"
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0)	# Array of primitives
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0)	# Array of primitives
         eqString << '        ' << seperator << '@' << var.name << ' == '
         eqString << 'src' << codeClass.name << '.'
         eqString << var.name << "\n"

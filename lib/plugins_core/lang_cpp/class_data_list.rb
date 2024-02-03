@@ -10,7 +10,7 @@
 require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/method_empty'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
-require 'code_elem'
+
 require 'code_elem_model'
 require 'code_elem_var_group'
 require 'code_elem_parent'
@@ -36,7 +36,7 @@ module XCTECpp
       # Use the standard class once we've added the necessary components
       stdClass = XCTEPlugin.findClassPlugin('cpp', 'standard')
 
-      listInfo = XCTECpp::Utils.getDataListInfo(cls.xmlElement)
+      listInfo = XCTECpp::Utils.getDataListInfo(cls.data_node)
 
       #      puts "Var name is: " << listInfo['varClassName']
       #      puts "Template type is: " << listInfo['cppTemplateType']

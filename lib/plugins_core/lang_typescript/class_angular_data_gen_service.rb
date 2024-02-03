@@ -109,7 +109,7 @@ module XCTETypescript
     def process_function(cls, bld, fun)
       bld.separate
 
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)

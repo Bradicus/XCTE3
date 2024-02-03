@@ -5,7 +5,7 @@
 #
 # This class stores information for the uses that get added to a class file
  
-require 'code_elem.rb'
+require 'code_structure/code_elem'
 
 class CodeElemUse
     attr_accessor :namespace

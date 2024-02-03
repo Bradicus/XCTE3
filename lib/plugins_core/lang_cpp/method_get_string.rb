@@ -50,7 +50,7 @@ class XCTECpp::MethodGetString < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
-      if varSec.elementId == CodeElem::ELEM_VARIABLE
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !varSec.isPointer
           if varSec.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(varSec)
@@ -76,9 +76,9 @@ class XCTECpp::MethodGetString < XCTEPlugin
         else
           methodString << '    // outStr << ' << varSec.name << ";\n"
         end
-      elsif varSec.elementId == CodeElem::ELEM_COMMENT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         methodString << '    ' << XCTECpp::Utils.getComment(varSec)
-      elsif varSec.elementId == CodeElem::ELEM_FORMAT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         methodString << varSec.formatText
       end
     end

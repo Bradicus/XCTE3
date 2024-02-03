@@ -9,7 +9,7 @@
 
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/class_base'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'code_elem_model'
 require 'lang_file'

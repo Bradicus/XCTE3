@@ -5,8 +5,10 @@
 
 #
 
+require 'code_structure/code_elem'
+
 module CodeStructure
-  class CodeElemClassGroupRef < CodeElem
+  class CodeElemClassGroupRef < CodeStructure::CodeElem
     attr_accessor :name, :variant, :featureGroup
 
     @name = nil

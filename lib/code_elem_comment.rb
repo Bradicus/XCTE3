@@ -7,12 +7,13 @@
 #
 # This class stores information for the comment code structure
 # read in from an xml file
+require 'code_structure/code_elem'
 
-class CodeElemComment < CodeElem
+class CodeElemComment < CodeStructure::CodeElem
   attr_accessor :text
   
   def initialize(text)
-    @elementId = CodeElem::ELEM_COMMENT
+    @element_id = CodeStructure::CodeElemTypes::ELEM_COMMENT
     @text = text
   end
 end

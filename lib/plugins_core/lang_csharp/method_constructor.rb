@@ -44,7 +44,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
     cls.model.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.defaultValue.nil?
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.defaultValue.nil?
         bld.add(var.name << ' = ')
 
         if var.vtype == 'String'

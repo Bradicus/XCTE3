@@ -8,17 +8,16 @@
 # read in from an xml file
 
 require 'code_elem_var_group'
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemFunction < CodeElem
+  class CodeElemFunction < CodeStructure::CodeElem
     attr_accessor :name, :description, :visibility, :parameters, :isConst,
                   :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue,
                   :annotations, :role
 
     def initialize(parentElem)
-      super(parentElem)
-
-      @elementId = CodeElem::ELEM_FUNCTION
+      super(CodeStructure::CodeElemTypes::ELEM_FUNCTION, parentElem)
 
       @parameters = CodeElemVarGroup.new # Array of CodeElemVariable
       @isConst = false

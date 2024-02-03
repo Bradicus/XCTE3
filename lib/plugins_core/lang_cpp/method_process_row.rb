@@ -37,7 +37,7 @@ class XCTECpp::MethodProcessRow < XCTEPlugin
     puts "Processing process_row method with var count: " + varArray.length.to_s
     
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !var.isPointer && var.arrayElemCount == 0 # Not an array
            readDef << indent << "std::string " << var.name << "Field;\n"
         end
@@ -47,7 +47,7 @@ class XCTECpp::MethodProcessRow < XCTEPlugin
     readDef << "\n"
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !var.isPointer && var.arrayElemCount == 0 # Not an array
           readDef << indent << "errCheck = table.getString(row, \"" << var.name << "\", " << var.name << "Field);\n"
 
@@ -63,9 +63,9 @@ class XCTECpp::MethodProcessRow < XCTEPlugin
           end
         end
             
-      elsif var.elementId == CodeElem::ELEM_COMMENT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         readDef << indent << XCTECpp::Utils::getComment(var)
-      elsif var.elementId == CodeElem::ELEM_FORMAT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         readDef << var.formatText
       end
     end

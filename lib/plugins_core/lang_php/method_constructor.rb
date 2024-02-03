@@ -33,7 +33,7 @@ class XCTEPhp::MethodConstructor < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
 
         outCode.iadd(1, "$this->dataSet['" << var.name << "'] = ")
 
@@ -57,7 +57,7 @@ class XCTEPhp::MethodConstructor < XCTEPlugin
 
         outCode.add
 
-      elsif var.elementId == CodeElem::ELEM_FORMAT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         outCode.same_line(var.formatText)
       end
     end

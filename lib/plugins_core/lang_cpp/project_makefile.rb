@@ -9,7 +9,7 @@
 
 require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
-require 'code_elem'
+
 require 'code_elem_project'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -38,7 +38,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     mFile.lfContents << genIncludePath(prj)
     mFile.lfContents << genFlags(prj)
 
-    if prj.buildType == CodeElem::ELEM_LIBRARY
+    if prj.buildType == CodeStructure::CodeElemTypes::ELEM_LIBRARY
       mFile.lfContents << 'lib' << prj.name << ".a: $(OBJS)\n"
       mFile.lfContents << "\t" << 'ar cr $(LIBPATH)lib' << prj.name << ".a $(OBJS)\n\n"
     else # Must be an application
@@ -60,7 +60,7 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
     listString = String.new
 
     for comp in grpNode.components
-      if comp.elementId == CodeElem::ELEM_CLASS || comp.elementId == CodeElem::ELEM_BODY
+      if comp.element_id == CodeStructure::CodeElemTypes::ELEM_CLASS || comp.element_id == CodeStructure::CodeElemTypes::ELEM_BODY
         listString << comp.getObjFileName() << ' '
       end
     end
@@ -148,10 +148,10 @@ class XCTECpp::ProjectMakefile < XCTEPlugin
         filePath = ''
       end
 
-      if comp.elementId == CodeElem::ELEM_CLASS
+      if comp.element_id == CodeStructure::CodeElemTypes::ELEM_CLASS
         blString << comp.getObjFileName() << ': ' << filePath << comp.getCppFileName() << "\n"
         blString << "\tg++ $(FLAGS) $(INCLUDES) -c " << filePath << comp.getCppFileName() << "\n\n"
-      elsif comp.elementId == CodeElem::ELEM_BODY
+      elsif comp.element_id == CodeStructure::CodeElemTypes::ELEM_BODY
         blString << comp.getObjFileName() << ': ' << filePath << comp.getCppFileName() << "\n"
         blString << "\tg++ $(FLAGS) $(INCLUDES) -c " << filePath << comp.getCppFileName() << "\n\n"
       end

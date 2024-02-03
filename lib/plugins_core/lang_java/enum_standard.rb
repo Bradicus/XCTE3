@@ -11,7 +11,7 @@
 # class generator for example
 
 require 'plugins_core/lang_csharp/utils'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -69,13 +69,13 @@ module XCTEJava
 
       for i in 0..(varArray.length - 1)
         var = varArray[i]
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           hFile.add(Utils.instance.get_styled_enum_name(var.name))
           hFile.same_line(' = ' + var.defaultValue) if !var.defaultValue.nil?
           hFile.same_line(',') if i != varArray.length - 1
-        elsif var.elementId == CodeElem::ELEM_COMMENT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           hFile.add(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           hFile.add(var.formatText)
         end
       end

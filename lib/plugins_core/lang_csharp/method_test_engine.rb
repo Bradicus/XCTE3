@@ -64,7 +64,7 @@ module XCTECSharp
 
       # # Generate class variables
       # for var in varArray
-      #   if var.elementId == CodeElem::ELEM_VARIABLE
+      #   if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
       #       if var.vtype == 'String'
       #         bld.add('obj.'+ Utils.instance.get_styled_variable_name(var) + ' = "TS";')
       #       elsif var.vtype.start_with?('Int')
@@ -94,7 +94,7 @@ module XCTECSharp
 
       # Generate code for functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
           if !templ.nil?
             templ.render_function(cls, bld, fun)

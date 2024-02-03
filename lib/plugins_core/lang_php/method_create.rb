@@ -45,7 +45,7 @@ class XCTEPhp::MethodGet < XCTEPlugin
     
 
     for varSec in varArray
-      if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == "true"
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == "true"
         if !varSec.isPointer
           if varSec.arrayElemCount == 0
               readDef << "( $new" << XCTEPhp::Utils::getCapitalizedFirst(varSec.name)
@@ -53,9 +53,9 @@ class XCTEPhp::MethodGet < XCTEPlugin
           end
         end
 
-      elsif varSec.elementId == CodeElem::ELEM_COMMENT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         readDef << "    " << XCTEPhp::Utils::getComment(varSec)
-      elsif varSec.elementId == CodeElem::ELEM_FORMAT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         readDef << varSec.formatText
       end
     end

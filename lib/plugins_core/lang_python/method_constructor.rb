@@ -30,7 +30,7 @@ module XCTEPython
       cls.model.getAllVarsFor(varArray)
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.isStatic != true
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic != true
           if !var.defaultValue.nil?
             rend.add('self.' << Utils.instance.get_styled_variable_name(var) + ' = ')
 

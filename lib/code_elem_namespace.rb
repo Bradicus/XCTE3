@@ -7,8 +7,10 @@
 #
 # This class stores namespace information
 
+require 'code_structure/code_elem'
+
 module CodeStructure
-  class CodeElemNamespace < CodeElem
+  class CodeElemNamespace < CodeStructure::CodeElem
     attr_accessor :nsList
 
     def initialize(nsString = "")

@@ -51,7 +51,7 @@ class XCTEPhp::MethodGenPDOSQLSelect < XCTEPlugin
     setVarArray.shift;
     
     for var in setVarArray
-      if var.elementId == CodeElem::ELEM_VARIABLE        
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE        
         outCode.add("," << "            '" << var.name << "' => $row->" << var.name)
       end
     end

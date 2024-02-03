@@ -43,7 +43,7 @@ module XCTECpp
     def render_fun_dependencies(cls, bld)
       # Get dependencies for functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('cpp', fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)

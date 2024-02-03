@@ -30,7 +30,7 @@ module DataLoading
       depthStack = []
       model.name = AttributeLoader.init(xmlDoc.root).names('name').get
       model.featureGroup = AttributeLoader.init(xmlDoc.root).names('feature_group').get
-      model.xmlElement = xmlDoc.root
+      model.data_node = xmlDoc.root
 
       xmlDoc.root.elements.each('derived') do |derived|
         model.derivedFrom = AttributeLoader.init(xmlDoc.root).names('from').get
@@ -59,11 +59,7 @@ module DataLoading
         cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
         cls.loadAttributes(genCXML)
 
-        if cls.langInclude.length > 0
-          ClassLoader.loadClass(pComponent, cls, genCXML, modelManager) if cls.langInclude.include?(pComponent.language)
-        else
-          ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
-        end
+        ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
       end
 
       # Load class groups
@@ -73,7 +69,7 @@ module DataLoading
         ClassGroupRefLoader.loadClassGroupRef(cgRef, nodeXml)
 
         if !cGroup.nil?
-          cGroup.xmlElement.elements.each('gen_class') do |genCXML|
+          cGroup.data_node.elements.each('gen_class') do |genCXML|
             cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
             cls.class_group_ref = cgRef
             cls.loadAttributes(genCXML)

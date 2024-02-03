@@ -8,11 +8,13 @@
 # This class stores information for the format code structure
 # read in from an xml file
 
-class CodeElemFormat < CodeElem
+require 'code_structure/code_elem'
+
+class CodeElemFormat < CodeStructure::CodeElem
   attr_accessor :formatText
   
   def initialize(formatText)
-    @elementId = CodeElem::ELEM_FORMAT
+    @element_id = CodeStructure::CodeElemTypes::ELEM_FORMAT
     
     @formatText = formatText
   end

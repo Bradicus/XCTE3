@@ -134,7 +134,7 @@ module XCTEHtml
     def load_search_names(cls)
       names = []
 
-      cls.xmlElement.elements.each('search_by') do |xmlNode|
+      cls.data_node.elements.each('search_by') do |xmlNode|
         names.push(xmlNode.attributes['name'])
       end
 

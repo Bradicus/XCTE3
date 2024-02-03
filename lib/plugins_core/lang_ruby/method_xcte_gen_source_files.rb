@@ -27,16 +27,16 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
     bld.add
 
     bld.start_block('for varSec in varArray')
-    bld.start_block('if varSec.elementId == CodeElem::ELEM_VARIABLE')
+    bld.start_block('if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE')
     bld.start_block('if !varSec.isPointer')
     bld.start_block('if varSec.arrayElemCount == 0')
     bld.end_block
     bld.end_block
     bld.end_block
-    bld.start_block('elsif varSec.elementId == CodeElem::ELEM_COMMENT')
+    bld.start_block('elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT')
     bld.add('bld.add(XCTERuby::Utils::getComment(varSec))')
     bld.unindent
-    bld.start_block('elsif varSec.elementId == CodeElem::ELEM_COMMENT')
+    bld.start_block('elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT')
     bld.add('bld.same_line(varSec.formatText)')
     bld.end_block
     bld.end_block

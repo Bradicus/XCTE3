@@ -27,13 +27,8 @@ module XCTERuby
 
     # Get a parameter declaration for a method parameter
     def get_param_dec(var)
-      pDec = String.new
 
-      pDec << get_type_name(var)
-
-      pDec << ' ' << var.name
-
-      return pDec
+      return get_styled_variable_name(var)
     end
 
     # Returns variable declaration for the specified variable

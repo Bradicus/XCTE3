@@ -9,7 +9,7 @@
 
 require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
-require 'code_elem'
+
 require 'code_elem_project'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -45,7 +45,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     mFile.lfContents << genFlags(prj)
     mFile.lfContents << "\n"
 
-    if prj.buildType == CodeElem::ELEM_LIBRARY
+    if prj.buildType == CodeStructure::CodeElemTypes::ELEM_LIBRARY
       mFile.lfContents << "SET(LIBRARY_OUTPUT_PATH ../linuxlib)\n"
       mFile.lfContents << 'ADD_LIBRARY(' << prj.name << " STATIC ${SRC_BODY_FILES})\n"
     else
@@ -67,7 +67,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     end
 
     for comp in grpNode.components
-      if comp.elementId == CodeElem::ELEM_CLASS || comp.elementId == CodeElem::ELEM_BODY
+      if comp.element_id == CodeStructure::CodeElemTypes::ELEM_CLASS || comp.element_id == CodeStructure::CodeElemTypes::ELEM_BODY
         listString << "\t" << filePath << comp.getCppFileName() << "\n"
       end
     end
@@ -91,7 +91,7 @@ class XCTECpp::ProjectCMakeLists < XCTEPlugin
     end
 
     for comp in grpNode.components
-      if comp.elementId == CodeElem::ELEM_CLASS || comp.elementId == CodeElem::ELEM_HEADER
+      if comp.element_id == CodeStructure::CodeElemTypes::ELEM_CLASS || comp.element_id == CodeStructure::CodeElemTypes::ELEM_HEADER
         listString << "\t" << filePath << comp.getHeaderFileName() << "\n"
       end
     end

@@ -37,7 +37,7 @@ class XCTERuby::MethodLogIt < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if var.isPointer
           if var.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(var)
@@ -66,9 +66,9 @@ class XCTERuby::MethodLogIt < XCTEPlugin
         else
           logItString << indent << '    pStream << indent << @' << var.name << "\n"
         end
-      elsif var.elementId == CodeElem::ELEM_COMMENT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         logItString << indent << '    ' << XCTERuby::Utils.getComment(var)
-      elsif var.elementId == CodeElem::ELEM_FORMAT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         logItString << indent << var.formatText
       end
     end

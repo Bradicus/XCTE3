@@ -180,7 +180,7 @@ module XCTEJava
 
     def process_var_dependencies(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
           fPath = get_styled_file_name(var.getUType + '')
           cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))

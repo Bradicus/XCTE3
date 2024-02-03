@@ -41,7 +41,7 @@ module DataLoading
             cg = ClassGroups.get(cgName)
 
             if !cg.nil?
-              cg.xmlElement.elements.each('gen_class') do |genCXML|
+              cg.data_node.elements.each('gen_class') do |genCXML|
                 loadClassGenNode(dm, genCXML, pComponent, fGroup)
               end
             else

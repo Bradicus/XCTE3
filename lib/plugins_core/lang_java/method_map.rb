@@ -24,8 +24,8 @@ module XCTEJava
       @fromParam = load_param(cls, fun, 'fromClass')
       @toParam = load_param(cls, fun, 'toClass')
 
-      @genReverse = (fun.xmlElement.attributes['gen_reverse'] == 'true')
-      @genListMap = (fun.xmlElement.attributes['gen_list_map'] == 'true')
+      @genReverse = (fun.data_node.attributes['gen_reverse'] == 'true')
+      @genListMap = (fun.data_node.attributes['gen_list_map'] == 'true')
 
       if @fromParam.cls.nil? || @toParam.cls.nil?
         Log.missingClassRef(@fromParam.ref) if @fromParam.cls.nil?
@@ -42,7 +42,7 @@ module XCTEJava
     def load_param(cls, fun, elemName)
       param = MapParam.new
 
-      param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.xmlElement.elements[elemName], nil, cls.genCfg)
+      param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.data_node.elements[elemName], nil, cls.genCfg)
       param.cls = ClassModelManager.findClass(param.ref.model_name, param.ref.plugin_name)
       param.name = Utils.instance.get_styled_class_name(param.cls.getUName)
 

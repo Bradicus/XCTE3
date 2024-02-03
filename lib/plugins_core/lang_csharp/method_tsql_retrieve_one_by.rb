@@ -111,7 +111,7 @@ module XCTECSharp
     # process variable group
     def process_var_group_sql(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && Utils.instance.is_primitive(var)
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && Utils.instance.is_primitive(var)
           return
           '[' +
             XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) +

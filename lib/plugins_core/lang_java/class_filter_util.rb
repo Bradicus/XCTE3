@@ -13,7 +13,7 @@
 require 'plugins_core/lang_java/utils'
 require 'plugins_core/lang_java/x_c_t_e_java'
 require 'plugins_core/lang_java/class_base'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'code_elem_model'
 require 'lang_file'

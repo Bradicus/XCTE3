@@ -51,7 +51,7 @@ class XCTECpp::MethodOperatorMinusEquals < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !var.isStatic # Ignore static variables
           if var.arrayElemCount > 0	# Array of objects
             if var.arrayElemCount > 10
@@ -78,9 +78,9 @@ class XCTECpp::MethodOperatorMinusEquals < XCTEPlugin
           end
         end
 
-      elsif var.elementId == CodeElem::ELEM_COMMENT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         eqString << '    ' << XCTECpp::Utils.getComment(var)
-      elsif var.elementId == CodeElem::ELEM_FORMAT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         eqString << var.formatText
       end
     end

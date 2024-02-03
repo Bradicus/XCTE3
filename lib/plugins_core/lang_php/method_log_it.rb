@@ -45,7 +45,7 @@ class XCTEPhp::MethodLogIt < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
-      if varSec.elementId == CodeElem::ELEM_VARIABLE
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !varSec.isPointer
           if varSec.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(varSec)
@@ -73,9 +73,9 @@ class XCTEPhp::MethodLogIt < XCTEPlugin
         else
           # outCode.add("pStream.println(indent + " << varSec.name << ");")
         end
-      elsif varSec.elementId == CodeElem::ELEM_COMMENT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         outCode.add(XCTEPhp::Utils.getComment(varSec))
-      elsif varSec.elementId == CodeElem::ELEM_FORMAT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         outCode.add(varSec.formatText)
       end
     end

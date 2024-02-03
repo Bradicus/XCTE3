@@ -2,6 +2,8 @@
 # Template element
 #
 
+require 'code_structure/code_elem'
+
 module CodeStructure
   class CodeElemTemplate
     attr_accessor :name, :pointerTpl, :isCollection

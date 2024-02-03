@@ -6,18 +6,18 @@
 ## This class stores information for the parent code structure
 # read in from an xml file
 
-require 'code_elem'
 require 'code_elem_include'
 require 'code_elem_use'
 require 'code_elem_namespace'
 require 'managers/name_compare'
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemClassRef < CodeElem
+  class CodeElemClassRef < CodeStructure::CodeElem
     attr_accessor :namespaces, :model_name, :plugin_name
 
     def initialize(parentElem, _pComp)
-      super(parentElem)
+      super(nil, parentElem)
 
       @namespaces = []
       @model_name = nil

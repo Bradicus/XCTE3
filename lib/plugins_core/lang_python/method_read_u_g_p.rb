@@ -37,7 +37,7 @@ class XCTEPython::MethodReadUGP < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
-      if varSec.elementId == CodeElem::ELEM_VARIABLE
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if varSec.isStatic # Ignore static variables
           readDef << ''
         elsif !varSec.isPointer
@@ -64,9 +64,9 @@ class XCTEPython::MethodReadUGP < XCTEPlugin
           readDef << "\n"
         end
 
-      elsif varSec.elementId == CodeElem::ELEM_COMMENT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         readDef << '    ' << XCTECpp::Utils.getComment(varSec)
-      elsif varSec.elementId == CodeElem::ELEM_FORMAT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         readDef << varSec.formatText
       end
     end

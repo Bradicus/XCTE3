@@ -18,7 +18,7 @@ module DataLoading
     # Loads a variable from an XML variable node
     def self.loadVariableNode(varXML, parentElem, pComp)
       curVar = CodeStructure::CodeElemVariable.new(parentElem)
-      curVar.xmlElement = varXML
+      curVar.data_node = varXML
 
       curVar.vtype = AttributeLoader.init().xml(varXML).names("type").get()
       curVar.utype = AttributeLoader.init().xml(varXML).names("utype").get()
@@ -36,12 +36,12 @@ module DataLoading
       curVar.isSharedPointer = varXML.attributes.get_attribute("sharedptr") != nil
       curVar.init = varXML.attributes["init"]
       curVar.namespace = NamespaceUtil.loadNamespaces(varXML, pComp)
-      curVar.isVirtual = curVar.findAttributeExists("virtual")
-      curVar.nullable = curVar.findAttributeExists("nullable")
+      curVar.isVirtual = curVar.required = AttributeLoader.init().xml(varXML).names("virtual").doInherit().get == "true"
+      curVar.nullable = curVar.required = AttributeLoader.init().xml(varXML).names("nullable").doInherit().get == "true"      
       curVar.identity = varXML.attributes["identity"]
       curVar.isPrimary = varXML.attributes["pkey"] == "true"
       curVar.name = varXML.attributes["name"]
-      curVar.displayName = varXML.attributes["display"]
+      curVar.display_name = varXML.attributes["display"]
       curVar.selectFrom = varXML.attributes["select_from"]
       curVar.isOptionsList = (varXML.attributes["options"] == "true")
       curVar.relation = AttributeLoader.init().xml(varXML).names("rel").get

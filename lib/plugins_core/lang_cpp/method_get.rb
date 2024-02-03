@@ -20,7 +20,7 @@ module XCTECpp
 
     # Returns declairation string for this class's get method
     def get_declaration(varSec, bld)
-      return unless varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genSet == true
+      return unless varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == true
 
       funName = Utils.instance.get_styled_function_name('get ' + varSec.name)
       varName = Utils.instance.get_styled_variable_name(varSec)

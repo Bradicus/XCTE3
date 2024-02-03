@@ -20,7 +20,7 @@ module XCTEPhp
     def render_function(listCodeClass, cfg)
       outCode.indent
 
-      listInfo = XCTEPhp::Utils::getDataListInfo(listCodeClass.xmlElement)
+      listInfo = XCTEPhp::Utils::getDataListInfo(listCodeClass.data_node)
       listPath = File.dirname(listCodeClass.path)
 
       codeClass = ClassModelManager.findClass(codeClass.coreClass)

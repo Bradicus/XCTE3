@@ -133,7 +133,7 @@ module XCTETypescript
     # process variable group
     def process_var_group_imports(_cls, _bld, vGroup, importList)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE && !is_primitive(var)
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var, 'class_angular_reactive_edit')
           if !varCls.nil?
             editClass = varCls.model.findClassModel('class_angular_reactive_edit')
@@ -152,7 +152,7 @@ module XCTETypescript
     def process_function(cls, bld, fun)
       bld.separate
 
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)

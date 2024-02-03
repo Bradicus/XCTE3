@@ -49,7 +49,7 @@ module XCTECpp
       cls.model.getAllVarsFor(varArray)
 
       for varSec in varArray
-        if varSec.elementId == CodeElem::ELEM_VARIABLE
+        if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if !varSec.isPointer
             if varSec.arrayElemCount > 0
               if Utils.instance.is_primitive(varSec)
@@ -77,9 +77,9 @@ module XCTECpp
           else
             bld.add('    outStr << indent << ' << varSec.name << ' << std::endl;')
           end
-        elsif varSec.elementId == CodeElem::ELEM_COMMENT
+        elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           bld.add('    ' + Utils.instance.getComment(varSec))
-        elsif varSec.elementId == CodeElem::ELEM_FORMAT
+        elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(varSec.formatText)
         end
 

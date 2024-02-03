@@ -172,11 +172,11 @@ class XCTEPlugin
   # Run a function on each variable in a variable group and subgroups
   def each_var_grp(vGroup, bld, separateGroups, varFun)
     for var in vGroup.vars
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         varFun.call(var)
-      elsif !bld.nil? && var.elementId == CodeElem::ELEM_COMMENT
+      elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         bld.same_line(getComment(var))
-      elsif !bld.nil? && var.elementId == CodeElem::ELEM_FORMAT
+      elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         bld.add(var.formatText)
       end
     end

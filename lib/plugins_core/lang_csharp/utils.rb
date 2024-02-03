@@ -204,7 +204,7 @@ module XCTECSharp
     def genFunctionDependencies(cls, bld)
       # Add in any dependencies required by functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION && fun.isTemplate
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)
@@ -224,11 +224,11 @@ module XCTECSharp
 
     def addParameters(varArray, _cls, bld)
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           bld.add('cmd.Parameters.AddWithValue("@' +
                   Utils.instance.get_styled_variable_name(var) +
                   '", o.' + Utils.instance.get_styled_variable_name(var) + ');')
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end
       end
@@ -258,7 +258,7 @@ module XCTECSharp
 
     def genAssignResults(cls, bld)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.elementId == CodeElem::ELEM_VARIABLE && var.isList && is_primitive(var)
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isList && is_primitive(var)
           resultVal = 'results["' +
                       XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) + '"]'
           objVar = 'o.' + XCTECSharp::Utils.instance.get_styled_variable_name(var)
@@ -277,7 +277,7 @@ module XCTECSharp
     def genFunctions(cls, bld)
       # Generate code for functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
             if !templ.nil?

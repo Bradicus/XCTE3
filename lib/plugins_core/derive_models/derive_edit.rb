@@ -10,7 +10,7 @@ module XCTEDerived
 
     def get(editModel, derivedFrom, derivedFor)
       editModel.name = derivedFrom.name + " " + derivedFor
-      editModel.xmlElement = derivedFrom.xmlElement
+      editModel.data_node = derivedFrom.data_node
       editModel.description = derivedFrom.description
 
       editModel.varGroup = CodeStructure::CodeElemVarGroup.new

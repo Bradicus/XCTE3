@@ -32,15 +32,15 @@ class XCTEPhp::MethodGet < XCTEPlugin
 	outCode.add
 	
     for varSec in varArray
-      if varSec.elementId == CodeElem::ELEM_VARIABLE && varSec.genGet == "true"
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genGet == "true"
         if !varSec.isPointer
           outCode.add("    public function get" << XCTEPhp::Utils::getCapitalizedFirst(varSec.name))
           outCode.add("() \t{ return($this->" << varSec.name << "); }")
         end
 
-      elsif varSec.elementId == CodeElem::ELEM_COMMENT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
         outCode.iadd(1, XCTEPhp::Utils::getComment(varSec))
-      elsif varSec.elementId == CodeElem::ELEM_FORMAT
+      elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         outCode.add(varSec.formatText)
       end
     end

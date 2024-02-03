@@ -6,6 +6,10 @@
 	</description>
 
 	<gen_class type="standard" ns="code structure" path="code structure">
+		<function name="method_constructor" >	
+			<param name="element id"	type="String" />  
+			<param name="parent elem"	utype="code elem"  nullable="true" />  
+		</function>
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">

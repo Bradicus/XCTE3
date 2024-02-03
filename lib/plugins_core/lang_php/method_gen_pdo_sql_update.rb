@@ -42,7 +42,7 @@ class XCTEPhp::MethodGenPDOSQLUpdate < XCTEPlugin
     setVarArray.shift;
     
     for var in setVarArray
-      if var.elementId == CodeElem::ELEM_VARIABLE        
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE        
         outCode.add("    $sql .= ', " << var.name << "=:" << var.name << "';");
       end
     end
@@ -52,7 +52,7 @@ class XCTEPhp::MethodGenPDOSQLUpdate < XCTEPlugin
     outCode.add("    $statement = $dbConn->prepare($sql);");
     
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE        
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE        
         outCode.add("    $statement->bindParam(':" << var.name << "', $pData->" << var.name << ");");
       end
     end

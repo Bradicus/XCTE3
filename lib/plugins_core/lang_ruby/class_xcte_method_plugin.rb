@@ -13,7 +13,7 @@
 require 'plugins_core/lang_ruby/utils'
 require 'plugins_core/lang_ruby/source_renderer_ruby'
 require 'plugins_core/lang_ruby/x_c_t_e_ruby'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'code_elem_model'
 require 'lang_file'
@@ -84,7 +84,7 @@ module XCTERuby
 
       bld.start_function('def initialize')
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
-      bld.add('@language = "' + cls.xmlElement.attributes['lang'] + '"')
+      bld.add('@language = "' + cls.data_node.attributes['lang'] + '"')
       bld.add('@category = XCTEPlugin::CAT_METHOD')
       bld.add('@author = "' + UserSettings.instance.codeAuthor + '"') if UserSettings.instance.codeAuthor
       bld.endFunction

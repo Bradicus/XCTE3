@@ -40,7 +40,7 @@ module XCTETypescript
 
       itemVar = Utils.instance.create_var_for(cls, 'standard')
 
-      if cls.xmlElement['isList'] == 'true'
+      if cls.data_node['isList'] == 'true'
         observableType = 'Observable<' + Utils.instance.get_styled_class_name(cls.model.name) + '[]>'
         bld.add('item: ' + observableType + ' = new ' + observableType + ';')
       else

@@ -9,18 +9,18 @@
 # read in from an xml file
 
 require 'code_elem_template'
+require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemVariable < CodeElem
+  class CodeElemVariable < CodeStructure::CodeElem
     attr_accessor :vtype, :utype, :defaultValue, :comment,
                   :visibility, :isConst, :isStatic, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
                   :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
                   :templates, :attribs, :required, :readonly, :relation, :storeIn, :construct
 
     def initialize(parentElem)
-      super(parentElem)
+      super(CodeStructure::CodeElemTypes::ELEM_VARIABLE, parentElem)
 
-      @elementId = CodeElem::ELEM_VARIABLE # Type name  # Unformatted type name
       @isVirtual = false
       @isConst = false
       @isStatic = false

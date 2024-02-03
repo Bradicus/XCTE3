@@ -12,7 +12,7 @@ module CodeStructure
      attr_accessor :buildOptions, :buildType
 
     def initialize()
-      @elementId = CodeElem::ELEM_BUILD_TYPE;
+      @element_id = CodeStructure::CodeElemTypes::ELEM_BUILD_TYPE;
 
       @buildType = String.new
       @buildOptions = Array.new

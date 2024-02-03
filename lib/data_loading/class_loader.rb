@@ -27,7 +27,7 @@ module DataLoading
         genC.variant = genC.class_group_ref.variant
       end
 
-      genC.xmlElement = genCXml
+      genC.data_node = genCXml
 
       genC.featureGroup = AttributeLoader.init
                                          .xml(genCXml).names('feature_group').model(genC.model).default(genC.featureGroup).get

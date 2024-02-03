@@ -24,7 +24,7 @@ module DataLoading
       xmlDoc = REXML::Document.new xmlString
       classGroup.name = AttributeLoader.init(xmlDoc.root).names("name").get()
       classGroup.cFor = AttributeLoader.init(xmlDoc.root).names("variant").get()
-      classGroup.xmlElement = xmlDoc.root
+      classGroup.data_node = xmlDoc.root
     end
   end
 end

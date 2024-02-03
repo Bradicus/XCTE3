@@ -7,12 +7,14 @@
 #
 # This class stores information on the library component of a project
 
+require 'code_structure/code_elem'
+
 module CodeStructure
   class CodeElemBuildOption
      attr_accessor :oType, :oValue
 
     def initialize(oType, oValue)
-      @elementId = CodeElem::ELEM_BUILD_OPTION;
+      @element_id = CodeStructure::CodeElemTypes::ELEM_BUILD_OPTION;
 
       if (oType != nil)
         @oType = oType

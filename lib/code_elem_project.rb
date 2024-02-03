@@ -7,7 +7,8 @@
 #
 # This class stores data for the project level
 
-require "code_elem.rb"
+require 'code_structure/code_elem'
+
 require "code_elem_model.rb"
 require "code_elem_header.rb"
 require "code_elem_template_directory.rb"
@@ -20,13 +21,13 @@ require "lang_generator_config.rb"
 require "rexml/document"
 
 module CodeStructure
-  class ElemProject < CodeElem
+  class ElemProject < CodeStructure::CodeElem
     attr_accessor :classType, :includes, :parentsList,
       :variableSection, :functionSection, :componentGroup, :buildType,
       :includeDirs, :libraryDirs, :linkLibs, :buildTypes, :dest, :langProfilePaths, :singleFile, :file_comment
 
     def initialize
-      @elementId = CodeElem::ELEM_PROJECT
+      @element_id = CodeStructure::CodeElemTypes::ELEM_PROJECT
       @buildType
       @file_comment
       @templateFolders = Array.new

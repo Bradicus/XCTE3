@@ -13,7 +13,7 @@
 require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/method_empty'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -136,7 +136,7 @@ module XCTECpp
 
       # Generate function declarations
       for funItem in cls.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION
+        if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if funItem.visibility != @activeVisibility
             @activeVisibility = funItem.visibility
             bld.unindent
@@ -167,9 +167,9 @@ module XCTECpp
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
           end
-        elsif funItem.elementId == CodeElem::ELEM_COMMENT
+        elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           bld.add(Utils.instance.getComment(funItem))
-        elsif funItem.elementId == CodeElem::ELEM_FORMAT
+        elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           if funItem.formatText == "\n"
             bld.add
           else
@@ -218,7 +218,7 @@ module XCTECpp
           bld.indent
         end
 
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if var.genGet
             templ = XCTEPlugin.findMethodPlugin('cpp', 'method_get')
             templ.get_declaration(var, bld) if !templ.nil?
@@ -263,7 +263,7 @@ module XCTECpp
 
       # Generate code for functions
       for fun in cls.functions
-        if fun.elementId == CodeElem::ELEM_FUNCTION
+        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
             templ = XCTEPlugin.findMethodPlugin('cpp', fun.name)
 

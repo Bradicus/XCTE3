@@ -33,7 +33,7 @@ module XCTEHtml
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      nested = (cls.xmlElement.attributes['nested'] == 'true')
+      nested = (cls.data_node.attributes['nested'] == 'true')
       contentNode = Utils.instance.make_node(cls.genCfg, 'div')
 
       @formName = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)

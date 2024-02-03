@@ -36,7 +36,7 @@ module XCTEPhp
       codeClass.getAllVarsFor(varArray)
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
 
           if XCTEPhp::Utils.is_primitive(var)
             outCode.iadd(3, 'case ' << varNum.to_s << ": $this->dataSet['" << var.name << "'] = ")

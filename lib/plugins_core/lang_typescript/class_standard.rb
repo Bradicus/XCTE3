@@ -11,7 +11,7 @@
 require 'plugins_core/lang_typescript/utils'
 require 'plugins_core/lang_typescript/class_base'
 require 'plugins_core/lang_typescript/x_c_t_e_typescript'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'code_elem_model'
 require 'lang_file'

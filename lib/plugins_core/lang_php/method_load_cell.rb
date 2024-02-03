@@ -41,7 +41,7 @@ class XCTEPhp::MethodLoadCell < XCTEPlugin
 
     for var in varArray
 
-      if var.elementId == CodeElem::ELEM_VARIABLE
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
 
         outCode.add("            case " << cellIndex.to_s << ": $this->dataSet['" << var.name << "'] = ")
         
@@ -63,7 +63,7 @@ class XCTEPhp::MethodLoadCell < XCTEPlugin
 
         cellIndex += 1
 
-      elsif var.elementId == CodeElem::ELEM_FORMAT
+      elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         codeStr.add(var.formatText)
       end
     end

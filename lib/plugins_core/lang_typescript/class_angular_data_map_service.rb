@@ -63,7 +63,7 @@ module XCTETypescript
 
       # Get dependencies for functions
       for funItem in cls.functions
-        if funItem.elementId == CodeElem::ELEM_FUNCTION && funItem.isTemplate
+        if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && funItem.isTemplate
           templ = XCTEPlugin.findMethodPlugin('typescript', funItem.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, funItem)

@@ -70,7 +70,7 @@ module XCTEJava
     end
 
     def process_fuction_dependencies(cls, bld, fun)
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, fun.name)
       if !templ.nil?

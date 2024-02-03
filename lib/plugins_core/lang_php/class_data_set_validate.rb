@@ -11,7 +11,7 @@
 require 'plugins_core/lang_php/utils'
 require 'plugins_core/lang_php/x_c_t_e_php'
 require 'plugins_core/lang_php/method_data_list_display_edit'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 
@@ -77,7 +77,7 @@ module XCTEPhp
     def genPhpSetValidateFileContent(codeClassValidator, _cfg)
       headerString = String.new
 
-      listInfo = XCTEPhp::Utils.getDataListInfo(codeClassValidator.xmlElement)
+      listInfo = XCTEPhp::Utils.getDataListInfo(codeClassValidator.data_node)
       listPath = File.dirname(codeClassValidator.path)
 
       codeClass = ClassModelManager.findClass(codeClassValidator.coreClass)
@@ -116,12 +116,12 @@ module XCTEPhp
       codeClass.getAllVarsFor(varArray)
 
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           outCode.add('        // if (isset($v' << codeClass.name << 'Obj->dataSet["' << var.name << '"])) ')
 
           outCode.add(var.vtype << 'Validator::validate($v' << codeClass.name << 'Obj->dataSet["' << var.name << '"], $errorList, $tableRowNum);')
           outCode.add('        // else $errorList []= ErrorData::genError("Undefined element ", $tableRowNum, "required element ' << var.name << ' has not been defined");')
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           outCode.addvar.formatText
         end
       end

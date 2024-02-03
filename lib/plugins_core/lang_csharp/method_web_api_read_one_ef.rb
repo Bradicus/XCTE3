@@ -47,7 +47,7 @@ module XCTECSharp
       varArray = []
       cls.model.getAllVarsFor(varArray)
 
-      bld.add(cls.xmlElement)
+      bld.add(cls.data_node)
 
       bld.end_block
     end

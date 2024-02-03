@@ -121,7 +121,7 @@ module XCTEHtml
     # process variable group
     def process_var_group_menu(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           varName = Utils.instance.get_styled_variable_name(var)
 
           bld.start_block('<li class="nav-item">')

@@ -8,7 +8,8 @@
 # This class stores information for the class code structure
 # read in from an xml file
 
-require 'code_elem'
+require 'code_structure/code_elem'
+
 require 'code_elem_class_spec'
 require 'code_elem_comment'
 require 'code_elem_format'
@@ -21,15 +22,14 @@ require 'rexml/document'
 require 'filters/data_filter'
 
 module CodeStructure
-  class CodeElemModel < CodeElem
+  class CodeElemModel < CodeStructure::CodeElem
     attr_accessor :classes, :name, :description,
                   :case, :varGroup, :xmlFileName, :lastModified,
                   :modelSet, :featureGroup, :data_filter
 
     def initialize
-      super()
-
-      @elementId = CodeElem::ELEM_MODEL
+      super(CodeStructure::CodeElemTypes::ELEM_MODEL, nil)
+      
       @classes = []
       @varGroup = CodeElemVarGroup.new
       @xmlFileName = ''

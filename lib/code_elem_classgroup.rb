@@ -7,8 +7,10 @@
 #
 # This class stores a class group
 
+require 'code_structure/code_elem'
+
 module CodeStructure
-  class CodeElemClassgroup < CodeElem
+  class CodeElemClassgroup < CodeStructure::CodeElem
     attr_accessor :featureGroup, :cFor
 
     @featureGroup = nil

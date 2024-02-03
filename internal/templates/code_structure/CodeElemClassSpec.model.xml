@@ -6,11 +6,15 @@
 	</description>
 
 	<gen_class type="standard" ns="code structure" path="code structure">
+		<function name="method_constructor" >	
+			<param name="parent elem"	utype="code elem"  nullable="true" />    
+			<param name="model"			type="code elem data spec" nullable="true" />
+		</function>
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" construct="true">
 		<var name="element id"		utype="code elem type" default="CodeElemType.ELEM_CLASS_GEN" />
-		<var name="model"			type="String" nullable="true" default="null" />
+		<var name="model"			type="code elem data spec" nullable="true" default="null" />
 		<var name="path"			type="String"  />
 		<var name="namespace"		utype="code elem namespace" />		
 		<var name="language"		type="String" />

@@ -49,7 +49,7 @@ class XCTECpp::MethodZero < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for var in varArray
-      if var.elementId == CodeElem::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var)
+      if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var)
         eqString << '    ' << var.name << ' = ' << XCTECpp::Utils.getZero(var) << ";\n"
       end
     end

@@ -55,11 +55,11 @@ module XCTECSharp
       varArray = []
       cls.model.getNonIdentityVars(varArray)
       for var in varArray
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           bld.same_line(separater)
           bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) +
                   '] = @' + Utils.instance.get_styled_variable_name(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end
         separater = ','

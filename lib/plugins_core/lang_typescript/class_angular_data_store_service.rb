@@ -70,11 +70,11 @@ module XCTETypescript
     # process variable group
     def process_var_group(cls, bld, vGroup)
       for var in vGroup.vars
-        if var.elementId == CodeElem::ELEM_VARIABLE
+        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           bld.add(Utils.instance.get_var_dec(var))
-        elsif var.elementId == CodeElem::ELEM_COMMENT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           bld.same_line(Utils.instance.getComment(var))
-        elsif var.elementId == CodeElem::ELEM_FORMAT
+        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end
         for group in vGroup.varGroups
@@ -86,7 +86,7 @@ module XCTETypescript
     def process_function(cls, bld, fun)
       bld.separate
 
-      return unless fun.elementId == CodeElem::ELEM_FUNCTION
+      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)

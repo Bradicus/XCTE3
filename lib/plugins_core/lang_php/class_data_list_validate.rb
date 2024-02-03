@@ -10,7 +10,7 @@
 require 'plugins_core/lang_php/utils'
 require 'plugins_core/lang_php/x_c_t_e_php'
 require 'plugins_core/lang_php/method_data_list_display_edit'
-require 'code_elem'
+
 require 'code_elem_parent'
 require 'lang_file'
 require 'managers/class_model_manager'
@@ -78,7 +78,7 @@ module XCTEPhp
       headerString = String.new
       outCode.indent
 
-      listInfo = XCTEPhp::Utils.getDataListInfo(codeClassValidator.xmlElement)
+      listInfo = XCTEPhp::Utils.getDataListInfo(codeClassValidator.data_node)
       listPath = File.dirname(codeClassValidator.path)
 
       codeClass = ClassModelManager.findClass(codeClassValidator.coreClass)

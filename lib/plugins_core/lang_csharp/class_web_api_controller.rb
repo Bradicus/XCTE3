@@ -6,7 +6,7 @@
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/class_base'
 require 'plugins_core/lang_csharp/source_renderer_csharp'
-require 'code_elem'
+
 require 'code_elem_use'
 require 'code_elem_namespace'
 require 'code_elem_parent'
