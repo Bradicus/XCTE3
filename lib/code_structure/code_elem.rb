@@ -17,7 +17,7 @@ module CodeStructure
       @name = nil
       @display_name = nil
       @description = nil
-      @visibility = 'private'
+      @visibility = 'public'
       @parent_elem = nil
       @data_node = nil
       @lang_only = []	# What languages this node is limited to
