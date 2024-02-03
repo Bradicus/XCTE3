@@ -17,7 +17,7 @@ module CodeStructure
     @cFor = nil
 
     def initialize(parentElem)
-      super(parentElem)
+      super(nil, parentElem)
     end
   end
 end

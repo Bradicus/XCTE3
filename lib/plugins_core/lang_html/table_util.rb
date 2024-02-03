@@ -53,7 +53,7 @@ module XCTEHtml
         Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
           if Utils.instance.is_primitive(var) && !var.isList
             tHeadRow.children.push(HtmlNode.new('th')
-              .add_text(var.getDisplayName)
+              .add_text(var.getdisplay_name)
               .add_child(HtmlNode.new('i').add_class('bi bi-arrow-bar-down'))
               .add_attribute('scope', 'col')
               .add_attribute('style', 'cursor: pointer')
@@ -226,7 +226,7 @@ module XCTEHtml
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)
-          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getDisplayName))
+          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getdisplay_name))
         end
       }))
 

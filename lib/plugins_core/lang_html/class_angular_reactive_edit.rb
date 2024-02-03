@@ -96,7 +96,7 @@ module XCTEHtml
       rowContainer.add_child(fieldsetNode)
 
       legNode = Utils.instance.make_node(cls.genCfg, 'legend')
-                     .add_text(var.getDisplayName)
+                     .add_text(var.getdisplay_name)
       fieldsetNode.add_child(legNode)
 
       rowNode = add_row_node(cls, rowContainer)
@@ -166,7 +166,7 @@ module XCTEHtml
         varId = varName
       end
 
-      labelNode = HtmlNode.new('label').add_text(var.getDisplayName)
+      labelNode = HtmlNode.new('label').add_text(var.getdisplay_name)
       inputNode = HtmlNode.new('input')
       selectNode = HtmlNode.new('select')
 
@@ -223,13 +223,13 @@ module XCTEHtml
         if var.required
           validationNode.add_child(HtmlNode.new('div')
             .add_attribute('*ngIf', formVarRef + "?.errors?.['required']")
-            .add_text(var.getDisplayName + ' is required'))
+            .add_text(var.getdisplay_name + ' is required'))
         end
 
         if var.arrayElemCount > 0
           validationNode.add_child(HtmlNode.new('div')
             .add_attribute('*ngIf', formVarRef + "?.errors?.['maxlength']")
-            .add_text(var.getDisplayName + ' must be ' + var.arrayElemCount.to_s + ' characters or less'))
+            .add_text(var.getdisplay_name + ' must be ' + var.arrayElemCount.to_s + ' characters or less'))
         end
 
         fldNode.add_child(validationNode)

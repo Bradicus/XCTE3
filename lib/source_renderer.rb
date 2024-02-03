@@ -112,7 +112,7 @@ class SourceRenderer
 
   def start_function_paramed(functionName, paramList)
     oneLiner = paramList.join(', ')
-    if oneLiner.length > max_line_length
+    if oneLiner.length > @max_line_length
       paramStr = "\n"
 
       (0..paramList.length - 1).each do |i|

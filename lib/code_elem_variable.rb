@@ -71,9 +71,9 @@ module CodeStructure
       return utype
     end
 
-    def getDisplayName
-      if !displayName.nil?
-        return displayName
+    def getdisplay_name
+      if !display_name.nil?
+        return display_name
       end
 
       return name.capitalize

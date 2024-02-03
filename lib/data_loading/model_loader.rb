@@ -65,7 +65,7 @@ module DataLoading
       # Load class groups
       xmlDoc.root.elements.each('class_group_ref') do |nodeXml|
         cGroup = ClassGroups.get(nodeXml.attributes['name'])
-        cgRef = CodeStructure::CodeElemClassGroupRef.new
+        cgRef = CodeStructure::CodeElemClassGroupRef.new(nil, nil)
         ClassGroupRefLoader.loadClassGroupRef(cgRef, nodeXml)
 
         if !cGroup.nil?
@@ -74,8 +74,8 @@ module DataLoading
             cls.class_group_ref = cgRef
             cls.loadAttributes(genCXML)
 
-            if cls.langInclude.length > 0
-              if cls.langInclude.include?(pComponent.language)
+            if cls.lang_only.length > 0
+              if cls.lang_only.include?(pComponent.language)
                 ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
               end
             else

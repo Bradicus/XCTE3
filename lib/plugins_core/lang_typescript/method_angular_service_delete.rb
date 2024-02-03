@@ -6,6 +6,8 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
+    def process_dependencies(cls, bld, fun); end
+    
     # Returns the code for the content for this function
     def render_function(cls, bld, _fun)
       className = Utils.instance.get_styled_class_name(cls.getUName)
