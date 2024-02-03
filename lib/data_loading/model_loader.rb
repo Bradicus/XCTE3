@@ -12,6 +12,7 @@ require 'data_loading/attribute_loader'
 require 'data_loading/namespace_util'
 require 'data_loading/variable_loader'
 require 'data_loading/class_loader'
+require 'data_loading/code_elem_loader'
 require 'data_loading/class_group_ref_loader'
 require 'code_elem_class_group_ref'
 require 'rexml/document'
@@ -29,7 +30,7 @@ module DataLoading
       xmlDoc = REXML::Document.new xmlString
       depthStack = []
       model.name = AttributeLoader.init(xmlDoc.root).names('name').get
-      model.featureGroup = AttributeLoader.init(xmlDoc.root).names('feature_group').get
+      model.feature_group = AttributeLoader.init(xmlDoc.root).names('feature_group').get
       model.data_node = xmlDoc.root
 
       xmlDoc.root.elements.each('derived') do |derived|
@@ -45,9 +46,9 @@ module DataLoading
       xmlDoc.root.elements.each('var_group') do |vargXML|
         # puts "loading var group"
         newVGroup = CodeStructure::CodeElemVarGroup.new
-        newVGroup.loadAttributes(vargXML)
+        CodeElemLoader.load(newVGroup, vargXML, model)
 
-        loadVarGroupNode(newVGroup, vargXML, pComponent)
+        loadVarGroupNode(newVGroup, vargXML, pComponent, model)
         model.varGroup = newVGroup
       end
 
@@ -56,8 +57,7 @@ module DataLoading
       end
 
       xmlDoc.root.elements.each('gen_class') do |genCXML|
-        cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
-        cls.loadAttributes(genCXML)
+        cls = CodeStructure::CodeElemClassSpec.new(cls, model, model)
 
         ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
       end
@@ -70,9 +70,8 @@ module DataLoading
 
         if !cGroup.nil?
           cGroup.data_node.elements.each('gen_class') do |genCXML|
-            cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
+            cls = CodeStructure::CodeElemClassSpec.new(cls, model, model)
             cls.class_group_ref = cgRef
-            cls.loadAttributes(genCXML)
 
             if cls.lang_only.length > 0
               if cls.lang_only.include?(pComponent.language)
@@ -95,13 +94,13 @@ module DataLoading
       ClassModelManager.list << cls
       model.classes << cls
 
-      if cls.interfaceNamespace.hasItems?
+      if cls.interface_namespace.hasItems?
         intf = processInterface(cls, model, pComponent)
         ClassModelManager.list << intf
         model.classes << intf
       end
 
-      return unless cls.testNamespace.hasItems?
+      return unless cls.test_namespace.hasItems?
 
       intf = ClassLoader.processTests(cls, model, pComponent)
       ClassModelManager.list << intf
@@ -109,18 +108,15 @@ module DataLoading
     end
 
     # Loads a group node from an XML template vargroup node
-    def self.loadVarGroupNode(vgNode, vgXML, pComponent)
-      vgNode.name = vgXML.attributes['name'] if !vgXML.attributes['name'].nil?
-
-      # puts "[ElemClass::loadVarGroupNode] loading var node "
+    def self.loadVarGroupNode(vgNode, vgXML, pComponent, parent_elem)
+      CodeElemLoader.load(vgNode, vgXML, parent_elem)  
 
       for varElem in vgXML.elements
         if varElem.name.downcase == 'variable' || varElem.name.downcase == 'var'
           VariableLoader.loadVariableNode(varElem, vgNode, pComponent)
         elsif varElem.name == 'var_group'
           newVG = CodeStructure::CodeElemVarGroup.new
-          newVG.loadAttributes(varElem)
-          loadVarGroupNode(newVG, varElem, pComponent)
+          loadVarGroupNode(newVG, varElem, pComponent, vgNode)
           vgNode.varGroups << newVG
         elsif varElem.name == 'comment'
           loadCommentNode(varElem, vgNode.vars)

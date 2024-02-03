@@ -23,27 +23,26 @@ module DataLoading
     # Loads a class from an xml node
     def self.loadClass(pComponent, genC, genCXml, modelManager)
       if !genC.class_group_ref.nil?
-        genC.featureGroup = genC.class_group_ref.featureGroup
+        genC.feature_group = genC.class_group_ref.feature_group
         genC.variant = genC.class_group_ref.variant
       end
 
-      genC.data_node = genCXml
+      CodeElemLoader.load(genC, genCXml, pComponent)      
 
-      genC.featureGroup = AttributeLoader.init
-                                         .xml(genCXml).names('feature_group').model(genC.model).default(genC.featureGroup).get
+      genC.feature_group = 
+        AttributeLoader.init.xml(genCXml).names('feature_group').model(genC.model).default(genC.feature_group).get
       genC.variant = AttributeLoader.init
                                     .xml(genCXml).names('variant').model(genC.model).default(genC.variant).get
 
-      genC.plugName = AttributeLoader.init.xml(genCXml).names('type').cls(genC).get
-      genC.className = AttributeLoader.init.xml(genCXml).names('name').model(genC.model).cls(genC).get
+      genC.plug_name = AttributeLoader.init.xml(genCXml).names('type').cls(genC).get
       genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)
-      genC.interfaceNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['interface_namespace'])
-      genC.interfacePath = genCXml.attributes['interface_path']
-      genC.testNamespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['test_namespace'])
-      genC.testPath = AttributeLoader.init.xml(genCXml).names('test_path').get
+      genC.interface_namespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['interface_namespace'])
+      genC.interface_path = genCXml.attributes['interface_path']
+      genC.test_namespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['test_namespace'])
+      genC.test_path = AttributeLoader.init.xml(genCXml).names('test_path').get
       genC.language = genCXml.attributes['language']
       genC.path = AttributeLoader.init.xml(genCXml).names('path').model(genC.model).cls(genC).default('').get
-      genC.varPrefix = AttributeLoader.init.xml(genCXml).names('var_prefix').get
+      genC.var_prefix = AttributeLoader.init.xml(genCXml).names('var_prefix').get
 
       # Add base namespace to class namespace lists
       if !pComponent.nil? && !pComponent.namespace.nsList.empty?
@@ -59,7 +58,7 @@ module DataLoading
         #   baseClass.templateParams << tplParam
         # end
 
-        genC.baseClasses << baseClass
+        genC.base_classes << baseClass
       end
 
       genCXml.elements.each('pre_def') do |pdXml|
@@ -85,7 +84,7 @@ module DataLoading
 
       genCXml.elements.each('empty_function') do |funXml|
         newFun = CodeStructure::CodeElemFunction.new(genC)
-        loadEmptyFunctionNode(newFun, funXml, pComponent)
+        loadEmptyFunctionNode(newFun, genC, funXml, pComponent)
         newFun.isTemplate = false
         genC.functions << newFun
       end
@@ -131,25 +130,27 @@ module DataLoading
       modelManager.list << genC
       genC.model.classes << genC
 
-      if genC.interfaceNamespace.hasItems?
+      if genC.interface_namespace.hasItems?
         intf = processInterface(genC, model, pComponent)
         modelManager.list << intf
         genC.model.classes << intf
       end
 
-      return unless genC.testNamespace.hasItems?
+      return unless genC.test_namespace.hasItems?
 
       intf = ClassLoader.processTests(genC, model, pComponent)
       modelManager.list << intf
       genC.model.classes << genC
+
+      return genC
 
       # puts "Loaded clss note with function count " + genC.functions.length.to_s
     end
 
     # Loads a template function element from an XML template function node
     def self.loadTemplateFunctionNode(genC, fun, tmpFunXML, pComponent)
-      fun.loadAttributes(tmpFunXML)
-      fun.name = tmpFunXML.attributes['name']
+      CodeElemLoader.load(fun, tmpFunXML, genC)
+      
       fun.role = AttributeLoader.init.xml(tmpFunXML).names('role').cls(genC).get
       # puts "Loading function: " + fun.name
       fun.isTemplate = true
@@ -162,9 +163,9 @@ module DataLoading
     end
 
     # Loads a function element from an XML function node
-    def self.loadEmptyFunctionNode(newFun, funXml, pComponent)
-      newFun.loadAttributes(funXml)
-      newFun.name = funXml.attributes['name']
+    def self.loadEmptyFunctionNode(newFun, cls, funXml, pComponent)
+      CodeElemLoader.load(newFun, funXml, cls)      
+      
       newFun.isInline = (funXml.attributes['inline'] == 'true')
 
       if !funXml.attributes['const'].nil? && funXml.attributes['const'].casecmp('true')
@@ -182,7 +183,9 @@ module DataLoading
 
       for funElemXML in funXml.elements
         if funElemXML.name == 'parameters'
-          newFun.parameters.loadAttributes(funElemXML)
+
+          CodeElemLoader.load(newFun.parameters, funElemXML, cls)      
+
           for paramXML in funElemXML.elements
             VariableLoader.loadVariableNode(paramXML, newFun.parameters, pComponent)
           end
@@ -194,41 +197,27 @@ module DataLoading
       end
     end
 
-    # Loads a comment from an XML comment node
-    def self.loadCommentNode(parXML, section)
-      comNode = CodeElemComment.new(parXML.attributes['text'])
-      comNode.loadAttributes(parXML)
-      section << comNode
-    end
-
-    # Loads a br format element from an XML br node
-    def self.loadBRNode(brXML, section)
-      brk = CodeElemFormat.new("\n")
-      brk.loadAttributes(brXML)
-      section << brk
-    end
-
     def self.loadList(str, separator)
       return str.split(separator).map!(&:trim)
     end
 
     def self.processInterface(cls, model, pComponent)
       intf = CodeStructure::CodeElemClassSpec.new(cls, model, pComponent, true)
-      intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interfaceNamespace.get('.'))
-      intf.path = cls.interfacePath
+      intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interface_namespace.get('.'))
+      intf.path = cls.interface_path
       intf.functions = cls.functions
       intf.language = cls.language
-      intf.plugName = 'interface'
+      intf.plug_name = 'interface'
       intf.parentElem = cls
       intf.model = model
     end
 
     def self.processTests(cls, model, pComponent)
       intf = CodeStructure::CodeElemClassSpec.new(cls, model, pComponent, true)
-      intf.namespace = CodeStructure::CodeElemNamespace.new(cls.testNamespace.get('.'))
-      intf.path = cls.testPath
+      intf.namespace = CodeStructure::CodeElemNamespace.new(cls.test_namespace.get('.'))
+      intf.path = cls.test_path
       intf.language = cls.language
-      intf.plugName = 'test_engine'
+      intf.plug_name = 'test_engine'
       intf.parentElem = cls
       intf.model = model
 

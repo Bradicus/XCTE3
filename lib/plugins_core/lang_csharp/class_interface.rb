@@ -20,7 +20,7 @@ module XCTECSharp
 
     def get_unformatted_class_name(cls)
       if (cls.parentElem.is_a?(CodeStructure::CodeElemClassSpec))
-        parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plugName)
+        parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plug_name)
         return 'i ' + parentPlug.get_unformatted_class_name(cls.parentElem)
       else
         return cls.getUName + ' engine'
@@ -31,7 +31,7 @@ module XCTECSharp
       srcFiles = []
 
       if cls.parentElem.is_a?(CodeStructure::CodeElemClassSpec)
-        parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plugName)
+        parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plug_name)
         cls.setName('i ' + parentPlug.get_unformatted_class_name(cls.parentElem))
       else
         cls.setName('i ' + cls.getUName)
@@ -71,10 +71,10 @@ module XCTECSharp
       classDec = cls.model.visibility + ' interface ' + Utils.instance.get_styled_class_name(cls.name)
 
       for par in (0..cls.baseClassModelManager.size)
-        if par == 0 && !cls.baseClasses[par].nil?
-          classDec << ' : ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
-        elsif !cls.baseClasses[par].nil?
-          classDec << ', ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
+        if par == 0 && !cls.base_classes[par].nil?
+          classDec << ' : ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        elsif !cls.base_classes[par].nil?
+          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
         end
       end
 

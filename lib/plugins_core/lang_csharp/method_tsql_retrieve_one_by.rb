@@ -67,7 +67,7 @@ module XCTECSharp
       whereItems = []
       fun.parameters.vars.each do |param|
         whereCondition = '[' +
-                         XCTETSql::Utils.instance.get_styled_variable_name(param, cls.varPrefix) +
+                         XCTETSql::Utils.instance.get_styled_variable_name(param, cls.var_prefix) +
                          '] = @' + Utils.instance.get_styled_variable_name(param.getParam)
 
         whereItems << whereCondition
@@ -114,7 +114,7 @@ module XCTECSharp
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && Utils.instance.is_primitive(var)
           return
           '[' +
-            XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) +
+            XCTETSql::Utils.instance.get_styled_variable_name(var, cls.var_prefix) +
             '] = @' + Utils.instance.get_styled_variable_name(var.getParam)
         end
         for group in vGroup.varGroups

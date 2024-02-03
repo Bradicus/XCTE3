@@ -57,7 +57,7 @@ module XCTECSharp
       for var in varArray
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           bld.same_line(separater)
-          bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) +
+          bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, cls.var_prefix) +
                   '] = @' + Utils.instance.get_styled_variable_name(var))
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
@@ -70,7 +70,7 @@ module XCTECSharp
       ident_var = cls.model.getIdentityVar
 
       if ident_var
-        bld.add('WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.varPrefix) +
+        bld.add('WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.var_prefix) +
                 '] = @' + Utils.instance.get_styled_variable_name(ident_var) + '";')
       else
         bld.add('WHERE' + '";')

@@ -54,7 +54,7 @@ module XCTERuby
         end
       elsif var.isList
         vDec << ' = []'
-      elsif var.construct
+      elsif var.init_vars
         vDec << ' = '
 
         if var.nullable
@@ -62,7 +62,7 @@ module XCTERuby
         elsif var.vtype == 'String'
           vDec << '""'
         elsif !is_primitive(var)
-          vDec << ' = new ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '()'
+          vDec << ' ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '.new'
         else
           vDec << '0'
         end

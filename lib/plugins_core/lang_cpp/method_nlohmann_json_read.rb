@@ -41,7 +41,7 @@ module XCTECpp
       cls.addInclude('', 'json.hpp')
       Utils.instance.getStandardClassInfo(cls)
 
-      for bc in cls.standardClass.baseClasses
+      for bc in cls.standardClass.base_classes
         cls.addInclude('', Utils.instance.getDerivedClassPrefix(bc) + 'JsonEngine.h')
       end
 
@@ -78,7 +78,7 @@ module XCTECpp
 
       bld.start_block('if (json.is_null() == false)')
 
-      for bc in cls.standardClass.baseClasses
+      for bc in cls.standardClass.base_classes
         bClass = ClassModelManager.findClass(bc.name, 'standard')
         bld.add(Utils.instance.getDerivedClassPrefix(bc) + 'JsonEngine::read(json, item);')
       end
@@ -90,7 +90,7 @@ module XCTECpp
           curVarType = Utils.instance.get_type_name(var)
           curVarClass = ClassModelManager.findVarClass(var)
 
-          isEnum = !curVarClass.nil? && curVarClass.plugName == 'enum'
+          isEnum = !curVarClass.nil? && curVarClass.plug_name == 'enum'
 
           if Utils.instance.is_primitive(var) || isEnum
             if !var.isList

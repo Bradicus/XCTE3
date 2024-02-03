@@ -28,11 +28,11 @@ module XCTECSharp
 
       classDec = cls.model.visibility + ' class ' + get_class_name(cls)
 
-      for par in (0..cls.baseClasses.size)
-        if par == 0 && !cls.baseClasses[par].nil?
-          classDec << ' : ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
-        elsif !cls.baseClasses[par].nil?
-          classDec << ', ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
+      for par in (0..cls.base_classes.size)
+        if par == 0 && !cls.base_classes[par].nil?
+          classDec << ' : ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        elsif !cls.base_classes[par].nil?
+          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
         end
       end
 

@@ -9,7 +9,7 @@ module DataProcessing
           language = XCTEPlugin::getLanguages()[pComponent.language]
         end
 
-        if language.has_key?(cls.plugName)
+        if language.has_key?(cls.plug_name)
           if cls.path != nil
             newPath = pComponent.dest + "/" + cls.path
           else
@@ -17,9 +17,9 @@ module DataProcessing
           end
 
           lClass = cls.clone()
-          lClass.filePath = newPath.gsub(" ", "-")
-          lClass.name = language[lClass.plugName].get_class_name(lClass)
-          lClass.genCfg = pComponent
+          lClass.file_path = newPath.gsub(" ", "-")
+          lClass.name = language[lClass.plug_name].get_class_name(lClass)
+          lClass.gen_cfg = pComponent
 
           if (lClass.language == nil)
             lClass.language = pComponent.language

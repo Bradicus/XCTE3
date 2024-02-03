@@ -84,11 +84,11 @@ module XCTETypescript
 
     def render_class_start(cls, bld)
       base_classes = ''
-      if cls.baseClasses.length > 0
+      if cls.base_classes.length > 0
         base_classes += " extends "
         first = true
 
-        for bc in cls.baseClasses
+        for bc in cls.base_classes
 
           bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
           bc_plugin = XCTEPlugin::findClassPlugin(cls.language, bc.plugin_name)
@@ -129,8 +129,8 @@ module XCTETypescript
     def get_full_route(cls, actionName)
       route = []
 
-      if !cls.featureGroup.nil?
-        route.push(cls.featureGroup)
+      if !cls.feature_group.nil?
+        route.push(cls.feature_group)
       else
         route.push(cls.model.name)
       end

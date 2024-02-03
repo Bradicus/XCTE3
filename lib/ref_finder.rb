@@ -7,7 +7,7 @@ class RefFinder
 
     for cls in ClassModelManager.list
       XCTEPlugin.getLanguages[lang].each do |_plugKey, plug|
-        if NameCompare.matches(plug.name, cls.plugName) && NameCompare.matches(plug.get_unformatted_class_name(cls), uType)
+        if NameCompare.matches(plug.name, cls.plug_name) && NameCompare.matches(plug.get_unformatted_class_name(cls), uType)
           cap.cls = cls
           cap.plug = plug
 

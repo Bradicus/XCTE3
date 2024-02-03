@@ -9,8 +9,8 @@
 # read in from an xml file
 
 require 'code_structure/code_elem'
+require 'code_structure/code_elem_class_spec'
 
-require 'code_elem_class_spec'
 require 'code_elem_comment'
 require 'code_elem_format'
 require 'code_elem_function'
@@ -25,7 +25,7 @@ module CodeStructure
   class CodeElemModel < CodeStructure::CodeElem
     attr_accessor :classes, :name, :description,
                   :case, :varGroup, :xmlFileName, :lastModified,
-                  :modelSet, :featureGroup, :data_filter
+                  :modelSet, :feature_group, :data_filter
 
     def initialize
       super(CodeStructure::CodeElemTypes::ELEM_MODEL, nil)
@@ -34,7 +34,7 @@ module CodeStructure
       @varGroup = CodeElemVarGroup.new
       @xmlFileName = ''
       @modelSet = nil
-      @featureGroup = nil
+      @feature_group = nil
       @data_filter = Filters::DataFilter.new
     end
 
@@ -50,9 +50,9 @@ module CodeStructure
     #
     # Finds a class that this model has by type name
     #
-    def findClassSpecByPluginName(plugName)
+    def findClassSpecByPluginName(plug_name)
       for cls in @classes
-        return cls if cls.plugName == plugName
+        return cls if cls.plug_name == plug_name
       end
 
       return nil
@@ -156,9 +156,9 @@ module CodeStructure
     end
 
     # Find class
-    def findClassModel(classPlugName)
+    def findClassModel(classplug_name)
       for c in @classes
-        return c if c.plugName == classPlugName
+        return c if c.plug_name == classplug_name
       end
 
       return nil

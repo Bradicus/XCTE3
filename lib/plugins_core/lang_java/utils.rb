@@ -202,32 +202,32 @@ module XCTEJava
       cls.addUse(varClassAndPlug.cls.namespace.get('.') + '.*')
     end
 
-    def requires_other_class_type(cls, _otherCls, plugName)
-      plugNameClass = cls.model.findClassSpecByPluginName(plugName)
-      return if cls.namespace.same?(plugNameClass.namespace)
+    def requires_other_class_type(cls, _otherCls, plug_name)
+      plug_nameClass = cls.model.findClassSpecByPluginName(plug_name)
+      return if cls.namespace.same?(plug_nameClass.namespace)
 
-      cls.addUse(plugNameClass.namespace.get('.') + '.*')
+      cls.addUse(plug_nameClass.namespace.get('.') + '.*')
     end
 
-    def requires_class_type(cls, fromCls, plugName)
-      plugNameClass = fromCls.model.findClassSpecByPluginName(plugName)
+    def requires_class_type(cls, fromCls, plug_name)
+      plug_nameClass = fromCls.model.findClassSpecByPluginName(plug_name)
 
-      if plugNameClass.nil?
-        Log.error('unable to find class by type ' + plugName)
-      elsif plugNameClass.namespace.nsList.length == 0
+      if plug_nameClass.nil?
+        Log.error('unable to find class by type ' + plug_name)
+      elsif plug_nameClass.namespace.nsList.length == 0
         throw 'Zero length namespace'
       else
-        cls.addUse(plugNameClass.namespace.get('.') + '.*')
+        cls.addUse(plug_nameClass.namespace.get('.') + '.*')
       end
     end
 
     def requires_class_ref(cls, classRef)
-      plugNameClass = ClassModelManager.findClass(classRef.model_name, classRef.plugin_name)
+      plug_nameClass = ClassModelManager.findClass(classRef.model_name, classRef.plugin_name)
 
-      if plugNameClass.nil?
+      if plug_nameClass.nil?
         Log.error('unable to find class by ref: ' + classRef.model_name + " - " + classRef.plugin_name)
       else
-        cls.addUse(plugNameClass.namespace.get('.') + '.*')
+        cls.addUse(plug_nameClass.namespace.get('.') + '.*')
       end
     end
 
@@ -240,10 +240,10 @@ module XCTEJava
       return cls
     end
 
-    def add_class_injection(toCls, fromCls, plugName)
-      varClass = fromCls.model.findClassSpecByPluginName(plugName)
+    def add_class_injection(toCls, fromCls, plug_name)
+      varClass = fromCls.model.findClassSpecByPluginName(plug_name)
       if !varClass.nil?
-        var = create_var_for(varClass, plugName)
+        var = create_var_for(varClass, plug_name)
         var.visibility = 'private'
 
         if !var.nil?
@@ -251,7 +251,7 @@ module XCTEJava
           requires_var(toCls, var)
         end
       else
-        Log.error('Unable to find class type ' + plugName + ' for model ' + fromCls.model.name)
+        Log.error('Unable to find class type ' + plug_name + ' for model ' + fromCls.model.name)
       end
     end
 
@@ -260,7 +260,7 @@ module XCTEJava
 
       if !filtered_class.dataClass.nil?
         data_class = ClassModelManager.findClass(filtered_class.dataClass.model_name, filtered_class.dataClass.plugin_name)
-        pageReqVar = create_var_for(data_class, data_class.plugName)
+        pageReqVar = create_var_for(data_class, data_class.plug_name)
       else
         data_class = cls
         pageReqVar = create_var_for(data_class, 'class_db_entity')

@@ -20,12 +20,12 @@ module XCTETSql
     end
 
     # Returns variable declaration for the specified variable
-    def get_var_dec(var, varPrefix)
+    def get_var_dec(var, var_prefix)
       vDec = String.new
-      if varPrefix.nil?
+      if var_prefix.nil?
         vPrevix = ''
       else
-        vPrevix = varPrefix
+        vPrevix = var_prefix
       end
       if var.hasOneToOneRelation
         vDec << '[' << CodeNameStyling.getStyled(vPrevix + var.name + ' id', @langProfile.variableNameStyle) << ']'

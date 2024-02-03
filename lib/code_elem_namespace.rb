@@ -10,7 +10,7 @@
 require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemNamespace < CodeStructure::CodeElem
+  class CodeElemNamespace < CodeElem
     attr_accessor :nsList
 
     def initialize(nsString = "")

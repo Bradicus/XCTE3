@@ -8,7 +8,7 @@
 	<gen_class type="standard" ns="filters" path="filters">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="name"	type="String" default="search" />
 		<var name="type"	type="String" default="shared" />
 		<var name="columns"	type="Int32" set="List" />

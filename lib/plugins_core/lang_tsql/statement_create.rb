@@ -52,7 +52,7 @@ module XCTETSql
           bld.same_line(', ') if !first
           first = false
 
-          varDec = XCTETSql::Utils.instance.get_var_dec(var, cls.varPrefix)
+          varDec = XCTETSql::Utils.instance.get_var_dec(var, cls.var_prefix)
           bld.add(varDec) if !varDec.nil? && varDec.strip.length > 0
 
           bld.same_line(" default '" << var.defaultValue << "'") if !var.defaultValue.nil?
@@ -62,7 +62,7 @@ module XCTETSql
       primKeys = []
 
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        primKeys << '[' + Utils.instance.get_styled_variable_name(var, cls.varPrefix) + ']' if var.isPrimary == true
+        primKeys << '[' + Utils.instance.get_styled_variable_name(var, cls.var_prefix) + ']' if var.isPrimary == true
       }))
 
       if primKeys.length > 0

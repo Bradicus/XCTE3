@@ -41,7 +41,7 @@ class XCTEClassBase < XCTEPlugin
       end
     }))
 
-    for bc in cls_spec.baseClasses
+    for bc in cls_spec.base_classes
       bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
 
       if !bc_cls_spec.nil?

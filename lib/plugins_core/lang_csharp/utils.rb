@@ -132,12 +132,12 @@ module XCTECSharp
       return @langProfile.get_type_name(var.vtype)
     end
 
-    def add_class_include(cls, plugName)
-      cls_model = cls.model.findClassSpecByPluginName(plugName)
+    def add_class_include(cls, plug_name)
+      cls_model = cls.model.findClassSpecByPluginName(plug_name)
       if !cls_model.nil?
-        cls.addUse(cls.model.findClassSpecByPluginName(plugName).namespace.get('.'))
+        cls.addUse(cls.model.findClassSpecByPluginName(plug_name).namespace.get('.'))
       else
-        Log.warn("Unabled to find class plugin " + plugName + ' for ' + cls.model.name)
+        Log.warn("Unabled to find class plugin " + plug_name + ' for ' + cls.model.name)
       end
     end
 
@@ -147,14 +147,14 @@ module XCTECSharp
     end
 
     # Returns the version of this name styled for this language
-    def get_styled_variable_name(var, varPrefix = '')
+    def get_styled_variable_name(var, var_prefix = '')
       if !var.is_a?(CodeStructure::CodeElemVariable)
         return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
       elsif !var.genGet.nil? || !var.genSet.nil?
-        return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle)
+        return CodeNameStyling.getStyled(var_prefix + var.name, @langProfile.functionNameStyle)
       end
 
-      return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
+      return CodeNameStyling.getStyled(var_prefix + var.name, @langProfile.variableNameStyle)
     end
 
     # Capitalizes the first letter of a string
@@ -184,11 +184,11 @@ module XCTECSharp
       return '0'
     end
 
-    def requires_other_class_type(cls, plugName)
-      plugNameClass = cls.model.findClassSpecByPluginName(plugName)
-      return if cls.namespace.same?(plugNameClass.namespace)
+    def requires_other_class_type(cls, plug_name)
+      plug_nameClass = cls.model.findClassSpecByPluginName(plug_name)
+      return if cls.namespace.same?(plug_nameClass.namespace)
 
-      cls.addUse(plugNameClass.namespace.get('.'))
+      cls.addUse(plug_nameClass.namespace.get('.'))
     end
 
     def getDataListInfo(classXML)
@@ -235,23 +235,23 @@ module XCTECSharp
     end
 
     # Generate a list of @'d parameters
-    def genParamList(cls, bld, varPrefix = '')
+    def genParamList(cls, bld, var_prefix = '')
       separator = ''
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.same_line(separator)
-        bld.add('@' + get_styled_variable_name(var, varPrefix))
+        bld.add('@' + get_styled_variable_name(var, var_prefix))
         separator = ','
       }))
     end
 
     # Generate a list of variables
-    def genVarList(cls, bld, varPrefix = '')
+    def genVarList(cls, bld, var_prefix = '')
       separator = ''
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         bld.same_line(separator)
-        bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, varPrefix) + ']')
+        bld.add('[' + XCTETSql::Utils.instance.get_styled_variable_name(var, var_prefix) + ']')
         separator = ','
       }))
     end
@@ -260,7 +260,7 @@ module XCTECSharp
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isList && is_primitive(var)
           resultVal = 'results["' +
-                      XCTETSql::Utils.instance.get_styled_variable_name(var, cls.varPrefix) + '"]'
+                      XCTETSql::Utils.instance.get_styled_variable_name(var, cls.var_prefix) + '"]'
           objVar = 'o.' + XCTECSharp::Utils.instance.get_styled_variable_name(var)
 
           if var.nullable
@@ -335,7 +335,7 @@ module XCTECSharp
 
       cls.standardClassType = ns + Utils.instance.get_styled_class_name(cls.getUName)
 
-      if !cls.standardClass.nil? && cls.standardClass.plugName != 'enum'
+      if !cls.standardClass.nil? && cls.standardClass.plug_name != 'enum'
         cls.addInclude(cls.standardClass.namespace.get('/'), Utils.instance.get_styled_class_name(cls.getUName))
       end
 

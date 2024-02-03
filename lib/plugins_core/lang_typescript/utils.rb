@@ -75,7 +75,7 @@ module XCTETypescript
         else
           vDec << ' = ' << var.defaultValue << ''
         end
-      elsif var.construct
+      elsif var.init_vars
         if var.isList
           vDec << ' = []'
         elsif var.getUType.downcase == 'string'
@@ -269,7 +269,7 @@ module XCTETypescript
 
     def addClassnamesFor(clsList, otherClasses, language, classType)
       for otherCls in otherClasses
-        if otherCls.plugName == classType
+        if otherCls.plug_name == classType
           plug = XCTEPlugin.findClassPlugin(language, classType)
           clsList.push(plug.get_class_name(otherCls))
         end
@@ -293,8 +293,8 @@ module XCTETypescript
     def getRelatedClasses(cls)
       relClasses = []
 
-      if !cls.model.featureGroup.nil?
-        fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
+      if !cls.model.feature_group.nil?
+        fClasses = ClassModelManager.findFeatureClasses(cls.model.feature_group)
 
         for otherCls in fClasses
           relClasses.push(otherCls)

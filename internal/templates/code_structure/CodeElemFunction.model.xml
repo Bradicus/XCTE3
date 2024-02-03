@@ -9,7 +9,7 @@
 	  <base_class cname="code elem" plugin="standard" />
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="element id"	utype="code elem type"   default="CodeElemType.ELEM_FUNCTION" />
 		<var name="parameters"	utype="code elem var group"/>
 

@@ -99,18 +99,18 @@ module XCTECpp
 
       for par in (0..cls.baseClassModelManager.size)
         nameSp = ''
-        if par == 0 && !cls.baseClasses[par].nil?
+        if par == 0 && !cls.base_classes[par].nil?
           classDec << ' : '
-        elsif !cls.baseClasses[par].nil?
+        elsif !cls.base_classes[par].nil?
           classDec << ', '
         end
 
-        if !cls.baseClasses[par].nil?
-          if cls.baseClasses[par].namespace.hasItems? && cls.baseClasses[par].namespace.nsList.size > 0
-            nameSp = cls.baseClasses[par].namespace.get('::') + '::'
+        if !cls.base_classes[par].nil?
+          if cls.base_classes[par].namespace.hasItems? && cls.base_classes[par].namespace.nsList.size > 0
+            nameSp = cls.base_classes[par].namespace.get('::') + '::'
           end
 
-          classDec << cls.baseClasses[par].visibility << ' ' << nameSp << Utils.instance.get_styled_class_name(cls.baseClasses[par].name)
+          classDec << cls.base_classes[par].visibility << ' ' << nameSp << Utils.instance.get_styled_class_name(cls.base_classes[par].name)
         end
       end
 

@@ -53,7 +53,7 @@ module XCTECSharp
 
       bld.indent
 
-      Utils.instance.genVarList(cls, bld, cls.varPrefix)
+      Utils.instance.genVarList(cls, bld, cls.var_prefix)
 
       bld.unindent
 

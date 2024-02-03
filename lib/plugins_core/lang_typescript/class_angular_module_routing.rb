@@ -47,14 +47,14 @@ module XCTETypescript
       cls.addInclude('@angular/common', 'CommonModule')
       cls.addInclude('@angular/router', 'RouterModule, Routes')
 
-      if !cls.model.featureGroup.nil?
-        fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
+      if !cls.model.feature_group.nil?
+        fClasses = ClassModelManager.findFeatureClasses(cls.model.feature_group)
 
         for otherCls in fClasses
-          if otherCls.plugName.start_with?('class_angular_reactive_edit') ||
-             otherCls.plugName.start_with?('class_angular_reactive_view') ||
-             otherCls.plugName.start_with?('class_angular_listing')
-            plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
+          if otherCls.plug_name.start_with?('class_angular_reactive_edit') ||
+             otherCls.plug_name.start_with?('class_angular_reactive_view') ||
+             otherCls.plug_name.start_with?('class_angular_listing')
+            plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
             cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
                            plug.get_class_name(otherCls))
           end
@@ -62,10 +62,10 @@ module XCTETypescript
       end
 
       for otherCls in cls.model.classes
-        if otherCls.plugName.start_with?('class_angular_reactive_edit') ||
-           otherCls.plugName.start_with?('class_angular_reactive_view') ||
-           otherCls.plugName.start_with?('class_angular_listing')
-          plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
+        if otherCls.plug_name.start_with?('class_angular_reactive_edit') ||
+           otherCls.plug_name.start_with?('class_angular_reactive_view') ||
+           otherCls.plug_name.start_with?('class_angular_listing')
+          plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
           cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
                          plug.get_class_name(otherCls))
         end
@@ -85,8 +85,8 @@ module XCTETypescript
 
       pathLines = []
 
-      if !cls.model.featureGroup.nil?
-        fClasses = ClassModelManager.findFeatureClasses(cls.model.featureGroup)
+      if !cls.model.feature_group.nil?
+        fClasses = ClassModelManager.findFeatureClasses(cls.model.feature_group)
 
         for otherCls in fClasses
           addPathsForClass(cls, bld, otherCls, pathLines)
@@ -128,21 +128,21 @@ module XCTETypescript
     end
 
     def addPathsForClass(_cls, _bld, otherCls, pathLines)
-      if otherCls.plugName.start_with? 'class_angular_reactive_edit'
+      if otherCls.plug_name.start_with? 'class_angular_reactive_edit'
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_edit')
         editPath = plug.get_relative_route(otherCls, 'edit')
 
         compName = plug.get_class_name(otherCls)
         # compName = get_class_name(cls)
         pathLines.push("{ path: '" + editPath.join('/') + "/:id', component: " + compName + ' },')
-      elsif otherCls.plugName.start_with? 'class_angular_reactive_view'
+      elsif otherCls.plug_name.start_with? 'class_angular_reactive_view'
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_view')
         viewPath = plug.get_relative_route(otherCls, 'view')
 
         compName = plug.get_class_name(otherCls)
         # compName = get_class_name(cls)
         pathLines.push("{ path: '" + viewPath.join('/') + "/:id', component: " + compName + ' },')
-      elsif otherCls.plugName == 'class_angular_listing'
+      elsif otherCls.plug_name == 'class_angular_listing'
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_listing')
 
         listPath = plug.get_relative_route(otherCls, 'listing')

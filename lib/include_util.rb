@@ -16,7 +16,7 @@ class IncludeUtil
     return self
   end
 
-  def plugName(pName)
+  def plug_name(pName)
     @pName = pName
     return self
   end

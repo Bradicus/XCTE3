@@ -96,25 +96,25 @@ module DataProcessing
       for plan in projectPlan.classes
         language = XCTEPlugin.getLanguages[plan.language]
 
-        Log.debug('generating model ' + plan.model.name + ' class ' + plan.plugName + ' language: ' + plan.language +
+        Log.debug('generating model ' + plan.model.name + ' class ' + plan.plug_name + ' language: ' + plan.language +
                   '  namespace: ' + plan.namespace.get('.'))
 
         # project.singleFile = "map gen settings"
 
         if project.singleFile.nil? || project.singleFile == plan.model.name
-          srcFiles = language[plan.plugName].gen_source_files(plan)
+          srcFiles = language[plan.plug_name].gen_source_files(plan)
 
           for srcFile in srcFiles
             foundStart = false
             foundEnd = false
             overwriteFile = false
-            fName = plan.filePath + '/' + srcFile.lfName + '.' + srcFile.lfExtension
+            fName = plan.file_path + '/' + srcFile.lfName + '.' + srcFile.lfExtension
 
             if File.file?(fName)
-              plan.customCode = ProcessCustomCode.extractCustomCode(fName)
+              plan.custom_code = ProcessCustomCode.extractCustomCode(fName)
 
-              if !plan.customCode.nil? && plan.customCode.strip.length > 0
-                srcFile.lines = ProcessCustomCode.insertCustomCode(plan.customCode, srcFile)
+              if !plan.custom_code.nil? && plan.custom_code.strip.length > 0
+                srcFile.lines = ProcessCustomCode.insertCustomCode(plan.custom_code, srcFile)
                 for line in srcFile.lines
                   line.!strip if line.blank?
                 end
@@ -124,7 +124,7 @@ module DataProcessing
             if !File.file?(fName)
               overwriteFile = true
             else
-              existingFile = File.new(File.join(plan.filePath, srcFile.lfName + '.' + srcFile.lfExtension), mode: 'r')
+              existingFile = File.new(File.join(plan.file_path, srcFile.lfName + '.' + srcFile.lfExtension), mode: 'r')
               fileData = existingFile.read
               genContents = srcFile.getContents
 
@@ -135,12 +135,12 @@ module DataProcessing
           end
 
           if overwriteFile
-            Log.debug('writing file: ' + File.join(plan.filePath, srcFile.lfName + '.' + srcFile.lfExtension))
-            if !File.directory?(plan.filePath)
-              FileUtils.mkdir_p(plan.filePath)
+            Log.debug('writing file: ' + File.join(plan.file_path, srcFile.lfName + '.' + srcFile.lfExtension))
+            if !File.directory?(plan.file_path)
+              FileUtils.mkdir_p(plan.file_path)
               #   Log.debug("Creating folder: " + newPath
             end
-            sFile = File.new(File.join(plan.filePath, srcFile.lfName + '.' + srcFile.lfExtension), mode: 'w')
+            sFile = File.new(File.join(plan.file_path, srcFile.lfName + '.' + srcFile.lfExtension), mode: 'w')
             sFile << srcFile.getContents
             sFile.close
           end

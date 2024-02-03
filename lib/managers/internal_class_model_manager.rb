@@ -9,11 +9,11 @@ class InternalClassModelManager
     @@list = Array.new
   end
 
-  def self.findClass(modelName, classPlugName)
+  def self.findClass(modelName, classplug_name)
     for c in @@list
-      # puts classPlugName + " " + c.plugName
+      # puts classplug_name + " " + c.plug_name
       # puts modelName + " " + c.model.name
-      if (c.plugName == classPlugName && nameMatches(c.model.name, modelName))
+      if (c.plug_name == classplug_name && nameMatches(c.model.name, modelName))
         return c
       end
     end
@@ -23,7 +23,7 @@ class InternalClassModelManager
 
   def self.findModel(modelName)
     for c in @@list
-      # puts classPlugName + " " + c.plugName
+      # puts classplug_name + " " + c.plug_name
       # puts modelName + " " + c.model.name
       if (nameMatches(c.model.name, modelName))
         return c
@@ -33,13 +33,13 @@ class InternalClassModelManager
     return nil
   end
 
-  def self.findFeatureClasses(featureGroup)
+  def self.findFeatureClasses(feature_group)
     classes = Array.new
 
     for c in @@list
-      # puts c.plugName + " " + classPlugName
+      # puts c.plug_name + " " + classplug_name
       # puts c.model.name + " " + className
-      if (c.model.featureGroup == featureGroup)
+      if (c.model.feature_group == feature_group)
         classes.push c
       end
     end
@@ -47,16 +47,16 @@ class InternalClassModelManager
     return classes
   end
 
-  def self.findVarClass(var, plugName = nil)
+  def self.findVarClass(var, plug_name = nil)
     dList = @@list
     for c in @@list
       if c.model.name != nil
         #puts c.model.name + " " + var.getUType()
         if (nameMatches(c.model.name, var.getUType()))
           # puts c.model.name + " " + var.getUType()
-          # puts c.plugName + " " + plugName
+          # puts c.plug_name + " " + plug_name
           if (nameMatches(c.model.name, var.getUType()) &&
-              (plugName == nil || nameMatches(c.plugName, plugName)))
+              (plug_name == nil || nameMatches(c.plug_name, plug_name)))
             if (c.namespace.same?(var.namespace))
               return c
             end
@@ -100,12 +100,12 @@ class InternalClassModelManager
     return true
   end
 
-  def self.findClassFunction(classPlugName, funPlugName)
+  def self.findClassFunction(classplug_name, funplug_name)
     cs = @@list # for debugging
     for c in @@list
-      if (c.plugName == classPlugName)
+      if (c.plug_name == classplug_name)
         for fun in c.functions
-          if fun.name == funPlugName
+          if fun.name == funplug_name
             return fun
           end
         end

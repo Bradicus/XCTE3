@@ -16,7 +16,7 @@ module CodeStructure
     attr_accessor :vtype, :utype, :defaultValue, :comment,
                   :visibility, :isConst, :isStatic, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
                   :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptionsList,
-                  :templates, :attribs, :required, :readonly, :relation, :storeIn, :construct
+                  :templates, :attribs, :required, :readonly, :relation, :storeIn, :init_vars
 
     def initialize(parentElem)
       super(CodeStructure::CodeElemTypes::ELEM_VARIABLE, parentElem)
@@ -42,7 +42,7 @@ module CodeStructure
       @readonly = false
       @relation = nil
       @storeIn = nil
-      @construct = false
+      @init_vars = false
 
       # Stored only for arrays
       @arrayElemCount = 0	# Array size of 0 means this isn't an array

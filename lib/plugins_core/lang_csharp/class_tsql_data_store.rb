@@ -28,8 +28,8 @@ module XCTECSharp
 
       cls.setName(get_class_name(cls))
 
-      if cls.interfaceNamespace.hasItems?
-        cls.addUse(cls.interfaceNamespace.get('.'), 'I' + get_unformatted_class_name(cls))
+      if cls.interface_namespace.hasItems?
+        cls.addUse(cls.interface_namespace.get('.'), 'I' + get_unformatted_class_name(cls))
         Utils.instance.add_class_include(cls, 'standard')
       end
 
@@ -50,10 +50,10 @@ module XCTECSharp
 
       inheritsFrom = []
 
-      for baseClass in cls.baseClasses
+      for baseClass in cls.base_classes
         inheritsFrom << baseClass.name
       end
-      if cls.interfaceNamespace.hasItems?
+      if cls.interface_namespace.hasItems?
         inheritsFrom << Utils.instance.get_styled_class_name('i ' + get_unformatted_class_name(cls))
       end
 

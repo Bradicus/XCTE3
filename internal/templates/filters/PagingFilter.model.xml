@@ -5,10 +5,10 @@
 	Filters data set down to current page
 	</description>
 				
-	<gen_class type="standard" ns="filters" path="filters" construct="true">
+	<gen_class type="standard" ns="filters" path="filters" init_vars="true">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="page sizes"	type="Int32" set="List" />
 		<var name="pager"		type="String" default="none" />
 		<var name="page size default"	type="Int32"  default="10" />

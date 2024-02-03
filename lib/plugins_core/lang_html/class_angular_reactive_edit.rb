@@ -149,7 +149,7 @@ module XCTEHtml
       rowNode
     end
 
-    def make_field(cls, var, varPrefix)
+    def make_field(cls, var, var_prefix)
       varName = Utils.instance.get_styled_variable_name(var)
       formVar = CodeNameStyling.getStyled(@formName, Utils.instance.langProfile.variableNameStyle)
       fldNode = HtmlNode.new('div')
@@ -160,8 +160,8 @@ module XCTEHtml
         fldNode.add_class('visually-hidden') if var.name.downcase == 'id'
       end
 
-      if !varPrefix.nil?
-        varId = varPrefix + '-' + varName
+      if !var_prefix.nil?
+        varId = var_prefix + '-' + varName
       else
         varId = varName
       end
@@ -211,8 +211,8 @@ module XCTEHtml
 
       # Display validation messages
       if var.needsValidation
-        if !varPrefix.nil?
-          formVarRef = formVar + ".get('" + varPrefix + "')?" + ".get('" + varName + "')"
+        if !var_prefix.nil?
+          formVarRef = formVar + ".get('" + var_prefix + "')?" + ".get('" + varName + "')"
         else
           formVarRef = formVar + ".get('" + varName + "')"
         end

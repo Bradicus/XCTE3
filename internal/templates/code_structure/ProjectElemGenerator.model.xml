@@ -9,7 +9,7 @@
 	  <base_class cname="code elem" plugin="standard" />
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="language"	type="String" nullable = "true"/>
 		<var name="template folders"	type="String" set="List" />
 		<var name="ouput folder"	type="String" nullable = "true" />

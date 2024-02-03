@@ -57,7 +57,7 @@ module XCTECpp
       #      bld.add("    unsigned int i;"))
       #    end
 
-      for par in cls.baseClasses
+      for par in cls.base_classes
         bld.add(Utils.instance.get_styled_class_name(par.name) + '::operator=(src' + styledCName + ');')
       end
 

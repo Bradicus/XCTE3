@@ -45,7 +45,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     #      bld.add("    unsigned int i;\n");
     #    end
 
-    for par in codeClass.baseClasses
+    for par in codeClass.base_classes
       bld.add('    ' << par.name << '::operator=(src' + styledCName << ');')
     end
 

@@ -13,7 +13,7 @@
 		</function>
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">		
+	<var_group genGet="true" genSet="true" init_vars="true">		
 		<var name="name"			type="String" />        
         <var name="is pointer tpl"	type="boolean" default="false" />        
         <var name="is collection"	type="boolean" default="false" />

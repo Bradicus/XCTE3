@@ -56,10 +56,10 @@ module XCTETypescript
       relClasses = Utils.instance.getRelatedClasses(cls)
 
       for otherCls in relClasses
-        if otherCls.plugName.start_with?('class_angular_reactive_edit') ||
-           otherCls.plugName.start_with?('class_angular_reactive_view') ||
-           otherCls.plugName.start_with?('class_angular_listing')
-          plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plugName)
+        if otherCls.plug_name.start_with?('class_angular_reactive_edit') ||
+           otherCls.plug_name.start_with?('class_angular_reactive_view') ||
+           otherCls.plug_name.start_with?('class_angular_listing')
+          plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
           cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
                          plug.get_class_name(otherCls))
         end
@@ -93,7 +93,7 @@ module XCTETypescript
       importList = %w[CommonModule RouterModule]
 
       for otherCls in relClasses
-        if otherCls.plugName.start_with?('class_angular_reactive_edit') || otherCls.plugName.start_with?('class_angular_reactive_edit')
+        if otherCls.plug_name.start_with?('class_angular_reactive_edit') || otherCls.plug_name.start_with?('class_angular_reactive_edit')
           importList.push('ReactiveFormsModule')
         end
       end

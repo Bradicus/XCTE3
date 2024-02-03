@@ -6,16 +6,17 @@
 	</description>
 
 	<gen_class type="standard" ns="code structure" path="code structure">
+	  	<base_class cname="code elem" plugin="standard" />
 		<function name="method_constructor" >	
 			<param name="parent elem"	utype="code elem"  nullable="true" />    
 			<param name="model"			type="code elem data spec" nullable="true" />
 		</function>
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
-		<var name="element id"		utype="code elem type" default="CodeElemType.ELEM_CLASS_GEN" />
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="model"			type="code elem data spec" nullable="true" default="null" />
 		<var name="path"			type="String"  />
+		<var name="plug name"		type="String"  />
 		<var name="namespace"		utype="code elem namespace" />		
 		<var name="language"		type="String" />
 		<var name="includes"		utype="code elem include" set="List" />
@@ -26,7 +27,9 @@
 		<var name="interfaces"		utype="code elem class spec" set="List" />
 		<var name="injections"		utype="code elem variable" set="List" />
 		<var name="interface namespace"	utype="code elem namespace" />
+		<var name="interface path"  type="String" />
 		<var name="test namespace"	utype="code elem namespace" />
+		<var name="test path"  type="String" />
 		<var name="template params"	utype="code elem class spec" set="List" />
 		<var name="var prefix"		type="String" nullable="true" />
 		<var name="pre defs"			type="String" set="List" />

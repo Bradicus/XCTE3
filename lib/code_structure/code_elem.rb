@@ -23,26 +23,6 @@ module CodeStructure
       @lang_only = []	# What languages this node is limited to
       @os_only = []	# What os's this node is limited to
     end
-      
-    # Loads attributes all code elements share
-    def loadAttributes(nodeXML)
-      @data_node = nodeXML
-
-      if (nodeXML.attributes["lang_ignore"] != nil)
-        ignoreLangs = nodeXML.attributes["lang_ignore"].split(",")
-        for iLang in ignoreLangs
-          @lang_only.delete(iLang.strip)
-        end
-      end
-
-      if (nodeXML.attributes["lang_only"] != nil)
-        ignoreLangs = nodeXML.attributes["lang_only"].split(",")
-        @lang_only = Array.new
-        for iLang in ignoreLangs
-          @lang_only << iLang.strip
-        end
-      end
-    end
   end
 end
 

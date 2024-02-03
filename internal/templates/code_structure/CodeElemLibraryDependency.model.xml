@@ -8,7 +8,7 @@
 	<gen_class type="standard" ns="code structure" path="code structure" >
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true" >		
+	<var_group genGet="true" genSet="true" init_vars="true" >		
 		<var name="name"		type="String" nullable="true" />        
         <var name="versionMin"	type="String" nullable="true" />        
         <var name="versionMax"	type="String" nullable="true" />        

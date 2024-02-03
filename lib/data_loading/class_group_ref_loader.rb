@@ -19,7 +19,7 @@ module DataLoading
       if xmlNode != nil
         cgRef.name = AttributeLoader.init(xmlNode).names("name").get()
         cgRef.variant = AttributeLoader.init(xmlNode).names("variant").get()
-        cgRef.featureGroup = AttributeLoader.init(xmlNode).names("feature_group").get()
+        cgRef.feature_group = AttributeLoader.init(xmlNode).names("feature_group").get()
         cgRef.data_node = xmlNode
       end
     end

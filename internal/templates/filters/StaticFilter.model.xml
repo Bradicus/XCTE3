@@ -8,7 +8,7 @@
 	<gen_class type="standard" ns="filters" path="filters">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="column"  type="String" />
 		<var name="value"	type="String" />
 	</var_group>		

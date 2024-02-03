@@ -40,10 +40,10 @@ class ProjectPlan
     return nil
   end
 
-  def findClassFunction(languageName, modelName, classPlugName, funPlugName)
+  def findClassFunction(languageName, modelName, classplug_name, funplug_name)
     for model in @models
       if model.name == modelName
-        return ClassModelManager.findClassFunction(classPlugName, funPlugName)
+        return ClassModelManager.findClassFunction(classplug_name, funplug_name)
       end
     end
 

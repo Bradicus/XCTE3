@@ -1,66 +1,48 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
-#
-# This class stores information for the parent code structure
-# read in from an xml file
-
-require 'code_elem_include'
-require 'code_elem_use'
-require 'code_elem_namespace'
-require 'filters/data_filter'
-require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemClassSpec < CodeStructure::CodeElem
-    attr_accessor :functions, :namespace, :plugName, :interfaceNamespace, :interfacePath,
-                  :testNamespace, :testPath, :templateParams,
-                  :includes, :uses, :baseClasses, :interfaces, :language, :path, :varPrefix, :model,
-                  :filePath, :name, :standardClass, :standardClassType, :customCode, :preDefs, :className,
-                  :genCfg, :injections, :dataClass, :featureGroup, :variant, :class_group_ref, :actions, :data_class_for
+  class CodeElemClassSpec < CodeElem
+    attr_accessor :element_id, :model, :plug_name, :path, :namespace, :language, :includes, :uses, :gen_cfg, :functions,
+            :base_classes, :interfaces, :injections, :interface_namespace, :interface_path, :test_namespace, :test_path,
+            :var_prefix, :pre_defs, :file_path, :standard_class, :standard_class_type, :custom_code, 
+            :class_group_ref, :class_group_name, :variant, :feature_group
+        
+    def initialize(cls, model, parent_elem)
+      super(CodeElemTypes::ELEM_CLASS_GEN, parent_elem)
 
-    def initialize(parentElem, model, pComp, _isStatic)
-      
-    super(CodeStructure::CodeElemTypes::ELEM_CLASS_GEN, parentElem)
-
-      @element_id = CodeStructure::CodeElemTypes::ELEM_CLASS_GEN
-      @name = nil
-      @className = nil # Override name for generated class
-
-      @language = nil
+      @model = model
+      @plug_name = nil
+      @path = ""
+      @namespace = CodeElemNamespace.new
+      @language = ""
       @includes = []
       @uses = []
+      @gen_cfg = nil
       @functions = []
-      @baseClasses = []
+      @base_classes = []
       @interfaces = []
       @injections = []
-      @namespace = CodeElemNamespace.new
-      @interfaceNamespace = CodeElemNamespace.new
-      @testNamespace = CodeElemNamespace.new
-      @templateParams = []
-      @varPrefix = ''
-      @preDefs = []
-      @actions = []
-      @path = ''
-      @model = model
-      @genCfg = pComp
-
-      # Used by per lang instance of class
-      @name = nil
-      @filePath = nil
-      @standardClass = nil
-      @standardClassType = nil
-      @customCode = nil
-      @dataClass = nil
+      @interface_namespace = CodeElemNamespace.new
+      @interface_path = nil
+      @test_namespace = CodeElemNamespace.new
+      @test_path = nil
+      @template_params = []
+      @var_prefix = nil
+      @pre_defs = []
+      @file_path = nil
+      @standard_class = nil
+      @standard_class_type = nil
+      @custom_code = nil
+      @data_class = nil
       @class_group_ref = nil
-      @cgName = nil
+      @class_group_name = nil
       @variant = nil
-      @featureGroup = nil
+      @feature_group = nil
     end
-
+    
     def addInclude(iPath, iName, iType = nil)
       iPath = String.new if iPath.nil?
 

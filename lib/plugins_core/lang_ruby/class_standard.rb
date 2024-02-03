@@ -38,9 +38,9 @@ module XCTERuby
     def render_body_content(cls, bld)
       inheritFrom = ''
 
-      inheritFrom = ' < ' + Utils.instance.getClassTypeName(cls.baseClasses[0]) if cls.baseClasses.length > 0
+      inheritFrom = ' < ' + Utils.instance.getClassTypeName(cls.base_classes[0]) if cls.base_classes.length > 0
 
-      if cls.baseClasses.length > 1
+      if cls.base_classes.length > 1
         Log.error("Ruby doesn't support multiple inheritance")
       end
 

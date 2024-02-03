@@ -19,7 +19,7 @@ module XCTETypescript
     end
 
     def getFileName(cls)
-      if !cls.featureGroup.nil?
+      if !cls.feature_group.nil?
         Utils.instance.get_styled_file_name(cls.getUName + '.component')
       else
         Utils.instance.get_styled_file_name(cls.getUName + '.component')

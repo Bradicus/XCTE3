@@ -57,7 +57,7 @@ module XCTECSharp
 
       bld.indent
 
-      XCTECSharp::Utils.instance.genVarList(cls, bld, cls.varPrefix)
+      XCTECSharp::Utils.instance.genVarList(cls, bld, cls.var_prefix)
 
       bld.unindent
 
@@ -69,7 +69,7 @@ module XCTECSharp
       whereItems = []
       fun.parameters.vars.each do |param|
         whereCondition =
-          '[' + XCTETSql::Utils.instance.get_styled_variable_name(param, cls.varPrefix) +
+          '[' + XCTETSql::Utils.instance.get_styled_variable_name(param, cls.var_prefix) +
           '] = @' + XCTETSql::Utils.instance.get_styled_variable_name(param.getParam)
 
         whereItems << whereCondition

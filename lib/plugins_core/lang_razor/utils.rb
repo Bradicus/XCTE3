@@ -20,10 +20,10 @@ module XCTERazor
     end
 
     # Returns variable declaration for the specified variable
-    def get_var_dec(var, varPrefix = '')
+    def get_var_dec(var, var_prefix = '')
       vDec = String.new
 
-      vDec << '[' + CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle) + ']'
+      vDec << '[' + CodeNameStyling.getStyled(var_prefix + var.name, @langProfile.variableNameStyle) + ']'
 
       tName = get_type_name(var)
 
@@ -62,13 +62,13 @@ module XCTERazor
     end
 
     # Returns the version of this name styled for this language
-    def get_styled_variable_name(var, varPrefix = '')
+    def get_styled_variable_name(var, var_prefix = '')
       return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle) unless var.is_a?(CodeElemVariable)
       if var.genGet || var.genSet
-        return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.functionNameStyle)
+        return CodeNameStyling.getStyled(var_prefix + var.name, @langProfile.functionNameStyle)
       end
 
-      return CodeNameStyling.getStyled(varPrefix + var.name, @langProfile.variableNameStyle)
+      return CodeNameStyling.getStyled(var_prefix + var.name, @langProfile.variableNameStyle)
     end
 
     # These are comments declaired in the COMMENT element,

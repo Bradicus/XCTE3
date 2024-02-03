@@ -9,10 +9,10 @@ require 'code_structure/code_elem'
 
 module CodeStructure
   class CodeElemClassGroupRef < CodeStructure::CodeElem
-    attr_accessor :name, :variant, :featureGroup
+    attr_accessor :name, :variant, :feature_group
 
     @name = nil
     @variant = nil
-    @featureGroup = nil
+    @feature_group = nil
   end
 end

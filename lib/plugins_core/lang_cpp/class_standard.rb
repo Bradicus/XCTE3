@@ -111,7 +111,7 @@ module XCTECpp
 
       inheritFrom = []
 
-      for bcls in cls.baseClasses
+      for bcls in cls.base_classes
         inheritFrom.push(bcls.visibility + ' ' + Utils.instance.getClassTypeName(bcls))
       end
 

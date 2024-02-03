@@ -170,10 +170,10 @@ module DataLoading
         newVal = newVal.gsub("!{ModelName}", @dmodel.name)
       end
 
-      if @cls_gen != nil && @cls_gen.featureGroup != nil
-        newVal = newVal.gsub("!{FeatureGroup}", @cls_gen.featureGroup)
+      if @cls_gen != nil && @cls_gen.feature_group != nil
+        newVal = newVal.gsub("!{feature_group}", @cls_gen.feature_group)
       else
-        newVal = newVal.gsub("!{FeatureGroup}", "")
+        newVal = newVal.gsub("!{feature_group}", "")
       end
 
       if @cls_gen != nil && @cls_gen.variant != nil

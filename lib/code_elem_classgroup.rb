@@ -11,9 +11,9 @@ require 'code_structure/code_elem'
 
 module CodeStructure
   class CodeElemClassgroup < CodeStructure::CodeElem
-    attr_accessor :featureGroup, :cFor
+    attr_accessor :feature_group, :cFor
 
-    @featureGroup = nil
+    @feature_group = nil
     @cFor = nil
 
     def initialize(parentElem)

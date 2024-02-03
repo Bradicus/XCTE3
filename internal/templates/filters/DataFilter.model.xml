@@ -8,7 +8,7 @@
 	<gen_class type="standard" ns="filters" path="filters">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="paging"	utype="paging filter" ns="filters" />
 		<var name="searches" utype="search filter" ns="filters" set="List" />
 		<var name="sort"	utype="sort filter" ns="filters" />

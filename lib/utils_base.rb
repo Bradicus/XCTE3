@@ -82,16 +82,16 @@ class UtilsBase
   end
 
   # Create a variable with a type cls
-  def create_var_for(cls, plugName)
-    plugClass = cls.model.findClassModel(plugName)
-    plug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
+  def create_var_for(cls, plug_name)
+    plugClass = cls.model.findClassModel(plug_name)
+    plug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
 
     if plugClass.nil?
-      Log.debug('Class not found for ' + plugName)
+      Log.debug('Class not found for ' + plug_name)
       return nil
     end
     if plug.nil?
-      Log.debug('Plugin not found for ' + plugName)
+      Log.debug('Plugin not found for ' + plug_name)
       return nil
     end
 
@@ -166,24 +166,24 @@ class UtilsBase
   end
 
   # Add an include if there's a class model defined for it
-  def try_add_include_for(to_cls, for_cls, plugName)
-    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
+  def try_add_include_for(to_cls, for_cls, plug_name)
+    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
 
     if !clsPlug.nil?
-      for_cls_spec = for_cls.model.findClassModel(plugName)
+      for_cls_spec = for_cls.model.findClassModel(plug_name)
 
       if !for_cls_spec.nil?
         to_cls.addInclude(clsPlug.get_dependency_path(for_cls_spec), clsPlug.get_class_name(for_cls_spec))
       end
     else
-      Log.warn "[try_add_include_for] Couldn't find class plugin: " + plugName.to_s
+      Log.warn "[try_add_include_for] Couldn't find class plugin: " + plug_name.to_s
     end
   end
 
   # Add an include if there's a class model defined for it
-  def try_add_include_for_var(cls, var, plugName)
-    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plugName)
-    clsGen = ClassModelManager.findClass(var.getUType, plugName)
+  def try_add_include_for_var(cls, var, plug_name)
+    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
+    clsGen = ClassModelManager.findClass(var.getUType, plug_name)
 
     return unless !clsPlug.nil? && !clsGen.nil? && !is_self_reference(cls, var, clsPlug)
 

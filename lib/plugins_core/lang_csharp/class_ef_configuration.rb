@@ -34,10 +34,10 @@ module XCTECSharp
       classDec = cls.model.visibility + ' class ' + get_class_name(cls) + ' : IEntityTypeConfiguration<' + Utils.instance.get_styled_class_name(cls.getUName) + '>'
 
       for par in (0..cls.baseClassModelManager.size)
-        if par == 0 && !cls.baseClasses[par].nil?
-          classDec << ' < ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
-        elsif !cls.baseClasses[par].nil?
-          classDec << ', ' << cls.baseClasses[par].visibility << ' ' << cls.baseClasses[par].name
+        if par == 0 && !cls.base_classes[par].nil?
+          classDec << ' < ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        elsif !cls.base_classes[par].nil?
+          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
         end
       end
 

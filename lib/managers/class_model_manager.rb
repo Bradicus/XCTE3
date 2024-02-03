@@ -11,27 +11,27 @@ class ClassModelManager
     @@list = []
   end
 
-  def self.findClass(modelName, classPlugName)
+  def self.findClass(modelName, classplug_name)
     for c in @@list
-      #  puts classPlugName + " " + c.plugName
+      #  puts classplug_name + " " + c.plug_name
       #  puts modelName + " " + c.model.name
-      if c.plugName == classPlugName && NameCompare.matches(c.model.name, modelName)
+      if c.plug_name == classplug_name && NameCompare.matches(c.model.name, modelName)
         return c
       end
     end
 
-    Log.warn("could not find class with model: " + modelName.to_s + "  plugin: " + classPlugName.to_s)
+    Log.warn("could not find class with model: " + modelName.to_s + "  plugin: " + classplug_name.to_s)
 
     return nil
   end
 
-  def self.findFeatureClasses(featureGroup)
+  def self.findFeatureClasses(feature_group)
     classes = []
 
     for c in @@list
-      # puts c.plugName + " " + classPlugName
+      # puts c.plug_name + " " + classplug_name
       # puts c.model.name + " " + className
-      if c.model.featureGroup == featureGroup
+      if c.model.feature_group == feature_group
         classes.push c
       end
     end
@@ -39,14 +39,14 @@ class ClassModelManager
     return classes
   end
 
-  def self.findVarClass(var, plugName = nil)
+  def self.findVarClass(var, plug_name = nil)
     dList = @@list
     for c in @@list
       # puts c.model.name + " " + var.getUType()
-      # puts c.plugName + " " + plugName
+      # puts c.plug_name + " " + plug_name
       if !c.model.name.nil? && (NameCompare.matches(c.model.name, var.getUType) &&
-                 (plugName.nil? || NameCompare.matches(c.plugName,
-                                                       plugName))) && (c.namespace.same?(var.namespace) || !var.namespace.hasItems?)
+                 (plug_name.nil? || NameCompare.matches(c.plug_name,
+                                                       plug_name))) && (c.namespace.same?(var.namespace) || !var.namespace.hasItems?)
         return c
       end
     end
@@ -78,12 +78,12 @@ class ClassModelManager
     dm_classes = []
 
     for c in @@list
-      # puts classPlugName + ' ' + c.plugName
+      # puts classplug_name + ' ' + c.plug_name
       # puts modelName + ' ' + c.model.name
 
       # puts cls.model.name
-      # puts cls.plugName
-      if !c.dataClass.nil? && c.dataClass.matches(cls.model.name, cls.plugName)
+      # puts cls.plug_name
+      if !c.dataClass.nil? && c.dataClass.matches(cls.model.name, cls.plug_name)
         dm_classes.push c
       end
     end
@@ -91,12 +91,12 @@ class ClassModelManager
     return dm_classes
   end
 
-  def self.findClassFunction(classPlugName, funPlugName)
+  def self.findClassFunction(classplug_name, funplug_name)
     cs = @@list # for debugging
     for c in @@list
-      if c.plugName == classPlugName
+      if c.plug_name == classplug_name
         for fun in c.functions
-          if fun.name == funPlugName
+          if fun.name == funplug_name
             return fun
           end
         end

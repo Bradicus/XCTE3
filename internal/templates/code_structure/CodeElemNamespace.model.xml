@@ -2,11 +2,11 @@
 <model name="code elem namespace">
 
 	<description>
-	Code Element - Use
+	Code Element - Namespace
 	</description>
 
-	<var_group genGet="true" genSet="true" construct="true" >
-	  <var name="nsList"	type="String" set="List" />
+	<var_group genGet="true" genSet="true" init_vars="true" >
+	  <var name="ns list"	type="String" set="List" />
 	</var_group>	
 				
 	<gen_class type="standard" ns="code structure" path="code structure">

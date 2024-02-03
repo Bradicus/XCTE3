@@ -12,7 +12,7 @@
 		</function>
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" construct="true">
+	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="element id"		utype="code elem type" nullable="true" default="null" />
 		<var name="name"			type="String" nullable = "true" />
 		<var name="display name"	type="String" nullable = "true" />

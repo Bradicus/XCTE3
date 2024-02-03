@@ -35,7 +35,7 @@ module XCTERuby
         param_set.push Utils.instance.get_param_dec(param)
       end
       
-      for bc in cls.baseClasses
+      for bc in cls.base_classes
         bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
 
         if !bc_cls_spec.nil?
@@ -52,7 +52,7 @@ module XCTERuby
 
       bld.start_class("def initialize(" + param_set.join(", ") + ")")
 
-      if cls.baseClasses.length > 0
+      if cls.base_classes.length > 0
         bld.add 'super'
       end
 
