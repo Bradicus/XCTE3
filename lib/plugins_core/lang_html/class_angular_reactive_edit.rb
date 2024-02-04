@@ -235,7 +235,7 @@ module XCTEHtml
         fldNode.add_child(validationNode)
       end
 
-      fldNode
+      return fldNode
     end
   end
 end

@@ -207,6 +207,7 @@ module XCTETypescript
 
       bld.separate
       bld.start_block('onSubmit()')
+      bld.add 'this.' + clsVar + '.markAllAsTouched();'
       bld.start_block('if (!this.' + clsVar + '.invalid)')
       if idVar[0].getUType.downcase == 'string' || idVar[0].getUType.downcase == 'guid'
         bld.start_block('if (this.' + clsVar + ".controls['id'].value?.length === 0)")
