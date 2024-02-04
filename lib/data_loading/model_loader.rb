@@ -33,12 +33,6 @@ module DataLoading
       model.feature_group = AttributeLoader.init(xmlDoc.root).names('feature_group').get
       model.data_node = xmlDoc.root
 
-      xmlDoc.root.elements.each('derived') do |derived|
-        model.derivedFrom = AttributeLoader.init(xmlDoc.root).names('from').get
-        model.modelSet = AttributeLoader.init(xmlDoc.root).names('model_set').get
-        Log.error('No model set for derived class in ' + mdoel.name) if model.modelSet.nil?
-      end
-
       xmlDoc.root.elements.each('description') do |desc|
         model.description = desc.text
       end
@@ -73,39 +67,10 @@ module DataLoading
           cGroup.data_node.elements.each('gen_class') do |genCXML|
             cls = CodeStructure::CodeElemClassSpec.new(cls, model, model)
             cls.class_group_ref = cgRef
-
-            if cls.lang_only.length > 0
-              if cls.lang_only.include?(pComponent.language)
-                ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
-              end
-            else
-              ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
-            end
+            ClassLoader.loadClass(pComponent, cls, genCXML, modelManager)
           end
         end
       end
-    end
-
-    def self.loadClassGenNode(model, genCXML, pComponent, cgRefXml)
-      cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
-      cgRef = CodeStructure::CodeElemClassGroupRef.new(cls)
-      ClassGroupRefLoader.loadClassGroupRef(cgRef, cgRefXml)
-
-      ClassLoader.loadClass(pComponent, cls, genCXML)
-      ClassModelManager.list << cls
-      model.classes << cls
-
-      if cls.interface_namespace.hasItems?
-        intf = processInterface(cls, model, pComponent)
-        ClassModelManager.list << intf
-        model.classes << intf
-      end
-
-      return unless cls.test_namespace.hasItems?
-
-      intf = ClassLoader.processTests(cls, model, pComponent)
-      ClassModelManager.list << intf
-      model.classes << cls
     end
 
     # Loads a group node from an XML template vargroup node
@@ -120,10 +85,6 @@ module DataLoading
           newVG = CodeStructure::CodeElemVarGroup.new
           loadVarGroupNode(newVG, varElem, pComponent, vgNode)
           vgNode.varGroups << newVG
-        elsif varElem.name == 'comment'
-          loadCommentNode(varElem, vgNode.vars)
-        elsif varElem.name == 'br'
-          #          loadBRNode(varElem, vgNode.vars)
         end
       end
     end

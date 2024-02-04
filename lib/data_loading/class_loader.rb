@@ -27,7 +27,11 @@ module DataLoading
         genC.variant = genC.class_group_ref.variant
       end
 
-      CodeElemLoader.load(genC, genCXml, pComponent)          
+      CodeElemLoader.load(genC, genCXml, pComponent) 
+
+      if genC.lang_only.length > 0 && !genC.lang_only.include?(pComponent.language)
+        return nil
+      end         
 
       genC.feature_group = 
         AttributeLoader.init.xml(genCXml).names('feature_group').model(genC.model).default(genC.feature_group).get
