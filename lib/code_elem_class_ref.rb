@@ -8,7 +8,7 @@
 
 require 'code_elem_include'
 require 'code_elem_use'
-require 'code_elem_namespace'
+require 'code_structure/code_elem_namespace'
 require 'managers/name_compare'
 require 'code_structure/code_elem'
 

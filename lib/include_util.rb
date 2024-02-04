@@ -27,7 +27,7 @@ class IncludeUtil
   end
 
   def addTo(tgtClass)
-    clsPlug = XCTEPlugin::findClassPlugin(tgtClass.genCfg.language, @pName)
+    clsPlug = XCTEPlugin::findClassPlugin(tgtClass.gen_cfg.language, @pName)
     clsGen = @mdl.findClassModel(@pName)
 
     if clsPlug != nil && clsGen != nil

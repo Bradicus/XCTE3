@@ -29,7 +29,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def process_dependencies(cls, bld)
@@ -41,7 +41,7 @@ module XCTEJava
     def render_body_content(cls, bld)
       bld.separate
       clsName = get_class_name(cls)
-      tableName = Utils.instance.get_sql_util(cls).get_styled_class_name(cls.getUName)
+      tableName = Utils.instance.get_sql_util(cls).get_styled_class_name(cls.get_u_name)
 
       bld.add('@Entity')
       if tableName != clsName

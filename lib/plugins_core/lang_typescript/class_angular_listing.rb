@@ -14,23 +14,11 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def get_unformatted_class_name(cls)
-      cls.getUName + ' component'
-    end
-
-    def getFileName(cls)
-      if !cls.feature_group.nil?
-        Utils.instance.get_styled_file_name(cls.getUName + '.component')
-      else
-        Utils.instance.get_styled_file_name(cls.getUName + '.component')
-      end
-    end
-
     def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = getFileName(cls)
+      bld.lfName = get_file_name(cls)
       bld.lfExtension = Utils.instance.get_extension('body')
 
       process_dependencies(cls, bld)
@@ -72,12 +60,12 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.get_styled_file_name(cls.getUName)
+      filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
 
       clsVar = CodeNameStyling.getStyled(get_unformatted_class_name(cls), Utils.instance.langProfile.variableNameStyle)
 
       standard_class_name = Utils.instance.get_styled_class_name(cls.model.name)
-      routeName = Utils.instance.get_styled_file_name(cls.getUName)
+      routeName = Utils.instance.get_styled_file_name(cls.get_u_name)
 
       bld.add('@Component({')
       bld.indent

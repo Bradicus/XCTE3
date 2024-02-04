@@ -24,7 +24,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' resp tpl'
+      cls.get_u_name + ' resp tpl'
     end
 
     def process_dependencies(cls, bld)

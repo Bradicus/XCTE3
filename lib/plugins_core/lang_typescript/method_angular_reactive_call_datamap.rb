@@ -13,8 +13,8 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def render_function(cls, bld, _fun)
-      itemVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
-      clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
+      itemVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
       populateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')
 
       return unless !clsVar.nil? && !populateServiceVar.nil?

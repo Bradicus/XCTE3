@@ -23,7 +23,7 @@ module XCTECSharp
       bld.add('// Configuration ')
       bld.add('//')
 
-      entityClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
+      entityClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name)
       configFunName = 'Configure(EntityTypeBuilder<' + entityClassName + '> builder)'
 
       bld.start_function('public void ' + configFunName)
@@ -34,7 +34,7 @@ module XCTECSharp
     end
 
     def get_body(cls, bld, _fun)
-      bld.add('builder.ToTable("' + XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) + '", "dbo");')
+      bld.add('builder.ToTable("' + XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) + '", "dbo");')
 
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

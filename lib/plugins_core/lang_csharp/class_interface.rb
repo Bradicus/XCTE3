@@ -23,19 +23,12 @@ module XCTECSharp
         parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plug_name)
         return 'i ' + parentPlug.get_unformatted_class_name(cls.parentElem)
       else
-        return cls.getUName + ' engine'
+        return cls.get_u_name + ' engine'
       end
     end
 
     def gen_source_files(cls)
       srcFiles = []
-
-      if cls.parentElem.is_a?(CodeStructure::CodeElemClassSpec)
-        parentPlug = XCTEPlugin.findClassPlugin(@language, cls.parentElem.plug_name)
-        cls.setName('i ' + parentPlug.get_unformatted_class_name(cls.parentElem))
-      else
-        cls.setName('i ' + cls.getUName)
-      end
 
       cls.addUse('System.Data.SqlClient', 'SqlConnection')
 

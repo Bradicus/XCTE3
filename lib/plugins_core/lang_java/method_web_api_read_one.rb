@@ -24,22 +24,22 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def render_function(cls, bld, fun)
       bld.add('/*')
-      bld.add('* Web API get single ' + cls.getUName)
+      bld.add('* Web API get single ' + cls.get_u_name)
       bld.add('*/')
 
       get_body(cls, bld, fun)
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
-              ' Get' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id);')
+      bld.add('public ' + Utils.instance.get_styled_class_name(cls.get_u_name) +
+              ' Get' + Utils.instance.get_styled_class_name(cls.get_u_name) + '(int id);')
     end
 
     def get_body(cls, bld, _fun)
       conDef = String.new
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(dataClass.getUName + ' data store', Utils.instance.langProfile.variableNameStyle)
+        CodeNameStyling.getStyled(dataClass.get_u_name + ' data store', Utils.instance.langProfile.variableNameStyle)
       mapperName = 'mapper'
 
       params = []
@@ -49,18 +49,18 @@ module XCTEJava
         params << '@PathVariable("' + Utils.instance.get_styled_variable_name(idVar) + '") ' + Utils.instance.get_param_dec(idVar)
       end
 
-      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.getUName) + '/{id}")')
+      bld.add('@GetMapping("' + Utils.instance.getStyledUrlName(cls.get_u_name) + '/{id}")')
 
-      bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
-                        ' Get' + Utils.instance.get_styled_class_name(cls.getUName) +
+      bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.get_u_name) +
+                        ' Get' + Utils.instance.get_styled_class_name(cls.get_u_name) +
                         '(' + params.join(', ') + ')')
 
       bld.add('var item = ' + dataStoreName + '.findById(id);')
       bld.separate
 
-      if !cls.dataClass.nil?
+      if !cls.data_class.nil?
         bld.start_block 'if (item.isPresent())'
-        bld.add 'var mappedItem = new ' + Utils.instance.get_styled_class_name(cls.getUName) + '();'
+        bld.add 'var mappedItem = new ' + Utils.instance.get_styled_class_name(cls.get_u_name) + '();'
         bld.add(mapperName + '.map(item.get(), mappedItem);')
         bld.add('return mappedItem;')
         bld.end_block

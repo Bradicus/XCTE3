@@ -1,4 +1,4 @@
-require "code_elem_namespace.rb"
+require "code_structure/code_elem_namespace"
 
 ##
 # Class:: LangGeneratorConfig

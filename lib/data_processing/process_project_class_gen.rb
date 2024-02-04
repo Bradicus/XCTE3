@@ -18,7 +18,7 @@ module DataProcessing
 
           lClass = cls.clone()
           lClass.file_path = newPath.gsub(" ", "-")
-          lClass.name = language[lClass.plug_name].get_class_name(lClass)
+         # lClass.name = language[lClass.plug_name].get_class_name(lClass)
           lClass.gen_cfg = pComponent
 
           if (lClass.language == nil)

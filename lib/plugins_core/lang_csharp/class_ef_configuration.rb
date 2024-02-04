@@ -20,7 +20,7 @@ module XCTECSharp
     end
 
     def get_class_name(cls)
-      return Utils.instance.get_styled_class_name(cls.getUName + ' configuration')
+      return Utils.instance.get_styled_class_name(cls.get_u_name + ' configuration')
     end
 
     def process_dependencies(cls, _bld)
@@ -31,7 +31,7 @@ module XCTECSharp
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      classDec = cls.model.visibility + ' class ' + get_class_name(cls) + ' : IEntityTypeConfiguration<' + Utils.instance.get_styled_class_name(cls.getUName) + '>'
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls) + ' : IEntityTypeConfiguration<' + Utils.instance.get_styled_class_name(cls.get_u_name) + '>'
 
       for par in (0..cls.baseClassModelManager.size)
         if par == 0 && !cls.base_classes[par].nil?

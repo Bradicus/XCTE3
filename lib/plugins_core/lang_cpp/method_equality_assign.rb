@@ -22,13 +22,13 @@ module XCTECpp
     def get_declaration(cls, bld, _funItem)
       eqString = String.new
 
-      bld.add(Utils.instance.get_styled_class_name(cls.getUName))
-      bld.same_line('(const ' + Utils.instance.get_styled_class_name(cls.getUName))
-      bld.same_line('& src' + Utils.instance.get_styled_class_name(cls.getUName) + ');')
+      bld.add(Utils.instance.get_styled_class_name(cls.get_u_name))
+      bld.same_line('(const ' + Utils.instance.get_styled_class_name(cls.get_u_name))
+      bld.same_line('& src' + Utils.instance.get_styled_class_name(cls.get_u_name) + ');')
 
-      bld.add('const ' + Utils.instance.get_styled_class_name(cls.getUName))
-      bld.same_line('& operator=' + '(const ' + Utils.instance.get_styled_class_name(cls.getUName))
-      bld.same_line('& src' + Utils.instance.get_styled_class_name(cls.getUName) + ");\n")
+      bld.add('const ' + Utils.instance.get_styled_class_name(cls.get_u_name))
+      bld.same_line('& operator=' + '(const ' + Utils.instance.get_styled_class_name(cls.get_u_name))
+      bld.same_line('& src' + Utils.instance.get_styled_class_name(cls.get_u_name) + ");\n")
     end
 
     def process_dependencies(cls, bld, funItem); end
@@ -38,7 +38,7 @@ module XCTECpp
       eqString = String.new
       longArrayFound = false
 
-      styledCName = Utils.instance.get_styled_class_name(cls.getUName)
+      styledCName = Utils.instance.get_styled_class_name(cls.get_u_name)
 
       # First add copy constructor
       bld.genMultiComment(['Copy constructor'])

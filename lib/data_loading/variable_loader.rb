@@ -43,7 +43,7 @@ module DataLoading
       curVar.name = varXML.attributes["name"]
       curVar.display_name = varXML.attributes["display"]
       curVar.selectFrom = varXML.attributes["select_from"]
-      curVar.isOptionsList = (varXML.attributes["options"] == "true")
+      curVar.isOptions_list = (varXML.attributes["options"] == "true")
       curVar.relation = AttributeLoader.init().xml(varXML).names("rel").get
       curVar.storeIn = AttributeLoader.init().xml(varXML).names("store_in").get
 
@@ -56,7 +56,7 @@ module DataLoading
       curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = AttributeLoader.init().xml(varXML).names("default").doInherit().get
 
-      # puts "[ElemClass::loadVariable] loaded variable: " << curVar.name
+      # puts "[ElemClass::loadVariable] loaded variable: " + curVar.name
 
       parentElem.add_var curVar
     end

@@ -20,13 +20,11 @@ module XCTECSharp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' data store'
+      cls.get_u_name + ' data store'
     end
 
     def gen_source_files(cls)
       srcFiles = []
-
-      cls.setName(get_class_name(cls))
 
       if cls.interface_namespace.hasItems?
         cls.addUse(cls.interface_namespace.get('.'), 'I' + get_unformatted_class_name(cls))

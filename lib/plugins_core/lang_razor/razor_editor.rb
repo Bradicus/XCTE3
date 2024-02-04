@@ -22,14 +22,14 @@ module XCTERazor
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererRazor.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
       bld.lfExtension = 'cshtml'
       render_body_content(cls, bld)
 

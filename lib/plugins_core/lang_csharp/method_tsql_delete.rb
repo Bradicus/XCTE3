@@ -58,7 +58,7 @@ module XCTECSharp
       if ident_var
         identParamName = Utils.instance.get_styled_variable_name(ident_var.getParam)
 
-        bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) +
+        bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) +
                 ' WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.var_prefix) +
                 '] = @' + identParamName + '";')
 
@@ -73,7 +73,7 @@ module XCTECSharp
         bld.end_block
         bld.end_block
         bld.start_block('catch(Exception e)')
-        bld.add('throw new Exception("Error deleting ' + cls.getUName + ' with ' +
+        bld.add('throw new Exception("Error deleting ' + cls.get_u_name + ' with ' +
                 ident_var.name + ' = "' + ' + ' + identParamName + ', e);')
         bld.end_block
       end

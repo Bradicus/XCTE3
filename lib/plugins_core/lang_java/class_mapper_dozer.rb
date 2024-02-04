@@ -10,7 +10,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' mapper'
+      cls.get_u_name + ' mapper'
     end
 
     def process_dependencies(cls, bld)

@@ -12,7 +12,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' data gen'
+      cls.get_u_name + ' data gen'
     end
 
     def process_dependencies(cls, bld)

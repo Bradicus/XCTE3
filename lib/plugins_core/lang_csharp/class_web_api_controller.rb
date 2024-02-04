@@ -8,7 +8,7 @@ require 'plugins_core/lang_csharp/class_base'
 require 'plugins_core/lang_csharp/source_renderer_csharp'
 
 require 'code_elem_use'
-require 'code_elem_namespace'
+require 'code_structure/code_elem_namespace'
 require 'code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -22,7 +22,7 @@ module XCTECSharp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' controller'
+      cls.get_u_name + ' controller'
     end
 
     def process_dependencies(cls, bld)

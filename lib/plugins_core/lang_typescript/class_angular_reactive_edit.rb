@@ -15,11 +15,11 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' component'
+      cls.get_u_name + ' component'
     end
 
-    def getFileName(cls)
-      Utils.instance.get_styled_file_name(cls.getUName + '.component')
+    def get_file_name(cls)
+      Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
     end
 
     def getFilePath(cls)
@@ -30,7 +30,7 @@ module XCTETypescript
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '.component')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
       # render_file_comment(cls, bld)
       process_dependencies(cls, bld)
@@ -83,10 +83,10 @@ module XCTETypescript
     def render_body_content(cls, bld)
       bld.add
 
-      selectorName = Utils.instance.get_styled_file_name(cls.getUName)
-      filePart = Utils.instance.get_styled_file_name(cls.getUName)
+      selectorName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
 
-      clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
       storeServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
       dataGenServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service')
       userPopulateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')
@@ -249,7 +249,7 @@ module XCTETypescript
 
     # process variable group
     def process_var_group(cls, bld, vGroup)
-      clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + ' = ')
 
       Utils.instance.renderReactiveFormGroup(cls, bld, vGroup, false)

@@ -13,10 +13,10 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      return cls.getUName + ' data gen service'
+      return cls.get_u_name + ' data gen service'
     end
 
-    def getFileName(cls)
+    def get_file_name(cls)
       return Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
     end
 
@@ -80,7 +80,7 @@ module XCTETypescript
 
       bld.add('private apiUrl=environment.apiUrl;')
       # bld.add("private dataExpires: Number = 600; // Seconds")
-      # bld.add("private items: " + Utils.instance.get_styled_class_name(cls.getUName()) + "[];")
+      # bld.add("private items: " + Utils.instance.get_styled_class_name(cls.get_u_name()) + "[];")
 
       constructorParams = []
 

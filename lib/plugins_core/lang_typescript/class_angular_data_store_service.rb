@@ -10,7 +10,7 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' data store service'
+      cls.get_u_name + ' data store service'
     end
 
     def gen_source_files(cls)
@@ -52,7 +52,7 @@ module XCTETypescript
 
       bld.add('private apiUrl=environment.apiUrl;')
       # bld.add("private dataExpires: Number = 600; // Seconds")
-      # bld.add("private items: " + Utils.instance.get_styled_class_name(cls.getUName()) + "[];")
+      # bld.add("private items: " + Utils.instance.get_styled_class_name(cls.get_u_name()) + "[];")
 
       bld.separate
       bld.start_function('constructor(private httpClient: HttpClient)')

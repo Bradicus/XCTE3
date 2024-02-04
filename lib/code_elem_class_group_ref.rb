@@ -11,8 +11,11 @@ module CodeStructure
   class CodeElemClassGroupRef < CodeStructure::CodeElem
     attr_accessor :name, :variant, :feature_group
 
-    @name = nil
-    @variant = nil
-    @feature_group = nil
+    def initialize(cls)
+      @variant = nil
+      @feature_group = nil
+
+      super(nil, cls)
+    end
   end
 end

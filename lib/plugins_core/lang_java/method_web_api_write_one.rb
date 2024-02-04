@@ -22,15 +22,15 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def render_function(cls, bld, fun)
       bld.add('/*')
-      bld.add('* Web API create single ' + cls.getUName)
+      bld.add('* Web API create single ' + cls.get_u_name)
       bld.add('*/')
 
       get_body(cls, bld, fun)
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
-              ' Post' + Utils.instance.get_styled_class_name(cls.getUName) + '(int id);')
+      bld.add('public ' + Utils.instance.get_styled_class_name(cls.get_u_name) +
+              ' Post' + Utils.instance.get_styled_class_name(cls.get_u_name) + '(int id);')
     end
 
     def process_dependencies(cls, _bld, fun)
@@ -41,10 +41,10 @@ module XCTEJava
 
     def get_body(cls, bld, fun)
       conDef = String.new
-      dataClass = Utils.instance.get_data_class(cls)
+      data_class = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(dataClass.getUName + ' data store', Utils.instance.langProfile.variableNameStyle)
-      className = Utils.instance.get_styled_class_name(cls.getUName)
+        CodeNameStyling.getStyled(data_class.get_u_name + ' data store', Utils.instance.langProfile.variableNameStyle)
+      className = Utils.instance.get_styled_class_name(cls.get_u_name)
       mapperName = 'mapper'
 
       params = []
@@ -57,7 +57,7 @@ module XCTEJava
         bld.add '@PreAuthorize("hasAuthority(\'' + fun.role + '\')")'
       end
 
-      bld.add '@PostMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName) + '",'
+      bld.add '@PostMapping(path = "' + Utils.instance.getStyledUrlName(cls.get_u_name) + '",'
       bld.iadd 'consumes = MediaType.APPLICATION_JSON_VALUE, '
       bld.iadd 'produces = MediaType.APPLICATION_JSON_VALUE)'
 
@@ -65,17 +65,17 @@ module XCTEJava
                         '> Post' + className +
                         '(' + params.join(', ') + ')')
 
-      if !cls.dataClass.nil?
-        bld.add 'var dataItem = new ' + Utils.instance.get_styled_class_name(dataClass.getUName) + '();'
+      if !cls.data_class.nil?
+        bld.add 'var dataItem = new ' + Utils.instance.get_styled_class_name(data_class.get_u_name) + '();'
         bld.add mapperName + '.map(item, dataItem);'
-        bld.add(Utils.instance.get_styled_class_name(dataClass.getUName) + ' savedItem = ' + dataStoreName + '.saveAndFlush(dataItem);')
+        bld.add(Utils.instance.get_styled_class_name(data_class.get_u_name) + ' savedItem = ' + dataStoreName + '.saveAndFlush(dataItem);')
         bld.separate
         bld.add 'var returnItem = new ' + className + '();'
         bld.add mapperName + '.map(savedItem, returnItem);'
 
         bld.add 'return new ResponseEntity<' + className + '>(returnItem, HttpStatus.CREATED);'
       else
-        bld.add(Utils.instance.get_styled_class_name(dataClass.getUName) + ' savedItem = ' + dataStoreName + '.saveAndFlush(item);')
+        bld.add(Utils.instance.get_styled_class_name(data_class.get_u_name) + ' savedItem = ' + dataStoreName + '.saveAndFlush(item);')
         bld.add 'return new ResponseEntity<' + className + '>(savedItem, HttpStatus.CREATED);'
       end
 

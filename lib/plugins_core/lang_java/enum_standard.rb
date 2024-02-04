@@ -27,12 +27,12 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def genHeaderComment(cls, hFile)
       hFile.add('/**')
-      hFile.add('* @enum ' + cls.getUName)
+      hFile.add('* @enum ' + cls.get_u_name)
 
       hFile.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 

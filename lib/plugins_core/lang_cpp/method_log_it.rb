@@ -36,14 +36,14 @@ module XCTECpp
       bld.add('* to the debug stream')
       bld.add('*/')
 
-      bld.add('void ' << cls.getUName() << ' :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const')
+      bld.add('void ' << cls.get_u_name() << ' :: logIt(std::ostream &outStr, std::string indent, bool logChildren) const')
       bld.add('{')
 
       if cls.model.has_an_array
         bld.add('    unsigned int i;')
       end
 
-      bld.add('    outStr << indent << " -- ' << cls.getUName() << ' begin -- " << std::endl;')
+      bld.add('    outStr << indent << " -- ' << cls.get_u_name() << ' begin -- " << std::endl;')
 
       varArray = []
       cls.model.getAllVarsFor(varArray)
@@ -83,7 +83,7 @@ module XCTECpp
           bld.add(varSec.formatText)
         end
 
-        bld.add('    outStr << indent << " -- ' << cls.getUName() << ' end -- " << std::endl;')
+        bld.add('    outStr << indent << " -- ' << cls.get_u_name() << ' end -- " << std::endl;')
 
         bld.add('}')
       end

@@ -18,7 +18,7 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' component'
+      cls.get_u_name + ' component'
     end
 
     def process_dependencies(cls, _bld)
@@ -27,7 +27,7 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      filePart = Utils.instance.get_styled_file_name(cls.getUName)
+      filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
 
       bld.start_class('class NavNode')
       bld.add('name: string;')

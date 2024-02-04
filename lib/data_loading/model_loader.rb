@@ -47,6 +47,7 @@ module DataLoading
         # puts "loading var group"
         newVGroup = CodeStructure::CodeElemVarGroup.new
         CodeElemLoader.load(newVGroup, vargXML, model)
+        newVGroup.name = AttributeLoader.init.xml(vargXML).model(model).names('name').get 
 
         loadVarGroupNode(newVGroup, vargXML, pComponent, model)
         model.varGroup = newVGroup
@@ -65,7 +66,7 @@ module DataLoading
       # Load class groups
       xmlDoc.root.elements.each('class_group_ref') do |nodeXml|
         cGroup = ClassGroups.get(nodeXml.attributes['name'])
-        cgRef = CodeStructure::CodeElemClassGroupRef.new(nil, nil)
+        cgRef = CodeStructure::CodeElemClassGroupRef.new(model)
         ClassGroupRefLoader.loadClassGroupRef(cgRef, nodeXml)
 
         if !cGroup.nil?
@@ -87,7 +88,7 @@ module DataLoading
 
     def self.loadClassGenNode(model, genCXML, pComponent, cgRefXml)
       cls = CodeStructure::CodeElemClassSpec.new(model, model, pComponent, true)
-      cgRef = CodeStructure::CodeElemClassGroupRef.new
+      cgRef = CodeStructure::CodeElemClassGroupRef.new(cls)
       ClassGroupRefLoader.loadClassGroupRef(cgRef, cgRefXml)
 
       ClassLoader.loadClass(pComponent, cls, genCXML)
@@ -110,6 +111,7 @@ module DataLoading
     # Loads a group node from an XML template vargroup node
     def self.loadVarGroupNode(vgNode, vgXML, pComponent, parent_elem)
       CodeElemLoader.load(vgNode, vgXML, parent_elem)  
+      vgNode.name = AttributeLoader.init.xml(vgXML).names('name').get 
 
       for varElem in vgXML.elements
         if varElem.name.downcase == 'variable' || varElem.name.downcase == 'var'

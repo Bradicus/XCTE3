@@ -28,7 +28,7 @@ module XCTERuby
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)
@@ -81,7 +81,7 @@ module XCTERuby
 
       # Process namespace items
       if cls.namespace.hasItems?
-        for nsItem in cls.namespace.nsList
+        for nsItem in cls.namespace.ns_list
           bld.start_block('module ' << nsItem)
         end
       end
@@ -89,7 +89,7 @@ module XCTERuby
       bld.start_class('class ' + get_class_name(cls) + ' < ClassBase')
 
       bld.start_function('def initialize')
-      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
+      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.get_u_name) + '"')
       bld.add('@language = "' + cls.language + '"')
       bld.add('@category = XCTEPlugin::CAT_CLASS')
       bld.add('@author = "' + UserSettings.instance.codeAuthor + '"') if UserSettings.instance.codeAuthor
@@ -97,7 +97,7 @@ module XCTERuby
       bld.separate
 
       bld.start_function('def get_unformatted_class_name(cls)')
-      bld.add('return cls.getUName()')
+      bld.add('return cls.get_u_name()')
       bld.endFunction
 
       bld.add
@@ -157,7 +157,7 @@ module XCTERuby
 
       # Process namespace items
       if cls.namespace.hasItems?
-        for nsItem in cls.namespace.nsList
+        for nsItem in cls.namespace.ns_list
           bld.end_block
         end
       end

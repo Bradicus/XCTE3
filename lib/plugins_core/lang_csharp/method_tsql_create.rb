@@ -27,7 +27,7 @@ module XCTECSharp
       bld.add('///')
 
       bld.start_function('public void Create(' +
-                        XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName) +
+                        XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name) +
                         ' o, SqlConnection conn, SqlTransaction trans = null)')
 
       get_body(cls, bld, funCb)
@@ -37,7 +37,7 @@ module XCTECSharp
 
     def get_declairation(cls, bld, _fun)
       bld.add('void Create(' +
-              XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName) +
+              XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name) +
               ' o, SqlConnection conn, SqlTransaction trans = null);')
     end
 
@@ -51,7 +51,7 @@ module XCTECSharp
       varArray = []
       cls.model.getNonIdentityVars(varArray)
 
-      bld.add('string sql = @"INSERT INTO ' + XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) + '(')
+      bld.add('string sql = @"INSERT INTO ' + XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) + '(')
 
       bld.indent
 
@@ -88,7 +88,7 @@ module XCTECSharp
       bld.end_block
       bld.start_block('catch(Exception e)')
       bld.add('throw new Exception("Error inserting ' +
-              XCTETSql::Utils.instance.get_styled_class_name(cls.getUName) + ' into database", e);')
+              XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) + ' into database", e);')
       bld.end_block(';')
     end
   end

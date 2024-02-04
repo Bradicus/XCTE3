@@ -10,8 +10,8 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def render_function(cls, bld, _fun)
-      className = Utils.instance.get_styled_class_name(cls.getUName)
-      urlName = Utils.instance.getStyledUrlName(cls.getUName)
+      className = Utils.instance.get_styled_class_name(cls.get_u_name)
+      urlName = Utils.instance.getStyledUrlName(cls.get_u_name)
 
       bld.start_function('create(item: any): Observable<' + className + '>')
       bld.add('return this.httpClient.post<' + className + '>(`${this.apiUrl}/' + urlName + '`, item);')

@@ -22,23 +22,23 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def render_function(cls, bld, fun)
       bld.add('/*')
-      bld.add('* Web API delete single ' + cls.getUName)
+      bld.add('* Web API delete single ' + cls.get_u_name)
       bld.add('*/')
 
       get_body(cls, bld, fun)
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add('public ' + Utils.instance.get_styled_class_name(cls.getUName) +
-              ' ' + Utils.instance.get_styled_class_name('delete' + cls.getUName) + '(int id);')
+      bld.add('public ' + Utils.instance.get_styled_class_name(cls.get_u_name) +
+              ' ' + Utils.instance.get_styled_class_name('delete' + cls.get_u_name) + '(int id);')
     end
 
     def get_body(cls, bld, _fun)
       conDef = String.new
-      dataClass = Utils.instance.get_data_class(cls)
+      data_class = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(dataClass.getUName + ' data store', Utils.instance.langProfile.variableNameStyle)
-      className = Utils.instance.get_styled_class_name(cls.getUName)
+        CodeNameStyling.getStyled(data_class.get_u_name + ' data store', Utils.instance.langProfile.variableNameStyle)
+      className = Utils.instance.get_styled_class_name(cls.get_u_name)
       mapperName = 'mapper'
 
       params = []
@@ -47,7 +47,7 @@ module XCTEJava
       params << '@RequestBody ' + className + ' item' if !idVar.nil?
 
       # bld.add "@CrossOrigin"
-      bld.add '@DeleteMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName) + '",'
+      bld.add '@DeleteMapping(path = "' + Utils.instance.getStyledUrlName(cls.get_u_name) + '",'
       bld.iadd 'consumes = MediaType.APPLICATION_JSON_VALUE, '
       bld.iadd 'produces = MediaType.APPLICATION_JSON_VALUE)'
 
@@ -58,7 +58,7 @@ module XCTEJava
       bld.separate
 
       bld.start_block 'if (dataItem.isPresent())'
-      if !cls.dataClass.nil?
+      if !cls.data_class.nil?
         bld.add mapperName + '.map(item, dataItem.get());'
         bld.add(dataStoreName + '.delete(dataItem.get());')
         bld.add 'var returnItem = new ' + className + '();'

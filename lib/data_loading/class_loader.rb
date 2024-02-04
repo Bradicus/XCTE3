@@ -27,13 +27,15 @@ module DataLoading
         genC.variant = genC.class_group_ref.variant
       end
 
-      CodeElemLoader.load(genC, genCXml, pComponent)      
+      CodeElemLoader.load(genC, genCXml, pComponent)          
 
       genC.feature_group = 
         AttributeLoader.init.xml(genCXml).names('feature_group').model(genC.model).default(genC.feature_group).get
-      genC.variant = AttributeLoader.init
-                                    .xml(genCXml).names('variant').model(genC.model).default(genC.variant).get
+      genC.variant = 
+        AttributeLoader.init.xml(genCXml).names('variant').model(genC.model).default(genC.variant).get
 
+      # Must be loaded after feature group because of build vars
+      genC.name = AttributeLoader.init.xml(genCXml).cls(genC).model(genC.model).names('name').get  
       genC.plug_name = AttributeLoader.init.xml(genCXml).names('type').cls(genC).get
       genC.namespace = NamespaceUtil.loadNamespaces(genCXml, pComponent)
       genC.interface_namespace = CodeStructure::CodeElemNamespace.new(genCXml.attributes['interface_namespace'])
@@ -45,8 +47,8 @@ module DataLoading
       genC.var_prefix = AttributeLoader.init.xml(genCXml).names('var_prefix').get
 
       # Add base namespace to class namespace lists
-      if !pComponent.nil? && !pComponent.namespace.nsList.empty?
-        genC.namespace.nsList = pComponent.namespace.nsList + genC.namespace.nsList
+      if !pComponent.nil? && !pComponent.namespace.ns_list.empty?
+        genC.namespace.ns_list = pComponent.namespace.ns_list + genC.namespace.ns_list
       end
 
       genCXml.elements.each('base_class') do |bcXml|
@@ -66,7 +68,7 @@ module DataLoading
       end
 
       genCXml.elements.each('data_class') do |dcXml|
-        genC.dataClass = ClassRefLoader.loadClassRef(dcXml, genCXml, pComponent, genC.model)
+        genC.data_class = ClassRefLoader.loadClassRef(dcXml, genCXml, pComponent, genC.model)
       end
 
       genCXml.elements.each('interface') do |ifXml|
@@ -150,6 +152,7 @@ module DataLoading
     # Loads a template function element from an XML template function node
     def self.loadTemplateFunctionNode(genC, fun, tmpFunXML, pComponent)
       CodeElemLoader.load(fun, tmpFunXML, genC)
+      fun.name = AttributeLoader.init.xml(tmpFunXML).model(genC.model).names('name').get 
       
       fun.role = AttributeLoader.init.xml(tmpFunXML).names('role').cls(genC).get
       # puts "Loading function: " + fun.name
@@ -164,7 +167,8 @@ module DataLoading
 
     # Loads a function element from an XML function node
     def self.loadEmptyFunctionNode(newFun, cls, funXml, pComponent)
-      CodeElemLoader.load(newFun, funXml, cls)      
+      CodeElemLoader.load(newFun, funXml, cls)  
+      newFun.name = AttributeLoader.init.xml(xml_node).model(cls.model).names('name').get     
       
       newFun.isInline = (funXml.attributes['inline'] == 'true')
 
@@ -184,7 +188,8 @@ module DataLoading
       for funElemXML in funXml.elements
         if funElemXML.name == 'parameters'
 
-          CodeElemLoader.load(newFun.parameters, funElemXML, cls)      
+          CodeElemLoader.load(newFun.parameters, funElemXML, cls)  
+          newFun.name = AttributeLoader.init.xml(xml_node).model(cls.model).names('name').get     
 
           for paramXML in funElemXML.elements
             VariableLoader.loadVariableNode(paramXML, newFun.parameters, pComponent)

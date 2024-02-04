@@ -27,7 +27,7 @@ module XCTECpp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' container'
+      cls.get_u_name + ' container'
     end
 
     def gen_source_files(cls)

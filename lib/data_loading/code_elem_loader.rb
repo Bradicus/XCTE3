@@ -13,7 +13,6 @@ module DataLoading
     def self.load(code_elem, xml_node, parent_elem)
       code_elem.data_node = xml_node      
       code_elem.parent_elem = parent_elem      
-      code_elem.name = AttributeLoader.init.xml(xml_node).names('name').get
       
       if (xml_node.attributes["lang_ignore"] != nil)
         ignoreLangs = xml_node.attributes["lang_ignore"].split(",")

@@ -19,7 +19,7 @@ module XCTECSharp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' engine'
+      cls.get_u_name + ' engine'
     end
 
     # Returns the code for the content for this class

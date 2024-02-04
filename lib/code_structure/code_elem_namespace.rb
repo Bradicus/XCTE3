@@ -7,7 +7,7 @@ require 'code_structure/code_elem'
 
 module CodeStructure
   class CodeElemNamespace < CodeElem
-    attr_accessor: ns_list
+    attr_accessor :ns_list
     
     def initialize(nsString = "")
       @ns_list = []

@@ -14,10 +14,10 @@ require 'plugins_core/lang_java/utils'
 module XCTEJava
   class MethodWebApiBase < XCTEPlugin
     def get_data_class(cls)
-      if !cls.dataClass.nil?
-        dataClass = ClassModelManager.findClass(cls.dataClass.model_name, cls.dataClass.plugin_name)
-        if !dataClass.nil?
-          return dataClass
+      if !cls.data_class.nil?
+        data_class = ClassModelManager.findClass(cls.data_class.model_name, cls.data_class.plugin_name)
+        if !data_class.nil?
+          return data_class
         end
       end
 
@@ -25,14 +25,14 @@ module XCTEJava
     end
 
     def process_dependencies(cls, _bld, _fun)
-      dataClass = get_data_class(cls)
+      data_class = get_data_class(cls)
 
-      Utils.instance.requires_class_type(cls, dataClass, 'class_db_entity')
-      Utils.instance.requires_class_type(cls, dataClass, 'tsql_data_store')
-      Utils.instance.add_class_injection(cls, dataClass, 'tsql_data_store')
+      Utils.instance.requires_class_type(cls, data_class, 'class_db_entity')
+      Utils.instance.requires_class_type(cls, data_class, 'tsql_data_store')
+      Utils.instance.add_class_injection(cls, data_class, 'tsql_data_store')
 
-      if !cls.dataClass.nil?
-        Utils.instance.requires_class_type(cls, dataClass, 'class_mapper_dozer')
+      if !cls.data_class.nil?
+        Utils.instance.requires_class_type(cls, data_class, 'class_mapper_dozer')
       end
 
       cls.addUse('java.util.*')

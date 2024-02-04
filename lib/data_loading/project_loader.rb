@@ -88,7 +88,7 @@ module DataLoading
         loadComponentGroup(newCGroup, cgroup)
         groupNode.subGroups << newCGroup
 
-        # puts "Loaded component group: " << newCGroup.name << "\n"
+        # puts "Loaded component group: " << newCGroup.name + "\n"
       end
 
       #   xmlGroup.elements.each("INCLUDE_DIRS") { |inc_d|

@@ -39,7 +39,7 @@ module XCTERuby
   end
 
     def render_namespace_start(cls, bld)
-      for ns in cls.namespace.nsList
+      for ns in cls.namespace.ns_list
         styledNs = get_default_utils().get_styled_namespace_name(ns)
         bld.start_block('module ' + styledNs)
       end
@@ -81,7 +81,7 @@ module XCTERuby
     end
 
     def render_namespace_end(cls, bld)
-      for ns in cls.namespace.nsList
+      for ns in cls.namespace.ns_list
         bld.end_block
       end
     end

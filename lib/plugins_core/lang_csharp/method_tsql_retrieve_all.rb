@@ -23,7 +23,7 @@ module XCTECSharp
       bld.add('/// Reads data set from sql database')
       bld.add('/// </summary>')
 
-      standard_class_name = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
+      standard_class_name = XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name)
 
       bld.start_class('public IEnumerable<' + standard_class_name +
                      '> RetrieveAll(SqlConnection conn, SqlTransaction trans = null)')
@@ -35,7 +35,7 @@ module XCTECSharp
 
     def get_declairation(cls, bld, _fun)
       bld.add('IEnumerable<' +
-              Utils.instance.get_styled_class_name(cls.getUName) +
+              Utils.instance.get_styled_class_name(cls.get_u_name) +
               '> RetrieveAll(SqlConnection conn, SqlTransaction trans = null);')
     end
 
@@ -47,7 +47,7 @@ module XCTECSharp
     def get_body(cls, bld, _fun)
       conDef = String.new
 
-      tableName = Utils.instance.get_styled_class_name(cls.getUName)
+      tableName = Utils.instance.get_styled_class_name(cls.get_u_name)
       bld.add('List<' + tableName + '> resultList = new List<' + tableName + '>();')
       bld.add('string sql = @"SELECT ')
 

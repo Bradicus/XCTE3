@@ -14,7 +14,7 @@ module XCTECss
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)

@@ -12,8 +12,8 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def render_function(cls, bld)
-      clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
-      clsName = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
+      clsName = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
       clsIntf = Utils.instance.create_var_for(cls, 'standard')
 
       bld.start_function('initData(item: ' + Utils.instance.get_styled_class_name(cls.model.name) + '): void')

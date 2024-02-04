@@ -83,7 +83,7 @@ class ClassModelManager
 
       # puts cls.model.name
       # puts cls.plug_name
-      if !c.dataClass.nil? && c.dataClass.matches(cls.model.name, cls.plug_name)
+      if !c.data_class.nil? && c.data_class.matches(cls.model.name, cls.plug_name)
         dm_classes.push c
       end
     end

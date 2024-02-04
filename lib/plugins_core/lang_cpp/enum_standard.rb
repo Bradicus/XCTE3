@@ -27,16 +27,14 @@ module XCTECpp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
-      cls.setName(get_unformatted_class_name(cls))
-
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName)
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
       bld.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
@@ -50,7 +48,7 @@ module XCTECpp
       cfg = UserSettings.instance
 
       bld.add('/**')
-      bld.add('* @enum ' + cls.getUName)
+      bld.add('* @enum ' + cls.get_u_name)
 
       bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
@@ -75,12 +73,12 @@ module XCTECpp
     # Returns the code for the header for this class
     def genHeader(cls, bld)
       if cls.namespace.hasItems?
-        bld.add('#ifndef __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.getUName) + '_H')
-        bld.add('#define __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.getUName) + '_H')
+        bld.add('#ifndef __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
+        bld.add('#define __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
         bld.add
       else
-        bld.add('#ifndef __' + Utils.instance.get_styled_class_name(cls.getUName) + '_H')
-        bld.add('#define __' + Utils.instance.get_styled_class_name(cls.getUName) + '_H')
+        bld.add('#ifndef __' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
+        bld.add('#define __' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
         bld.add
       end
 
@@ -88,7 +86,7 @@ module XCTECpp
 
       # Do automatic static array size declairations above class def
 
-      classDec = 'enum class ' + Utils.instance.get_styled_class_name(cls.getUName)
+      classDec = 'enum class ' + Utils.instance.get_styled_class_name(cls.get_u_name)
 
       bld.start_block(classDec)
       enums = []

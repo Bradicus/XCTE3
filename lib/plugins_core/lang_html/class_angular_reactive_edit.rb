@@ -12,7 +12,7 @@ module XCTEHtml
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)
@@ -32,32 +32,32 @@ module XCTEHtml
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
       nested = (cls.data_node.attributes['nested'] == 'true')
-      contentNode = Utils.instance.make_node(cls.genCfg, 'div')
+      contentNode = Utils.instance.make_node(cls.gen_cfg, 'div')
 
-      @formName = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
+      @formName = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
       formNode = nil
 
       if !nested
-        contentNode.add_child(Utils.instance.make_node(cls.genCfg, 'h2').add_text(cls.model.name.capitalize))
-        formNode = Utils.instance.make_node(cls.genCfg, 'form')
+        contentNode.add_child(Utils.instance.make_node(cls.gen_cfg, 'h2').add_text(cls.model.name.capitalize))
+        formNode = Utils.instance.make_node(cls.gen_cfg, 'form')
                         .add_attribute('[formGroup]', @formName)
                         .add_attribute('(ngSubmit)', 'onSubmit()')
 
         buttonNode = HtmlNode.new('div')
 
-        populateButton = Utils.instance.make_primary_button(cls.genCfg, 'Populate')
+        populateButton = Utils.instance.make_primary_button(cls.gen_cfg, 'Populate')
                               .add_attribute('(click)', 'populateRandom()')
 
         buttonNode.add_child(populateButton)
 
-        submitButton = Utils.instance.make_primary_button(cls.genCfg, 'Save')
+        submitButton = Utils.instance.make_primary_button(cls.gen_cfg, 'Save')
                             .add_attribute('(click)', 'onSubmit()')
 
         buttonNode.add_child(submitButton)
 
         contentNode.add_child(buttonNode)
       else
-        formNode = formNode = Utils.instance.make_node(cls.genCfg, 'div')
+        formNode = formNode = Utils.instance.make_node(cls.gen_cfg, 'div')
                                    .add_attribute('[formGroup]', @formName)
       end
 
@@ -89,13 +89,13 @@ module XCTEHtml
 
     def process_object_var(cls, _vGroup, var, rowContainer)
       vName = Utils.instance.get_styled_variable_name(var)
-      fieldsetNode = Utils.instance.make_node(cls.genCfg, 'fieldset')
+      fieldsetNode = Utils.instance.make_node(cls.gen_cfg, 'fieldset')
                           .add_attribute('formGroupName', vName)
                           .add_class('row', 'form-group')
 
       rowContainer.add_child(fieldsetNode)
 
-      legNode = Utils.instance.make_node(cls.genCfg, 'legend')
+      legNode = Utils.instance.make_node(cls.gen_cfg, 'legend')
                      .add_text(var.getdisplay_name)
       fieldsetNode.add_child(legNode)
 
@@ -141,7 +141,7 @@ module XCTEHtml
     end
 
     def add_row_node(cls, rowContainer)
-      rowNode = Utils.instance.make_node(cls.genCfg, 'div')
+      rowNode = Utils.instance.make_node(cls.gen_cfg, 'div')
                      .add_class('row', 'form-group')
 
       rowContainer.add_child(rowNode)
@@ -154,7 +154,7 @@ module XCTEHtml
       formVar = CodeNameStyling.getStyled(@formName, Utils.instance.langProfile.variableNameStyle)
       fldNode = HtmlNode.new('div')
 
-      if cls.genCfg.usesExternalDependency('bootstrap')
+      if cls.gen_cfg.usesExternalDependency('bootstrap')
         fldNode.add_class('col-md-3')
 
         fldNode.add_class('visually-hidden') if var.name.downcase == 'id'
@@ -177,7 +177,7 @@ module XCTEHtml
 
       fldNode.add_child(labelNode)
 
-      if cls.genCfg.usesExternalDependency('bootstrap')
+      if cls.gen_cfg.usesExternalDependency('bootstrap')
         labelNode.add_class('form-label')
         if var.getUType.downcase == 'boolean'
           inputNode.add_class('form-check-input')

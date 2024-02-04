@@ -42,9 +42,9 @@ module XCTEJava
     def load_param(cls, fun, elemName)
       param = MapParam.new
 
-      param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.data_node.elements[elemName], nil, cls.genCfg)
+      param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.data_node.elements[elemName], nil, cls.gen_cfg)
       param.cls = ClassModelManager.findClass(param.ref.model_name, param.ref.plugin_name)
-      param.name = Utils.instance.get_styled_class_name(param.cls.getUName)
+      param.name = Utils.instance.get_styled_class_name(param.cls.get_u_name)
 
       return param
     end
@@ -56,7 +56,7 @@ module XCTEJava
       @mapParams.push('@MappingTarget ' + tParam.name + ' dst')
 
       bld.add('/*')
-      bld.add('* Map -' + fParam.cls.getUName + '- to -' + tParam.cls.getUName + '-')
+      bld.add('* Map -' + fParam.cls.get_u_name + '- to -' + tParam.cls.get_u_name + '-')
       bld.add('*/')
 
       bld.add('public void map(' + @mapParams.join(', ') + ');')
@@ -66,13 +66,13 @@ module XCTEJava
     def genListMapper(_cls, bld, _fun)
       @mapParams = []
 
-      @mapParams.push('List<' + Utils.instance.get_styled_class_name(@fromParam.cls.getUName) + '> srcList')
-      @mapParams.push('@MappingTarget List<' + Utils.instance.get_styled_class_name(@toParam.cls.getUName) + '> dstList')
+      @mapParams.push('List<' + Utils.instance.get_styled_class_name(@fromParam.cls.get_u_name) + '> srcList')
+      @mapParams.push('@MappingTarget List<' + Utils.instance.get_styled_class_name(@toParam.cls.get_u_name) + '> dstList')
 
       bld.separate
 
       bld.add('/*')
-      bld.add('* Map -List<' + @fromParam.name + '>- to -List<' + @toParam.cls.getUName + '>-')
+      bld.add('* Map -List<' + @fromParam.name + '>- to -List<' + @toParam.cls.get_u_name + '>-')
       bld.add('*/')
 
       bld.add('public void updateList(' + @mapParams.join(', ') + ');')

@@ -5,9 +5,9 @@
 
 module CodeStructure
   class CodeElemClassSpec < CodeElem
-    attr_accessor :element_id, :model, :plug_name, :path, :namespace, :language, :includes, :uses, :gen_cfg, :functions,
+    attr_accessor :element_id, :model, :plug_name, :path, :namespace, :language, :includes, :uses, :actions, :gen_cfg, :functions,
             :base_classes, :interfaces, :injections, :interface_namespace, :interface_path, :test_namespace, :test_path,
-            :var_prefix, :pre_defs, :file_path, :standard_class, :standard_class_type, :custom_code, 
+            :var_prefix, :pre_defs, :file_path, :standard_class, :standard_class_type, :custom_code, :data_class,
             :class_group_ref, :class_group_name, :variant, :feature_group
         
     def initialize(cls, model, parent_elem)
@@ -20,6 +20,7 @@ module CodeStructure
       @language = ""
       @includes = []
       @uses = []
+      @actions = []
       @gen_cfg = nil
       @functions = []
       @base_classes = []
@@ -91,14 +92,12 @@ module CodeStructure
       return false
     end
 
-    def getUName
-      return @className if !@className.nil?
+    def get_u_name
+      if !@name.nil? && @name.length > 0
+        return @name 
+      end
 
       return @model.name
-    end
-
-    def setName(newName)
-      @name = newName
     end
 
     def findVar(varName, varNs = nil)

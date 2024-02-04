@@ -14,7 +14,7 @@ module XCTEHtml
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)
@@ -37,7 +37,7 @@ module XCTEHtml
         plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_edit')
 
         bld.add('<button type="button" class="btn btn-primary btn-sm" routerLink="/' +
-                plug.get_full_route(cls, 'edit') + '/0">New ' + cls.getUName + '</button>')
+                plug.get_full_route(cls, 'edit') + '/0">New ' + cls.get_u_name + '</button>')
       end
 
       tbl = TableUtil.instance.make_table(cls, 'page', 'item', 'async', true)

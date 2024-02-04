@@ -194,7 +194,7 @@ module XCTEJava
 
     def requires_var(cls, var)
       # varClass = ClassModelManager.findVarClass(var)
-      varClassAndPlug = RefFinder.find_class_by_type(cls.genCfg.language, var.getUType)
+      varClassAndPlug = RefFinder.find_class_by_type(cls.gen_cfg.language, var.getUType)
       # requires_other_class_type(cls, varClass, varClass.plug.name)
 
       return unless !varClassAndPlug.nil? && !cls.namespace.same?(varClassAndPlug.cls.namespace)
@@ -214,7 +214,7 @@ module XCTEJava
 
       if plug_nameClass.nil?
         Log.error('unable to find class by type ' + plug_name)
-      elsif plug_nameClass.namespace.nsList.length == 0
+      elsif plug_nameClass.namespace.ns_list.length == 0
         throw 'Zero length namespace'
       else
         cls.addUse(plug_nameClass.namespace.get('.') + '.*')
@@ -232,9 +232,9 @@ module XCTEJava
     end
 
     def get_data_class(cls)
-      if !cls.dataClass.nil?
-        dataClass = ClassModelManager.findClass(cls.dataClass.model_name, cls.dataClass.plugin_name)
-        return dataClass if !dataClass.nil?
+      if !cls.data_class.nil?
+        data_class = ClassModelManager.findClass(cls.data_class.model_name, cls.data_class.plugin_name)
+        return data_class if !data_class.nil?
       end
 
       return cls
@@ -258,8 +258,8 @@ module XCTEJava
     def get_search_fun(cls, filtered_class)
       fun = CodeStructure::CodeElemFunction.new(nil)
 
-      if !filtered_class.dataClass.nil?
-        data_class = ClassModelManager.findClass(filtered_class.dataClass.model_name, filtered_class.dataClass.plugin_name)
+      if !filtered_class.data_class.nil?
+        data_class = ClassModelManager.findClass(filtered_class.data_class.model_name, filtered_class.data_class.plugin_name)
         pageReqVar = create_var_for(data_class, data_class.plug_name)
       else
         data_class = cls

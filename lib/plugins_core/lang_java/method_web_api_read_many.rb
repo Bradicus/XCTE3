@@ -22,15 +22,15 @@ module XCTEJava
     # Returns definition string for this class's constructor
     def render_function(cls, bld, fun)
       bld.add('/*')
-      bld.add('* Web API get many ' + cls.getUName)
+      bld.add('* Web API get many ' + cls.get_u_name)
       bld.add('*/')
 
       @dsClass = cls.model.findClassSpecByPluginName('class_data_set')
 
       if !@dsClass.nil?
-        @returnType = Utils.instance.get_styled_class_name(@dsClass.getUName)
+        @returnType = Utils.instance.get_styled_class_name(@dsClass.get_u_name)
       else
-        @returnType = 'FilteredPageRespTpl<' + Utils.instance.get_styled_class_name(cls.getUName) + '>'
+        @returnType = 'FilteredPageRespTpl<' + Utils.instance.get_styled_class_name(cls.get_u_name) + '>'
       end
 
       get_body(cls, bld, fun)
@@ -52,18 +52,18 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add('public ' + @returnType + ' Get' + Utils.instance.get_styled_class_name(cls.getUName) + 's(' + params.join(', ') + ');')
+      bld.add('public ' + @returnType + ' Get' + Utils.instance.get_styled_class_name(cls.get_u_name) + 's(' + params.join(', ') + ');')
     end
 
     def get_body(cls, bld, fun)
       conDef = String.new
-      dataClass = Utils.instance.get_data_class(cls)
+      data_class = Utils.instance.get_data_class(cls)
       dataStoreName =
-        CodeNameStyling.getStyled(dataClass.getUName + ' data store', Utils.instance.langProfile.variableNameStyle)
+        CodeNameStyling.getStyled(data_class.get_u_name + ' data store', Utils.instance.langProfile.variableNameStyle)
       mapperName =
         'mapper'
       mapperClassName =
-        CodeNameStyling.getStyled(dataClass.getUName + ' mapper', Utils.instance.langProfile.classNameStyle)
+        CodeNameStyling.getStyled(data_class.get_u_name + ' mapper', Utils.instance.langProfile.classNameStyle)
 
       params = []
 
@@ -95,10 +95,10 @@ module XCTEJava
       params.push('@RequestParam(defaultValue="true") Boolean sortAsc')
       params.push('@RequestParam(defaultValue="") String searchValue')
 
-      bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.getUName) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
+      bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.get_u_name) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
       bld.start_function_paramed('public ' + @returnType + ' Get' +
-                               Utils.instance.get_styled_class_name(cls.getUName) + 's', params)
+                               Utils.instance.get_styled_class_name(cls.get_u_name) + 's', params)
 
       bld.add 'Sort sort = null;'
       bld.start_block 'if (sortBy.length() > 0 && sortBy.length() > 0)'
@@ -114,10 +114,10 @@ module XCTEJava
 
       bld.separate
       bld.add 'PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);'
-      bld.add 'Page<' + Utils.instance.get_styled_class_name(dataClass.getUName) + '> items;'
+      bld.add 'Page<' + Utils.instance.get_styled_class_name(data_class.get_u_name) + '> items;'
 
       if cls.model.data_filter.has_non_paging_filters?
-        fun = Utils.instance.get_search_fun(dataClass, cls)
+        fun = Utils.instance.get_search_fun(data_class, cls)
         paramVars = []
 
         paramVars.push('pageRequest')
@@ -134,12 +134,12 @@ module XCTEJava
       bld.separate
       if !@dsClass.nil?
         bld.add 'var dataSet = new ' + @returnType + '();'
-        bld.add 'var mappedItems = items.map(item -> ' + mapperName + '.mapTo' + Utils.instance.get_styled_class_name(cls.getUName) + '(item));'
+        bld.add 'var mappedItems = items.map(item -> ' + mapperName + '.mapTo' + Utils.instance.get_styled_class_name(cls.get_u_name) + '(item));'
         bld.add 'dataSet.items = mappedItems;'
         bld.separate
         bld.add('return dataSet;')
-      elsif !cls.dataClass.nil?
-        bld.add 'var mappedItems = items.map(item -> ' + mapperName + '.mapTo' + Utils.instance.get_styled_class_name(cls.getUName) + '(item));'
+      elsif !cls.data_class.nil?
+        bld.add 'var mappedItems = items.map(item -> ' + mapperName + '.mapTo' + Utils.instance.get_styled_class_name(cls.get_u_name) + '(item));'
         bld.add 'var response = new ' + @returnType + '();'
         bld.add 'response.pageCount = mappedItems.getTotalPages();'
         bld.add 'response.data = mappedItems.getContent();'

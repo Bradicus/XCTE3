@@ -17,7 +17,7 @@ module XCTETypescript
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + '')
       bld.lfExtension = Utils.instance.get_extension('body')
 
       render_file_comment(cls, bld)
@@ -39,7 +39,7 @@ module XCTETypescript
       headerString = String.new
 
       bld.add('/**')
-      bld.add('* @class ' + cls.name)
+      bld.add('* @class ' + get_class_name(cls))
 
       bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
@@ -68,7 +68,7 @@ module XCTETypescript
 
     def render_namespace_start(cls, bld)
       if !ActiveComponent.get().ignore_namespace
-        for ns in cls.namespace.nsList
+        for ns in cls.namespace.ns_list
           bld.start_block('export namespace ' + get_default_utils().get_styled_namespace_name(ns))
         end
       end
@@ -76,7 +76,7 @@ module XCTETypescript
 
     def render_namespace_end(cls, bld)
       if !ActiveComponent.get().ignore_namespace
-        for ns in cls.namespace.nsList
+        for ns in cls.namespace.ns_list
           bld.end_block
         end
       end

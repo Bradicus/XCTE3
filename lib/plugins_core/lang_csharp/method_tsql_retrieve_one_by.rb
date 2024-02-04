@@ -32,7 +32,7 @@ module XCTECSharp
     end
 
     def get_function_signature(cls, _bld, fun)
-      standard_class_name = Utils.instance.get_styled_class_name(cls.getUName)
+      standard_class_name = Utils.instance.get_styled_class_name(cls.get_u_name)
 
       paramDec = []
       paramNames = []
@@ -49,9 +49,9 @@ module XCTECSharp
     def get_body(cls, bld, fun)
       conDef = String.new
 
-      styledClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName)
+      styledClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name)
 
-      bld.add('var o = new ' + XCTECSharp::Utils.instance.get_styled_class_name(cls.getUName) + '();')
+      bld.add('var o = new ' + XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name) + '();')
 
       bld.add('string sql = @"SELECT TOP 1 ')
 
@@ -59,7 +59,7 @@ module XCTECSharp
 
       bld.unindent
 
-      bld.add('FROM ' + cls.getUName)
+      bld.add('FROM ' + cls.get_u_name)
       bld.add('WHERE ')
 
       bld.indent
@@ -101,7 +101,7 @@ module XCTECSharp
 
       bld.end_block
       bld.start_block('catch(Exception e)')
-      bld.add('throw new Exception("Error retrieving one item from ' + cls.getUName + '", e);')
+      bld.add('throw new Exception("Error retrieving one item from ' + cls.get_u_name + '", e);')
       bld.end_block(';')
 
       bld.add

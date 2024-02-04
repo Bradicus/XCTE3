@@ -10,7 +10,7 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' shared data store service'
+      cls.get_u_name + ' shared data store service'
     end
 
     def gen_source_files(cls)

@@ -12,18 +12,18 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' module'
+      cls.get_u_name + ' module'
     end
 
-    def getFileName(cls)
-      Utils.instance.get_styled_file_name(cls.getUName + '.module')
+    def get_file_name(cls)
+      Utils.instance.get_styled_file_name(cls.get_u_name + '.module')
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = getFileName(cls)
+      bld.lfName = get_file_name(cls)
       bld.lfExtension = Utils.instance.get_extension('body')
 
       fPath = get_styled_file_name(cls.model.name)
@@ -49,8 +49,8 @@ module XCTETypescript
       cls.addInclude('@angular/router', 'RouterModule, Routes')
 
       if !cls.model.findClassModel('class_angular_module_routing').nil?
-        cls.addInclude(get_styled_file_name(cls.getUName) + '/' + get_styled_file_name(cls.getUName + '.routing.module'),
-                       get_styled_class_name(cls.getUName + ' routing module'))
+        cls.addInclude(get_styled_file_name(cls.get_u_name) + '/' + get_styled_file_name(cls.get_u_name + '.routing.module'),
+                       get_styled_class_name(cls.get_u_name + ' routing module'))
       end
 
       relClasses = Utils.instance.getRelatedClasses(cls)
@@ -60,7 +60,7 @@ module XCTETypescript
            otherCls.plug_name.start_with?('class_angular_reactive_view') ||
            otherCls.plug_name.start_with?('class_angular_listing')
           plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
-          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
+          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.get_file_name(otherCls),
                          plug.get_class_name(otherCls))
         end
       end

@@ -24,7 +24,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' req tpl'
+      cls.get_u_name + ' req tpl'
     end
 
     # Returns the code for the header for this class

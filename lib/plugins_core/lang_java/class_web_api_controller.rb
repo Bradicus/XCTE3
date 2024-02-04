@@ -8,7 +8,7 @@ require 'plugins_core/lang_java/class_base'
 require 'plugins_core/lang_java/source_renderer_java'
 
 require 'code_elem_use'
-require 'code_elem_namespace'
+require 'code_structure/code_elem_namespace'
 require 'code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
@@ -22,7 +22,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' controller'
+      cls.get_u_name + ' controller'
     end
 
     def render_file_comment(_cls, bld)
@@ -86,8 +86,8 @@ module XCTEJava
 
       mapperName = 'mapper'
 
-      if !cls.dataClass.nil?
-        mapperClassName = Utils.instance.get_styled_class_name(cls.dataClass.model_name + ' mapper')
+      if !cls.data_class.nil?
+        mapperClassName = Utils.instance.get_styled_class_name(cls.data_class.model_name + ' mapper')
         bld.separate
         bld.add(mapperClassName + ' ' + mapperName + ' = Mappers.getMapper( ' + mapperClassName + '.class );')
         bld.separate

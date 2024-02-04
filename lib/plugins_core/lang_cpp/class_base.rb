@@ -92,7 +92,7 @@ module XCTECpp
       # Process namespace items
       return unless cls.namespace.hasItems?
 
-      for nsItem in cls.namespace.nsList
+      for nsItem in cls.namespace.ns_list
         bld.start_block('namespace ' << nsItem)
       end
     end
@@ -101,7 +101,7 @@ module XCTECpp
       # Process namespace items
       return unless cls.namespace.hasItems?
 
-      cls.namespace.nsList.reverse_each do |nsItem|
+      cls.namespace.ns_list.reverse_each do |nsItem|
         bld.end_block
         bld.same_line(nsCloseChar + '  // namespace ' << nsItem)
       end

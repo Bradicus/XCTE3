@@ -27,7 +27,7 @@ module XCTERuby
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def gen_source_files(cls)
@@ -75,15 +75,15 @@ module XCTERuby
 
       # Process namespace items
       if cls.namespace.hasItems?
-        for nsItem in cls.namespace.nsList
+        for nsItem in cls.namespace.ns_list
           bld.start_block('module ' << nsItem)
         end
       end
 
-      bld.start_class('class ' + Utils.instance.get_styled_class_name(cls.getUName) + ' < XCTEPlugin')
+      bld.start_class('class ' + Utils.instance.get_styled_class_name(cls.get_u_name) + ' < XCTEPlugin')
 
       bld.start_function('def initialize')
-      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.getUName) + '"')
+      bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.get_u_name) + '"')
       bld.add('@language = "' + cls.data_node.attributes['lang'] + '"')
       bld.add('@category = XCTEPlugin::CAT_METHOD')
       bld.add('@author = "' + UserSettings.instance.codeAuthor + '"') if UserSettings.instance.codeAuthor
@@ -101,7 +101,7 @@ module XCTERuby
       bld.start_block('if !var.isStatic   # Ignore static variables')
       bld.start_block('if Utils.instance.is_primitive(var)')
       bld.start_block("if var.arrayElemCount.to_i > 0\t# Array of primitives)")
-      bld.add('bld.start_block("for i in 0..@" << var.name << ".size")')
+      bld.add('bld.start_block("for i in 0..@" + var.name + ".size")')
       bld.add('bld.add(var.name + "[i] = src" + cls.name + "[i]")')
       bld.add('bld.end_block')
 
@@ -127,7 +127,7 @@ module XCTERuby
 
       # Process namespace items
       if cls.namespace.hasItems?
-        for nsItem in cls.namespace.nsList
+        for nsItem in cls.namespace.ns_list
           bld.end_block
         end
       end

@@ -10,12 +10,16 @@ module XCTETypescript
 
       @name = 'class_angular_component'
     end
+    
+    def get_unformatted_class_name(cls)
+      cls.get_u_name + ' component'
+    end
 
     def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + '.component')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
 
       render_file_comment(cls, bld)
@@ -30,6 +34,14 @@ module XCTETypescript
       srcFiles << bld
 
       srcFiles
+    end    
+
+    def get_file_name(cls)
+      if !cls.feature_group.nil?
+        return Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
+      else
+        return Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
+      end
     end
   end
 end

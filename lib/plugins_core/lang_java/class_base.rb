@@ -63,9 +63,9 @@ module XCTEJava
 
       cls.addUse('import java.util.List') if hasList(cls)
 
-      return if cls.dataClass.nil?
+      return if cls.data_class.nil?
 
-      Utils.instance.requires_class_ref(cls, cls.dataClass)
+      Utils.instance.requires_class_ref(cls, cls.data_class)
       #  Utils.instance.requires_class_type(cls, cls.dataClass, "standard")
     end
 

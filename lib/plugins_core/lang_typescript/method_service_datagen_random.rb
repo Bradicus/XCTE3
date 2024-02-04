@@ -13,7 +13,7 @@ module XCTETypescript
     # Returns the code for the content for this function
     def render_function(cls, bld, _fun)
       dataGenUserServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service')
-      clsVar = CodeNameStyling.getStyled(cls.getUName + ' form', Utils.instance.langProfile.variableNameStyle)
+      clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
 
       bld.start_function('populateRandom(): void')
 

@@ -25,20 +25,20 @@ module XCTECpp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' pugi xml engine'
+      cls.get_u_name + ' pugi xml engine'
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'PugiXmlEngine')
+      hFile.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'PugiXmlEngine')
       hFile.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, hFile)
       genHeader(cls, hFile)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'PugiXmlEngine')
+      cppFile.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'PugiXmlEngine')
       cppFile.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
@@ -97,7 +97,7 @@ module XCTECpp
 
       # Process namespace items
       if cls.namespace.hasItems?
-        for nsItem in cls.namespace.nsList
+        for nsItem in cls.namespace.ns_list
           hFile.start_block('namespace ' << nsItem)
         end
         hFile.add
@@ -124,7 +124,7 @@ module XCTECpp
         end
 
         if !cls.base_classes[par].nil?
-          if cls.base_classes[par].namespace.hasItems? && cls.base_classes[par].namespace.nsList.size > 0
+          if cls.base_classes[par].namespace.hasItems? && cls.base_classes[par].namespace.ns_list.size > 0
             nameSp = cls.base_classes[par].namespace.get('::') + '::'
           end
 
@@ -194,7 +194,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, cppGen)
-      cppGen.add('#include "' << Utils.instance.get_styled_class_name(cls.getUName) << '.h"')
+      cppGen.add('#include "' << Utils.instance.get_styled_class_name(cls.get_u_name) << '.h"')
       cppGen.add
 
       render_namespace_start(cls, cppGen)
@@ -206,7 +206,7 @@ module XCTECpp
       for var in varArray
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic
           cppGen.add(Utils.instance.get_type_name(var) << ' ')
-          cppGen.same_line(Utils.instance.get_styled_class_name(cls.getUName) << ' :: ')
+          cppGen.same_line(Utils.instance.get_styled_class_name(cls.get_u_name) << ' :: ')
           cppGen.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array

@@ -24,22 +24,20 @@ module XCTECpp
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' json engine'
+      cls.get_u_name + ' json engine'
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
-      cls.setName(get_unformatted_class_name(cls))
-
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'JsonEngine')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'JsonEngine')
       bld.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.getUName + 'JsonEngine')
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'JsonEngine')
       bld.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, bld)
       genBody(cls, bld)
@@ -54,7 +52,7 @@ module XCTECpp
       cfg = UserSettings.instance
 
       bld.add('/**')
-      bld.add('* @class ' + Utils.instance.get_styled_class_name(cls.getUName + 'JsonEngine'))
+      bld.add('* @class ' + Utils.instance.get_styled_class_name(cls.get_u_name + 'JsonEngine'))
 
       bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
@@ -89,7 +87,7 @@ module XCTECpp
 
       # Process namespace items
       if cls.namespace.hasItems?
-        for nsItem in cls.namespace.nsList
+        for nsItem in cls.namespace.ns_list
           bld.start_block('namespace ' << nsItem)
         end
         bld.add
@@ -106,11 +104,11 @@ module XCTECpp
         end
 
         if !cls.base_classes[par].nil?
-          if cls.base_classes[par].namespace.hasItems? && cls.base_classes[par].namespace.nsList.size > 0
+          if cls.base_classes[par].namespace.hasItems? && cls.base_classes[par].namespace.ns_list.size > 0
             nameSp = cls.base_classes[par].namespace.get('::') + '::'
           end
 
-          classDec << cls.base_classes[par].visibility << ' ' << nameSp << Utils.instance.get_styled_class_name(cls.base_classes[par].name)
+          classDec += cls.base_classes[par].visibility + ' ' + nameSp + Utils.instance.get_styled_class_name(cls.base_classes[par].name)
         end
       end
 
@@ -127,7 +125,7 @@ module XCTECpp
 
       # Process namespace items
       if cls.namespace.hasItems?
-        cls.namespace.nsList.reverse_each do |nsItem|
+        cls.namespace.ns_list.reverse_each do |nsItem|
           bld.end_block('  // namespace ' << nsItem)
         end
         bld.add
@@ -138,7 +136,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, bld)
-      bld.add('#include "' << Utils.instance.get_styled_class_name(cls.getUName + 'JsonEngine') << '.h"')
+      bld.add('#include "' << Utils.instance.get_styled_class_name(cls.get_u_name + 'JsonEngine') << '.h"')
       bld.add
 
       render_namespace_start(cls, bld)

@@ -27,7 +27,7 @@ module XCTEJava
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName
+      cls.get_u_name
     end
 
     def process_dependencies(cls, bld)
@@ -41,29 +41,6 @@ module XCTEJava
       # end
 
       super
-    end
-
-    def render_file_comment(cls, bld)
-      cfg = UserSettings.instance
-
-      bld.add('/**')
-      bld.add('* @class ' + cls.name)
-
-      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
-
-      bld.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
-
-      bld.add("*\n* " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
-
-      bld.add('*')
-
-      if !cls.description.nil?
-        cls.description.each_line do |descLine|
-          bld.add('* ' << descLine.chomp) if descLine.strip.size > 0
-        end
-      end
-
-      bld.add('*/')
     end
 
     # Returns the code for the header for this class

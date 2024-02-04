@@ -12,18 +12,18 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' routing module'
+      cls.get_u_name + ' routing module'
     end
 
-    def getFileName(cls)
-      get_styled_file_name(cls.getUName + '.routing.module')
+    def get_file_name(cls)
+      get_styled_file_name(cls.get_u_name + '.routing.module')
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = getFileName(cls)
+      bld.lfName = get_file_name(cls)
       bld.lfExtension = Utils.instance.get_extension('body')
 
       fPath = get_styled_file_name(cls.model.name)
@@ -55,7 +55,7 @@ module XCTETypescript
              otherCls.plug_name.start_with?('class_angular_reactive_view') ||
              otherCls.plug_name.start_with?('class_angular_listing')
             plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
-            cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
+            cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.get_file_name(otherCls),
                            plug.get_class_name(otherCls))
           end
         end
@@ -66,7 +66,7 @@ module XCTETypescript
            otherCls.plug_name.start_with?('class_angular_reactive_view') ||
            otherCls.plug_name.start_with?('class_angular_listing')
           plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
-          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.getFileName(otherCls),
+          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.get_file_name(otherCls),
                          plug.get_class_name(otherCls))
         end
       end
@@ -80,7 +80,7 @@ module XCTETypescript
       bld.indent
       bld.add('{')
       bld.indent
-      bld.add("path: '" + get_styled_file_name(cls.getUName) + "', ")
+      bld.add("path: '" + get_styled_file_name(cls.get_u_name) + "', ")
       bld.add('children: [ ')
 
       pathLines = []

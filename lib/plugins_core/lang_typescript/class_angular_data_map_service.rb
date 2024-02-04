@@ -15,7 +15,7 @@ module XCTETypescript
     end
 
     def get_unformatted_class_name(cls)
-      cls.getUName + ' data map service'
+      cls.get_u_name + ' data map service'
     end
 
     def getFilePath(cls)
