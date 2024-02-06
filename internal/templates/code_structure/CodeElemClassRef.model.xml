@@ -11,8 +11,8 @@
 
 	<var_group genGet="true" genSet="true" init_vars="true">
 	  <var name="namespaces"	type="CodeElemNamespace" set="List" />
-	  <var name="plug_name"		type="String"	nullable="true" />
-	  <var name="pluginName"	type="String"	nullable="true" />
+	  <var name="model name"		type="String"	nullable="true" />
+	  <var name="plugin name"	type="String"	nullable="true" />
 	</var_group>		
 	
 </model>

@@ -1,6 +1,4 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
@@ -8,12 +6,12 @@
 # This class stores data for the project level
 
 require 'code_structure/code_elem'
+require "code_structure/code_elem_build_type.rb"
+require "code_structure/code_elem_build_option.rb"
 
 require "code_elem_model.rb"
 require "code_elem_header.rb"
 require "code_elem_template_directory.rb"
-require "code_elem_build_type.rb"
-require "code_elem_build_option.rb"
 require "code_elem_project_component_group.rb"
 require "external_dependency"
 require "lang_generator_config.rb"

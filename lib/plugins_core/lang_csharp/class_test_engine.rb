@@ -11,7 +11,7 @@ require 'lang_file'
 require 'x_c_t_e_plugin'
 
 module XCTECSharp
-  class XCTECSharp::TestEngine < XCTEPlugin
+  class XCTECSharp::TestEngine < ClassBase
     def initialize
       @name = 'test_engine'
       @language = 'csharp'

@@ -1,18 +1,11 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
-#
-# This class stores information for the class code structure
-# read in from an xml file
 
 require 'code_structure/code_elem'
 require 'code_structure/code_elem_class_spec'
 
-require 'code_elem_comment'
-require 'code_elem_format'
 require 'code_elem_function'
 require 'code_elem_include'
 require 'code_elem_parent'
@@ -23,9 +16,11 @@ require 'filters/data_filter'
 
 module CodeStructure
   class CodeElemModel < CodeStructure::CodeElem
-    attr_accessor :classes, :name, :description,
+    attr_accessor :name, :description,
                   :case, :varGroup, :xmlFileName, :lastModified,
                   :modelSet, :feature_group, :data_filter
+
+    attr_reader :classes
 
     def initialize
       super(CodeStructure::CodeElemTypes::ELEM_MODEL, nil)
@@ -45,6 +40,14 @@ module CodeStructure
 
     def add_var(var)
       varGroup.vars << var
+    end
+
+    def add_class(cls)
+      if !cls.is_a? CodeElemClassSpec
+        throw "Invalid class type in add cleass"
+      end
+
+      @classes << cls
     end
 
     #

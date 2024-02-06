@@ -28,8 +28,7 @@ class LangProfiles
         if fileName.include?(".xml")
           langName = fileName[0..-5]
 
-          langProfile = LangProfile.new
-          langProfile.name = langName
+          langProfile = LangProfile.new(langName)
 
           filePath = path + "/" + fileName
           file = File.new filePath

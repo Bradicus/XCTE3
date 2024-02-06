@@ -19,8 +19,8 @@ module XCTECSharp
       @category = XCTEPlugin::CAT_CLASS
     end
 
-    def get_class_name(cls)
-      return Utils.instance.get_styled_class_name(cls.get_u_name + ' configuration')
+    def get_unformatted_class_name(cls)
+      return cls.get_u_name + ' configuration'
     end
 
     def process_dependencies(cls, _bld)
@@ -33,7 +33,7 @@ module XCTECSharp
     def render_body_content(cls, bld)
       classDec = cls.model.visibility + ' class ' + get_class_name(cls) + ' : IEntityTypeConfiguration<' + Utils.instance.get_styled_class_name(cls.get_u_name) + '>'
 
-      for par in (0..cls.baseClassModelManager.size)
+      for par in (0..cls.base_classes.size)
         if par == 0 && !cls.base_classes[par].nil?
           classDec << ' < ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
         elsif !cls.base_classes[par].nil?

@@ -26,20 +26,25 @@ module XCTECSharp
     end
 
     # Returns the code for the content for this class
-    def render_body_content(cls, bld)
-      id_var = cls.model.getFilteredVars(->(var) { var.name == 'id' })
+    def render_body_content(cls, bld)      
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
 
-      if id_var.nil?
-        Log.error('Missing id var')
+      for par in (0..cls.base_classes.size)
+        if par == 0 && !cls.base_classes[par].nil?
+          classDec << ' : ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        elsif !cls.base_classes[par].nil?
+          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        end
       end
 
-      bld.start_class('public class ' + get_class_name(cls))
+      bld.start_class(classDec)
 
-      bld.separate
-      # Generate class variables
-      each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(->(var) {}))
+      # Process variables
+      each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        XCTECSharp::Utils.instance.get_var_dec(var)
+      }))
 
-      bld.separate
+      bld.add if cls.functions.length > 0
 
       # Generate code for functions
       render_functions(cls, bld)

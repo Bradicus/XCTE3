@@ -252,7 +252,7 @@ module XCTEHtml
       tBody.add_child(tBodyRow)
       tableElem.add_child(tBody)
 
-      return tableDiv
+      return tableElem
     end
   end
 end

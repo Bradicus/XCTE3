@@ -32,7 +32,7 @@ module XCTECSharp
       end
 
       bld = SourceRendererCSharp.new
-      bld.lfName = cls.name
+      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
       bld.lfExtension = Utils.instance.get_extension('body')
       render_body_content(cls, bld)
 
@@ -44,7 +44,7 @@ module XCTECSharp
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
 
-      classDec = cls.model.visibility + ' class ' + cls.name
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
 
       inheritsFrom = []
 

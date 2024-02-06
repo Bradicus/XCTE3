@@ -103,7 +103,7 @@ module XCTECpp
 
       bld.separate if Utils.instance.has_an_array?(cls)
 
-      for pd in cls.preDefs
+      for pd in cls.pre_defs
         bld.add('class ' + pd + ';')
       end
 

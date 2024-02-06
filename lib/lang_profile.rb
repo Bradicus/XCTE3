@@ -15,7 +15,9 @@ class LangProfile
                 :functionNameStyle, :classNameStyle, :fileNameStyle,
                 :enumNameStyle, :constNameStyle, :directoryNameStyle
 
-  def initialize # Defined in the initialize method of child classes
+  def initialize(name) # Defined in the initialize method of child classes
+    @name = name
+
     @fileTypes = []  # Array of LangProfileFileType
     @typeMaps = []   # Array of LangProfileTypeMap
 

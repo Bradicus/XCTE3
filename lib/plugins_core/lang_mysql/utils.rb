@@ -11,11 +11,9 @@ require 'lang_profile'
 
 module XCTEMySql
   class Utils
-    @@langProfile = LangProfile.new
 
-    def self.init
-      @@langProfile.name = 'sql'
-      @@langProfile.loadProfile
+    def initialize
+      super('mysql')
     end
 
     # Returns variable declaration for the specified variable

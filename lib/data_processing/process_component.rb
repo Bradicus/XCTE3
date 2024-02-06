@@ -1,7 +1,7 @@
 require 'data_processing/process_custom_code'
 require 'data_processing/process_project_class_gen'
 require 'data_loading/class_group_loader'
-require 'code_elem_classgroup'
+require 'code_structure/code_elem_classgroup'
 require 'class_groups'
 require 'debug'
 require 'env'

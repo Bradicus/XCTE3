@@ -3,17 +3,11 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 
-## This class stores information for the parent code structure
-# read in from an xml file
-
-require 'code_elem_include'
-require 'code_elem_use'
-require 'code_structure/code_elem_namespace'
-require 'managers/name_compare'
 require 'code_structure/code_elem'
+require 'managers/name_compare'
 
 module CodeStructure
-  class CodeElemClassRef < CodeStructure::CodeElem
+  class CodeElemClassRef < CodeElem
     attr_accessor :namespaces, :model_name, :plugin_name
 
     def initialize(parentElem, _pComp)
@@ -35,3 +29,4 @@ module CodeStructure
     end
   end
 end
+

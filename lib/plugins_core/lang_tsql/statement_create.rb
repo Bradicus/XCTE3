@@ -43,7 +43,7 @@ module XCTETSql
       sqlCDef = []
       first = true
 
-      bld.add('CREATE TABLE [' + cls.name + '] (')
+      bld.add('CREATE TABLE [' + Utils.instance.get_styled_class_name(cls.get_u_name) + '] (')
       bld.indent
 
       # Generate code for class variables

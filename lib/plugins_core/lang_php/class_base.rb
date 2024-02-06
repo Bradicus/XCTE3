@@ -1,15 +1,15 @@
-require 'plugins_core/lang_java/utils'
+require 'plugins_core/lang_php/utils'
 require 'x_c_t_e_class_base'
 
 # This class contains functions that may be usefull in any type of class
-module XCTEJava
+module XCTEPhp
   class ClassBase < XCTEClassBase
     def get_default_utils
       Utils.instance
     end
 
     def get_source_renderer
-      return SourceRendererJava.new
+      return SourceRendererPhp.new
     end
 
     def get_sql_util(cls)
@@ -28,14 +28,16 @@ module XCTEJava
       bld.lfExtension = get_default_utils().get_extension('body')
 
       process_dependencies(cls, bld)
-
-      render_namespace_start(cls, bld)
-      render_dependencies(cls, bld)
+      
+      bld.add('<?php')
 
       render_file_comment(cls, bld)
+      render_namespace_start(cls, bld)
+      render_dependencies(cls, bld)
       render_body_content(cls, bld)
 
       render_namespace_end(cls, bld)
+      bld.add('?>')
 
       srcFiles << bld
 
@@ -54,14 +56,12 @@ module XCTEJava
     end
 
     def process_dependencies(cls, bld)
+      super 
+
       # Generate dependency code for functions
       for fun in cls.functions
         process_fuction_dependencies(cls, bld, fun)
       end
-
-      cls.addUse('java.time.LocalDateTime') if cls.model.hasVariableType('datetime')
-
-      cls.addUse('import java.util.List') if hasList(cls)
 
       return if cls.data_class.nil?
 
@@ -81,31 +81,23 @@ module XCTEJava
     end
 
     def render_dependencies(cls, bld)
-      bld.seperate_if(cls.uses.length > 0)
+      bld.seperate_if(cls.includes.length > 0)
 
-      for use in cls.uses
-        bld.add('import ' + use.namespace.get('.') + ';')
-
-        # if inc.itype == "<"
-        #   bld.add("#include <" << incPathAndName << ">")
-        # elsif inc.name.count(".") > 0
-        #   bld.add('#include "' << incPathAndName << '"')
-        # else
-        #   bld.add('#include "' << incPathAndName << "." << Utils.instance.get_extension("header") << '"')
-        # end
+      for inc in cls.includes
+        outCode.add('include_once("' << inc.path << inc.name << '.php");')
       end
 
-      bld.seperate_if(cls.uses.length > 0)
+      bld.seperate_if(cls.includes.length > 0)
     end
 
     def render_header_var_group_getter_setters(cls, bld)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
-          templ = XCTEPlugin.findMethodPlugin('java', 'method_get')
+          templ = XCTEPlugin.findMethodPlugin('php', 'method_get')
           templ.render_function(var, bld) if !templ.nil?
         end
         if var.genSet
-          templ = XCTEPlugin.findMethodPlugin('java', 'method_set')
+          templ = XCTEPlugin.findMethodPlugin('php', 'method_set')
           templ.render_function(var, bld) if !templ.nil?
         end
       }))

@@ -8,7 +8,7 @@
 # This class loads class reference information form an XML node
 
 require 'rexml/document'
-require 'code_elem_class_ref'
+require 'code_structure/code_elem_class_ref'
 require 'data_loading/attribute_loader'
 
 module DataLoading

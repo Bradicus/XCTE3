@@ -6,7 +6,7 @@
 module CodeStructure
   class CodeElemClassSpec < CodeElem
     attr_accessor :element_id, :model, :plug_name, :path, :namespace, :language, :includes, :uses, :actions, :gen_cfg, :functions,
-            :base_classes, :interfaces, :injections, :interface_namespace, :interface_path, :test_namespace, :test_path,
+            :base_classes, :interfaces, :injections, :interface_namespace, :interface_path, :test_namespace, :test_path, :template_params,
             :var_prefix, :pre_defs, :file_path, :standard_class, :standard_class_type, :custom_code, :data_class,
             :class_group_ref, :class_group_name, :variant, :feature_group
         

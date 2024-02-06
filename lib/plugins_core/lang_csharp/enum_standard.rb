@@ -17,7 +17,7 @@ require 'lang_file'
 require 'x_c_t_e_plugin'
 
 module XCTECSharp
-  class EnumStandard < XCTEPlugin
+  class EnumStandard < XCTEClassBase
     def initialize
       super
 

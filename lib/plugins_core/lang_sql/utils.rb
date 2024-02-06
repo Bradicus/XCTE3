@@ -13,7 +13,6 @@ require 'utils_base'
 module XCTESql
   class Utils < UtilsBase
     include Singleton
-    @@langProfile = LangProfile.new
 
     def initialize
       super('sql')

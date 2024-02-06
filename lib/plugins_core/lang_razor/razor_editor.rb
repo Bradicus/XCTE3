@@ -48,28 +48,18 @@ module XCTERazor
       bld.add('<form>')
       bld.indent
 
-      processVarGroup(cls, bld, cls.model.groups)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if var.vtype == 'String'
+          bld.add('<input type="text" name="' +
+                  XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + '" value="model.' +
+                  XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + '" />')
+        elsif (!var.vtype.nil? && var.vtype.start_with?('Int')) || (!var.utype.nil? && var.utype.start_with?('int'))
+          bld.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
+        end
+      }))
 
       bld.unindent
       bld.add('</form>')
-    end
-
-    def processVarGroup(cls, bld, varGroup)
-      for grp in varGroup
-        for var in grp.vars
-          if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
-            if var.vtype == 'String'
-              bld.add('<input type="text" name="' +
-                      XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + '" value="model.' +
-                      XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + '" />')
-            elsif (!var.vtype.nil? && var.vtype.start_with?('Int')) || (!var.utype.nil? && var.utype.start_with?('int'))
-              bld.add('<input type="number" name="' + var.name + '" value="model.' + var.name + '" />')
-            end
-          end
-        end
-
-        processVarGroup(cls, bld, grp.groups)
-      end
     end
   end
 end

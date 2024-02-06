@@ -12,8 +12,14 @@ require 'utils_base'
 
 module XCTEPhp
   class Utils < UtilsBase
+    include Singleton
+
+    def initialize
+      super('php')
+    end
+
     # Get a parameter declaration for a method parameter
-    def self.get_param_dec(var)
+    def get_param_dec(var)
       pDec = String.new
 
       pDec << get_type_name(var.vtype)
@@ -24,7 +30,7 @@ module XCTEPhp
     end
 
     # Returns variable declaration for the specified variable
-    def self.get_var_dec(var)
+    def get_var_dec(var)
       vDec = String.new
 
       if !var.comment.nil?
@@ -43,26 +49,26 @@ module XCTEPhp
     end
 
     # Get a parameter declaration for a method parameter
-    def self.get_type_name(gType)
-      return @@langProfile.get_type_name(gType)
+    def get_type_name(gType)
+      return @langProfile.get_type_name(gType)
     end
 
     # Get the extension for a file type
-    def self.get_extension(eType)
-      return @@langProfile.get_extension(eType)
+    def get_extension(eType)
+      return @langProfile.get_extension(eType)
     end
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def self.getComment(var)
+    def getComment(var)
       return '/* ' << var.text << ' */'
     end
 
-    def self.is_primitive(var)
-      return @@langProfile.is_primitive(var)
+    def is_primitive(var)
+      return @langProfile.is_primitive(var)
     end
 
-    def self.getDataListInfo(classXML)
+    def getDataListInfo(classXML)
       dInfo = {}
 
       classXML.elements.each('DATA_LIST_TYPE') do |dataListXML|
@@ -74,7 +80,7 @@ module XCTEPhp
     end
 
     # Capitalizes the first letter of a string
-    def self.getCapitalizedFirst(str)
+    def getCapitalizedFirst(str)
       newStr = String.new
       newStr += str[0, 1].capitalize
 

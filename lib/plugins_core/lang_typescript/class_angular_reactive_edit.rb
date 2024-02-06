@@ -67,9 +67,11 @@ module XCTETypescript
                          Utils.instance.get_styled_class_name(optVar.getUType))
 
           bCls = ClassModelManager.findClass(cls.model.name, 'standard')
-          optStoreVar = Utils.instance.create_var_for(bCls, 'class_angular_data_store_service')
-          Utils.instance.try_add_include_for_var(bCls, optVar, 'class_angular_data_store_service')
-          Utils.instance.try_add_include_for_var(cls, optVar, 'class_angular_data_store_service')
+          if !bCls.nil?
+            optStoreVar = Utils.instance.create_var_for(bCls, 'class_angular_data_store_service')
+            Utils.instance.try_add_include_for_var(bCls, optVar, 'class_angular_data_store_service')
+            Utils.instance.try_add_include_for_var(cls, optVar, 'class_angular_data_store_service')
+          end
         end
       }))
 

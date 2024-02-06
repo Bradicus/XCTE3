@@ -4,13 +4,10 @@
 # root directory
 
 module CodeStructure
-  class CodeElemBuildVar
-    attr_accessor :name, :value
-  
-    def initialize(name, value)
-      @name = name
-      @value = value
-    end
+  class CodeElemAction
+    attr_accessor :name,
+      :link,
+      :trigger,
+      :role
   end
 end
-

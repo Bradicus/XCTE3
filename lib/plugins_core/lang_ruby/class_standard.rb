@@ -84,7 +84,7 @@ module XCTERuby
       vList = []
 
       for acc in accList
-        vList.push(':' + Utils.instance.get_styled_variable_name(acc.var))
+        vList.push(' :' + Utils.instance.get_styled_variable_name(acc.var))
       end
 
       vList

@@ -307,10 +307,10 @@ module XCTECSharp
       nsPrefix = ''
       nsPrefix = cls.namespace.get('.') + '.' if cls.namespace.hasItems?
 
-      baseTypeName = CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
+      baseTypeName = CodeNameStyling.getStyled(cls.get_u_name, @langProfile.classNameStyle)
       baseTypeName = nsPrefix + baseTypeName
 
-      if cls.templateParams.length > 0
+      if cls.template_params.length > 0
         allParams = []
 
         for param in cls.templateParams

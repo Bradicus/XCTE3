@@ -8,8 +8,8 @@
 # This class loads class information form an XML node
 
 require 'code_elem_project'
-require 'code_elem_build_var'
-require 'code_elem_action'
+require 'code_structure/code_elem_build_var'
+require 'code_structure/code_elem_action'
 require 'data_loading/variable_loader'
 require 'data_loading/attribute_loader'
 require 'data_loading/attribute_loader'
@@ -126,7 +126,7 @@ module DataLoading
 
       # Load uses
       genCXml.elements.each('actions/action') do |xmlNode|
-        act = CodeElemAction.new
+        act = CodeStructure::CodeElemAction.new
         act.name = AttributeLoader.init.xml(xmlNode).names('name').model(genC.model).cls(genC).get
         act.link = AttributeLoader.init.xml(xmlNode).names('link').model(genC.model).cls(genC).get
         act.trigger = AttributeLoader.init.xml(xmlNode).names('trigger').model(genC.model).cls(genC).get
@@ -134,19 +134,19 @@ module DataLoading
       end
 
       modelManager.list << genC
-      genC.model.classes << genC
+      genC.model.add_class genC
 
       if genC.interface_namespace.hasItems?
-        intf = processInterface(genC, model, pComponent)
+        intf = processInterface(genC)
         modelManager.list << intf
-        genC.model.classes << intf
+        genC.model.add_class intf
       end
 
       return unless genC.test_namespace.hasItems?
 
-      intf = ClassLoader.processTests(genC, model, pComponent)
+      intf = ClassLoader.processTests(genC)
       modelManager.list << intf
-      genC.model.classes << genC
+      genC.model.add_class genC
 
       return genC
 
@@ -210,25 +210,27 @@ module DataLoading
       return str.split(separator).map!(&:trim)
     end
 
-    def self.processInterface(cls, model, pComponent)
-      intf = CodeStructure::CodeElemClassSpec.new(cls, model, pComponent, true)
+    def self.processInterface(cls)
+      intf = CodeStructure::CodeElemClassSpec.new(cls, cls.model, cls.parent_elem)
       intf.namespace = CodeStructure::CodeElemNamespace.new(cls.interface_namespace.get('.'))
       intf.path = cls.interface_path
       intf.functions = cls.functions
       intf.language = cls.language
       intf.plug_name = 'interface'
-      intf.parentElem = cls
-      intf.model = model
+      intf.parent_elem = cls
+      intf.model = cls.model
+
+      return intf
     end
 
-    def self.processTests(cls, model, pComponent)
-      intf = CodeStructure::CodeElemClassSpec.new(cls, model, pComponent, true)
+    def self.processTests(cls)
+      intf = CodeStructure::CodeElemClassSpec.new(cls, cls.model, cls.parent_elem)
       intf.namespace = CodeStructure::CodeElemNamespace.new(cls.test_namespace.get('.'))
       intf.path = cls.test_path
       intf.language = cls.language
       intf.plug_name = 'test_engine'
-      intf.parentElem = cls
-      intf.model = model
+      intf.parent_elem = cls
+      intf.model = cls.model
 
       return intf
     end

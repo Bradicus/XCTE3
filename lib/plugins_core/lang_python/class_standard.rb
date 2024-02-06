@@ -18,11 +18,15 @@ require 'code_elem_model'
 require 'lang_file'
 
 module XCTEPython
-  class ClassStandard < XCTEPlugin
+  class ClassStandard < ClassBase
     def initialize
       @name = 'standard'
       @language = 'python'
       @category = XCTEPlugin::CAT_CLASS
+    end
+
+    def get_unformatted_class_name(cls)
+      return cls.get_u_name
     end
 
     def gen_source_files(cls)
@@ -32,7 +36,7 @@ module XCTEPython
       rend.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
       rend.lfExtension = Utils.instance.get_extension('body')
       genPythonFileComment(cls, rend)
-      genPythonFileContent(cls, rend)
+      render_body_content(cls, rend)
 
       srcFiles << rend
 
@@ -40,12 +44,10 @@ module XCTEPython
     end
 
     def genPythonFileComment(cls, rend)
+      cfg = UserSettings.instance
+
       rend.add('##')
       rend.add('# Class:: ' + Utils.instance.get_styled_file_name(cls.get_u_name))
-
-      if !cfg.codeAuthor.nil?
-        rend.add('# Author:: ' + cfg.codeAuthor)
-      end
 
       if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
         rend.add('# ' + cfg.codeCompany)
@@ -66,6 +68,32 @@ module XCTEPython
       end
     end
 
+    def render_body_content(cls, bld)      
+      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
+
+      for par in (0..cls.base_classes.size)
+        if par == 0 && !cls.base_classes[par].nil?
+          classDec << ' : ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        elsif !cls.base_classes[par].nil?
+          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+        end
+      end
+
+      bld.start_class(classDec)
+
+      # Process variables
+      each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
+        XCTECSharp::Utils.instance.get_var_dec(var)
+      }))
+
+      bld.add if cls.functions.length > 0
+
+      # Generate code for functions
+      render_functions(cls, bld)
+
+      bld.end_class
+    end
+
     # Returns the code for the header for this class
     def genPythonFileContent(cls, rend)
       headerString = String.new
@@ -81,10 +109,6 @@ module XCTEPython
       end
 
       rend.start_class('class ' + Utils.instance.get_styled_file_name(cls.get_u_name))
-
-      # Do automatic static array size declairations at top of class
-      varArray = []
-      cls.model.getAllVarsFor(varArray)
 
       for var in varArray
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic == true
