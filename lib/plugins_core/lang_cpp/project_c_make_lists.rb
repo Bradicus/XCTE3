@@ -10,7 +10,7 @@
 require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
 
-require 'code_elem_project'
+require 'code_structure/code_elem_project'
 require 'lang_file'
 require 'x_c_t_e_plugin'
 

@@ -9,10 +9,10 @@ require 'code_structure/code_elem'
 require "code_structure/code_elem_build_type.rb"
 require "code_structure/code_elem_build_option.rb"
 
-require "code_elem_model.rb"
-require "code_elem_header.rb"
-require "code_elem_template_directory.rb"
-require "code_elem_project_component_group.rb"
+require "code_structure/code_elem_model.rb"
+require "code_structure/code_elem_header.rb"
+require "code_structure/code_elem_template_directory.rb"
+require "code_structure/code_elem_project_component_group.rb"
 require "external_dependency"
 require "lang_generator_config.rb"
 

@@ -7,10 +7,12 @@
  
 require 'code_structure/code_elem'
 
-class CodeElemUse
-    attr_accessor :namespace
-  
-  def initialize(namespace)
-    @namespace = namespace
-  end
+module CodeStructure
+	class CodeElemUse
+		attr_accessor :namespace
+	  
+	  def initialize(namespace)
+		@namespace = namespace
+	  end
+	end
 end

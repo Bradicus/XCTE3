@@ -1,6 +1,4 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
@@ -11,7 +9,7 @@
 require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemVarGroup < CodeStructure::CodeElem
+  class CodeElemVarGroup < CodeElem
     attr_accessor :name, :vars, :varGroups
 
     def initialize

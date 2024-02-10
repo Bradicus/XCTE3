@@ -13,8 +13,8 @@
 require 'plugins_core/lang_python/utils'
 require 'plugins_core/lang_python/x_c_t_e_python'
 
-require 'code_elem_parent'
-require 'code_elem_model'
+require 'code_structure/code_elem_parent'
+require 'code_structure/code_elem_model'
 require 'lang_file'
 
 module XCTEPython

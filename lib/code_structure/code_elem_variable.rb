@@ -1,6 +1,4 @@
 ##
-
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
@@ -8,11 +6,11 @@
 # This class stores information for the variable code structure
 # read in from an xml file
 
-require 'code_elem_template'
+require 'code_structure/code_elem_template'
 require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemVariable < CodeStructure::CodeElem
+  class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :defaultValue, :comment,
                   :visibility, :isConst, :isStatic, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
                   :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptions_list,

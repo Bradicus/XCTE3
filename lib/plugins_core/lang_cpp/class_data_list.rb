@@ -11,9 +11,9 @@ require 'plugins_core/lang_cpp/utils'
 require 'plugins_core/lang_cpp/method_empty'
 require 'plugins_core/lang_cpp/x_c_t_e_cpp'
 
-require 'code_elem_model'
-require 'code_elem_var_group'
-require 'code_elem_parent'
+require 'code_structure/code_elem_model'
+require 'code_structure/code_elem_var_group'
+require 'code_structure/code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
 

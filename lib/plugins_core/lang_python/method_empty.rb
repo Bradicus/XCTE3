@@ -8,7 +8,7 @@
 # This plugin creates an empty method with the specified function name
 # and parameters
 
-require 'code_elem_model'
+require 'code_structure/code_elem_model'
 require 'lang_file'
 
 require 'x_c_t_e_plugin'

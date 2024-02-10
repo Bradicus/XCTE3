@@ -11,7 +11,7 @@ require 'plugins_core/lang_php/utils'
 require 'plugins_core/lang_php/x_c_t_e_php'
 require 'plugins_core/lang_php/method_data_list_display_edit'
 
-require 'code_elem_parent'
+require 'code_structure/code_elem_parent'
 require 'lang_file'
 
 module XCTEPhp

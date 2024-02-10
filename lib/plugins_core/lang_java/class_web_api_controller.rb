@@ -7,9 +7,9 @@ require 'plugins_core/lang_java/utils'
 require 'plugins_core/lang_java/class_base'
 require 'plugins_core/lang_java/source_renderer_java'
 
-require 'code_elem_use'
+require 'code_structure/code_elem_use'
 require 'code_structure/code_elem_namespace'
-require 'code_elem_parent'
+require 'code_structure/code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
 

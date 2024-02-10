@@ -10,9 +10,9 @@
 require 'lang_profile'
 require 'utils_base'
 require 'types'
-require 'code_elem_variable'
-require 'code_elem_model'
-require 'code_elem_var_group'
+require 'code_structure/code_elem_variable'
+require 'code_structure/code_elem_model'
+require 'code_structure/code_elem_var_group'
 
 module XCTETypescript
   class Utils < UtilsBase

@@ -14,8 +14,8 @@ require 'plugins_core/lang_ruby/utils'
 require 'plugins_core/lang_ruby/source_renderer_ruby'
 require 'plugins_core/lang_ruby/x_c_t_e_ruby'
 
-require 'code_elem_parent'
-require 'code_elem_model'
+require 'code_structure/code_elem_parent'
+require 'code_structure/code_elem_model'
 require 'lang_file'
 
 module XCTERuby

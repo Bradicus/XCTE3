@@ -6,7 +6,7 @@
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/source_renderer_csharp'
 
-require 'code_elem_parent'
+require 'code_structure/code_elem_parent'
 require 'lang_file'
 require 'x_c_t_e_plugin'
 
@@ -44,22 +44,8 @@ module XCTECSharp
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      # Add in any dependencies required by functions
-      for fun in cls.functions
-        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin('csharp', fun.name)
-          if !templ.nil?
-            templ.process_dependencies(cls, bld, fun)
-          else
-            puts 'ERROR no plugin for function: ' + fun.name + '   language: csharp'
-          end
-        end
-      end
 
 #     Utils.instance.genUses(cls.uses, bld)
-
-      # Process namespace items
-      bld.start_block('namespace ' << cls.namespace.get('.')) if cls.namespace.hasItems?
 
       classDec = cls.model.visibility + ' interface ' + get_class_name(cls)
 
@@ -74,12 +60,6 @@ module XCTECSharp
       bld.start_class(classDec)
 
       bld.end_class
-
-      # Process namespace items
-      return unless cls.namespace.hasItems?
-
-      bld.end_block(' // namespace ' + cls.namespace.get('.'))
-      bld.add
     end
   end
 end

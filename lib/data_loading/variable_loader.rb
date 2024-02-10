@@ -7,7 +7,7 @@
 #
 # This class loads class information form an XML node
 
-require "code_elem_variable.rb"
+require "code_structure/code_elem_variable.rb"
 require "code_structure/code_elem_build_var.rb"
 require "rexml/document"
 require "data_loading/attribute_loader"

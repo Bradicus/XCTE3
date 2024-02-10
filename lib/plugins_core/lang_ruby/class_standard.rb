@@ -15,8 +15,8 @@ require 'plugins_core/lang_ruby/utils'
 require 'plugins_core/lang_ruby/class_base'
 require 'x_c_t_e_plugin'
 
-require 'code_elem_parent'
-require 'code_elem_model'
+require 'code_structure/code_elem_parent'
+require 'code_structure/code_elem_model'
 require 'lang_file'
 require 'log'
 

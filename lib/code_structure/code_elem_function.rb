@@ -1,5 +1,4 @@
 ##
-#
 # Copyright XCTE Contributors
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
@@ -11,7 +10,7 @@ require 'code_structure/code_elem_var_group'
 require 'code_structure/code_elem'
 
 module CodeStructure
-  class CodeElemFunction < CodeStructure::CodeElem
+  class CodeElemFunction < CodeElem
     attr_accessor :name, :description, :visibility, :parameters, :isConst,
                   :isStatic, :isVirtual, :isInline, :isTemplate, :returnValue,
                   :annotations, :role

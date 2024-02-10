@@ -5,17 +5,17 @@
 
 require 'code_structure/code_elem'
 require 'code_structure/code_elem_class_spec'
-
 require 'code_structure/code_elem_function'
 require 'code_structure/code_elem_include'
 require 'code_structure/code_elem_parent'
 require 'code_structure/code_elem_variable'
 require 'code_structure/code_elem_var_group'
+
 require 'rexml/document'
 require 'filters/data_filter'
 
 module CodeStructure
-  class CodeElemModel < CodeStructure::CodeElem
+  class CodeElemModel < CodeElem
     attr_accessor :name, :description,
                   :case, :varGroup, :xmlFileName, :lastModified,
                   :modelSet, :feature_group, :data_filter

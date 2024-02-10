@@ -7,7 +7,7 @@
 #
 # This class loads class group information from an XML node
 
-require 'code_elem_project'
+require 'code_structure/code_elem_project'
 require 'code_structure/code_elem_build_var'
 require 'data_loading/attribute_loader'
 require 'data_loading/class_ref_loader'

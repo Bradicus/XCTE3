@@ -13,7 +13,7 @@
 require 'plugins_core/lang_csharp/utils'
 require 'plugins_core/lang_csharp/class_base'
 
-require 'code_elem_parent'
+require 'code_structure/code_elem_parent'
 require 'lang_file'
 
 module XCTETypescript

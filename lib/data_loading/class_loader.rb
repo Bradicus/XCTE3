@@ -7,7 +7,7 @@
 #
 # This class loads class information form an XML node
 
-require 'code_elem_project'
+require 'code_structure/code_elem_project'
 require 'code_structure/code_elem_build_var'
 require 'code_structure/code_elem_action'
 require 'data_loading/variable_loader'

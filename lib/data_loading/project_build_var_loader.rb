@@ -7,7 +7,7 @@
 #
 # This class loads project information form an XML file
 
-require "code_elem_project.rb"
+require "code_structure/code_elem_project.rb"
 require "code_structure/code_elem_build_var.rb"
 require "rexml/document"
 

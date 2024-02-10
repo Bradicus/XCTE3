@@ -13,7 +13,7 @@
 require 'plugins_core/lang_php/utils'
 require 'plugins_core/lang_php/x_c_t_e_php'
 
-require 'code_elem_parent'
+require 'code_structure/code_elem_parent'
 require 'lang_file'
 
 module XCTEPhp

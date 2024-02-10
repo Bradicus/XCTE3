@@ -8,7 +8,7 @@
 # This plugin creates an empty method with the specified function name
 # and parameters
 
-require 'code_elem_model.rb'
+require 'code_structure/code_elem_model.rb'
 require 'lang_file.rb'
 
 require 'x_c_t_e_plugin.rb'

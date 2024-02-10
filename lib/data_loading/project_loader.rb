@@ -7,7 +7,7 @@
 #
 # This class loads project information form an XML file
 
-require 'code_elem_project'
+require 'code_structure/code_elem_project'
 require 'data_loading/project_build_var_loader'
 require 'rexml/document'
 
