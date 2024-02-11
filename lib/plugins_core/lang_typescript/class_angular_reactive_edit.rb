@@ -143,7 +143,7 @@ module XCTETypescript
           elsif optCls.nil?
             Log.error('No standard class for var: ' + var.name)
           else
-            dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service')
+            dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service', 'private')
             if !dataStoreOptServiceVar.nil?
               Utils.instance.add_param_if_available(constructorParams, dataStoreOptServiceVar)
             else

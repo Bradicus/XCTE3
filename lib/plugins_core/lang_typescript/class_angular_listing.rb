@@ -97,7 +97,7 @@ module XCTETypescript
       
       constructorParams = inst_fun.parameters.vars
       
-      userServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
+      userServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service', 'private')
       inst_fun.add_param(userServiceVar)      
       inst_fun.add_param_from('route', 'ActivatedRoute', 'private')
 

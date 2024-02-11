@@ -88,7 +88,7 @@ module XCTETypescript
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           varCls = ClassModelManager.findVarClass(var, 'class_angular_data_gen_service')
           if !varCls.nil?
-            vService = Utils.instance.create_var_for(varCls, 'class_angular_data_gen_service')
+            vService = Utils.instance.create_var_for(varCls, 'class_angular_data_gen_service', 'private')
             inst_fun.add_param(vService)
           end
         end
