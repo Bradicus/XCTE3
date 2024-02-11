@@ -15,9 +15,15 @@ module XCTETypescript
   class MethodConstructor < XCTEPlugin
 
     def initialize
+      super
+
       @name = "method_constructor"
       @language = "typescript"
       @category = XCTEPlugin::CAT_METHOD
+    end
+
+    def get_unformatted_fun_name(cls, fun)
+      return 'constructor'
     end
 
     def process_dependencies(cls, bld, fun); end
@@ -30,10 +36,17 @@ module XCTETypescript
         params.push Utils.instance.get_param_dec(param)
       end
 
-      bld.start_class("constructor(" + params.join(', ') + ")")
+      bld.start_function_paramed(get_unformatted_fun_name(cls, fun), params)
 
       if cls.base_classes.length > 0
-        bld.add 'super();'
+        bc = cls.base_classes[0]
+        bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
+        base_consturctor_fun = bc_cls_spec.get_function('constructor')
+        if !base_consturctor_fun.nil?
+          bld.add 'super();'
+        else
+          bld.add 'super();'
+        end
       end
 
       for bc in cls.base_classes

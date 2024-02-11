@@ -9,18 +9,18 @@
 	  	<base_class cname="code elem" plugin="standard" />
 		<function name="method_constructor" >	
 			<param name="parent elem"	utype="code elem"  nullable="true" />    
-			<param name="model"			type="code elem data spec" nullable="true" />
+			<param name="model"			utype="code elem data spec" nullable="true" />
 		</function>
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">
-		<var name="model"			type="code elem data spec" nullable="true" default="null" />
+		<var name="model"			utype="code elem data spec" nullable="true" default="null" />
 		<var name="path"			type="String"  />
 		<var name="plug name"		type="String"  />
 		<var name="namespace"		utype="code elem namespace" />		
 		<var name="language"		type="String" />
 		<var name="includes"		utype="code elem include" set="List" />
-		<var name="uses"			utype="code elem use" set="List" />
+		<var name="uses"			utype="code elem namespace" set="List" />
 		<var name="gen cfg"			utype="project elem" nullable="true" />		
 		<var name="functions"		utype="code elem function" set="List" />
 		<var name="base classes"	utype="code elem class spec" set="List" />

@@ -10,7 +10,6 @@
 	</var_group>	
 				
 	<gen_class type="standard" ns="code structure" path="code structure">
-	  <base_class cname="code elem" plugin="standard" />
 	</gen_class>	
 	
 </model>

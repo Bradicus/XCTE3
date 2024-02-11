@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="code elem library dependency" >
+<model name="code elem library dependency">
 
 	<description>
-	Code Element
+	
 	</description>
 
-	<gen_class type="standard" ns="code structure" path="code structure" >
+	<gen_class type="standard" ns="code structure" path="code structure">
+	  <base_class cname="code elem" plugin="standard" />
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" init_vars="true" >		
-		<var name="name"		type="String" nullable="true" />        
-        <var name="versionMin"	type="String" nullable="true" />        
-        <var name="versionMax"	type="String" nullable="true" />        
+	<var_group genGet="true" genSet="true" init_vars="true">
+		<var name="name" type="String" nullable="true" />
+		<var name="versionMin" type="String" nullable="true" />
+		<var name="versionMax" type="String" nullable="true" />
 	</var_group>
 
 </model>

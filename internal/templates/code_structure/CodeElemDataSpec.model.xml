@@ -10,7 +10,6 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">
-		<var name="element id"	utype="code elem type"   default="CodeElemType.ELEM_MODEL" />
 		<var name="classes"		utype="code elem class spec" set="List" />
 		<var name="var group"		utype="code elem var group" />
 		

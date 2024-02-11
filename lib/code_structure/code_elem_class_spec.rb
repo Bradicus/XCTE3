@@ -120,12 +120,12 @@ module CodeStructure
       return nil
     end
 
-    def get_function(funName)      
-      Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun| 
+    def get_function(funName)  
+      for fun in @functions
         if fun.name == funName
           return fun
         end
-      }));
+      end
     end
   end
 end

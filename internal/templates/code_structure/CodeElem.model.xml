@@ -7,16 +7,13 @@
 
 	<gen_class type="standard" ns="code structure" path="code structure">
 		<function name="method_constructor" >	
-			<param name="element id"	type="String" />  
 			<param name="parent elem"	utype="code elem"  nullable="true" />  
 		</function>
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">
-		<var name="element id"		utype="code elem type" nullable="true" default="null" />
 		<var name="name"			type="String" nullable = "true" />
-		<var name="display name"	type="String" nullable = "true" />
-		<var name="description"		type="String" nullable = "true" />
+		<var name="comment" 		type="String" />
 		<var name="visibility"		type="String" nullable = "true" />
 		<var name="parent elem"		utype="code elem"  nullable="true" default="null" />
 		<var name="data node"		utype="data node" ns="data node" nullable="true" default="null"  />		

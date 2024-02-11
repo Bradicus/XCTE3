@@ -10,7 +10,6 @@
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">
-		<var name="element id"	utype="code elem type"   default="CodeElemType.ELEM_PROJECT" />
 		<var name="build type"	type="String"	 nullable="true" />
 		<var name="template folders"	type="String" nullable="true" />
 		<var name="lang profile paths"	type="String" set="List" />

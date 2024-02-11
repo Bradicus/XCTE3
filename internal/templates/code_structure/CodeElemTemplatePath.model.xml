@@ -5,8 +5,7 @@
 	Code Element - Use
 	</description>
 
-	<var_group genGet="true" genSet="true" init_vars="true" >
-	    <var name="element id"	utype="code elem type" default="CodeElemType.ELEM_TEMPLATE_DIRECTORY" />		
+	<var_group genGet="true" genSet="true" init_vars="true" >	
 		<var name="path"	type="String" />
 		<var name="dest"	type="String" />
 

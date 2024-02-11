@@ -15,10 +15,10 @@
 				
 	<var_group virtual="true" genGet="true" genSet="true" init_vars="true">
 		<var name="vtype" 		 type="String" />
+		<var name="display name"	type="String" nullable = "true" />
 		<var name="templateType" type="String" />
 		<var name="defaultValue" type="String" nullable="true" />
 		<var name="init_vars" type="Boolean" default="false" />
-		<var name="comment" type="String" />
 		<var name="is virtual" default = "false" type="Boolean" />
 		<var name="is const" default = "false" type="Boolean" />
 		<var name="is static" default = "false" type="Boolean" />

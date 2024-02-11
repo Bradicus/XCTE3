@@ -4,6 +4,11 @@
 	<description>
 	Code Element for Templates or in some languages arrays
 	</description>
+	
+	<var_group genGet="true" genSet="true" init_vars="true">		
+		<var name="name"	type="String" />        
+        <var name="value"	type="String" />   
+	</var_group>
 
 	<gen_class type="standard" ns="code structure" path="code structure" >
 		<function name="method_constructor" >	
@@ -11,10 +16,5 @@
         	<param name="value"	type="String" />   
 		</function>
 	</gen_class>
-
-	<var_group genGet="true" genSet="true" init_vars="true">		
-		<var name="name"	type="String" />        
-        <var name="value"	type="String" />   
-	</var_group>
 
 </model>

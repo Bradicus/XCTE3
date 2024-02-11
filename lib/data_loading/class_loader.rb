@@ -172,7 +172,7 @@ module DataLoading
     # Loads a function element from an XML function node
     def self.loadEmptyFunctionNode(newFun, cls, funXml, pComponent)
       CodeElemLoader.load(newFun, funXml, cls)  
-      newFun.name = AttributeLoader.init.xml(xml_node).model(cls.model).names('name').get     
+      newFun.name = AttributeLoader.init.xml(funXml).model(cls.model).names('name').get     
       
       newFun.isInline = (funXml.attributes['inline'] == 'true')
 
@@ -192,8 +192,7 @@ module DataLoading
       for funElemXML in funXml.elements
         if funElemXML.name == 'parameters'
 
-          CodeElemLoader.load(newFun.parameters, funElemXML, cls)  
-          newFun.name = AttributeLoader.init.xml(xml_node).model(cls.model).names('name').get     
+          CodeElemLoader.load(newFun.parameters, funElemXML, cls)    
 
           for paramXML in funElemXML.elements
             VariableLoader.loadVariableNode(paramXML, newFun.parameters, pComponent)

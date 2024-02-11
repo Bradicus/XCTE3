@@ -6,7 +6,6 @@
 	</description>
 				
 	<gen_class type="standard" ns="code structure" path="code structure">
-	  <base_class cname="code elem" plugin="standard" />
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true" >
