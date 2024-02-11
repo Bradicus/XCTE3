@@ -11,4 +11,12 @@ class NameCompare
 
     return true
   end
+
+  def self.var_name_matches(n1, n2)
+    if n1.nil? || n2.nil?
+      return false
+    end
+
+    return n1.tr(' ', '').downcase == n2.tr(' ', '').downcase
+  end
 end

@@ -35,7 +35,24 @@ module CodeStructure
     end
 
     def add_param(param)
-      parameters.vars.push(param)
+      if param != nil
+
+        found = false
+
+        for pvar in parameters.vars
+          if pvar.name == param.name
+            found = true
+          end
+        end
+
+        if !found
+          parameters.vars.push(param)
+        end
+      end
+    end
+
+    def add_param_from(name, type, visibility = nil)
+      add_param CodeElemVariable.new(self).init_as_param(name, type, visibility)
     end
   end
 end

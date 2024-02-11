@@ -41,10 +41,9 @@ module XCTETypescript
       vDec
     end
 
-    def addParamIfAvailable(params, var)
+    def add_param_if_available(params, var)
       return if var.nil?
-
-      params.push(get_param_dec(var))
+      params.push var
     end
 
     def getParamDecForClass(cls, plug)

@@ -82,7 +82,7 @@ class UtilsBase
   end
 
   # Create a variable with a type cls
-  def create_var_for(cls, plug_name)
+  def create_var_for(cls, plug_name, visibility = nil)
     plugClass = cls.model.findClassModel(plug_name)
     plug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
 
@@ -98,6 +98,10 @@ class UtilsBase
     newVar = CodeStructure::CodeElemVariable.new(nil)
     newVar.utype = plug.get_unformatted_class_name(plugClass)
     newVar.name = newVar.utype
+
+    if visibility != nil
+      newVar.visibility = visibility
+    end
 
     newVar
   end

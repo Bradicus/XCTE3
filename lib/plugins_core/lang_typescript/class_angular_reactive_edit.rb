@@ -126,10 +126,12 @@ module XCTETypescript
 
       bld.separate
 
-      constructorParams = []
-      Utils.instance.addParamIfAvailable(constructorParams, storeServiceVar)
-      Utils.instance.addParamIfAvailable(constructorParams, dataGenServiceVar)
-      Utils.instance.addParamIfAvailable(constructorParams, userPopulateServiceVar)
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+      
+      constructorParams = inst_fun.parameters.vars
+      Utils.instance.add_param_if_available(constructorParams, storeServiceVar)
+      Utils.instance.add_param_if_available(constructorParams, dataGenServiceVar)
+      Utils.instance.add_param_if_available(constructorParams, userPopulateServiceVar)
 
       # Generate any selection list variable parameters for data stores
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
@@ -143,7 +145,7 @@ module XCTETypescript
           else
             dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service')
             if !dataStoreOptServiceVar.nil?
-              Utils.instance.addParamIfAvailable(constructorParams, dataStoreOptServiceVar)
+              Utils.instance.add_param_if_available(constructorParams, dataStoreOptServiceVar)
             else
               Log.error("couldn't find data store service for: " + var.name)
             end
@@ -151,10 +153,10 @@ module XCTETypescript
         end
       }))
 
-      constructorParams.push('private route: ActivatedRoute')
-      constructorParams.push('private router: Router')
+      constructorParams.push(CodeStructure::CodeElemVariable.new(nil).init_as_param('route', 'ActivatedRoute', 'private'))
+      constructorParams.push(CodeStructure::CodeElemVariable.new(nil).init_as_param('router', 'Router', 'private'))
 
-      bld.start_function_paramed('constructor', constructorParams)
+      bld.start_function('constructor', inst_fun)
       bld.end_block
 
       bld.separate

@@ -93,11 +93,15 @@ module XCTETypescript
 
       bld.separate
 
-      constructorParams = []
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+      
+      constructorParams = inst_fun.parameters.vars
+      
       userServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
-      Utils.instance.addParamIfAvailable(constructorParams, userServiceVar)
-      constructorParams.push('private route: ActivatedRoute')
-      bld.start_function_paramed('constructor', constructorParams)
+      inst_fun.add_param(userServiceVar)      
+      inst_fun.add_param_from('route', 'ActivatedRoute', 'private')
+
+      bld.start_function('constructor', inst_fun)
 
       if cls.model.data_filter.search.columns.length > 0
         subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search)

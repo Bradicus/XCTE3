@@ -87,9 +87,9 @@ module XCTETypescript
       filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
 
       clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
-      storeServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
-      dataGenServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service')
-      userPopulateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')
+      storeServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service', 'private')
+      dataGenServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service', 'private')
+      populateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service', 'private')
 
       bld.add('@Component({')
       bld.indent
@@ -120,10 +120,11 @@ module XCTETypescript
 
       bld.separate
 
-      constructorParams = []
-      Utils.instance.addParamIfAvailable(constructorParams, storeServiceVar)
-      Utils.instance.addParamIfAvailable(constructorParams, dataGenServiceVar)
-      Utils.instance.addParamIfAvailable(constructorParams, userPopulateServiceVar)
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+            
+      inst_fun.add_param(storeServiceVar)
+      inst_fun.add_param(dataGenServiceVar)
+      inst_fun.add_param(populateServiceVar)
 
       # Generate any selection list variable parameters for data stores
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
@@ -135,9 +136,10 @@ module XCTETypescript
           elsif optCls.nil?
             Log.error('No ts_interface class for var: ' + var.name)
           else
-            dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service')
+            dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, 'class_angular_data_store_service', 'private')
+            
             if !dataStoreOptServiceVar.nil?
-              Utils.instance.addParamIfAvailable(constructorParams, dataStoreOptServiceVar)
+              inst_fun.add_param(dataStoreOptServiceVar)
             else
               Log.error("couldn't find data store service for: " + var.name)
             end
@@ -145,9 +147,9 @@ module XCTETypescript
         end
       }))
 
-      constructorParams.push('private route: ActivatedRoute')
+      inst_fun.add_param_from('route', 'ActivatedRoute', 'private')
 
-      bld.start_function_paramed('constructor', constructorParams)
+      bld.start_function('constructor', inst_fun)
       bld.end_block
 
       bld.separate

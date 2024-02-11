@@ -53,11 +53,11 @@ module XCTETypescript
 
       dataServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_store_service')
 
-      constructorParams = []
-      Utils.instance.addParamIfAvailable(constructorParams, dataServiceVar)
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+      inst_fun.add_param(dataServiceVar)
 
       bld.separate
-      bld.start_function_paramed('constructor', constructorParams)
+      bld.start_function_paramed('constructor', inst_fun)
       bld.endFunction
 
       # Generate code for functions

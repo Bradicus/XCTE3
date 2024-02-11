@@ -81,20 +81,20 @@ module XCTETypescript
       bld.end_block(')')
       bld.start_class('export class ' + get_class_name(cls))
 
-      constructorParams = []
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           varCls = ClassModelManager.findVarClass(var, 'class_angular_data_map_service')
           if !varCls.nil?
             vService = Utils.instance.create_var_for(varCls, 'class_angular_data_map_service')
-            Utils.instance.addParamIfAvailable(constructorParams, vService)
+            inst_fun.add_param(vService)
           end
         end
       }))
 
       bld.separate
-      bld.start_block('constructor(' + constructorParams.uniq.join(', ') + ')')
+      bld.start_function('constructor', inst_fun)
       bld.endFunction
 
       # Generate code for functions
