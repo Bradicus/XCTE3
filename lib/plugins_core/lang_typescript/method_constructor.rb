@@ -41,9 +41,15 @@ module XCTETypescript
       if cls.base_classes.length > 0
         bc = cls.base_classes[0]
         bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
-        base_consturctor_fun = bc_cls_spec.get_function('constructor')
-        if !base_consturctor_fun.nil?
-          bld.add 'super();'
+        base_constructor_fun = bc_cls_spec.get_function('method_constructor')
+        if !base_constructor_fun.nil?
+          b_params = []
+
+          for param in base_constructor_fun.parameters.vars
+            b_params.push Utils.instance.get_styled_variable_name(param)
+          end
+
+          bld.add 'super(' + b_params.join(', ') + ');'
         else
           bld.add 'super();'
         end

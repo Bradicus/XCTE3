@@ -20,7 +20,7 @@ module XCTECss
     def gen_source_files(cls)
       srcFiles = []
 
-      bld = SourceRendererTypescript.new
+      bld = SourceRendererBraceDelim.new
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
       render_file_comment(cls, bld)

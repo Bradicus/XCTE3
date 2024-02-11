@@ -27,6 +27,10 @@ module XCTETypescript
       vDec = String.new
       typeName = String.new
 
+      if !var.visibility.nil?
+        vDec << var.visibility << ' '
+      end
+
       vDec << get_styled_variable_name(var)
       vDec << ': ' + get_type_name(var)
 
@@ -40,7 +44,7 @@ module XCTETypescript
     def addParamIfAvailable(params, var)
       return if var.nil?
 
-      params.push('private ' + get_param_dec(var))
+      params.push(get_param_dec(var))
     end
 
     def getParamDecForClass(cls, plug)

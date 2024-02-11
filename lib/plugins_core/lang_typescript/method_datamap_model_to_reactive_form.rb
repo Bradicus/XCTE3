@@ -20,7 +20,11 @@ module XCTETypescript
     def render_function(cls, bld, _fun)
       clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
 
-      bld.start_function('populate(formGroup: FormGroup, src: ' + Utils.instance.get_styled_class_name(cls.model.name) + '): void')
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("formGroup", 'FormGroup'))
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("src", Utils.instance.get_styled_class_name(cls.model.name)))
+      
+      bld.start_function('populate', inst_fun)
 
       bld.start_block('if (src != null)')
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|

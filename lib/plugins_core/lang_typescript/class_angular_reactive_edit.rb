@@ -93,6 +93,10 @@ module XCTETypescript
       dataGenServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service')
       userPopulateServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_map_service')
 
+      storeServiceVar.visibility = 'private'
+      dataGenServiceVar.visibility = 'private'
+      userPopulateServiceVar.visibility = 'private'
+
       bld.add('@Component({')
       bld.indent
       bld.add("selector: 'app-" + selectorName + "',")

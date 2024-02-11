@@ -19,7 +19,8 @@ module XCTETypescript
 
       return unless !clsVar.nil? && !populateServiceVar.nil?
 
-      bld.start_function('populate(): void')
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)      
+      bld.start_function('populate', inst_fun)
       bld.add('this.' + Utils.instance.get_styled_variable_name(populateServiceVar) +
               '.populate(this.' + clsVar + ' as FormGroup, this.item);')
 

@@ -20,6 +20,8 @@
 
 		<var name="annotations"	type="String" set="List" />
 		<var name="returnValue"	utype="code elem variable" default="new CodeElemVariable(this)" />
+
+		<var name="code block" utype="code block" set="List" />
 	</var_group>	
 	
       <!-- @returnValue.vtype = 'void' -->

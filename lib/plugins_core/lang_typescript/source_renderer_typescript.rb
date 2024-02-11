@@ -10,31 +10,42 @@
 require "source_renderer_brace_delim.rb"
 require "plugins_core/lang_typescript/utils"
 
-class SourceRendererTypescript < SourceRendererBraceDelim
-  def initialize()
-    super
+module XCTETypescript
+  class SourceRendererTypescript < SourceRendererBraceDelim
+    def initialize()
+      super
 
-    @hangingFunctionStart = true
-  end
-
-  def start_function(funName, fun)
-    params = []
-
-    for param in fun.parameters.vars
-      params.push Utils.instance.get_param_dec(param)
+      @hangingFunctionStart = true
     end
 
-    start_function_paramed(Utils.instance.get_styled_function_name(funName), params.join(', '))
-  end
+    def start_function(funName, fun)
+      params = []
 
-  def comment_file(file_comm)
-    add '/* '
+      for param in fun.parameters.vars
+        params.push Utils.instance.get_param_dec(param)
+      end
 
-    fc = file_comm.strip
+      if funName != 'constructor'
+        returnStr = Utils.instance.get_type_name(fun.returnValue)
+      else
+        returnStr = nil
+      end
 
-    for line in fc.split("\n")
-      add  '* ' + line.rstrip
+      start_function_paramed(
+        Utils.instance.get_styled_function_name(funName), 
+        params,
+        returnStr)
     end
-    add '*/'
+
+    def comment_file(file_comm)
+      add '/* '
+
+      fc = file_comm.strip
+
+      for line in fc.split("\n")
+        add  '* ' + line.rstrip
+      end
+      add '*/'
+    end
   end
 end

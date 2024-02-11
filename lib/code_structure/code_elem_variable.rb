@@ -48,6 +48,22 @@ module CodeStructure
       # puts "[CodeElemVariable::initialize] Creating variable"
     end
 
+    def init_as_param(name, type, visibility = nil)
+      @name = name
+      @vtype = type
+      @visibility = visibility
+
+      return self
+    end
+
+    def init_as_uparam(name, type, visibility = nil)
+      @name = name
+      @utype = type
+      @visibility = visibility
+
+      return self
+    end
+
     # Returns parameter version of this variable, that can be used in function calls to pass data that
     # can later be assigned to this variable.
     def getParam

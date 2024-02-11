@@ -110,9 +110,16 @@ class SourceRenderer
     start_delimed_chunk(functionDeclairation, @hangingFunctionStart)
   end
 
-  def start_function_paramed(functionName, paramList)
+  def start_function_paramed(functionName, paramList, returnType = nil)
+    if returnType.nil?
+      returnStr = ''
+    else
+      returnStr = ': ' + returnType
+    end
+    
     oneLiner = paramList.join(', ')
-    if oneLiner.length > @max_line_length
+
+    if (oneLiner.length + returnStr.length) > @max_line_length
       paramStr = "\n"
 
       (0..paramList.length - 1).each do |i|
@@ -123,9 +130,9 @@ class SourceRenderer
         end
       end
 
-      start_delimed_chunk(functionName + '(' + paramStr + ')', @hangingFunctionStart)
+      start_delimed_chunk(functionName + '(' + paramStr + ')' + returnStr, @hangingFunctionStart)
     else
-      start_delimed_chunk(functionName + '(' + oneLiner + ')', @hangingFunctionStart)
+      start_delimed_chunk(functionName + '(' + oneLiner + ')' + returnStr, @hangingFunctionStart)
     end
   end
 

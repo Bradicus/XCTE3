@@ -54,8 +54,16 @@ module XCTETypescript
       # bld.add("private dataExpires: Number = 600; // Seconds")
       # bld.add("private items: " + Utils.instance.get_styled_class_name(cls.get_u_name()) + "[];")
 
+      constructor = CodeStructure::CodeElemFunction.new(nil)
+      cParam = CodeStructure::CodeElemVariable.new(nil)
+      cParam.name = 'httpClient'
+      cParam.vtype = 'HttpClient'
+      cParam.visibility = 'private'
+
+      constructor.add_param(cParam)
+
       bld.separate
-      bld.start_function('constructor(private httpClient: HttpClient)')
+      bld.start_function('constructor', constructor)
       bld.add('this.apiUrl = environment.apiUrl;')
       bld.endFunction
 

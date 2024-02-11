@@ -15,7 +15,8 @@ module XCTETypescript
       dataGenUserServiceVar = Utils.instance.create_var_for(cls, 'class_angular_data_gen_service')
       clsVar = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
 
-      bld.start_function('populateRandom(): void')
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)      
+      bld.start_function('populateRandom', inst_fun)
 
       bld.add('this.' + Utils.instance.get_styled_variable_name(dataGenUserServiceVar) + '.populateRandom(this.item);')
       bld.add('this.populate();')

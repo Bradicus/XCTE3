@@ -15,7 +15,11 @@ module XCTETypescript
       # process class variables
 
       className = Utils.instance.get_styled_class_name(cls.model.name)
-      bld.start_function('populateRandom(item: ' + className + '): void')
+      
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("item", className))
+      
+      bld.start_function('populateRandom', inst_fun)
 
       genPopulate(cls, bld, 'item.')
 

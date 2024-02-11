@@ -34,7 +34,11 @@ module XCTETypescript
       bld.add('url: string | null;')
       bld.add('children: NavNode[] = [];')
 
-      bld.start_function('constructor(name: string, url: string | null)')
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)      
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("name", 'string'))
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("url", 'string | null'))
+      
+      bld.start_function('constructor', inst_fun)
 
       bld.add('this.name = name;')
       bld.add('this.url = url;')
@@ -56,7 +60,9 @@ module XCTETypescript
       bld.add 'collapsed = true;'
       bld.separate
 
-      bld.start_function('constructor()')
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)  
+      inst_fun.returnValue.vtype = nil
+      bld.start_function('constructor', CodeStructure::CodeElemFunction.new(cls))
 
       features = {}
       rootNode = NavigationNode.new('', '/')
@@ -116,7 +122,13 @@ module XCTETypescript
 
       bld.separate
 
-      bld.start_function 'addNode(toNode: NavNode, name: string, link: string | null)'
+      inst_fun = CodeStructure::CodeElemFunction.new(cls)
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("toNode", 'NavNode'))
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("name", 'string'))
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("link", 'string | null'))
+      inst_fun.returnValue.vtype = 'NavNode'
+
+      bld.start_function('addNode', inst_fun)
       bld.add 'var newNode = new NavNode(name, link);'
       bld.add 'toNode.children.push(newNode);'
       bld.add 'return newNode;'
