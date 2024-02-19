@@ -6,6 +6,7 @@
 	</description>
 
 	<var_group genGet="true" genSet="true" init_vars="true" >	
+		<var name="name"	type="String" />
 		<var name="path"	type="String" />
 		<var name="dest"	type="String" />
 
@@ -15,12 +16,10 @@
 	</var_group>
 				
 	<gen_class type="standard" ns="code structure" path="code structure">
-	  <base_class cname="code elem" plugin="standard" />
-
 		<function name="method_constructor" >
-			<param name="name" type="String" nullable="true" />
-			<param name="path" type="String" nullable="true" />
-			<param name="dest" type="String" nullable="true" />
+			<param name="name" type="String" />
+			<param name="path" type="String" />
+			<param name="dest" type="String" />
 			<param name="namespace" utype="code elem namespace" />
 		</function>
 	</gen_class>

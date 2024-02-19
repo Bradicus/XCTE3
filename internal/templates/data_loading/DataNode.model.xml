@@ -8,14 +8,12 @@
 	<gen_class type="standard" path="data loading">
 	</gen_class>
 
-	<var_group genGet="true" genSet="true" init_vars="true">
-		
+	<var_group genGet="true" genSet="true" init_vars="true">		
 		<var name="name"			type="String" />
-		<var name="parent"		   	utype="data node" nullable="true" />
+		<var name="parent"		   	utype="data node" nullable="true" default="null" />
 		<var name="attributes"		utype="attribute" set="List" />
 		<var name="children"		utype="data node" set="List" />
 		<var name="content"			type="String" />
-
 	</var_group>
 
 </model>

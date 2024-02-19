@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem action">
+
+	<description>
+	</description>
+				
+	<gen_class type="standard" ns="code structure" path="code structure">
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" init_vars="true">
+	  <var name="name"	type="String"	nullable="true"  />
+	  <var name="role"	type="String"	nullable="true" />
+	  <var name="link"	type="String"	nullable="true" />
+	  <var name="trigger"	type="String"	nullable="true" />
+	</var_group>		
+	
+</model>

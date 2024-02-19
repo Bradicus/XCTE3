@@ -2,7 +2,7 @@
 <model name="code elem data spec">
 
 	<description>
-	Code Element - Class Reference
+	Code Element - Data Specification
 	</description>
 				
 	<gen_class type="standard" ns="code structure" path="code structure">
@@ -11,7 +11,7 @@
 
 	<var_group genGet="true" genSet="true" init_vars="true">
 		<var name="classes"		utype="code elem class spec" set="List" />
-		<var name="var group"		utype="code elem var group" />
+		<var name="var group"		utype="code elem var group" nullable="true" default="null"/>
 		
 		<var name="xml file name"	type="String" />
 		<var name="model set"		type="String" />

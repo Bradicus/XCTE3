@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="type mgr" >
+<model name="class spec mgr" >
 
 	<description>
-	Type Manager
+	Class Spec Manager
 	</description>
 
 	<var_group genGet="true" genSet="true" init_vars="true">		
@@ -11,10 +11,10 @@
 
 	<gen_class type="standard" path="managers">
     
-		<empty_function name="in category" >
+		<empty_function name="find class" >
 			<parameters>
-				<var name="dataVar"	    utype="code elem variable" />
-				<var name="category"	type="String" />
+				<var name="data spec name"	type="String" />
+				<var name="plugin name"		type="String" />
 			</parameters>
 		</empty_function>
 	</gen_class>

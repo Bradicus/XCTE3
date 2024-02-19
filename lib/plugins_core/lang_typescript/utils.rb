@@ -27,7 +27,7 @@ module XCTETypescript
       vDec = String.new
       typeName = String.new
 
-      if !var.visibility.nil?
+      if !var.visibility.nil? && var.visibility == 'private'
         vDec << var.visibility << ' '
       end
 
@@ -67,10 +67,6 @@ module XCTETypescript
       vDec << get_styled_variable_name(var)
 
       vDec << ': ' + get_type_name(var)
-
-      if var.nullable
-        vDec << ' | null'
-      end
 
       if !var.defaultValue.nil?
         if var.getUType.downcase == 'string'
@@ -114,9 +110,15 @@ module XCTETypescript
     def get_type_name(var)
       typeName = getSingleItemTypeName(var)
 
-      typeName = apply_template(var.templates[0], typeName) if var.isList
+      if var.isList
+        typeName = apply_template(var.templates[0], typeName) 
+      end
 
-      typeName
+      if var.nullable
+        typeName += ' | null'
+      end
+
+      return typeName
     end
 
     def getSingleItemTypeName(var)

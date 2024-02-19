@@ -74,44 +74,6 @@ module XCTETypescript
 
       bld.end_class
     end
-
-    # process variable group
-    def process_var_group(cls, bld, vGroup)
-      for var in vGroup.vars
-        if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
-          bld.add(Utils.instance.get_var_dec(var))
-        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          bld.same_line(Utils.instance.getComment(var))
-        elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
-          bld.add(var.formatText)
-        end
-        for group in vGroup.varGroups
-          process_var_group(cls, bld, group)
-        end
-      end
-    end
-
-    def process_function(cls, bld, fun)
-      bld.separate
-
-      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
-
-      if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
-        if !templ.nil?
-          templ.render_function(cls, bld)
-        else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-        end
-      else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin('typescript', 'method_empty')
-        if !templ.nil?
-          templ.render_function(fun, cfg)
-        else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-        end
-      end
-    end
   end
 end
 

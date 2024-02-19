@@ -21,7 +21,7 @@
 		<var name="language"		type="String" />
 		<var name="includes"		utype="code elem include" set="List" />
 		<var name="uses"			utype="code elem namespace" set="List" />
-		<var name="gen cfg"			utype="project elem" nullable="true" />		
+		<var name="gen cfg"			utype="project elem" nullable="true" default="null" />		
 		<var name="functions"		utype="code elem function" set="List" />
 		<var name="base classes"	utype="code elem class spec" set="List" />
 		<var name="interfaces"		utype="code elem class spec" set="List" />
@@ -38,7 +38,7 @@
 		<var name="standard class type"	type="String" nullable="true" />
 		<var name="custom code"			type="String" nullable="true" />
 		<var name="data class"			type="String" nullable="true" />
-		<var name="class group ref"		utype="code elem class ref" nullable="true" />
+		<var name="class group ref"		utype="code elem class ref" nullable="true" default="null" />
 		<var name="class group name"	type="String" nullable="true" />
 		<var name="variant"				type="String" nullable="true" />
 		<var name="feature group"		type="String" nullable="true" />

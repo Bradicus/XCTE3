@@ -82,7 +82,7 @@ module XCTECpp
       }))
     end
 
-    def render_ifndef(cls, bld)
+    def render_uses(cls, bld)
       for us in cls.uses
         bld.add('using namespace ' + us.namespace.get('::') + ';')
       end

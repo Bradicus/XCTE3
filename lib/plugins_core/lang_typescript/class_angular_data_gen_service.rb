@@ -99,33 +99,9 @@ module XCTETypescript
       bld.endFunction
 
       # Generate code for functions
-      for fun in cls.functions
-        process_function(cls, bld, fun)
-      end
+      render_functions(cls, bld)
 
       bld.end_class
-    end
-
-    def process_function(cls, bld, fun)
-      bld.separate
-
-      return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
-
-      if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
-        if !templ.nil?
-          templ.render_function(cls, bld, fun)
-        else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-        end
-      else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin('typescript', 'method_empty')
-        if !templ.nil?
-          templ.render_function(cls, bld, fun)
-        else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
-        end
-      end
     end
   end
 end
