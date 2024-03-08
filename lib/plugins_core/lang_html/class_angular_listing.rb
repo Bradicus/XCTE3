@@ -1,4 +1,6 @@
 require 'plugins_core/lang_html/class_base'
+require 'plugins_core/lang_html/table_cfg'
+require 'plugins_core/lang_html/table_container_types'
 
 module XCTEHtml
   ##
@@ -40,7 +42,8 @@ module XCTEHtml
                 plug.get_full_route(cls, 'edit') + '/0">New ' + cls.get_u_name + '</button>')
       end
 
-      tbl = TableUtil.instance.make_table(cls, 'page', 'item', 'async', true)
+      tbl = TableUtil.instance.make_table(
+        TableCfg.new(cls, 'pageObv', TableContainerTypes::PAGE, 'item', true, false))
 
       bld.render_html(tbl)
     end

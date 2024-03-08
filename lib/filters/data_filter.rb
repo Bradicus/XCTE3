@@ -10,17 +10,33 @@ require 'filters/static_filter'
 
 module Filters
   class DataFilter
-    attr_accessor :paging, :search, :sort, :static_filters
+    attr_accessor :paging, :search_filter, :sort, :static_filters
 
     def initialize
       @paging = PagingFilter.new
-      @search = SearchFilter.new
+      @search_filter = nil
       @sort = SortFilter.new
       @static_filters = []
     end
 
     def has_non_paging_filters?
-      return !@static_filters.empty? || !@search.columns.empty?
+      return !@static_filters.empty? || has_search_filter
+    end
+
+    def has_search_filter
+      return !search_filter.nil?
+    end
+
+    def get_search_cols   
+      if search_filter.nil?
+        return []
+      end
+
+      return search_filter.columns
+    end
+
+    def get_search_fun_name
+      return 'search for ' + get_search_cols.join(' ')
     end
   end
 end

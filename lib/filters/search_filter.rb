@@ -5,12 +5,24 @@
 
 module Filters
   class SearchFilter
-    attr_accessor :type, :columns, :name
+    attr_accessor :columns, :name, :type
 
     def initialize
-      @name = 'search'
+      @name = nil
       @type = 'shared'
       @columns = []
+    end
+
+    def get_name()
+      if @name.nil?
+        if @type == 'shared'
+          return 'searchValue'
+        else
+          return @columns.join(' ')
+        end
+      end
+
+      return @name
     end
   end
 end

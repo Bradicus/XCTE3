@@ -6,7 +6,7 @@
 	</description>
 
 	<var_group genGet="true" genSet="true" init_vars="true">		
-		<var name="types"		    utype="type" set="List" />		
+		<var name="items"		    utype="type" static="true" set="List" />		
 	</var_group>
 
 	<gen_class type="standard" path="managers">

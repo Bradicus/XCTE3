@@ -17,6 +17,20 @@ module XCTECss
       cls.get_u_name
     end
 
+    def gen_source_files(cls)
+      srcFiles = []
+
+      bld = SourceRendererBraceDelim.new
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
+      bld.lfExtension = Utils.instance.get_extension('body')
+      render_file_comment(cls, bld)
+      render_body_content(cls, bld)
+
+      srcFiles << bld
+
+      srcFiles
+    end
+    
     # Returns the code for the comment for this class
     def render_file_comment(cls, bld); end
 

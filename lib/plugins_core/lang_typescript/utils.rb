@@ -386,13 +386,8 @@ module XCTETypescript
     end
 
     def get_search_subject(search)
-      colNameCointain = []
-      for col in search.columns
-        colNameCointain.push(get_styled_class_name(col))
-      end
-
       subjectVar = CodeStructure::CodeElemVariable.new(nil)
-      subjectVar.name = 'search' + colNameCointain.join('Or') + 'Subject'
+      subjectVar.name = search.get_name + ' subject'
       subjectVar.vtype = 'BehaviorSubject<string>'
       subjectVar.defaultValue = "''"
 

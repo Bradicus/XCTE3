@@ -278,59 +278,52 @@ module XCTEJava
       fun.add_param(pageVar)
 
       if needs_custom_query? filtered_class.model.data_filter
-        tableVar = CodeNameStyling.getStyled(data_class.model.name, get_sql_util(cls).langProfile.variableNameStyle)
-        talbeName = CodeNameStyling.getStyled(data_class.model.name, get_sql_util(cls).langProfile.classNameStyle)
-        query = 'SELECT ' + tableVar + ' FROM ' + talbeName + ' ' + tableVar + ' WHERE '
+          query = build_custom_query(cls, filtered_class)
 
-        if !filtered_class.model.data_filter.static_filters.empty?
-          static_compares = []
-          for filter in filtered_class.model.data_filter.static_filters
-            col_var = data_class.model.get_var_by_name(filter.column)
-            static_compares.push(get_sql_equality_compare(col_var, filter.value))
+          fun.annotations.push('@Query("' + query + '")')
+
+          fun.name = get_styled_function_name(filtered_class.model.data_filter.get_search_fun_name)
+          
+          for col in filtered_class.model.data_filter.get_search_cols
+            cParam = CodeStructure::CodeElemVariable.new(nil)
+            cParam.name = col
+            cParam.vtype = 'String'
+            cParam.visibility = 'private'
+            
+            fun.add_param(cParam)
           end
-        end
-
-        if !filtered_class.model.data_filter.search.columns.empty?
-          search_compares = []
-          for col in filtered_class.model.data_filter.search.columns
+      else
+          for col in filtered_class.model.data_filter.get_search_cols
             col_var = data_class.model.get_var_by_name(col)
-            search_compares.push(
-              get_sql_equality_like(col_var,
-                                    CodeNameStyling.getStyled(col,
-                                                              XCTETSql::Utils.instance.langProfile.variableNameStyle))
-            )
+
+            if col_var.nil?
+              throw('Could not find column variable named ' + col)
+            end
+
+            add_jpa_function_part_for(col_name_cointain, col_var, nil)
             fun.add_param(col_var)
           end
 
-          query += '(' + static_compares.join(' OR ') + ') AND (' + search_compares.join(' OR ') + ')'
-        end
-
-        fun.annotations.push('@Query("' + query + '")')
-
-        fun.name = get_styled_function_name(filtered_class.model.data_filter.search.name)
-      else
-        for col in filtered_class.model.data_filter.search.columns
-          col_var = data_class.model.get_var_by_name(col)
-
-          if col_var.nil?
-            throw('Could not find column variable named ' + col)
+          for static_filter in filtered_class.model.data_filter.static_filters
+            static_filter_var = data_class.model.get_var_by_name(static_filter.column)
+            add_jpa_function_part_for(col_name_cointain, static_filter_var, static_filter)
           end
 
-          add_jpa_function_part_for(col_name_cointain, col_var, nil)
-          fun.add_param(col_var)
-        end
+          if filtered_class.model.data_filter.has_search_filter
+            if filtered_class.model.data_filter.search_filter.type == 'shared'
+              separator = 'Or'
+            else
+              separator = 'And'
+            end
+          end
 
-        for static_filter in filtered_class.model.data_filter.static_filters
-          static_filter_var = data_class.model.get_var_by_name(static_filter.column)
-          add_jpa_function_part_for(col_name_cointain, static_filter_var, static_filter)
-        end
-
-        fun.name = 'findBy' + col_name_cointain.join('Or')
-        # else # Statif filter but no search filter
-        #   fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.static_filters[0].column)
-        #   searchVar = data_class.data_class.model.get_var_by_name(cls.model.data_filter.static_filters[0].column)
-        #   if !searchVar.nil? && searchVar.getUType == 'boolean'
-        #     fun.name += value.capitalize
+          fun.name = 'findBy' + col_name_cointain.join(separator)
+          # else # Statif filter but no search filter
+          #   fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.static_filters[0].column)
+          #   searchVar = data_class.data_class.model.get_var_by_name(cls.model.data_filter.static_filters[0].column)
+          #   if !searchVar.nil? && searchVar.getUType == 'boolean'
+          #     fun.name += value.capitalize
+        
       end
 
       return fun
@@ -343,7 +336,40 @@ module XCTEJava
     end
 
     def needs_custom_query?(data_filter)
-      return !data_filter.search.columns.empty? && !data_filter.static_filters.empty?
+      return data_filter.has_search_filter && !data_filter.static_filters.empty?
+    end
+
+    def build_custom_query(data_class, filtered_class)
+      tableVar = CodeNameStyling.getStyled(data_class.model.name, get_sql_util(data_class).langProfile.variableNameStyle)
+      talbeName = CodeNameStyling.getStyled(data_class.model.name, get_sql_util(data_class).langProfile.classNameStyle)
+      query = 'SELECT ' + tableVar + ' FROM ' + talbeName + ' ' + tableVar + ' WHERE '
+
+      if !filtered_class.model.data_filter.static_filters.empty?
+        static_compares = []
+        for filter in filtered_class.model.data_filter.static_filters
+          col_var = data_class.model.get_var_by_name(filter.column)
+          static_compares.push(get_sql_equality_compare(col_var, filter.value))
+        end
+      end
+
+      if filtered_class.model.data_filter.has_search_filter
+        search_compares = []
+        for col in filtered_class.model.data_filter.get_search_cols
+          col_var = data_class.model.get_var_by_name(col)
+          search_compares.push(
+            get_sql_equality_like(col_var,
+                CodeNameStyling.getStyled(col,
+                XCTETSql::Utils.instance.langProfile.variableNameStyle))
+          )
+          #fun.add_param(col_var)
+        end
+
+        query += '(' + static_compares.join(' OR ') + ') AND (' + search_compares.join(' OR ') + ')'
+      elsif static_compares.length > 0
+        query += '(' + static_compares.join(' OR ') + ')'
+      end
+
+      return query
     end
 
     def get_sql_equality_compare(var, value)

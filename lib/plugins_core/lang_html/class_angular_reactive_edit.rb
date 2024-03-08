@@ -120,7 +120,7 @@ module XCTEHtml
         optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
         tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + 'Item', 'async')
         rowContainer.add_child(tableNode)
-        # Not an options list, just a reglar array of data
+      # Not an options list, just a reglar array of data
       elsif !var.relation.nil?
         optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
         varCls = ClassModelManager.findVarClass(optVar)
@@ -128,14 +128,19 @@ module XCTEHtml
 
         vName = Utils.instance.get_styled_variable_name(optVar)
         rowContainer.add_child(HtmlNode.new('h2').add_text(varCls.model.name.capitalize))
-        tableNode = TableUtil.instance.make_table(varCls, vName, vName + 'Item', false, 'async', false)
+        #tableNode = TableUtil.instance.make_table(varCls, vName, vName + 'Item', false, 'async', true)
+
+        tableNode = TableUtil.instance.make_relation_table(
+          TableCfg.new(varCls, vName, TableContainerTypes::PAGE, vName + 'Item', true, true))
+
         rowContainer.add_child(tableNode)
       else
         varCls = ClassModelManager.findVarClass(var)
         puts 'Unable to find variable call ' + var.getUType if varCls.nil?
 
         rowContainer.add_child(HtmlNode.new('h2').add_text(var.name.capitalize))
-        tableNode = TableUtil.instance.make_table(varCls, 'item.' + vName, vName + 'Item', false, '', true)
+        tableNode = TableUtil.instance.make_table(
+          TableCfg.new(varCls, 'item.' + vName, TableContainerTypes::LIST, vName + 'Item', false))
         rowContainer.add_child(tableNode)
       end
     end

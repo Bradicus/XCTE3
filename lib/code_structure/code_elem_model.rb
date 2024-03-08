@@ -113,7 +113,9 @@ module CodeStructure
         return vars[0]
       end
 
-      return null
+      Log.warn('Cound not find variable ' + var_name)
+
+      return nil
     end
 
     def getFilteredVars(filterFun)

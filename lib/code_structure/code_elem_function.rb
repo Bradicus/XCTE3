@@ -36,6 +36,12 @@ module CodeStructure
 
     def add_param(param)
       if param != nil
+        parameters.vars.push(param)
+      end
+    end
+
+    def add_unique_param(param)
+      if param != nil
 
         found = false
 

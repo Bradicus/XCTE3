@@ -33,10 +33,10 @@ module DataLoading
       end
 
       page_node.elements.each('search') do |xml_node|
-        data_filter.search = Filters::SearchFilter.new
-        data_filter.search.type = AttributeLoader.init(xml_node).names('type').get
-        data_filter.search.name = AttributeLoader.init(xml_node).names('name').get
-        data_filter.search.columns =
+        data_filter.search_filter = Filters::SearchFilter.new
+        data_filter.search_filter.type = AttributeLoader.init(xml_node).names('type').get
+        data_filter.search_filter.name = AttributeLoader.init(xml_node).names('name').get
+        data_filter.search_filter.columns =
           AttributeLoader.init(xml_node).names('columns').arrayDelim(',').get
       end
 

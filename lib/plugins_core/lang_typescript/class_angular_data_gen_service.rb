@@ -89,7 +89,7 @@ module XCTETypescript
           varCls = ClassModelManager.findVarClass(var, 'class_angular_data_gen_service')
           if !varCls.nil?
             vService = Utils.instance.create_var_for(varCls, 'class_angular_data_gen_service', 'private')
-            inst_fun.add_param(vService)
+            inst_fun.add_unique_param(vService)
           end
         end
       }))

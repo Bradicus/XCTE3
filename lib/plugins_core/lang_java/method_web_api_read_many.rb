@@ -72,7 +72,7 @@ module XCTEJava
       elsif cls.model.data_filter.paging.page_sizes.length > 0
         pageSize = cls.model.data_filter.paging.page_size_default
       else
-        pageSize = 1_000_000
+        pageSize = 1000000
       end
 
       if !cls.model.data_filter.sort.default_sort_column.nil?
@@ -93,7 +93,18 @@ module XCTEJava
       params.push('@RequestParam(defaultValue="' + pageSize.to_s + '") Integer pageSize')
       params.push('@RequestParam(defaultValue="' + sortCol + '") String sortBy')
       params.push('@RequestParam(defaultValue="true") Boolean sortAsc')
-      params.push('@RequestParam(defaultValue="") String searchValue')
+
+      if cls.model.data_filter.has_search_filter
+        if cls.model.data_filter.search_filter.type == 'shared'
+          params.push('@RequestParam(defaultValue="") String ' +
+            Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name))
+        else
+          for col in cls.model.data_filter.search_filter.columns
+            params.push('@RequestParam(defaultValue="") String ' +
+              Utils.instance.get_variable_styling('search ' + col))
+          end
+        end
+      end
 
       bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.get_u_name) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
@@ -117,16 +128,29 @@ module XCTEJava
       bld.add 'Page<' + Utils.instance.get_styled_class_name(data_class.get_u_name) + '> items;'
 
       if cls.model.data_filter.has_non_paging_filters?
-        fun = Utils.instance.get_search_fun(data_class, cls)
-        paramVars = []
+        
+          fun = Utils.instance.get_search_fun(data_class, cls)
 
-        paramVars.push('pageRequest')
+          paramVars = []
 
-        for funParam in fun.parameters.vars.drop(1)
-          paramVars.push('searchValue')
-        end
+          paramVars.push('pageRequest')
 
-        bld.render_function_call('items', dataStoreName, fun, paramVars)
+          filter_params = fun.parameters.vars.drop(1)
+
+          if cls.model.data_filter.has_search_filter 
+            if (cls.model.data_filter.search_filter.type == 'shared')
+              for funParam in filter_params
+                paramVars.push(Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name))
+              end
+            else         
+              for col in cls.model.data_filter.search_filter.columns       
+                paramVars.push(
+                  Utils.instance.get_variable_styling('search ' + col))
+              end
+            end
+          end
+
+          bld.render_function_call('items', dataStoreName, fun, paramVars)
       else
         bld.add 'items = ' + dataStoreName + '.findAll(pageRequest);'
       end
@@ -152,7 +176,6 @@ module XCTEJava
       bld.add 'response.pageNum = pageNum.intValue();'
       bld.add 'response.pageSize = pageSize;'
       bld.add 'response.sortBy = sortBy;'
-      bld.add 'response.searchValue = searchValue;'
 
       bld.separate
       bld.add('return response;')

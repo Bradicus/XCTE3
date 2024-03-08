@@ -41,7 +41,7 @@ module XCTETypescript
       cls.addInclude('shared/paging/filtered-page-req-tpl', 'FilteredPageReqTpl')
       cls.addInclude('shared/paging/filtered-page-resp-tpl', 'FilteredPageRespTpl')
 
-      if !cls.model.data_filter.search.columns.empty?
+      if cls.model.data_filter.has_search_filter
         cls.addInclude('rxjs', 'Subject, debounceTime, distinctUntilChanged', 'lib')
       end
 
@@ -85,10 +85,9 @@ module XCTETypescript
 
       bld.separate
 
-      if cls.model.data_filter.search.columns.length > 0
-        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search)
-        bld.add 'public ' + subjectVar.name + ': Subject<string> = new Subject<string>();'
-        bld.separate
+      if cls.model.data_filter.has_search_filter
+        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
+        bld.add 'public ' + Utils.instance.get_styled_variable_name(subjectVar) + ': Subject<string> = new Subject<string>();'
       end
 
       bld.separate
@@ -103,20 +102,17 @@ module XCTETypescript
 
       bld.start_function('constructor', inst_fun)
 
-      if cls.model.data_filter.search.columns.length > 0
-        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search)
-        bld.add 'this.' + subjectVar.name + '.pipe('
+      if cls.model.data_filter.has_search_filter
+        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
+        bld.add 'this.' + Utils.instance.get_styled_variable_name(subjectVar) + '.pipe('
         bld.iadd 'debounceTime(250),'
         bld.iadd 'distinctUntilChanged())'
         bld.add '.subscribe((p) =>  { this.goToPage(0); });'
-        bld.separate
       end
 
       bld.end_block
 
       bld.separate
-
-      searchNames = load_search_names(cls)
 
       bld.start_block('ngOnInit()')
       bld.add 'this.updatePageData();'
@@ -167,9 +163,9 @@ module XCTETypescript
       bld.start_block('onSearch(event: any)')
       bld.add 'this.pageReq.searchValue = event.target.value;'
 
-      if !cls.model.data_filter.search.columns.empty?
-        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search)
-        bld.add 'this.' + subjectVar.name + '.next(event.target.value);'
+      if cls.model.data_filter.has_search_filter
+        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
+        bld.add 'this.' + Utils.instance.get_styled_variable_name(subjectVar) + '.next(event.target.value);'
       end
 
       bld.end_block
@@ -194,16 +190,6 @@ module XCTETypescript
       render_functions(cls, bld)
 
       bld.end_class
-    end
-
-    def load_search_names(cls)
-      names = []
-
-      cls.data_node.elements.each('search_by') do |xmlNode|
-        names.push(xmlNode.attributes['name'])
-      end
-
-      names
     end
   end
 end

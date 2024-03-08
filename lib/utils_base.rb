@@ -48,6 +48,10 @@ class UtilsBase
     CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
   end
 
+  def get_variable_styling(var_string)
+    CodeNameStyling.getStyled(var_string, @langProfile.variableNameStyle)
+  end
+
   def get_styled_function_name(funName)
     CodeNameStyling.getStyled(funName, @langProfile.functionNameStyle)
   end

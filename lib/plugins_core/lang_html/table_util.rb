@@ -11,28 +11,17 @@ require 'lang_profile'
 require 'code_name_styling'
 require 'utils_base'
 require 'singleton'
+require 'plugins_core/lang_html/page_util'
+require 'plugins_core/lang_html/search_util'
 
 module XCTEHtml
   class TableUtil
     include Singleton
 
     # Return formatted class name
-    def make_table(cls, listVarName, iteratorName, paging, async = '', embedded = false)
+    def make_table(table_cfg)
+      cls = table_cfg.item_class
       tableDiv = HtmlNode.new('div')
-
-      # Generate search fields
-      names = load_search_names(cls)
-
-      if names.length > 0 && paging
-        searchInput = HtmlNode.new('input')
-                              .add_class('form-control')
-                              .add_attribute('type', 'search')
-                              .add_attribute('placeholder', 'Search')
-                              .add_attribute('id', Utils.instance.getStyledUrlName(cls.model.name + ' search'))
-                              .add_attribute('(keyup)', 'onSearch($event)')
-
-        tableDiv.add_child(searchInput)
-      end
 
       tableElem = HtmlNode.new('table')
                           .add_class('table')
@@ -40,27 +29,23 @@ module XCTEHtml
       tableDiv.add_child(tableElem)
 
       asyncStr = ''
-      if async == 'async'
+      if table_cfg.is_observable
         asyncStr = ' | async'
       end
 
       # Generate table header
       tHead = HtmlNode.new('thead')
+
+      # Generate search header, if needed
+      if cls.model.data_filter.has_search_filter && table_cfg.is_paged?
+        tHead.add_child(SearchUtil.instance.make_search_row(cls))
+      end
+
       tHeadRow = HtmlNode.new('tr')
       colCount = 0
 
-      if !embedded && paging
-        Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
-          if Utils.instance.is_primitive(var) && !var.isList
-            tHeadRow.children.push(HtmlNode.new('th')
-              .add_text(var.getdisplay_name)
-              .add_child(HtmlNode.new('i').add_class('bi bi-arrow-bar-down'))
-              .add_attribute('scope', 'col')
-              .add_attribute('style', 'cursor: pointer')
-              .add_attribute('(click)', "sortBy('" + Utils.instance.get_styled_variable_name(var) + "')"))
-            colCount += 1
-          end
-        }))
+      if table_cfg.is_paged?
+        add_sortable_header(cls, tHeadRow, colCount)
       end
 
       tHead.add_child(tHeadRow)
@@ -68,57 +53,12 @@ module XCTEHtml
 
       # Generate table body
       tBody = HtmlNode.new('tbody')
-      tBodyRow = HtmlNode.new('tr')
-
-      if embedded
-        tBodyRow.add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')')
-      else
-        tBodyRow.add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
-      end
-
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
-        if Utils.instance.is_primitive(var) && !var.isList
-
-          if var.getUType.downcase.start_with? 'date'
-            tBodyRow.add_child(HtmlNode.new('td')
-              .add_text('{{' + iteratorName + '.' + Utils.instance.get_styled_variable_name(var) + " | date:'medium'}}"))
-          else
-            tBodyRow.add_child(HtmlNode.new('td')
-              .add_text('{{' + iteratorName + '.' + Utils.instance.get_styled_variable_name(var) + '}}'))
-          end
-        end
-      }))
-
-      actions = HtmlNode.new('th')
-
-      if !embedded && paging
-        for act in cls.actions
-          if !act.link.nil?
-            actions.add_child(make_action_button(act.name, 'routerLink',
-                                                 act.link + '/' + '{{' + iteratorName + '.id}}'))
-          elsif !act.trigger.nil?
-            triggerFun = Utils.instance.get_styled_function_name('on ' + act.trigger) + '(' + iteratorName + ')'
-            if act.trigger == 'delete'
-              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
-            else
-              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
-            end
-          end
-        end
-      end
-
-      # Add actions
-      tBodyRow.children.push(actions)
-
-      tBody.add_child(tBodyRow)
+      
+      tBody.add_child(gen_row(table_cfg))
       tableElem.add_child(tBody)
 
-      if paging
-        tFoot = HtmlNode.new('tfoot')
-        tFoot.add_attribute('*ngIf', '(' + listVarName + asyncStr + ')?.pageCount ?? 0 > 1')
-
-        tFoot.add_child(make_paging_control(colCount, listVarName, asyncStr))
-        tableElem.add_child(tFoot)
+      if table_cfg.is_paged?        
+        tableElem.add_child(PageUtil.instance.get_page_footer(colCount, table_cfg.container_var_name, asyncStr))
       end
 
       return tableDiv
@@ -131,74 +71,95 @@ module XCTEHtml
       # bld.end_block("</table>")
     end
 
-    def load_search_names(cls)
-      names = []
+    def add_sortable_header(cls, tHeadRow, colCount)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+        if Utils.instance.is_primitive(var) && !var.isList
+          tHeadRow.children.push(HtmlNode.new('th')
+            .add_text(var.getdisplay_name)
+            .add_child(HtmlNode.new('i').add_class('bi bi-arrow-bar-down'))
+            .add_attribute('scope', 'col')
+            .add_attribute('style', 'cursor: pointer')
+            .add_attribute('(click)', "sortBy('" + Utils.instance.get_styled_variable_name(var) + "')"))
+          colCount += 1
+        end
+      }))
+    end
 
-      cls.data_node.elements.each('search_by') do |xmlNode|
-        names.push(xmlNode.attributes['name'])
+    def gen_row(table_cfg)
+      tBodyRow = HtmlNode.new('tr')
+      
+      asyncStr = ''
+      if table_cfg.is_observable
+        asyncStr = ' | async'
       end
 
-      return names
+      if table_cfg.is_paged?
+        tBodyRow.add_attribute('*ngFor', 'let ' + table_cfg.iterator_var_name + ' of (' + table_cfg.container_var_name + asyncStr + ')?.data')
+      else
+        tBodyRow.add_attribute('*ngFor', 'let ' + table_cfg.iterator_var_name + ' of (' + table_cfg.container_var_name + asyncStr + ')')
+      end
+
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(table_cfg.item_class).wVarCb(lambda { |var|
+        if Utils.instance.is_primitive(var) && !var.isList
+
+          if var.getUType.downcase.start_with? 'date'
+            tBodyRow.add_child(HtmlNode.new('td')
+              .add_text('{{' + table_cfg.iterator_var_name + '.' + Utils.instance.get_styled_variable_name(var) + " | date:'medium'}}"))
+          else
+            tBodyRow.add_child(HtmlNode.new('td')
+              .add_text('{{' + table_cfg.iterator_var_name + '.' + Utils.instance.get_styled_variable_name(var) + '}}'))
+          end
+        end
+      }))
+
+      actions = HtmlNode.new('th')
+
+      if table_cfg.is_paged? && !table_cfg.is_embedded
+        for act in table_cfg.item_class.actions
+          if !act.link.nil?
+            actions.add_child(make_action_button(act.name, 'routerLink',
+                                                 act.link + '/' + '{{' + table_cfg.iterator_var_name + '.id}}'))
+          elsif !act.trigger.nil?
+            triggerFun = Utils.instance.get_styled_function_name('on ' + act.trigger) + '(' + table_cfg.iterator_var_name + ')'
+            if act.trigger == 'delete'
+              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
+            else
+              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
+            end
+          end
+        end
+      end
+
+      # Add actions
+      tBodyRow.children.push(actions)
+
+      return tBodyRow
     end
 
-    def make_paging_control(colCount, listVarName, asyncStr)
-      tFootRow = HtmlNode.new('tr')
+    def make_relation_table(table_cfg)
+      tableDiv = HtmlNode.new('div')
 
-      tFootTd = HtmlNode.new('td')
-      tFootTd.add_class('list-group-horizontal')
-      tFootTd.add_attribute('colspan', colCount.to_s)
+      tableElem = HtmlNode.new('table')
+                          .add_class('table')
 
-      firstPage = make_paging_button('&lt;&lt;', 'goToPage(0)')
-      prevPage = make_paging_button('&lt;', 'goToPreviousPage()')
+      tableDiv.add_child(tableElem)
 
-      pageList = HtmlNode.new('ul')
-                         .add_class('pagination')
-                         .add_class('list-group')
-                         .add_class('list-group-horizontal')
+      # Generate table header
+      tHead = HtmlNode.new('thead')
 
-      li = HtmlNode.new('li')
-                   .add_child(firstPage)
-      pageList.add_child(li)
+      tHeadRow = HtmlNode.new('tr')
+      colCount = 0
 
-      li = HtmlNode.new('li')
-                   .add_child(prevPage)
-      pageList.add_child(li)
+      tHead.add_child(tHeadRow)
+      tableElem.add_child(tHead)
 
-      li = HtmlNode.new('li')
-                   .add_attribute('*ngFor', 'let item of [].constructor((' + listVarName + asyncStr + ')?.pageCount ?? 0);let i = index')
-                   .add_class('page-item')
-                   .add_child(make_paging_button('{{i + 1}}', 'goToPage(i)'))
+      # Generate table body
+      tBody = HtmlNode.new('tbody')
+      
+      tBody.add_child(gen_row(table_cfg))
+      tableElem.add_child(tBody)
 
-      # li = HtmlNode.new("li").add_attribute("*ngIf", "(" + listVarName + asyncStr + ")?.pageCount > 10)")
-      pageList.add_child(li)
-
-      nextPage = make_paging_button('&gt;', 'goToNextPage()')
-      lastPage = make_paging_button('&gt;&gt;', 'goToPage(this.page.pageCount - 1)')
-
-      li = HtmlNode.new('li')
-                   .add_child(nextPage)
-      pageList.add_child(li)
-
-      li = HtmlNode.new('li')
-                   .add_child(lastPage)
-
-      pageList.add_child(li)
-
-      tFootTd.add_child(pageList)
-
-      tFootTd.add_child(HtmlNode.new('span').add_class('justify-content-end').add_text('Page '))
-
-      tFootRow.add_child(tFootTd)
-
-      return tFootRow
-    end
-
-    def make_paging_button(text, onClick)
-      return HtmlNode.new('a')
-                     .add_class('page-link')
-                     .add_attribute('style', 'cursor: pointer')
-                     .add_attribute('(click)', onClick)
-                     .add_text(text)
+      return tableDiv
     end
 
     def make_action_button(text, attrib, attribValue)

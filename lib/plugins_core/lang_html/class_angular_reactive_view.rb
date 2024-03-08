@@ -125,7 +125,11 @@ module XCTEHtml
         puts 'Unable to find variable call ' + var.getUType if varCls.nil?
 
         rowContainer.add_child(HtmlNode.new('h2').add_text(var.name.capitalize))
-        tableNode = TableUtil.instance.make_table(varCls, 'item.' + vName, vName + 'Item', false, '', true)
+        tableNode = TableUtil.instance.make_table(
+          TableCfg.new(varCls, 'item.' + vName, TableContainerTypes::LIST, vName + 'Item', false, true))
+          
+          
+          #varCls, 'item.' + vName, vName + 'Item', false, '', true)
         rowContainer.add_child(tableNode)
         # end
       end

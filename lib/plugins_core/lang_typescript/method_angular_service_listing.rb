@@ -27,7 +27,17 @@ module XCTETypescript
       bld.add 'params = params.append("pageSize", req.pageSize);'
       bld.add 'params = params.append("sortBy", req.sortBy);'
       bld.add 'params = params.append("sortAsc", req.sortAsc);'
-      bld.add 'params = params.append("searchValue", req.searchValue);'
+
+      if cls.model.data_filter.has_search_filter
+        if cls.model.data_filter.search_filter.type == 'shared'
+          bld.add 'params = params.append("' + Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name) + '", req.searchValue);'
+        else
+          for col in cls.model.data_filter.search_filter.columns
+            bld.add 'params = params.append("' + Utils.instance.get_variable_styling(col) + '", req.searchValue);'
+          end
+        end
+      end
+
       bld.separate
       bld.add('return this.httpClient.get<FilteredPageRespTpl<' + className + '>>(`${this.apiUrl}/' + urlName + '`, { params} );')
       bld.endFunction

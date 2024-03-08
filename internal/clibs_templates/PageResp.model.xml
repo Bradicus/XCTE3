@@ -11,8 +11,6 @@
 			<var name="pageCount"	type="Int32" default="0" />		
 			<var name="sortBy"	type="String" default = ""/>
 			<var name="sortAsc"	type="Boolean" default = "true"/>
-			<var name="searchCols"	type="String" default = ""/>
-			<var name="searchValue"	type="String" default = "" />
 	</var_group>
 
 	<gen_class type="class_filtered_dataset_tpl" path="shared/class" />

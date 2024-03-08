@@ -47,7 +47,7 @@ module XCTERuby
 
     def render_file_comment(cls, bld)
       bld.add('##')
-      bld.add('# Class:: ' + cls.name)
+      bld.add('# Class:: ' + get_class_name(cls))
 
       bld.add('# Author:: ' + UserSettings.instance.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
 

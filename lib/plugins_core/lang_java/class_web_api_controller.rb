@@ -74,10 +74,13 @@ module XCTEJava
         bld.separate
       end
 
-      if !cls.model.data_filter.search.columns.empty?
-        bld.add('final List<String> searchCols = List.of("' + cls.model.data_filter.search.columns.join('","') + '");')
-        bld.separate
+      search_columns = cls.model.data_filter.get_search_cols
+
+      if search_columns.length > 0
+        bld.add('final List<String> searchCols = List.of("' + search_columns.join('","') + '");')
       end
+
+      bld.separate
 
       for inj in cls.injections
         bld.add('@Autowired')

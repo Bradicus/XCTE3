@@ -9,8 +9,8 @@
             "name": "Profiles",
             "request": "launch",
             "args": [],
-            "cwd": "/home/brad/XCTE3-Tests/profile",
-            "script": "${workspaceRoot}/bin/xcte3.rb"
+            "cwd": "${workspaceFolder}/XCTE-Tests/profile",
+            "script": "${workspaceFolder}/XCTE/bin/xcte3.rb"
         },
         {
             "type": "rdbg",
@@ -18,7 +18,7 @@
             "request": "launch",
             "args": [],
             "cwd": "/home/brad/XCTE3-Tests/xctets",
-            "script": "${workspaceRoot}/bin/xcte3.rb"
+            "script": "${workspaceFolder}/XCTE/bin/xcte3.rb"
         },
         {
             "type": "rdbg",
@@ -26,7 +26,7 @@
             "request": "launch",
             "args": [],
             "cwd": "/home/brad/XCTE3/internal",
-            "script": "${workspaceRoot}/bin/xcte3.rb"
+            "script": "${workspaceFolder}/bin/xcte3.rb"
         },
         {
             "type": "rdbg",

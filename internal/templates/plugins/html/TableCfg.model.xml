@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="table cfg" >
+
+	<description>
+	Table configuration parameters
+	</description>
+
+	<var_group genGet="true" genSet="true" init_vars="true">		
+		<var name="item class"			utype="class spec" nullable="true" default="null" />
+		<var name="container var name"	type="String" />
+		<var name="container type"		type="String" />  
+		<var name="iterator var name"	type="String" />
+		<var name="is observable"		type="Boolean" default="false" />
+		<var name="is embedded"		type="Boolean" default="false" />
+	</var_group>
+
+	<gen_class type="standard" ns="plugins.html" path="plugins/html" >
+		<function name="method_constructor" >
+			<param name="item class"			utype="class spec" />
+			<param name="container var name"	type="String" />
+			<param name="container type"		type="String" />  
+			<param name="iterator var name"		type="String" />
+			<param name="is observable"		type="Boolean" />
+			<param name="is embedded"		type="Boolean" />
+		</function>
+	</gen_class>
+
+</model>
