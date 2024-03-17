@@ -13,6 +13,6 @@
 			<var name="sortAsc"	type="Boolean" default = "true"/>
 	</var_group>
 
-	<gen_class type="class_filtered_dataset_tpl" path="shared/class" />
+	<gen_class type="class_filtered_tpl" path="shared/class" />
 
 </model>

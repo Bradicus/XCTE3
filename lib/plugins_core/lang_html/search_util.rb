@@ -7,49 +7,65 @@
 #
 # This class contains utility functions for a language
 
-require 'lang_profile'
-require 'code_name_styling'
-require 'utils_base'
-require 'singleton'
+require "lang_profile"
+require "code_name_styling"
+require "utils_base"
+require "singleton"
 
 module XCTEHtml
   class SearchUtil
     include Singleton
 
     def make_search_row(cls)
-        searchRow = HtmlNode.new('tr').add_class('row') 
+      searchRow = HtmlNode.new("tr")
 
-        if cls.model.data_filter.has_search_filter
-            if cls.model.data_filter.search_filter.type == 'shared'  
-                searchCol = HtmlNode.new('th')
-
-                searchInput = HtmlNode.new('input')
-                                        .add_class('form-control')
-                                        .add_attribute('type', 'search')
-                                        .add_attribute('placeholder', 'Search')
-                                        .add_attribute('id', Utils.instance.getStyledUrlName(cls.model.name + ' search'))
-                                        .add_attribute('(keyup)', 'onSearch($event)')
+      if cls.model.data_filter.has_search_filter?
+        Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
+          if Utils.instance.is_primitive(var) && !var.isList
+            found = false
+            for col in cls.model.data_filter.search_filter.columns
+              if col == var.name
+                searchCol = HtmlNode.new("th")
+                searchInput = gen_search_input(col + " search")
 
                 searchCol.add_child(searchInput)
-                searchRow.add_child(searchCol)
-            else
-                for col in cls.model.data_filter.search_filter.columns
-                searchCol = HtmlNode.new('th')
-
-                searchInput = HtmlNode.new('input')
-                                            .add_class('form-control')
-                                            .add_attribute('type', 'search')
-                                            .add_attribute('placeholder', 'Search')
-                                            .add_attribute('id', Utils.instance.getStyledUrlName(col + ' search'))
-                                            .add_attribute('(keyup)', 'onSearch($event)')
-        
-                searchCol.add_child(searchInput)
-                searchRow.add_child(searchCol)
-                end
+                found = true
+              end
             end
-        end
 
-        return searchRow
+            if !found
+              searchCol = HtmlNode.new("th")
+            end
+
+            searchRow.add_child(searchCol)
+          end
+        }))
+      end
+
+      return searchRow
+    end
+
+    def make_search_area(cls)
+      searchRow = HtmlNode.new("div").add_class("row")
+
+      if cls.model.data_filter.has_search_filter?
+        searchCol = HtmlNode.new("div").add_class("col-3")
+        searchInput = gen_search_input(cls.model.name + " search")
+
+        searchCol.add_child(searchInput)
+        searchRow.add_child(searchCol)
+      end
+
+      return searchRow
+    end
+
+    def gen_search_input(idName)
+      searchInput = HtmlNode.new("input")
+        .add_class("form-control")
+        .add_attribute("type", "search")
+        .add_attribute("placeholder", "Search")
+        .add_attribute("id", Utils.instance.getStyledUrlName(idName))
+        .add_attribute("(keyup)", "onSearch($event)")
     end
   end
 end

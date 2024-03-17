@@ -7,12 +7,12 @@
 #
 # This class contains utility functions for a language
 
-require 'lang_profile'
-require 'code_name_styling'
-require 'utils_base'
-require 'singleton'
-require 'plugins_core/lang_html/page_util'
-require 'plugins_core/lang_html/search_util'
+require "lang_profile"
+require "code_name_styling"
+require "utils_base"
+require "singleton"
+require "plugins_core/lang_html/page_util"
+require "plugins_core/lang_html/search_util"
 
 module XCTEHtml
   class TableUtil
@@ -21,27 +21,34 @@ module XCTEHtml
     # Return formatted class name
     def make_table(table_cfg)
       cls = table_cfg.item_class
-      tableDiv = HtmlNode.new('div')
 
-      tableElem = HtmlNode.new('table')
-                          .add_class('table')
+      integrated_search = !cls.model.data_filter.has_shared_filter? && table_cfg.is_paged?
+
+      tableDiv = HtmlNode.new("div")
+
+      if !integrated_search && !table_cfg.is_embedded
+        tableDiv.add_child(SearchUtil.instance.make_search_area(cls))
+      end
+
+      tableElem = HtmlNode.new("table")
+                          .add_class("table")
 
       tableDiv.add_child(tableElem)
 
-      asyncStr = ''
+      asyncStr = ""
       if table_cfg.is_observable
-        asyncStr = ' | async'
+        asyncStr = " | async"
       end
 
       # Generate table header
-      tHead = HtmlNode.new('thead')
+      tHead = HtmlNode.new("thead")
 
       # Generate search header, if needed
-      if cls.model.data_filter.has_search_filter && table_cfg.is_paged?
+      if integrated_search && !table_cfg.is_embedded
         tHead.add_child(SearchUtil.instance.make_search_row(cls))
       end
 
-      tHeadRow = HtmlNode.new('tr')
+      tHeadRow = HtmlNode.new("tr")
       colCount = 0
 
       if table_cfg.is_paged?
@@ -52,12 +59,12 @@ module XCTEHtml
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new('tbody')
-      
+      tBody = HtmlNode.new("tbody")
+
       tBody.add_child(gen_row(table_cfg))
       tableElem.add_child(tBody)
 
-      if table_cfg.is_paged?        
+      if table_cfg.is_paged?
         tableElem.add_child(PageUtil.instance.get_page_footer(colCount, table_cfg.container_var_name, asyncStr))
       end
 
@@ -74,57 +81,56 @@ module XCTEHtml
     def add_sortable_header(cls, tHeadRow, colCount)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var) && !var.isList
-          tHeadRow.children.push(HtmlNode.new('th')
+          tHeadRow.children.push(HtmlNode.new("th")
             .add_text(var.getdisplay_name)
-            .add_child(HtmlNode.new('i').add_class('bi bi-arrow-bar-down'))
-            .add_attribute('scope', 'col')
-            .add_attribute('style', 'cursor: pointer')
-            .add_attribute('(click)', "sortBy('" + Utils.instance.get_styled_variable_name(var) + "')"))
+            .add_child(HtmlNode.new("i").add_class("bi bi-arrow-bar-down"))
+            .add_attribute("scope", "col")
+            .add_attribute("style", "cursor: pointer")
+            .add_attribute("(click)", "sortBy('" + Utils.instance.get_styled_variable_name(var) + "')"))
           colCount += 1
         end
       }))
     end
 
     def gen_row(table_cfg)
-      tBodyRow = HtmlNode.new('tr')
-      
-      asyncStr = ''
+      tBodyRow = HtmlNode.new("tr")
+
+      asyncStr = ""
       if table_cfg.is_observable
-        asyncStr = ' | async'
+        asyncStr = " | async"
       end
 
       if table_cfg.is_paged?
-        tBodyRow.add_attribute('*ngFor', 'let ' + table_cfg.iterator_var_name + ' of (' + table_cfg.container_var_name + asyncStr + ')?.data')
+        tBodyRow.add_attribute("*ngFor", "let " + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ")?.data")
       else
-        tBodyRow.add_attribute('*ngFor', 'let ' + table_cfg.iterator_var_name + ' of (' + table_cfg.container_var_name + asyncStr + ')')
+        tBodyRow.add_attribute("*ngFor", "let " + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ")")
       end
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(table_cfg.item_class).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var) && !var.isList
-
-          if var.getUType.downcase.start_with? 'date'
-            tBodyRow.add_child(HtmlNode.new('td')
-              .add_text('{{' + table_cfg.iterator_var_name + '.' + Utils.instance.get_styled_variable_name(var) + " | date:'medium'}}"))
+          if var.getUType.downcase.start_with? "date"
+            tBodyRow.add_child(HtmlNode.new("td")
+              .add_text("{{" + table_cfg.iterator_var_name + "." + Utils.instance.get_styled_variable_name(var) + " | date:'medium'}}"))
           else
-            tBodyRow.add_child(HtmlNode.new('td')
-              .add_text('{{' + table_cfg.iterator_var_name + '.' + Utils.instance.get_styled_variable_name(var) + '}}'))
+            tBodyRow.add_child(HtmlNode.new("td")
+              .add_text("{{" + table_cfg.iterator_var_name + "." + Utils.instance.get_styled_variable_name(var) + "}}"))
           end
         end
       }))
 
-      actions = HtmlNode.new('th')
+      actions = HtmlNode.new("th")
 
       if table_cfg.is_paged? && !table_cfg.is_embedded
         for act in table_cfg.item_class.actions
           if !act.link.nil?
-            actions.add_child(make_action_button(act.name, 'routerLink',
-                                                 act.link + '/' + '{{' + table_cfg.iterator_var_name + '.id}}'))
+            actions.add_child(make_action_button(act.name, "routerLink",
+                                                 act.link + "/" + "{{" + table_cfg.iterator_var_name + ".id}}"))
           elsif !act.trigger.nil?
-            triggerFun = Utils.instance.get_styled_function_name('on ' + act.trigger) + '(' + table_cfg.iterator_var_name + ')'
-            if act.trigger == 'delete'
-              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
+            triggerFun = Utils.instance.get_styled_function_name("on " + act.trigger) + "(" + table_cfg.iterator_var_name + ")"
+            if act.trigger == "delete"
+              actions.add_child(make_action_button(act.name, "(click)", triggerFun))
             else
-              actions.add_child(make_action_button(act.name, '(click)', triggerFun))
+              actions.add_child(make_action_button(act.name, "(click)", triggerFun))
             end
           end
         end
@@ -137,25 +143,25 @@ module XCTEHtml
     end
 
     def make_relation_table(table_cfg)
-      tableDiv = HtmlNode.new('div')
+      tableDiv = HtmlNode.new("div")
 
-      tableElem = HtmlNode.new('table')
-                          .add_class('table')
+      tableElem = HtmlNode.new("table")
+                          .add_class("table")
 
       tableDiv.add_child(tableElem)
 
       # Generate table header
-      tHead = HtmlNode.new('thead')
+      tHead = HtmlNode.new("thead")
 
-      tHeadRow = HtmlNode.new('tr')
+      tHeadRow = HtmlNode.new("tr")
       colCount = 0
 
       tHead.add_child(tHeadRow)
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new('tbody')
-      
+      tBody = HtmlNode.new("tbody")
+
       tBody.add_child(gen_row(table_cfg))
       tableElem.add_child(tBody)
 
@@ -163,31 +169,31 @@ module XCTEHtml
     end
 
     def make_action_button(text, attrib, attribValue)
-      return HtmlNode.new('button')
-                     .add_class('btn btn-primary btn-sm')
+      return HtmlNode.new("button")
+                     .add_class("btn btn-primary btn-sm")
                      .add_attribute(attrib, attribValue)
                      .add_text(text.capitalize)
     end
 
-    def make_sel_option_table(_listVar, optionsVar, iteratorName, async = '')
-      tableElem = HtmlNode.new('table')
-                          .add_class('table')
+    def make_sel_option_table(_listVar, optionsVar, iteratorName, async = "")
+      tableElem = HtmlNode.new("table")
+                          .add_class("table")
 
-      asyncStr = ''
-      if async == 'async'
-        asyncStr = ' | async'
+      asyncStr = ""
+      if async == "async"
+        asyncStr = " | async"
       end
 
       # Generate table header
-      tHead = HtmlNode.new('thead')
-      tHeadRow = HtmlNode.new('tr')
+      tHead = HtmlNode.new("thead")
+      tHeadRow = HtmlNode.new("tr")
 
       optClass = ClassModelManager.findVarClass(optionsVar)
       listVarName = Utils.instance.get_styled_variable_name(optionsVar)
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)
-          tHeadRow.children.push(HtmlNode.new('th').add_text(var.getdisplay_name))
+          tHeadRow.children.push(HtmlNode.new("th").add_text(var.getdisplay_name))
         end
       }))
 
@@ -195,17 +201,17 @@ module XCTEHtml
       tableElem.add_child(tHead)
 
       # Generate table body
-      tBody = HtmlNode.new('tbody')
-      tBodyRow = HtmlNode.new('tr')
-                         .add_attribute('*ngFor', 'let ' + iteratorName + ' of (' + listVarName + asyncStr + ')?.data')
+      tBody = HtmlNode.new("tbody")
+      tBodyRow = HtmlNode.new("tr")
+                         .add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.data")
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)
-          td = HtmlNode.new('td')
+          td = HtmlNode.new("td")
           ##            .add_text("{{" + iteratorName + "." + Utils.instance.get_styled_variable_name(var) + "}}")
-          td.add_child(HtmlNode.new('a')
-            .add_class('page-link')
-            .add_text('{{i}}}'))
+          td.add_child(HtmlNode.new("a")
+            .add_class("page-link")
+            .add_text("{{i}}}"))
           tBodyRow.add_child(td)
         end
       }))

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="filtered page search param" >
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private" init_vars="true">
+	</var_group>
+
+	<gen_class type="class_filtered_search_param" path="shared/class" />
+
+</model>

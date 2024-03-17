@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="page request" >
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+			<var name="page num"	type="Int32" default="0" />
+			<var name="page size"	type="Int32" default="10" />		
+			<var name="sort by"	type="String" default = ""/>
+			<var name="sort asc"	type="Boolean" default = "true"/>
+			<var name="search cols"	 type="String" default = ""/>
+			<var name="search params" utype="filtered page search param" init_vars="true" />
+	</var_group>
+
+	<gen_class type="class_filtered_tpl" path="shared/class" />
+
+</model>

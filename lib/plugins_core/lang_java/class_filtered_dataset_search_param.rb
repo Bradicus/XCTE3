@@ -3,7 +3,7 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes,
+# This class generates source files for "Filtered dataset" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
@@ -16,19 +16,19 @@ require "code_structure/code_elem_model"
 require "lang_file"
 
 module XCTEJava
-  class ClassFilteredDatasetRespTpl < ClassBase
+  class ClassFilteredDatasetReqTpl < ClassBase
     def initialize
-      @name = "class_filtered_resp_tpl"
+      @name = "class_filtered_search_param"
       @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def get_unformatted_class_name(cls)
-      cls.get_u_name + " resp tpl"
+      return "filtered page search param"
     end
 
     def process_dependencies(cls, bld)
-      cls.addUse("java.util.List")
+      cls.addUse("java.util.HashMap")
       super
     end
 
@@ -37,9 +37,9 @@ module XCTEJava
       headerString = String.new
 
       bld.separate
-      bld.start_class("public class " + get_class_name(cls) + "<T>")
+      bld.start_class("public class " + get_class_name(cls) + " extends HashMap<String, String>")
 
-      model = InternalClassModelManager.findModel("page response")
+      model = InternalClassModelManager.findModel("filtered page search param")
 
       # Generate class variables
       each_var(uevParams.wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
@@ -51,4 +51,4 @@ module XCTEJava
   end
 end
 
-XCTEPlugin.registerPlugin(XCTEJava::ClassFilteredDatasetRespTpl.new)
+XCTEPlugin.registerPlugin(XCTEJava::ClassFilteredDatasetReqTpl.new)

@@ -17,15 +17,15 @@ require "code_structure/code_elem_model"
 require "lang_file"
 
 module XCTETypescript
-  class ClassFilteredDatasetReqTpl < ClassBase
+  class ClassFilteredDatasetSearchParam < ClassBase
     def initialize
-      @name = "class_filtered_req_tpl"
+      @name = "class_filtered_search_param"
       @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def get_unformatted_class_name(cls)
-      cls.get_u_name + " req tpl"
+      return "filtered page search param"
     end
 
     def gen_source_files(cls)
@@ -45,15 +45,20 @@ module XCTETypescript
       srcFiles
     end
 
-    def process_dependencies(cls, bld)
-      cls.addInclude("shared/paging/filtered-page-search-param", "FilteredPageSearchParam")
-    end
-
     # Returns the code for the header for this class
     def render_body_content(cls, bld)
-      bld.start_class("export class " + get_class_name(cls) + "<T>")
+      headerString = String.new
 
-      model = InternalClassModelManager.findModel("page request")
+      bld.separate
+
+      for inc in cls.includes
+        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.get_extension("body") + "'")
+      end
+
+      bld.separate
+      bld.start_class("export class " + get_class_name(cls) + " extends Map<string, string>")
+
+      model = InternalClassModelManager.findModel("filtered page search param")
 
       # Generate class variables
       each_var(uevParams.wCls(model).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
@@ -65,4 +70,4 @@ module XCTETypescript
   end
 end
 
-XCTEPlugin.registerPlugin(XCTETypescript::ClassFilteredDatasetReqTpl.new)
+XCTEPlugin.registerPlugin(XCTETypescript::ClassFilteredDatasetSearchParam.new)
