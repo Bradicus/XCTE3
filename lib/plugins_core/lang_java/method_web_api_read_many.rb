@@ -97,11 +97,11 @@ module XCTEJava
       if cls.model.data_filter.has_search_filter?
         if cls.model.data_filter.search_filter.type == "shared"
           params.push('@RequestParam(defaultValue="") String ' +
-                      Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name))
+                      Utils.instance.style_as_variable(cls.model.data_filter.search_filter.get_name))
         else
           for col in cls.model.data_filter.search_filter.columns
             params.push('@RequestParam(defaultValue="") String ' +
-                        Utils.instance.get_variable_styling("search " + col))
+                        Utils.instance.style_as_variable(col))
           end
         end
       end
@@ -139,12 +139,12 @@ module XCTEJava
         if cls.model.data_filter.has_search_filter?
           if cls.model.data_filter.has_shared_filter?
             for funParam in filter_params
-              paramVars.push(Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name))
+              paramVars.push(Utils.instance.style_as_variable(cls.model.data_filter.search_filter.get_name))
             end
           else
             for col in cls.model.data_filter.search_filter.columns
               paramVars.push(
-                Utils.instance.get_variable_styling("search " + col)
+                Utils.instance.style_as_variable(col)
               )
             end
           end

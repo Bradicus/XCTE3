@@ -30,7 +30,7 @@ module XCTETypescript
 
       if cls.model.data_filter.has_search_filter?
         if cls.model.data_filter.has_shared_filter?
-          search_name = Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name)
+          search_name = Utils.instance.style_as_variable(cls.model.data_filter.search_filter.get_name)
           bld.add "params = params.append('" + search_name + "', req.searchParams.get('" + search_name + "') ?? '');"
         else
           bld.start_block "for (let [key, value] of  req.searchParams)"

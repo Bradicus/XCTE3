@@ -5,9 +5,9 @@
 #
 # This class contains utility functions useful for all languages.
 
-require 'lang_profile'
-require 'params/process_dependencies_params'
-require 'log'
+require "lang_profile"
+require "params/process_dependencies_params"
+require "log"
 
 class UtilsBase
   attr_accessor :langProfile
@@ -17,7 +17,7 @@ class UtilsBase
 
     return unless @langProfile.nil?
 
-    Log.debug('Profile ' + langName + ' not found')
+    Log.debug("Profile " + langName + " not found")
   end
 
   # Returns true if this is a primitive data type
@@ -27,7 +27,7 @@ class UtilsBase
 
   def is_numeric?(var)
     isPrim = @langProfile.is_primitive(var)
-    isNum = Types.instance.inCategory(var, 'number')
+    isNum = Types.instance.inCategory(var, "number")
     isPrim && isNum
   end
 
@@ -44,12 +44,16 @@ class UtilsBase
   end
 
   # Returns the version of this name styled for this language
-  def get_styled_variable_name(var, prefix = '', postfix = '')
+  def get_styled_variable_name(var, prefix = "", postfix = "")
     CodeNameStyling.getStyled(prefix + var.name + postfix, @langProfile.variableNameStyle)
   end
 
-  def get_variable_styling(var_string)
+  def style_as_variable(var_string)
     CodeNameStyling.getStyled(var_string, @langProfile.variableNameStyle)
+  end
+
+  def style_as_function(fun_string)
+    CodeNameStyling.getStyled(fun_string, @langProfile.functionNameStyle)
   end
 
   def get_styled_function_name(funName)
@@ -91,11 +95,11 @@ class UtilsBase
     plug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
 
     if plugClass.nil?
-      Log.debug('Class not found for ' + plug_name)
+      Log.debug("Class not found for " + plug_name)
       return nil
     end
     if plug.nil?
-      Log.debug('Plugin not found for ' + plug_name)
+      Log.debug("Plugin not found for " + plug_name)
       return nil
     end
 
@@ -169,7 +173,7 @@ class UtilsBase
     if !bc_cls_spec.nil?
       get_default_utils().try_add_include_for(to_cls, bc_cls_spec, bc.plugin_name)
     else
-      Log.warn 'Could not find class for class ref ' + bc.model_name.to_s + " " + bc.plugin_name.to_s
+      Log.warn "Could not find class for class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
     end
   end
 
@@ -205,10 +209,10 @@ class UtilsBase
   end
 
   def render_param_list(pList)
-    oneLiner = pList.join(', ')
+    oneLiner = pList.join(", ")
     return unless pList.length > 100
 
-    pList.join(', ')
+    pList.join(", ")
   end
 
   def has_an_array?(cls)

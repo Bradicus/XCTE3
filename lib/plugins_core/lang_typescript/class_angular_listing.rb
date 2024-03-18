@@ -85,8 +85,15 @@ module XCTETypescript
       bld.separate
 
       if cls.model.data_filter.has_search_filter?
-        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
-        bld.add "public " + Utils.instance.get_styled_variable_name(subjectVar) + ": Subject<string> = new Subject<string>();"
+        if cls.model.data_filter.has_shared_filter?
+          subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
+          bld.add "public " + Utils.instance.get_styled_variable_name(subjectVar) + ": Subject<string> = new Subject<string>();"
+        else
+          for col in cls.model.data_filter.search_filter.columns
+            subjectVar = Utils.instance.get_search_subject_var(col)
+            bld.add "public " + Utils.instance.get_styled_variable_name(subjectVar) + ": Subject<string> = new Subject<string>();"
+          end
+        end
       end
 
       bld.separate
@@ -102,11 +109,23 @@ module XCTETypescript
       bld.start_function("constructor", inst_fun)
 
       if cls.model.data_filter.has_search_filter?
-        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
-        bld.add "this." + Utils.instance.get_styled_variable_name(subjectVar) + ".pipe("
-        bld.iadd "debounceTime(250),"
-        bld.iadd "distinctUntilChanged())"
-        bld.add ".subscribe((p) =>  { this.goToPage(0); });"
+        if cls.model.data_filter.has_shared_filter?
+          subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
+          bld.add "this." + Utils.instance.get_styled_variable_name(subjectVar) + ".pipe("
+          bld.iadd "debounceTime(250),"
+          bld.iadd "distinctUntilChanged())"
+          bld.add ".subscribe((p) =>  { this.goToPage(0); });"
+        else
+          for col in cls.model.data_filter.search_filter.columns
+            subjectVar = Utils.instance.get_search_subject_var(col)
+            bld.add "this." + Utils.instance.get_styled_variable_name(subjectVar) + ".pipe("
+            bld.iadd "debounceTime(250),"
+            bld.iadd "distinctUntilChanged())"
+            bld.add ".subscribe((p) =>  { this.goToPage(0); });"
+
+            bld.separate
+          end
+        end
       end
 
       bld.end_block
@@ -159,15 +178,23 @@ module XCTETypescript
       bld.add "this.updatePageData();"
       bld.end_block
 
-      bld.start_block("onSearch(event: any)")
-
       if cls.model.data_filter.has_search_filter?
-        bld.add "this.pageReq.searchParams.set('" + Utils.instance.get_variable_styling(cls.model.data_filter.search_filter.get_name) + "', event.target.value);"
-        subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
-        bld.add "this." + Utils.instance.get_styled_variable_name(subjectVar) + ".next(event.target.value);"
+        if cls.model.data_filter.has_shared_filter?
+          bld.start_block("onSearch(event: any)")
+          bld.add "this.pageReq.searchParams.set('" + Utils.instance.style_as_variable(cls.model.data_filter.search_filter.get_name) + "', event.target.value);"
+          subjectVar = Utils.instance.get_search_subject(cls.model.data_filter.search_filter)
+          bld.add "this." + Utils.instance.get_styled_variable_name(subjectVar) + ".next(event.target.value);"
+          bld.end_block
+        else
+          for col in cls.model.data_filter.search_filter.columns
+            bld.start_block(Utils.instance.style_as_function("on search " + col) + "(event: any)")
+            bld.add "this.pageReq.searchParams.set('" + Utils.instance.style_as_variable(col) + "', event.target.value);"
+            subjectVar = Utils.instance.get_search_subject_var(col)
+            bld.add "this." + Utils.instance.get_styled_variable_name(subjectVar) + ".next(event.target.value);"
+            bld.end_block
+          end
+        end
       end
-
-      bld.end_block
 
       bld.separate
 

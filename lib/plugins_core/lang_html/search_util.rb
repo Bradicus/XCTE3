@@ -26,7 +26,7 @@ module XCTEHtml
             for col in cls.model.data_filter.search_filter.columns
               if col == var.name
                 searchCol = HtmlNode.new("th")
-                searchInput = gen_search_input(col + " search")
+                searchInput = gen_search_input(col + " search", "on search " + col)
 
                 searchCol.add_child(searchInput)
                 found = true
@@ -50,7 +50,7 @@ module XCTEHtml
 
       if cls.model.data_filter.has_search_filter?
         searchCol = HtmlNode.new("div").add_class("col-3")
-        searchInput = gen_search_input(cls.model.name + " search")
+        searchInput = gen_search_input(cls.model.name + " search", "on search")
 
         searchCol.add_child(searchInput)
         searchRow.add_child(searchCol)
@@ -59,13 +59,13 @@ module XCTEHtml
       return searchRow
     end
 
-    def gen_search_input(idName)
+    def gen_search_input(id_name, search_fun_name)
       searchInput = HtmlNode.new("input")
         .add_class("form-control")
         .add_attribute("type", "search")
         .add_attribute("placeholder", "Search")
-        .add_attribute("id", Utils.instance.getStyledUrlName(idName))
-        .add_attribute("(keyup)", "onSearch($event)")
+        .add_attribute("id", Utils.instance.getStyledUrlName(id_name))
+        .add_attribute("(keyup)", Utils.instance.get_styled_function_name(search_fun_name) + "($event)")
     end
   end
 end
