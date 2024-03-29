@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="filter" >
+
+	<description>
+	</description>
+
+	<var_group genGet="true" genSet="true" visibility="private">
+		<var name="name"	type="String" />
+		<var name="value"	type="String" />
+	</var_group>
+
+</model>

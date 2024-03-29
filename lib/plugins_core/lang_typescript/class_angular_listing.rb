@@ -32,6 +32,7 @@ module XCTETypescript
 
     def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "Component, OnInit")
+      cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
       cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(cls.model.name),
@@ -66,13 +67,10 @@ module XCTETypescript
       standard_class_name = Utils.instance.get_styled_class_name(cls.model.name)
       routeName = Utils.instance.get_styled_file_name(cls.get_u_name)
 
-      bld.add("@Component({")
-      bld.indent
-      bld.add("selector: 'app-" + filePart + "',")
-      bld.add("templateUrl: './" + filePart + ".component.html',")
-      bld.add("styleUrls: ['./" + filePart + ".component.css']")
-      bld.unindent
-      bld.add("})")
+      bld.render_component_declaration(ComponentConfig.new
+        .w_selector_name(filePart)
+        .w_file_part(filePart)
+        .w_imports(["CommonModule, RouterModule"]))
 
       bld.separate
 

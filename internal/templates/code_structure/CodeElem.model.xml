@@ -5,7 +5,7 @@
 	Code Element
 	</description>
 
-	<gen_class type="standard" ns="code structure" path="code structure">
+	<gen_class type="class_standard" ns="code structure" path="code structure">
 		<function name="method_constructor" >	
 			<param name="parent elem"	utype="code elem"  nullable="true" />  
 		</function>

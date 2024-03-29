@@ -5,7 +5,7 @@
 	Basic variable type
 	</description>
 				
-	<gen_class type="standard" ns="lang profile" path="lang profile">	
+	<gen_class type="class_standard" ns="lang profile" path="lang profile">	
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">

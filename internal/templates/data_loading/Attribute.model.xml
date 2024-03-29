@@ -5,7 +5,7 @@
 	Code Element
 	</description>
 
-	<gen_class type="standard" ns="data loading" path="data loading">
+	<gen_class type="class_standard" ns="data loading" path="data loading">
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">		

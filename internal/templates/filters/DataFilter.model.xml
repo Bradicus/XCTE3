@@ -5,7 +5,7 @@
 	Filters request for sets of data
 	</description>
 				
-	<gen_class type="standard" ns="filters" path="filters">
+	<gen_class type="class_standard" ns="filters" path="filters">
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">

@@ -1,0 +1,20 @@
+<class_group name="data store server w delete">
+	<!-- Java -->
+	<gen_class type="class_db_entity" path="{DataModelPath}/model" ns="{DataModelNs}.model">
+		<use-csharp name="System.Collections.Generic" />
+		<use-java name='java.time.*' />
+		<use-java name='java.util.*' />
+	</gen_class>
+
+	<gen_class type="tsql_data_store" path="{DataModelPath}/store" ns="{DataModelNs}.store">
+		<data_class cname="!{ModelName}" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
+		
+		<function name="method_tsql_create" interface="true" />
+		<function name="method_tsql_update" interface="true" />
+		<function name="method_tsql_delete" interface="true" />
+		<function name="method_tsql_retrieve_all" interface="true" />
+		<function name="method_tsql_retrieve_one_by" interface="true">
+			<var_ref name="id" />
+		</function>
+	</gen_class>
+</class_group>

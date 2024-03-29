@@ -5,7 +5,7 @@
 	Ruby accessor
 	</description>
 				
-	<gen_class type="standard" ns="lang profles.ruby" path="lang profiles/ruby" >
+	<gen_class type="class_standard" ns="lang profles.ruby" path="lang profiles/ruby" >
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">

@@ -3,24 +3,24 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes,
+# This class generates source files for "class_standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_typescript/utils'
-require 'plugins_core/lang_typescript/class_base'
-require 'plugins_core/lang_typescript/x_c_t_e_typescript'
+require "plugins_core/lang_typescript/utils"
+require "plugins_core/lang_typescript/class_base"
+require "plugins_core/lang_typescript/x_c_t_e_typescript"
 
-require 'code_structure/code_elem_parent'
-require 'code_structure/code_elem_model'
-require 'lang_file'
+require "code_structure/code_elem_parent"
+require "code_structure/code_elem_model"
+require "lang_file"
 
 module XCTETypescript
   class ClassStandard < ClassBase
     def initialize
-      @name = 'standard'
-      @language = 'typescript'
+      @name = "class_standard"
+      @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -33,8 +33,8 @@ module XCTETypescript
 
       # Generate class variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        Utils.instance.try_add_include_for_var(cls, var, 'standard') if !Utils.instance.is_primitive(var)
-        Utils.instance.try_add_include_for_var(cls, var, 'enum') if !Utils.instance.is_primitive(var)
+        Utils.instance.try_add_include_for_var(cls, var, "class_standard") if !Utils.instance.is_primitive(var)
+        Utils.instance.try_add_include_for_var(cls, var, "enum") if !Utils.instance.is_primitive(var)
       }))
     end
 

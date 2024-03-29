@@ -66,7 +66,7 @@ module XCTEPhp
       return if cls.data_class.nil?
 
       Utils.instance.requires_class_ref(cls, cls.data_class)
-      #  Utils.instance.requires_class_type(cls, cls.dataClass, "standard")
+      #  Utils.instance.requires_class_type(cls, cls.dataClass, "class_standard")
     end
 
     def process_fuction_dependencies(cls, bld, fun)

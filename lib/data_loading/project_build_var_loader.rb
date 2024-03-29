@@ -21,8 +21,14 @@ module DataLoading
         gen.buildVars.push(bVar)
       }
 
-      # Sort with longest first so loops searching for names get longer names first,
-      # in case a smaller variable is contained within a larger
+      for bVar in gen.buildVars
+        if bVar.name.include?("{")
+          for obVar in gen.buildVars
+            bVar.name.sub!("{" + obVar.name + "}", obVar.value)
+          end
+        end
+      end
+
       gen.buildVars.sort_by { |bv| -bv.name.length }
     end
   end

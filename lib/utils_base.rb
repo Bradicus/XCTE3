@@ -185,7 +185,7 @@ class UtilsBase
       for_cls_spec = for_cls.model.findClassModel(plug_name)
 
       if !for_cls_spec.nil?
-        to_cls.addInclude(clsPlug.get_dependency_path(for_cls_spec), clsPlug.get_class_name(for_cls_spec))
+        to_cls.addInclude(clsPlug.get_dependency_path_w_file(for_cls_spec), clsPlug.get_class_name(for_cls_spec))
       end
     else
       Log.warn "[try_add_include_for] Couldn't find class plugin: " + plug_name.to_s
@@ -199,7 +199,7 @@ class UtilsBase
 
     return unless !clsPlug.nil? && !clsGen.nil? && !is_self_reference(cls, var, clsPlug)
 
-    cls.addInclude(clsPlug.get_dependency_path(clsGen), clsPlug.get_class_name(clsGen))
+    cls.addInclude(clsPlug.get_dependency_path_w_file(clsGen), clsPlug.get_class_name(clsGen))
   end
 
   def is_self_reference(cls, var, clsPlug)

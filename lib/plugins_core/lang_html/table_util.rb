@@ -93,7 +93,10 @@ module XCTEHtml
     end
 
     def gen_row(table_cfg)
+      rowLoop = HtmlNode.new("loop")
+
       tBodyRow = HtmlNode.new("tr")
+      rowLoop.add_child(tBodyRow)
 
       asyncStr = ""
       if table_cfg.is_observable
@@ -101,9 +104,9 @@ module XCTEHtml
       end
 
       if table_cfg.is_paged?
-        tBodyRow.add_attribute("*ngFor", "let " + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ")?.data")
+        rowLoop.add_text("@for (" + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ")?.data; track " + table_cfg.iterator_var_name + ".id) {")
       else
-        tBodyRow.add_attribute("*ngFor", "let " + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ")")
+        rowLoop.add_text("@for (" + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ") track " + table_cfg.iterator_var_name + ".id) {")
       end
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(table_cfg.item_class).wVarCb(lambda { |var|
@@ -139,7 +142,7 @@ module XCTEHtml
       # Add actions
       tBodyRow.children.push(actions)
 
-      return tBodyRow
+      return rowLoop
     end
 
     def make_relation_table(table_cfg)

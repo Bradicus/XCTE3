@@ -9,11 +9,6 @@ module XCTEHtml
   class HtmlNode
     attr_accessor :name, :classAttrib, :attribs, :children, :text, :selfClose
 
-    @name
-    @classAttrib = Array.new
-    @attribs = Hash.new
-    @text = ""
-    @children = Array.new
     @selfClose = false
 
     def initialize(name)
@@ -23,6 +18,7 @@ module XCTEHtml
       @attribs = Hash.new
       @text = ""
       @children = Array.new
+      @selfClose = false
 
       if (name == "area" ||
           name == "base" ||

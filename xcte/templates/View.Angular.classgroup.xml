@@ -1,0 +1,12 @@
+<class_group name="view">
+
+  	<!-- Angular -->
+
+    <gen_class type="class_angular_reactive_view"
+      name="!{ModelName} view"
+      path="!{feature_group}/!{ModelName} view"
+      route="!{ModelName} view">
+    	<function name="method_angular_reactive_call_datamap" />
+    </gen_class>
+
+</class_group>

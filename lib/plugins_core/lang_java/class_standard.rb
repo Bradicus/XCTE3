@@ -5,24 +5,24 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes,
+# This class generates source files for "class_standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_java/utils'
-require 'plugins_core/lang_java/x_c_t_e_java'
-require 'plugins_core/lang_java/class_base'
+require "plugins_core/lang_java/utils"
+require "plugins_core/lang_java/x_c_t_e_java"
+require "plugins_core/lang_java/class_base"
 
-require 'code_structure/code_elem_parent'
-require 'code_structure/code_elem_model'
-require 'lang_file'
+require "code_structure/code_elem_parent"
+require "code_structure/code_elem_model"
+require "lang_file"
 
 module XCTEJava
   class ClassStandard < ClassBase
     def initialize
-      @name = 'standard'
-      @language = 'java'
+      @name = "class_standard"
+      @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -37,7 +37,7 @@ module XCTEJava
       }))
 
       # if hasList(cls)
-      cls.addUse('java.util.*')
+      cls.addUse("java.util.*")
       # end
 
       super
@@ -47,7 +47,7 @@ module XCTEJava
     def render_body_content(cls, bld)
       cfg = UserSettings.instance
 
-      bld.start_class('public class ' << get_class_name(cls))
+      bld.start_class("public class " << get_class_name(cls))
 
       bld.separate if Utils.instance.has_an_array?(cls)
 

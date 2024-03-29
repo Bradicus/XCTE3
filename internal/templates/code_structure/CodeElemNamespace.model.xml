@@ -9,7 +9,7 @@
 	  <var name="ns list"	type="String" set="List" />
 	</var_group>	
 				
-	<gen_class type="standard" ns="code structure" path="code structure">
+	<gen_class type="class_standard" ns="code structure" path="code structure">
 	</gen_class>	
 	
 </model>

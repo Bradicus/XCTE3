@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="filtered page" >
+
+	<description>
+	</description>
+
+	<gen_class type="class_filtered_req_tpl"
+		path="shared/paging"
+		path-java="dto"
+		ns-java="com.example.demo.dto" />
+	<gen_class type="class_filtered_resp_tpl"
+		path="shared/paging"
+		path-java="dto"
+		ns-java="com.example.demo.dto" />
+	<gen_class type="class_filtered_search_param"
+		path="shared/paging"
+		path-java="dto"
+		ns-java="com.example.demo.dto" />
+
+</model>

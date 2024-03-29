@@ -1,0 +1,13 @@
+<class_group name="edit">
+
+  	<!-- Angular -->
+
+    <gen_class type="class_angular_reactive_edit"
+      name="!{ModelName} edit"
+      path="!{feature_group}/!{ModelName} edit"
+      route="!{ModelName} edit">
+    	<function name="method_service_datagen_random" />
+    	<function name="method_angular_reactive_call_datamap" />
+    </gen_class>
+
+</class_group>

@@ -9,7 +9,7 @@
 		<var name="items"		    utype="type" static="true" set="List" />		
 	</var_group>
 
-	<gen_class type="standard" path="managers">
+	<gen_class type="class_standard" path="managers">
     
 		<empty_function name="find class" >
 			<parameters>

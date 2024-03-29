@@ -1,5 +1,6 @@
-require 'x_c_t_e_plugin'
-require 'params/render_fun_def_params'
+require "x_c_t_e_plugin"
+require "path_util"
+require "params/render_fun_def_params"
 
 # Base class for all class plugins
 class XCTEClassBase < XCTEPlugin
@@ -36,7 +37,7 @@ class XCTEClassBase < XCTEPlugin
           Log.info "processing fun: " + fun.name
           templ.process_dependencies(cls_spec, bld, fun)
         else
-          Log.warn 'ERROR no plugin for function: ' + fun.name + '   language: ' + cls_spec.language
+          Log.warn "ERROR no plugin for function: " + fun.name + "   language: " + cls_spec.language
         end
       end
     }))
@@ -47,7 +48,7 @@ class XCTEClassBase < XCTEPlugin
       if !bc_cls_spec.nil?
         get_default_utils().try_add_include_for(cls_spec, bc_cls_spec, bc.plugin_name)
       else
-        Log.warn 'Could not find class for base class ref ' + bc.model_name.to_s + " " + bc.plugin_name.to_s
+        Log.warn "Could not find class for base class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
       end
     end
   end
@@ -57,7 +58,7 @@ class XCTEClassBase < XCTEPlugin
 
     bld = get_source_renderer()
     bld.lfName = get_default_utils().get_styled_file_name(get_unformatted_class_name(cls))
-    bld.lfExtension = get_default_utils().get_extension('body')
+    bld.lfExtension = get_default_utils().get_extension("body")
 
     process_dependencies(cls, bld)
 
@@ -73,7 +74,7 @@ class XCTEClassBase < XCTEPlugin
 
     return srcFiles
   end
-  
+
   def render_file_comment(cls, bld)
     if ActiveComponent.get().file_comment != nil && ActiveComponent.get().file_comment.length > 0
       bld.comment_file(ActiveComponent.get().file_comment)
@@ -82,17 +83,11 @@ class XCTEClassBase < XCTEPlugin
     end
   end
 
-  def get_dependency_path(cls)
+  def get_dependency_path_w_file(cls)
     # get_file_name
-    fileName = get_file_name(cls)
+    file_name = get_file_name(cls)
 
-    if !cls.path.nil?
-      depPath = cls.path + '/' + fileName
-    else
-      depPath = cls.namespace.get('/') + '/' + fileName
-    end
-
-    depPath
+    return PathUtil.get_dependency_path(cls) + "/" + file_name
   end
 
   def get_file_name(cls)
@@ -121,7 +116,7 @@ class XCTEClassBase < XCTEPlugin
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
         end
       else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, 'method_empty')
+        templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, "method_empty")
         if !templ.nil?
           templ.render_function(cls, bld, fun)
         else

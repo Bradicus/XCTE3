@@ -1,4 +1,5 @@
 require "plugins_core/lang_typescript/class_angular_component"
+require "plugins_core/lang_typescript/component_config"
 require "include_util"
 
 ##
@@ -45,8 +46,11 @@ module XCTETypescript
 
     def process_dependencies(cls, bld)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
+      cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray, Validators")
+
       cls.addInclude("@angular/router", "ActivatedRoute, Router")
+
       cls.addInclude("rxjs", "Observable, of", "lib")
 
       cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(cls.model.name),
@@ -66,7 +70,7 @@ module XCTETypescript
           cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(optVar.getUType),
                          Utils.instance.get_styled_class_name(optVar.getUType))
 
-          bCls = ClassModelManager.findClass(cls.model.name, "standard")
+          bCls = ClassModelManager.findClass(cls.model.name, "class_standard")
           if !bCls.nil?
             optStoreVar = Utils.instance.create_var_for(bCls, "class_angular_data_store_service")
             Utils.instance.try_add_include_for_var(bCls, optVar, "class_angular_data_store_service")
@@ -97,15 +101,12 @@ module XCTETypescript
       dataGenServiceVar.visibility = "private"
       userPopulateServiceVar.visibility = "private"
 
-      bld.add("@Component({")
-      bld.indent
-      bld.add("selector: 'app-" + selectorName + "',")
-      bld.add("templateUrl: './" + filePart + ".component.html',")
-      bld.add("styleUrls: ['./" + filePart + ".component.css']")
-      bld.unindent
-      bld.add("})")
+      bld.render_component_declaration(ComponentConfig.new
+        .w_selector_name(selectorName)
+        .w_file_part(filePart)
+        .w_imports(["CommonModule, ReactiveFormsModule"]))
 
-      bld.add
+      bld.separate
 
       bld.start_block("export class " + get_class_name(cls) + " implements OnInit ")
       bld.add("item: " + Utils.instance.get_styled_class_name(cls.model.name) + " = new " + Utils.instance.get_styled_class_name(cls.model.name) + "();")
@@ -137,7 +138,7 @@ module XCTETypescript
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
-          optCls = ClassModelManager.findClass(var.selectFrom, "standard")
+          optCls = ClassModelManager.findClass(var.selectFrom, "class_standard")
           if optVar.nil?
             Log.error("No options var for var: " + var.name)
           elsif optCls.nil?
@@ -192,7 +193,7 @@ module XCTETypescript
         if !var.selectFrom.nil?
           optVar = Utils.instance.getOptionsVarFor(var)
           reqVar = Utils.instance.getOptionsReqVarFor(var)
-          optCls = ClassModelManager.findClass(var.selectFrom, "standard")
+          optCls = ClassModelManager.findClass(var.selectFrom, "class_standard")
           if optVar.nil?
             Log.error("No options var for var: " + var.name)
           elsif optCls.nil?

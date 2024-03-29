@@ -5,27 +5,27 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes,
+# This class generates source files for "class_standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_cpp/utils'
-require 'plugins_core/lang_cpp/method_empty'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "plugins_core/lang_cpp/utils"
+require "plugins_core/lang_cpp/method_empty"
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
-require 'code_structure/code_elem_parent'
-require 'lang_file'
-require 'x_c_t_e_plugin'
-require 'log'
+require "code_structure/code_elem_parent"
+require "lang_file"
+require "x_c_t_e_plugin"
+require "log"
 
 module XCTECpp
   class ClassStandard < ClassBase
     def initialize
-      @name = 'standard'
-      @language = 'cpp'
+      @name = "class_standard"
+      @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
-      @activeVisibility = ''
+      @activeVisibility = ""
     end
 
     def get_unformatted_class_name(cls)
@@ -37,13 +37,13 @@ module XCTECpp
 
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
-      bld.lfExtension = Utils.instance.get_extension('header')
+      bld.lfExtension = Utils.instance.get_extension("header")
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       cppFile = SourceRendererCpp.new
       cppFile.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
-      cppFile.lfExtension = Utils.instance.get_extension('body')
+      cppFile.lfExtension = Utils.instance.get_extension("body")
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
 
@@ -56,32 +56,32 @@ module XCTECpp
     def genHeaderComment(cls, bld)
       cfg = UserSettings.instance
 
-      bld.add('/**')
-      bld.add('* @class ' + Utils.instance.get_styled_class_name(cls.get_u_name))
+      bld.add("/**")
+      bld.add("* @class " + Utils.instance.get_styled_class_name(cls.get_u_name))
 
-      bld.add('* @author ' + cfg.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
+      bld.add("* @author " + cfg.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
 
-      bld.add('* ' + cfg.codeCompany) if !UserSettings.instance.codeCompany.nil? && cfg.codeCompany.size > 0
+      bld.add("* " + cfg.codeCompany) if !UserSettings.instance.codeCompany.nil? && cfg.codeCompany.size > 0
 
       if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
-        bld.add('*')
-        bld.add('* ' + cfg.codeLicense)
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
 
-      bld.add('* ')
+      bld.add("* ")
 
       if !cls.model.description.nil?
         cls.model.description.each_line do |descLine|
-          bld.add('* ' << descLine.strip) if descLine.strip.size > 0
+          bld.add("* " << descLine.strip) if descLine.strip.size > 0
         end
       end
 
-      bld.add('*/')
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
     def genHeader(cls, bld)
-      @activeVisibility = ''
+      @activeVisibility = ""
       render_ifndef(cls, bld)
 
       # get list of includes needed by functions
@@ -97,40 +97,40 @@ module XCTECpp
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          bld.add('#define ' << Utils.instance.get_size_const(var) << ' ' << var.arrayElemCount.to_s)
+          bld.add("#define " << Utils.instance.get_size_const(var) << " " << var.arrayElemCount.to_s)
         end
       }))
 
       bld.separate if Utils.instance.has_an_array?(cls)
 
       for pd in cls.pre_defs
-        bld.add('class ' + pd + ';')
+        bld.add("class " + pd + ";")
       end
 
-      classDec = 'class ' + Utils.instance.get_styled_class_name(cls.get_u_name)
+      classDec = "class " + Utils.instance.get_styled_class_name(cls.get_u_name)
 
       inheritFrom = []
 
       for bcls in cls.base_classes
-        inheritFrom.push(bcls.visibility + ' ' + Utils.instance.getClassTypeName(bcls))
+        inheritFrom.push(bcls.visibility + " " + Utils.instance.getClassTypeName(bcls))
       end
 
       for icls in cls.interfaces
-        inheritFrom.push(icls.visibility + ' ' + Utils.instance.getClassTypeName(icls))
+        inheritFrom.push(icls.visibility + " " + Utils.instance.getClassTypeName(icls))
       end
 
-      classDec += ' : ' + inheritFrom.join(', ') if inheritFrom.length > 0
+      classDec += " : " + inheritFrom.join(", ") if inheritFrom.length > 0
 
       bld.start_class(classDec)
 
       bld.indent
 
       # Generate class variables
-      process_header_var_group(cls, bld, cls.model.varGroup, 'public')
+      process_header_var_group(cls, bld, cls.model.varGroup, "public")
 
       bld.separate
 
-      process_header_var_group(cls, bld, cls.model.varGroup, 'private')
+      process_header_var_group(cls, bld, cls.model.varGroup, "private")
 
       bld.separate
 
@@ -140,12 +140,12 @@ module XCTECpp
           if funItem.visibility != @activeVisibility
             @activeVisibility = funItem.visibility
             bld.unindent
-            bld.add(funItem.visibility + ':')
+            bld.add(funItem.visibility + ":")
             bld.indent
           end
 
           if funItem.isTemplate
-            templ = XCTEPlugin.findMethodPlugin('cpp', funItem.name)
+            templ = XCTEPlugin.findMethodPlugin("cpp", funItem.name)
             if !templ.nil?
               if funItem.isInline
                 templ.get_declaration_inline(cls, bld, funItem)
@@ -156,7 +156,7 @@ module XCTECpp
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
           else # Must be an empty function
-            templ = XCTEPlugin.findMethodPlugin('cpp', 'method_empty')
+            templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
             if !templ.nil?
               if funItem.isInline
                 templ.get_declaration_inline(cls, bld, funItem)
@@ -184,15 +184,15 @@ module XCTECpp
 
       bld.unindent
 
-      bld.add('//+XCTE Custom Code Area')
+      bld.add("//+XCTE Custom Code Area")
       bld.add
-      bld.add('//-XCTE Custom Code Area')
+      bld.add("//-XCTE Custom Code Area")
 
       bld.end_class
 
       render_namespace_end(cls, bld)
 
-      bld.add('#endif')
+      bld.add("#endif")
     end
 
     # process variable group
@@ -201,7 +201,7 @@ module XCTECpp
         if var.visibility != @activeVisibility
           @activeVisibility = var.visibility
           bld.unindent
-          bld.add(var.visibility + ':')
+          bld.add(var.visibility + ":")
           bld.indent
         end
 
@@ -211,20 +211,20 @@ module XCTECpp
 
     def process_header_var_group_getter_setters(cls, bld, vGroup)
       for var in vGroup.vars
-        if 'public' != @activeVisibility
-          @activeVisibility = 'public'
+        if "public" != @activeVisibility
+          @activeVisibility = "public"
           bld.unindent
-          bld.add('public:')
+          bld.add("public:")
           bld.indent
         end
 
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if var.genGet
-            templ = XCTEPlugin.findMethodPlugin('cpp', 'method_get')
+            templ = XCTEPlugin.findMethodPlugin("cpp", "method_get")
             templ.get_declaration(var, bld) if !templ.nil?
           end
           if var.genSet
-            templ = XCTEPlugin.findMethodPlugin('cpp', 'method_set')
+            templ = XCTEPlugin.findMethodPlugin("cpp", "method_set")
             templ.get_declaration(var, bld) if !templ.nil?
           end
         end
@@ -245,17 +245,17 @@ module XCTECpp
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isStatic
-          bld.add(Utils.instance.get_type_name(var) << ' ')
-          bld.same_line(Utils.instance.get_styled_class_name(cls.get_u_name) << ' :: ')
+          bld.add(Utils.instance.get_type_name(var) << " ")
+          bld.same_line(Utils.instance.get_styled_class_name(cls.get_u_name) << " :: ")
           bld.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array
-            bld.same_line('[' + Utils.instance.get_size_const(var) << ']')
+            bld.same_line("[" + Utils.instance.get_size_const(var) << "]")
           elsif !var.defaultValue.nil?
-            bld.same_line(' = ' + var.defaultValue)
+            bld.same_line(" = " + var.defaultValue)
           end
 
-          bld.same_line(';')
+          bld.same_line(";")
         end
       }))
 
@@ -265,16 +265,16 @@ module XCTECpp
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin('cpp', fun.name)
+            templ = XCTEPlugin.findMethodPlugin("cpp", fun.name)
 
-            Log.debug('processing template for function ' + fun.name)
+            Log.debug("processing template for function " + fun.name)
             if !templ.nil?
               templ.render_function(cls, bld, fun) if !fun.isInline
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
             end
           else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin('cpp', 'method_empty')
+            templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
             if !templ.nil?
               templ.render_function(cls, bld, fun) if !fun.isInline
             else
@@ -284,9 +284,9 @@ module XCTECpp
         end
       end
 
-      bld.add('//+XCTE Custom Code Area')
+      bld.add("//+XCTE Custom Code Area")
       bld.add
-      bld.add('//-XCTE Custom Code Area')
+      bld.add("//-XCTE Custom Code Area")
 
       render_namespace_end(cls, bld)
     end

@@ -6,10 +6,10 @@
 module CodeStructure
   class CodeElemClassSpec < CodeElem
     attr_accessor :element_id, :model, :plug_name, :path, :namespace, :language, :includes, :uses, :actions, :gen_cfg, :functions,
-            :base_classes, :interfaces, :injections, :interface_namespace, :interface_path, :test_namespace, :test_path, :template_params,
-            :var_prefix, :pre_defs, :file_path, :standard_class, :standard_class_type, :custom_code, :data_class,
-            :class_group_ref, :class_group_name, :variant, :feature_group
-        
+                  :base_classes, :interfaces, :injections, :interface_namespace, :interface_path, :test_namespace, :test_path, :template_params,
+                  :var_prefix, :pre_defs, :file_path, :standard_class, :standard_class_type, :custom_code, :data_class,
+                  :class_group_ref, :class_group_name, :variant, :feature_group
+
     def initialize(cls, model, parent_elem)
       super(CodeElemTypes::ELEM_CLASS_GEN, parent_elem)
 
@@ -43,11 +43,11 @@ module CodeStructure
       @variant = nil
       @feature_group = nil
     end
-    
+
     def addInclude(iPath, iName, iType = nil)
       iPath = String.new if iPath.nil?
 
-      raise 'Include name cannot be nil' if iName.nil? || iName.length == 0
+      raise "Include name cannot be nil" if iName.nil? || iName.length == 0
 
       curInc = nil
 
@@ -94,7 +94,7 @@ module CodeStructure
 
     def get_u_name
       if !@name.nil? && @name.length > 0
-        return @name 
+        return @name
       end
 
       return @model.name
@@ -109,7 +109,7 @@ module CodeStructure
 
     def findVarInGroup(vGroup, varName, varNs)
       for var in vGroup.vars
-        return var if var.name == varName && (varNs.nil? || var.namespace.get('.') == varNs)
+        return var if var.name == varName && (varNs.nil? || var.namespace.get(".") == varNs)
       end
 
       for grp in vGroup.varGroups
@@ -120,7 +120,7 @@ module CodeStructure
       return nil
     end
 
-    def get_function(funName)  
+    def get_function(funName)
       for fun in @functions
         if fun.name == funName
           return fun

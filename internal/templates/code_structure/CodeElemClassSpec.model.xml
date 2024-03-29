@@ -5,8 +5,8 @@
 	Class specification
 	</description>
 
-	<gen_class type="standard" ns="code structure" path="code structure">
-	  	<base_class cname="code elem" plugin="standard" />
+	<gen_class type="class_standard" ns="code structure" path="code structure">
+	  	<base_class cname="code elem" plugin="class_standard" />
 		<function name="method_constructor" >	
 			<param name="parent elem"	utype="code elem"  nullable="true" />    
 			<param name="model"			utype="code elem data spec" nullable="true" />

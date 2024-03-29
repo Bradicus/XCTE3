@@ -15,7 +15,7 @@
 		<var name="namespace"	utype="code elem namespace" />
 	</var_group>
 				
-	<gen_class type="standard" ns="code structure" path="code structure">
+	<gen_class type="class_standard" ns="code structure" path="code structure">
 		<function name="method_constructor" >
 			<param name="name" type="String" />
 			<param name="path" type="String" />

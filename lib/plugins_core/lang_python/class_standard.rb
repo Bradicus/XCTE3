@@ -5,23 +5,23 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes,
+# This class generates source files for "class_standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_python/utils'
-require 'plugins_core/lang_python/x_c_t_e_python'
+require "plugins_core/lang_python/utils"
+require "plugins_core/lang_python/x_c_t_e_python"
 
-require 'code_structure/code_elem_parent'
-require 'code_structure/code_elem_model'
-require 'lang_file'
+require "code_structure/code_elem_parent"
+require "code_structure/code_elem_model"
+require "lang_file"
 
 module XCTEPython
   class ClassStandard < ClassBase
     def initialize
-      @name = 'standard'
-      @language = 'python'
+      @name = "class_standard"
+      @language = "python"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -34,7 +34,7 @@ module XCTEPython
 
       rend = SourceRendererPython.new
       rend.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
-      rend.lfExtension = Utils.instance.get_extension('body')
+      rend.lfExtension = Utils.instance.get_extension("body")
       genPythonFileComment(cls, rend)
       render_body_content(cls, rend)
 
@@ -46,36 +46,36 @@ module XCTEPython
     def genPythonFileComment(cls, rend)
       cfg = UserSettings.instance
 
-      rend.add('##')
-      rend.add('# Class:: ' + Utils.instance.get_styled_file_name(cls.get_u_name))
+      rend.add("##")
+      rend.add("# Class:: " + Utils.instance.get_styled_file_name(cls.get_u_name))
 
       if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
-        rend.add('# ' + cfg.codeCompany)
+        rend.add("# " + cfg.codeCompany)
       end
 
       if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
         rend.add("#\n# License:: " + cfg.codeLicense)
       end
 
-      rend.add('# ')
+      rend.add("# ")
 
       return if cls.model.description.nil?
 
       cls.model.description.each_line do |descLine|
         if descLine.strip.size > 0
-          rend.add('# ' << descLine.chomp)
+          rend.add("# " << descLine.chomp)
         end
       end
     end
 
-    def render_body_content(cls, bld)      
-      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
+    def render_body_content(cls, bld)
+      classDec = cls.model.visibility + " class " + get_class_name(cls)
 
       for par in (0..cls.base_classes.size)
         if par == 0 && !cls.base_classes[par].nil?
-          classDec << ' : ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+          classDec << " : " << cls.base_classes[par].visibility << " " << cls.base_classes[par].name
         elsif !cls.base_classes[par].nil?
-          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+          classDec << ", " << cls.base_classes[par].visibility << " " << cls.base_classes[par].name
         end
       end
 
@@ -101,14 +101,14 @@ module XCTEPython
       rend.add
 
       for inc in cls.includes
-        rend.add('import ' + inc.path + inc.name)
+        rend.add("import " + inc.path + inc.name)
       end
 
       if !cls.includes.empty?
         rend.add
       end
 
-      rend.start_class('class ' + Utils.instance.get_styled_file_name(cls.get_u_name))
+      rend.start_class("class " + Utils.instance.get_styled_file_name(cls.get_u_name))
 
       for var in varArray
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic == true
@@ -122,14 +122,14 @@ module XCTEPython
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin('python', fun.name)
+            templ = XCTEPlugin.findMethodPlugin("python", fun.name)
             if !templ.nil?
               templ.render_function(cls, fun, rend)
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
             end
           else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin('python', 'method_empty')
+            templ = XCTEPlugin.findMethodPlugin("python", "method_empty")
             if !templ.nil?
               templ.render_function(cls, fun, rend)
             else
@@ -139,7 +139,7 @@ module XCTEPython
         end
       end
 
-      rend.end_block('# class ' + Utils.instance.get_styled_file_name(cls.get_u_name))
+      rend.end_block("# class " + Utils.instance.get_styled_file_name(cls.get_u_name))
       rend.add
     end
   end

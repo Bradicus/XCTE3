@@ -5,7 +5,7 @@
 	Code Element for Templates or in some languages arrays
 	</description>
 
-	<gen_class type="standard" ns="code structure" path="code structure" >
+	<gen_class type="class_standard" ns="code structure" path="code structure" >
 		<function name="method_constructor" >
 			<param name="tpl string" type="String" />
 		</function>

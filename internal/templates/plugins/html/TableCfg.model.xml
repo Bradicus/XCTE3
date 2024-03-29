@@ -14,7 +14,7 @@
 		<var name="is embedded"		type="Boolean" default="false" />
 	</var_group>
 
-	<gen_class type="standard" ns="plugins.html" path="plugins/html" >
+	<gen_class type="class_standard" ns="plugins.html" path="plugins/html" >
 		<function name="method_constructor" >
 			<param name="item class"			utype="class spec" />
 			<param name="container var name"	type="String" />

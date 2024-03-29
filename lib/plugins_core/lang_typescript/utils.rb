@@ -198,7 +198,7 @@ module XCTETypescript
             bld.add(get_styled_variable_name(var) + ": new FormArray([]),")
           end
         else
-          otherClass = ClassModelManager.findVarClass(var, "standard")
+          otherClass = ClassModelManager.findVarClass(var, "class_standard")
 
           if !var.isList
             if !otherClass.nil?

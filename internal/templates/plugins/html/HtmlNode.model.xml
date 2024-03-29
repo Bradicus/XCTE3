@@ -5,7 +5,7 @@
 	HTML node
 	</description>
 
-	<gen_class type="standard" ns="plugins.html" path="plugins/html" >
+	<gen_class type="class_standard" ns="plugins.html" path="plugins/html" >
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">		

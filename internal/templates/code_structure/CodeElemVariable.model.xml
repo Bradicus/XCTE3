@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model name="code elem variable">
 
-	<gen_class type="standard" ns="code structure" path="code structure">
+	<gen_class type="class_standard" ns="code structure" path="code structure">
 		<description>
 			This class stores information on variables in a model.
 		</description>
 
-		<base_class cname="code elem" plugin="standard" />
+		<base_class cname="code elem" plugin="class_standard" />
 
 		<function name="method_constructor" >
 			<param name="parentElem" utype="code elem" />

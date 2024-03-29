@@ -5,22 +5,22 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
-# This class generates source files for "standard" classes,
+# This class generates source files for "class_standard" classes,
 # those being regualar classes for now, vs possible library specific
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_php/utils'
-require 'plugins_core/lang_php/x_c_t_e_php'
+require "plugins_core/lang_php/utils"
+require "plugins_core/lang_php/x_c_t_e_php"
 
-require 'code_structure/code_elem_parent'
-require 'lang_file'
+require "code_structure/code_elem_parent"
+require "lang_file"
 
 module XCTEPhp
   class ClassStandard < ClassBase
     def initialize
-      @name = 'standard'
-      @language = 'php'
+      @name = "class_standard"
+      @language = "php"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -37,15 +37,15 @@ module XCTEPhp
       end
 
       if !codeClass.includes.empty?
-        outCode.add('')
+        outCode.add("")
       end
 
-      outCode.add('class ' << get_class_name(codeClass))
-      outCode.add('{')
+      outCode.add("class " << get_class_name(codeClass))
+      outCode.add("{")
 
       render_functions(codeClass, outCode)
 
-      outCode.add('}')
+      outCode.add("}")
     end
   end
 end

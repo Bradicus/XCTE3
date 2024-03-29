@@ -5,7 +5,7 @@
 	Filters data set down to current page
 	</description>
 				
-	<gen_class type="standard" ns="filters" path="filters" init_vars="true">
+	<gen_class type="class_standard" ns="filters" path="filters" init_vars="true">
 	</gen_class>
 
 	<var_group genGet="true" genSet="true" init_vars="true">
