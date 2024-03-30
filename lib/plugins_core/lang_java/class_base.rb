@@ -1,5 +1,5 @@
-require 'plugins_core/lang_java/utils'
-require 'x_c_t_e_class_base'
+require "plugins_core/lang_java/utils"
+require "x_c_t_e_class_base"
 
 # This class contains functions that may be usefull in any type of class
 module XCTEJava
@@ -13,7 +13,7 @@ module XCTEJava
     end
 
     def get_sql_util(cls)
-      if cls.model.findClassSpecByPluginName('tsql_data_store') != nil
+      if cls.model.findClassSpecByPluginName("tsql_data_store") != nil
         return XCTETSql::Utils.instance
       else
         return XCTESql::Utils.instance
@@ -25,7 +25,7 @@ module XCTEJava
 
       bld = get_source_renderer()
       bld.lfName = get_default_utils().get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = get_default_utils().get_extension('body')
+      bld.lfExtension = get_default_utils().get_extension("body")
 
       process_dependencies(cls, bld)
 
@@ -46,7 +46,7 @@ module XCTEJava
       # Process namespace items
       return unless cls.namespace.hasItems?
 
-      bld.add('package ' + cls.namespace.get('.') + ';')
+      bld.add("package " + cls.namespace.get(".") + ";")
       bld.separate
     end
 
@@ -59,14 +59,16 @@ module XCTEJava
         process_fuction_dependencies(cls, bld, fun)
       end
 
-      cls.addUse('java.time.LocalDateTime') if cls.model.hasVariableType('datetime')
+      cls.addUse("java.time.LocalDateTime") if cls.model.hasVariableType("datetime")
 
-      cls.addUse('import java.util.List') if hasList(cls)
+      cls.addUse("import java.util.List") if hasList(cls)
 
       return if cls.data_class.nil?
 
       Utils.instance.requires_class_ref(cls, cls.data_class)
       #  Utils.instance.requires_class_type(cls, cls.dataClass, "class_standard")
+
+      super
     end
 
     def process_fuction_dependencies(cls, bld, fun)
@@ -84,7 +86,7 @@ module XCTEJava
       bld.seperate_if(cls.uses.length > 0)
 
       for use in cls.uses
-        bld.add('import ' + use.namespace.get('.') + ';')
+        bld.add("import " + use.namespace.get(".") + ";")
 
         # if inc.itype == "<"
         #   bld.add("#include <" << incPathAndName << ">")
@@ -101,11 +103,11 @@ module XCTEJava
     def render_header_var_group_getter_setters(cls, bld)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
-          templ = XCTEPlugin.findMethodPlugin('java', 'method_get')
+          templ = XCTEPlugin.findMethodPlugin("java", "method_get")
           templ.render_function(var, bld) if !templ.nil?
         end
         if var.genSet
-          templ = XCTEPlugin.findMethodPlugin('java', 'method_set')
+          templ = XCTEPlugin.findMethodPlugin("java", "method_set")
           templ.render_function(var, bld) if !templ.nil?
         end
       }))
@@ -115,24 +117,22 @@ module XCTEJava
       cfg = UserSettings.instance
       headerString = String.new
 
-      bld.add('/**')
-      bld.add('* @class ' + get_class_name(cls))
+      bld.add("/**")
+      bld.add("* @class " + get_class_name(cls))
 
-      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
-
-
+      bld.add("* @author " + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
       bld.add("*\n* " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
 
-      bld.add('* ')
+      bld.add("* ")
 
       if !cls.description.nil?
         cls.description.each_line do |descLine|
-          bld.add('* ' << descLine.chomp) if descLine.strip.size > 0
+          bld.add("* " << descLine.chomp) if descLine.strip.size > 0
         end
       end
 
-      bld.add('*/')
+      bld.add("*/")
 
       headerString
     end

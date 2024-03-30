@@ -1,4 +1,4 @@
-require 'plugins_core/lang_typescript/class_base'
+require "plugins_core/lang_typescript/class_base"
 
 ##
 # Class:: ClassInterface
@@ -6,8 +6,8 @@ require 'plugins_core/lang_typescript/class_base'
 module XCTETypescript
   class ClassInterface < ClassBase
     def initialize
-      @name = 'ts_interface'
-      @language = 'typescript'
+      @name = "ts_interface"
+      @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -20,7 +20,7 @@ module XCTETypescript
 
       bld = SourceRendererTypescript.new
       bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
+      bld.lfExtension = Utils.instance.get_extension("body")
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
       render_file_comment(cls, bld)
@@ -36,7 +36,7 @@ module XCTETypescript
 
       # Generate class variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        Utils.instance.try_add_include_for_var(cls, var, 'standard') if !Utils.instance.is_primitive(var)
+        Utils.instance.try_add_include_for_var(cls, var, "class_standard") if !Utils.instance.is_primitive(var)
       }))
     end
 
@@ -45,7 +45,7 @@ module XCTETypescript
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
       bld.separate
-      bld.start_block('export interface ' + get_class_name(cls))
+      bld.start_block("export interface " + get_class_name(cls))
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         bld.add(Utils.instance.get_var_dec(var))

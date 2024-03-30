@@ -3,43 +3,43 @@
 # Author:: Brad Ottoson
 #
 
-require 'plugins_core/lang_java/utils'
-require 'plugins_core/lang_java/class_base'
-require 'plugins_core/lang_java/source_renderer_java'
+require "plugins_core/lang_java/utils"
+require "plugins_core/lang_java/class_base"
+require "plugins_core/lang_java/source_renderer_java"
 
-require 'code_structure/code_elem_use'
-require 'code_structure/code_elem_namespace'
-require 'code_structure/code_elem_parent'
-require 'lang_file'
-require 'x_c_t_e_plugin'
+require "code_structure/code_elem_use"
+require "code_structure/code_elem_namespace"
+require "code_structure/code_elem_parent"
+require "lang_file"
+require "x_c_t_e_plugin"
 
 module XCTEJava
   class ClassWebApiController < ClassBase
     def initialize
-      @name = 'web_api_controller'
-      @language = 'java'
+      @name = "web_api_controller"
+      @language = "java"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def get_unformatted_class_name(cls)
-      cls.get_u_name + ' controller'
+      cls.get_u_name + " controller"
     end
 
     def render_file_comment(_cls, bld)
-      bld.add('/**')
-      bld.add('* Web API controller')
-      bld.add('*/')
+      bld.add("/**")
+      bld.add("* Web API controller")
+      bld.add("*/")
     end
 
     def process_dependencies(cls, bld)
-      Utils.instance.requires_class_type(cls, cls, 'standard')
-      cls.addUse('org.springframework.web.bind.annotation.*')
-      cls.addUse('org.springframework.beans.factory.annotation.Autowired')
+      Utils.instance.requires_class_type(cls, cls, "class_standard")
+      cls.addUse("org.springframework.web.bind.annotation.*")
+      cls.addUse("org.springframework.beans.factory.annotation.Autowired")
 
-      cls.addUse('org.springframework.http.HttpStatus')
-      cls.addUse('org.springframework.http.MediaType')
-      cls.addUse('org.springframework.http.ResponseEntity')
-      cls.addUse('org.mapstruct.factory.Mappers')
+      cls.addUse("org.springframework.http.HttpStatus")
+      cls.addUse("org.springframework.http.MediaType")
+      cls.addUse("org.springframework.http.ResponseEntity")
+      cls.addUse("org.mapstruct.factory.Mappers")
 
       super
     end
@@ -49,28 +49,28 @@ module XCTEJava
       # Add in any dependencies required by functions
       Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
         if fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin('java', fun.name)
+          templ = XCTEPlugin.findMethodPlugin("java", fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)
           else
-            puts 'ERROR no plugin for function: ' + fun.name + '   language: java'
+            puts "ERROR no plugin for function: " + fun.name + "   language: java"
           end
         end
       }))
 
-      classDec = cls.model.visibility + ' class ' + get_class_name(cls)
+      classDec = cls.model.visibility + " class " + get_class_name(cls)
 
       for par in (0..cls.base_classes.size)
         if !cls.base_classes[par].nil?
-          classDec << ', ' << cls.base_classes[par].visibility << ' ' << cls.base_classes[par].name
+          classDec << ", " << cls.base_classes[par].visibility << " " << cls.base_classes[par].name
         end
       end
 
-      bld.add('@RestController')
+      bld.add("@RestController")
       bld.start_class(classDec)
 
       if cls.model.data_filter.paging.page_sizes.length > 0
-        bld.add('final List<Integer> pageSizes = List.of(' + cls.model.data_filter.paging.page_sizes.join(',') + ');')
+        bld.add("final List<Integer> pageSizes = List.of(" + cls.model.data_filter.paging.page_sizes.join(",") + ");")
         bld.separate
       end
 
@@ -83,16 +83,16 @@ module XCTEJava
       bld.separate
 
       for inj in cls.injections
-        bld.add('@Autowired')
+        bld.add("@Autowired")
         bld.add(Utils.instance.get_var_dec(inj))
       end
 
-      mapperName = 'mapper'
+      mapperName = "mapper"
 
       if !cls.data_class.nil?
-        mapperClassName = Utils.instance.get_styled_class_name(cls.data_class.model_name + ' mapper')
+        mapperClassName = Utils.instance.get_styled_class_name(cls.data_class.model_name + " mapper")
         bld.separate
-        bld.add(mapperClassName + ' ' + mapperName + ' = Mappers.getMapper( ' + mapperClassName + '.class );')
+        bld.add(mapperClassName + " " + mapperName + " = Mappers.getMapper( " + mapperClassName + ".class );")
         bld.separate
       end
 

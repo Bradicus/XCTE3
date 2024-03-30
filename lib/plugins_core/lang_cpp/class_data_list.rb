@@ -7,43 +7,43 @@
 #
 # This class generates source files for "data list" classes
 
-require 'plugins_core/lang_cpp/utils'
-require 'plugins_core/lang_cpp/method_empty'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "plugins_core/lang_cpp/utils"
+require "plugins_core/lang_cpp/method_empty"
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
-require 'code_structure/code_elem_model'
-require 'code_structure/code_elem_var_group'
-require 'code_structure/code_elem_parent'
-require 'lang_file'
-require 'x_c_t_e_plugin'
+require "code_structure/code_elem_model"
+require "code_structure/code_elem_var_group"
+require "code_structure/code_elem_parent"
+require "lang_file"
+require "x_c_t_e_plugin"
 
 module XCTECpp
   class ClassDataList < XCTEPlugin
     def initialize
-      @name = 'data_list'
-      @language = 'cpp'
+      @name = "data_list"
+      @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
-      @author = 'Brad Ottoson'
+      @author = "Brad Ottoson"
     end
 
     def get_unformatted_class_name(cls)
-      cls.get_u_name + ' container'
+      cls.get_u_name + " container"
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
       # Use the standard class once we've added the necessary components
-      stdClass = XCTEPlugin.findClassPlugin('cpp', 'standard')
+      stdClass = XCTEPlugin.findClassPlugin("cpp", "class_standard")
 
       listInfo = XCTECpp::Utils.getDataListInfo(cls.data_node)
 
       #      puts "Var name is: " << listInfo['varClassName']
       #      puts "Template type is: " << listInfo['cppTemplateType']
 
-      cls.includesList.push(CodeElemInclude.new(cls.coreClass, ''))
+      cls.includesList.push(CodeElemInclude.new(cls.coreClass, ""))
 
-      cls.includesList.push(CodeElemInclude.new(listInfo['cppTemplateType'], '')) if !listInfo['cppTemplateType'].nil?
+      cls.includesList.push(CodeElemInclude.new(listInfo["cppTemplateType"], "")) if !listInfo["cppTemplateType"].nil?
 
       #      newGroup = CodeStructure::CodeElemVarGroup.new
       #      newVar = CodeElemVariable.new
@@ -52,7 +52,7 @@ module XCTECpp
       #      newVar.templateType = listInfo['cppTemplateType'];
       #      newGroup.vars.push(newVar);
 
-      containerClass = CodeElemParent.new(cls.coreClass + 'Container', 'public')
+      containerClass = CodeElemParent.new(cls.coreClass + "Container", "public")
       # containerClass.name =
       # containerClass.visibility = "public"
 
@@ -62,13 +62,13 @@ module XCTECpp
 
       listHFile = LangFile.new
       listHFile.lfName = cls.name
-      listHFile.lfExtension = XCTECpp::Utils.get_extension('header')
+      listHFile.lfExtension = XCTECpp::Utils.get_extension("header")
       listHFile.lfContents = stdClass.genHeaderComment(cls, cfg)
       listHFile.lfContents << stdClass.genHeader(cls, cfg)
 
       listCppFile = LangFile.new
       listCppFile.lfName = cls.name
-      listCppFile.lfExtension = XCTECpp::Utils.get_extension('body')
+      listCppFile.lfExtension = XCTECpp::Utils.get_extension("body")
       listCppFile.lfContents = stdClass.genHeaderComment(cls, cfg)
       listCppFile.lfContents << stdClass.genBody(cls, cfg)
 
