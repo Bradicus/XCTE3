@@ -60,7 +60,7 @@ module XCTEJava
       bld.add("*/")
 
       bld.add("public void map(" + @mapParams.join(", ") + ");")
-      bld.add("public " + tParam.name + " mapTo" + tParam.name + "(" + fParam.name + " src);")
+      #   bld.add("public " + tParam.name + " mapTo" + tParam.name + "(" + fParam.name + " src);")
     end
 
     def genListMapper(_cls, bld, _fun)

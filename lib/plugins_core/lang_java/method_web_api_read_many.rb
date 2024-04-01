@@ -41,6 +41,7 @@ module XCTEJava
       cls.addUse("org.springframework.data.domain.Sort")
       cls.addUse("org.springframework.data.domain.Page")
       cls.addUse("com.example.demo.dto.FilteredPageRespTpl")
+      cls.addUse("java.util.function.Function")
 
       @dsClass = cls.model.findClassSpecByPluginName("class_data_set")
 
@@ -156,16 +157,30 @@ module XCTEJava
       end
 
       bld.separate
+
+      to_type = Utils.instance.get_styled_class_name(cls.get_u_name)
+
       if !@dsClass.nil?
-        bld.add "var dataSet = new " + @returnType + "();"
-        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.get_styled_class_name(cls.get_u_name) + "(item));"
-        bld.add "dataSet.items = mappedItems;"
-        bld.separate
-        bld.add("return dataSet;")
-      elsif !cls.data_class.nil?
-        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.get_styled_class_name(cls.get_u_name) + "(item));"
+        from_type = Utils.instance.get_styled_class_name(@dsClass)
         bld.add "var response = new " + @returnType + "();"
-        bld.add "response.pageCount = mappedItems.getTotalPages();"
+        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.get_styled_class_name(cls.get_u_name) + "(item));"
+        bld.add "response.items = mappedItems;"
+        bld.separate
+        bld.add("return response;")
+      elsif !cls.data_class.nil?
+        from_type = Utils.instance.get_styled_class_name(data_class.get_u_name)
+
+        bld.start_block "var mappedItems = items.map(new Function<" + from_type + ", " + to_type + ">()"
+        bld.add "@Override"
+        bld.start_block "public " + to_type + " apply(" + from_type + " item)"
+        bld.add to_type + " dto = new " + to_type + "();"
+        bld.add "mapper.map(item, dto);"
+        bld.add "return dto;"
+        bld.end_block
+        bld.end_block ");"
+
+        bld.add "var response = new " + @returnType + "();"
+        bld.add "response.pageCount = items.getTotalPages();"
         bld.add "response.data = mappedItems.getContent();"
       else
         bld.add "var response = new " + @returnType + "();"
