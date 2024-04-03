@@ -168,7 +168,7 @@ module XCTECpp
             end
           end
         elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          bld.add(Utils.instance.getComment(funItem))
+          bld.add(Utils.instance.get_comment(funItem))
         elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           if funItem.formatText == "\n"
             bld.add

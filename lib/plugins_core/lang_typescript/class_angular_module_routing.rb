@@ -157,7 +157,7 @@ module XCTETypescript
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           bld.add(get_var_dec(var))
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          bld.same_line(getComment(var))
+          bld.same_line(get_comment(var))
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end

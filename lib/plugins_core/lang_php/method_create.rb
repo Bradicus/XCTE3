@@ -7,11 +7,10 @@
 #
 # This plugin creates a get meathod for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_php/x_c_t_e_php.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_php/x_c_t_e_php.rb"
 
 class XCTEPhp::MethodGet < XCTEPlugin
-
   def initialize
     @name = "method_create"
     @language = "php"
@@ -27,40 +26,38 @@ class XCTEPhp::MethodGet < XCTEPlugin
   def render_function(codeClass, cfg)
     readDef = String.new
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
-	readDef << "\n"
-	
-    readDef << "       public function create() {\n";
+    readDef << "\n"
+
+    readDef << "       public function create() {\n"
     readDef <<
-			"$serializer = JMS\Serializer\SerializerBuilder::create()->build();
+      "$serializer = JMS\Serializer\SerializerBuilder::create()->build();
 					"
-			"$data = $serializer->deserialize(file_get_contents('php://input'), '', 'json')
+    "$data = $serializer->deserialize(file_get_contents('php://input'), '', 'json')
 			
 			foreach ($data as $varName => varValue)
 			{
 			}"
-    
-			"{ return($this->" << varSec.name << "); };\n"
-    
+
+    "{ return($this->" << varSec.name << "); };\n"
 
     for varSec in varArray
       if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == "true"
         if !varSec.isPointer
           if varSec.arrayElemCount == 0
-              readDef << "( $new" << XCTEPhp::Utils::getCapitalizedFirst(varSec.name)
-              readDef << ")\t{ $this->" << varSec.name << " = $new" << XCTEPhp::Utils::getCapitalizedFirst(varSec.name) << "; };\n"
+            readDef << "( $new" << XCTEPhp::Utils::get_capitalized_first(varSec.name)
+            readDef << ")\t{ $this->" << varSec.name << " = $new" << XCTEPhp::Utils::get_capitalized_first(varSec.name) << "; };\n"
           end
         end
-
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        readDef << "    " << XCTEPhp::Utils::getComment(varSec)
+        readDef << "    " << XCTEPhp::Utils::get_comment(varSec)
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         readDef << varSec.formatText
       end
     end
 
-    return(readDef);
+    return(readDef)
   end
 end
 

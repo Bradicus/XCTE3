@@ -48,7 +48,7 @@ module XCTEMySql
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def self.getComment(var)
+    def self.get_comment(var)
       return '/* ' << var.text << " */\n"
     end
 

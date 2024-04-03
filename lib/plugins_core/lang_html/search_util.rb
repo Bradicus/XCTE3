@@ -64,7 +64,7 @@ module XCTEHtml
         .add_class("form-control")
         .add_attribute("type", "search")
         .add_attribute("placeholder", "Search")
-        .add_attribute("id", Utils.instance.getStyledUrlName(id_name))
+        .add_attribute("id", Utils.instance.get_styled_url_name(id_name))
         .add_attribute("(keyup)", Utils.instance.get_styled_function_name(search_fun_name) + "($event)")
     end
   end

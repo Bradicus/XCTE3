@@ -123,9 +123,9 @@ module XCTETypescript
       route.push(cls.variant) if !cls.variant.nil?
 
       if !cls.model.name.include?(actionName)
-        route.push(Utils.instance.getStyledUrlName(cls.model.name) + "-" + actionName)
+        route.push(Utils.instance.get_styled_url_name(cls.model.name) + "-" + actionName)
       else
-        route.push(Utils.instance.getStyledUrlName(cls.model.name))
+        route.push(Utils.instance.get_styled_url_name(cls.model.name))
       end
 
       return route

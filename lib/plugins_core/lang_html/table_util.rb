@@ -70,8 +70,8 @@ module XCTEHtml
 
       return tableDiv
 
-      # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.get_u_name()) + '/view/{{item.id}}">View</a></td>')
-      # bld.add('<td><a class="button" routerLink="/' + Utils.instance.getStyledUrlName(cls.get_u_name()) + '/edit/{{item.id}}">Edit</a></td>')
+      # bld.add('<td><a class="button" routerLink="/' + Utils.instance.get_styled_url_name(cls.get_u_name()) + '/view/{{item.id}}">View</a></td>')
+      # bld.add('<td><a class="button" routerLink="/' + Utils.instance.get_styled_url_name(cls.get_u_name()) + '/edit/{{item.id}}">Edit</a></td>')
       # bld.end_block("</tr>")
       # bld.end_block("</tbody>")
 

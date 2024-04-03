@@ -20,7 +20,7 @@ class CodeNameStyling
 
   # Format name in pascal case
   def self.stylePascal(name)
-    return self.getCapitalizedFirst(self.styleCamel(name))
+    return self.get_capitalized_first(self.styleCamel(name))
   end
 
   # Format name in camel case
@@ -28,7 +28,7 @@ class CodeNameStyling
     nameParts = name.split(" ")
 
     (1..nameParts.length - 1).each do |i|
-      nameParts[i] = self.getCapitalizedFirst(nameParts[i])
+      nameParts[i] = self.get_capitalized_first(nameParts[i])
     end
 
     return(nameParts.join(""))
@@ -56,7 +56,7 @@ class CodeNameStyling
   end
 
   # Capitalizes the first letter of a string
-  def self.getCapitalizedFirst(str)
+  def self.get_capitalized_first(str)
     newStr = String.new
     newStr += str[0, 1].capitalize
 

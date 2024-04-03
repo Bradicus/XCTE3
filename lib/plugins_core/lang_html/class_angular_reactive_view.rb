@@ -1,4 +1,4 @@
-require 'plugins_core/lang_typescript/utils'
+require "plugins_core/lang_typescript/utils"
 
 ##
 # Class:: ClassAngularReactiveView
@@ -8,8 +8,8 @@ module XCTEHtml
     def initialize
       super
 
-      @name = 'class_angular_reactive_view'
-      @language = 'html'
+      @name = "class_angular_reactive_view"
+      @language = "html"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -21,8 +21,8 @@ module XCTEHtml
       srcFiles = []
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + '.component')
-      bld.lfExtension = Utils.instance.get_extension('body')
+      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + ".component")
+      bld.lfExtension = Utils.instance.get_extension("body")
       # render_file_comment(cls, bld)
       render_body_content(cls, bld)
 
@@ -33,19 +33,19 @@ module XCTEHtml
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      nested = (cls.data_node.attributes['nested'] == 'true')
-      contentNode = Utils.instance.make_node(cls.gen_cfg, 'div')
+      nested = (cls.data_node.attributes["nested"] == "true")
+      contentNode = Utils.instance.make_node(cls.gen_cfg, "div")
 
-      @formName = CodeNameStyling.getStyled(cls.get_u_name + ' form', Utils.instance.langProfile.variableNameStyle)
+      @formName = CodeNameStyling.getStyled(cls.get_u_name + " form", Utils.instance.langProfile.variableNameStyle)
       formNode = nil
 
       if !nested
-        contentNode.add_child(Utils.instance.make_node(cls.gen_cfg, 'h2').add_text(cls.model.name.capitalize))
-        formNode = Utils.instance.make_node(cls.gen_cfg, 'form')
-                        .add_attribute('[formGroup]', @formName)
+        contentNode.add_child(Utils.instance.make_node(cls.gen_cfg, "h2").add_text(cls.model.name.capitalize))
+        formNode = Utils.instance.make_node(cls.gen_cfg, "form")
+                        .add_attribute("[formGroup]", @formName)
       else
-        formNode = formNode = Utils.instance.make_node(cls.gen_cfg, 'div')
-                                   .add_attribute('[formGroup]', @formName)
+        formNode = formNode = Utils.instance.make_node(cls.gen_cfg, "div")
+                                   .add_attribute("[formGroup]", @formName)
       end
 
       contentNode.add_child(formNode)
@@ -76,13 +76,13 @@ module XCTEHtml
 
     def process_object_var(cls, _vGroup, var, rowContainer)
       vName = Utils.instance.get_styled_variable_name(var)
-      fieldsetNode = Utils.instance.make_node(cls.gen_cfg, 'fieldset')
-                          .add_attribute('formGroupName', vName)
-                          .add_class('row', 'form-group')
+      fieldsetNode = Utils.instance.make_node(cls.gen_cfg, "fieldset")
+                          .add_attribute("formGroupName", vName)
+                          .add_class("row", "form-group")
 
       rowContainer.add_child(fieldsetNode)
 
-      legNode = Utils.instance.make_node(cls.gen_cfg, 'legend')
+      legNode = Utils.instance.make_node(cls.gen_cfg, "legend")
                      .add_text(var.getdisplay_name)
       fieldsetNode.add_child(legNode)
 
@@ -93,10 +93,10 @@ module XCTEHtml
       if !varCls.nil?
         each_var(uevParams.wCls(varCls)
           .wVarCb(lambda { |innerVar|
-                    fieldsetNode.add_child(make_field(cls, innerVar, vName))
-                  }))
+            fieldsetNode.add_child(make_field(cls, innerVar, vName))
+          }))
       else
-        Log.error('Unable to find varible class for var: ' + var.name + '  type: ' + var.getUType)
+        Log.error("Unable to find varible class for var: " + var.name + "  type: " + var.getUType)
       end
     end
 
@@ -104,13 +104,13 @@ module XCTEHtml
       vName = Utils.instance.get_styled_variable_name(var)
       # List of primitive "ids" linked to an options list
       if Utils.instance.is_primitive(var) && !var.selectFrom.nil?
-        optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
-        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + 'Item', 'async')
+        optVar = XCTETypescript::Utils.instance.get_options_var_for(var)
+        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
         rowContainer.add_child(tableNode)
         # Not an options list, just a reglar array of data
       else
         # if var.relation != nil
-        #   optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+        #   optVar = XCTETypescript::Utils.instance.get_options_var_for(var)
         #   varCls = ClassModelManager.findVarClass(optVar)
         #   if (varCls == nil)
         #     puts "Unable to find variable type called " + var.getUType()
@@ -122,22 +122,22 @@ module XCTEHtml
         #   rowContainer.add_child(tableNode)
         # else
         varCls = ClassModelManager.findVarClass(var)
-        puts 'Unable to find variable call ' + var.getUType if varCls.nil?
+        puts "Unable to find variable call " + var.getUType if varCls.nil?
 
-        rowContainer.add_child(HtmlNode.new('h2').add_text(var.name.capitalize))
+        rowContainer.add_child(HtmlNode.new("h2").add_text(var.name.capitalize))
         tableNode = TableUtil.instance.make_table(
-          TableCfg.new(varCls, 'item.' + vName, TableContainerTypes::LIST, vName + 'Item', false, true))
-          
-          
-          #varCls, 'item.' + vName, vName + 'Item', false, '', true)
+          TableCfg.new(varCls, "item." + vName, TableContainerTypes::LIST, vName + "Item", false, true)
+        )
+
+        #varCls, 'item.' + vName, vName + 'Item', false, '', true)
         rowContainer.add_child(tableNode)
         # end
       end
     end
 
     def add_row_node(cls, rowContainer)
-      rowNode = Utils.instance.make_node(cls.gen_cfg, 'div')
-                     .add_class('row', 'form-group')
+      rowNode = Utils.instance.make_node(cls.gen_cfg, "div")
+                     .add_class("row", "form-group")
 
       rowContainer.add_child(rowNode)
 
@@ -147,50 +147,50 @@ module XCTEHtml
     def make_field(cls, var, var_prefix)
       varName = Utils.instance.get_styled_variable_name(var)
       formVar = CodeNameStyling.getStyled(@formName, Utils.instance.langProfile.variableNameStyle)
-      fldNode = HtmlNode.new('div')
+      fldNode = HtmlNode.new("div")
 
-      if cls.gen_cfg.usesExternalDependency('bootstrap')
-        fldNode.add_class('col-md-3')
+      if cls.gen_cfg.usesExternalDependency("bootstrap")
+        fldNode.add_class("col-md-3")
 
-        fldNode.add_class('visually-hidden') if var.name.downcase == 'id'
+        fldNode.add_class("visually-hidden") if var.name.downcase == "id"
       end
 
       if !var_prefix.nil?
-        varId = var_prefix + '-' + varName
+        varId = var_prefix + "-" + varName
       else
         varId = varName
       end
 
-      labelNode = HtmlNode.new('label').add_text(var.getdisplay_name)
-      inputNode = HtmlNode.new('input')
-      selectNode = HtmlNode.new('select')
+      labelNode = HtmlNode.new("label").add_text(var.getdisplay_name)
+      inputNode = HtmlNode.new("input")
+      selectNode = HtmlNode.new("select")
 
       fldNode.add_child(labelNode)
 
-      if cls.gen_cfg.usesExternalDependency('bootstrap')
-        labelNode.add_class('form-label')
-        if var.getUType.downcase == 'boolean'
-          inputNode.add_class('form-check-input')
+      if cls.gen_cfg.usesExternalDependency("bootstrap")
+        labelNode.add_class("form-label")
+        if var.getUType.downcase == "boolean"
+          inputNode.add_class("form-check-input")
         else
-          inputNode.add_class('form-control')
+          inputNode.add_class("form-control")
         end
-        selectNode.add_class('form-select')
+        selectNode.add_class("form-select")
       end
 
-      labelNode.add_attribute('for', varId)
+      labelNode.add_attribute("for", varId)
 
       if !var.selectFrom.nil?
-        itemName = CodeNameStyling.getStyled(var.selectFrom + ' item', Utils.instance.langProfile.variableNameStyle)
+        itemName = CodeNameStyling.getStyled(var.selectFrom + " item", Utils.instance.langProfile.variableNameStyle)
 
-        selectNode.add_attribute('id', varId)
-        selectNode.add_attribute('formControlName', Utils.instance.get_styled_variable_name(var, ''))
+        selectNode.add_attribute("id", varId)
+        selectNode.add_attribute("formControlName", Utils.instance.get_styled_variable_name(var, ""))
 
         fldNode.add_child(selectNode)
       else
         inputNode
-          .add_attribute('id', varId)
-          .add_attribute('formControlName', varName)
-          .add_attribute('type', Utils.instance.getInputType(var))
+          .add_attribute("id", varId)
+          .add_attribute("formControlName", varName)
+          .add_attribute("type", Utils.instance.getInputType(var))
         fldNode.add_child(inputNode)
       end
 
@@ -201,20 +201,20 @@ module XCTEHtml
         else
           formVarRef = formVar + ".get('" + varName + "')"
         end
-        validationNode = HtmlNode.new('div')
-                                 .add_attribute('*ngIf', formVarRef + '?.invalid && (' + formVarRef + '?.dirty || ' + formVarRef + '?.touched)')
-                                 .add_class('alert alert-danger')
+        validationNode = HtmlNode.new("div")
+                                 .add_attribute("*ngIf", formVarRef + "?.invalid && (" + formVarRef + "?.dirty || " + formVarRef + "?.touched)")
+                                 .add_class("alert alert-danger")
 
         if var.required
-          validationNode.add_child(HtmlNode.new('div')
-            .add_attribute('*ngIf', formVarRef + "?.errors?.['required']")
-            .add_text(var.getdisplay_name + ' is required'))
+          validationNode.add_child(HtmlNode.new("div")
+            .add_attribute("*ngIf", formVarRef + "?.errors?.['required']")
+            .add_text(var.getdisplay_name + " is required"))
         end
 
         if var.arrayElemCount > 0
-          validationNode.add_child(HtmlNode.new('div')
-            .add_attribute('*ngIf', formVarRef + "?.errors?.['maxlength']")
-            .add_text(var.getdisplay_name + ' must be ' + var.arrayElemCount.to_s + ' characters or less'))
+          validationNode.add_child(HtmlNode.new("div")
+            .add_attribute("*ngIf", formVarRef + "?.errors?.['maxlength']")
+            .add_text(var.getdisplay_name + " must be " + var.arrayElemCount.to_s + " characters or less"))
         end
 
         fldNode.add_child(validationNode)

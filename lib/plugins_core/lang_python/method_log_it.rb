@@ -64,7 +64,7 @@ class XCTEPython::MethodLogIt < XCTEPlugin
           logItString << indent << '    pStream << indent << self.' << var.name << "\n"
         end
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        logItString << indent << '    ' << XCTEPython::Utils.getComment(var)
+        logItString << indent << '    ' << XCTEPython::Utils.get_comment(var)
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         logItString << indent << var.formatText
       end

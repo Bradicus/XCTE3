@@ -104,7 +104,7 @@ module XCTECpp
             else
               bld.add("item." + curVarName + ".clear();")
               bld.start_block('for (auto child : json["' + curVarName + '"])')
-              bld.add("item." + curVarName + ".push_back(child.get<" + Utils.instance.getBaseTypeName(var) + ">());")
+              bld.add("item." + curVarName + ".push_back(child.get<" + Utils.instance.get_base_type_name(var) + ">());")
               bld.end_block
             end
           elsif !var.isList
@@ -118,10 +118,10 @@ module XCTECpp
             bld.start_block('for (auto aJson : json["' + curVarName + '"])')
 
             if var.isPointer(1)
-              bld.add(Utils.instance.getSingleItemTypeName(var) + " newVar(new " + Utils.instance.getBaseTypeName(var) + "());")
+              bld.add(Utils.instance.get_single_item_type_name(var) + " newVar(new " + Utils.instance.get_base_type_name(var) + "());")
               bld.add(Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, *newVar);")
             else
-              bld.add(Utils.instance.getSingleItemTypeName(var) + " newVar;")
+              bld.add(Utils.instance.get_single_item_type_name(var) + " newVar;")
               bld.add(Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, newVar);")
             end
 

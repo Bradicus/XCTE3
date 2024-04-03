@@ -117,12 +117,12 @@ module XCTEHtml
       vName = Utils.instance.get_styled_variable_name(var)
       # List of primitive "ids" linked to an options list
       if Utils.instance.is_primitive(var) && !var.selectFrom.nil?
-        optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+        optVar = XCTETypescript::Utils.instance.get_options_var_for(var)
         tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
         rowContainer.add_child(tableNode)
         # Not an options list, just a reglar array of data
       elsif !var.relation.nil?
-        optVar = XCTETypescript::Utils.instance.getOptionsVarFor(var)
+        optVar = XCTETypescript::Utils.instance.get_options_var_for(var)
         varCls = ClassModelManager.findVarClass(optVar)
         puts "Unable to find variable type called " + var.getUType if varCls.nil?
 

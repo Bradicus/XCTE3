@@ -7,11 +7,10 @@
 #
 # This plugin creates a get meathod for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_php/x_c_t_e_php.rb'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_php/x_c_t_e_php.rb"
 
 class XCTEPhp::MethodGet < XCTEPlugin
-
   def initialize
     @name = "method_get"
     @language = "php"
@@ -25,26 +24,23 @@ class XCTEPhp::MethodGet < XCTEPlugin
 
   # Returns definition string for this class's set method
   def render_function(codeClass, outCode)
-    
     varArray = Array.new
-    codeClass.getAllVarsFor(varArray);
+    codeClass.getAllVarsFor(varArray)
 
-	outCode.add
-	
+    outCode.add
+
     for varSec in varArray
       if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genGet == "true"
         if !varSec.isPointer
-          outCode.add("    public function get" << XCTEPhp::Utils::getCapitalizedFirst(varSec.name))
+          outCode.add("    public function get" << XCTEPhp::Utils::get_capitalized_first(varSec.name))
           outCode.add("() \t{ return($this->" << varSec.name << "); }")
         end
-
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        outCode.iadd(1, XCTEPhp::Utils::getComment(varSec))
+        outCode.iadd(1, XCTEPhp::Utils::get_comment(varSec))
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         outCode.add(varSec.formatText)
       end
     end
-	
   end
 end
 

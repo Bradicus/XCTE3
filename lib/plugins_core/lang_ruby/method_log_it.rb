@@ -67,7 +67,7 @@ class XCTERuby::MethodLogIt < XCTEPlugin
           logItString << indent << '    pStream << indent << @' << var.name << "\n"
         end
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        logItString << indent << '    ' << XCTERuby::Utils.getComment(var)
+        logItString << indent << '    ' << XCTERuby::Utils.get_comment(var)
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         logItString << indent << var.formatText
       end

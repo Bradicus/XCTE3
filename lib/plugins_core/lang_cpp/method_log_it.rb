@@ -78,7 +78,7 @@ module XCTECpp
             bld.add('    outStr << indent << ' << varSec.name << ' << std::endl;')
           end
         elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          bld.add('    ' + Utils.instance.getComment(varSec))
+          bld.add('    ' + Utils.instance.get_comment(varSec))
         elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(varSec.formatText)
         end

@@ -8,12 +8,12 @@
 # This plugin creates an equality assignment operator for making
 # a copy of a class
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
 class XCTECpp::MethodDefine < XCTEPlugin
   def initialize
-    @name = 'method_define'
-    @language = 'cpp'
+    @name = "method_define"
+    @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
   end
 
@@ -23,18 +23,18 @@ class XCTECpp::MethodDefine < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     eqString = String.new
-    seperator = ''
-    bld.add('void define(')
+    seperator = ""
+    bld.add("void define(")
 
     for var in varArray
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
-        bld.same_line(seperator + XCTECpp::Utils.get_type_name(var.vtype) + ' ')
-        bld.same_line('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
-        bld.same_line(seperator = ', ')
+        bld.same_line(seperator + XCTECpp::Utils.get_type_name(var.vtype) + " ")
+        bld.same_line("new" << XCTECpp::Utils.get_capitalized_first(var.name))
+        bld.same_line(seperator = ", ")
       end
     end
 
-    bld.same_line(');')
+    bld.same_line(");")
 
     return eqString
   end
@@ -45,48 +45,48 @@ class XCTECpp::MethodDefine < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     eqString = String.new
-    seperator = ''
-    bld.add('void define(')
+    seperator = ""
+    bld.add("void define(")
 
     for var in varArray
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
-        bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << ' ')
-        bld.same_line('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
-        seperator = ', '
+        bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << " ")
+        bld.same_line("new" << XCTECpp::Utils.get_capitalized_first(var.name))
+        seperator = ", "
       end
     end
 
-    bld.same_line(')')
+    bld.same_line(")")
     bld.start_block
     get_body(codeClass, bld)
   end
 
   # Returns definition string for this class's equality assignment operator
   def render_function(codeClass, bld)
-    seperator = ''
+    seperator = ""
     longArrayFound = false
     varArray = []
     codeClass.getAllVarsFor(varArray)
 
     bld.add("/**\n* Defines the variables in an object\n*/")
-    bld.add('void ' << codeClass.name << ' :: define(')
+    bld.add("void " << codeClass.name << " :: define(")
 
     for var in varArray
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
-        bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << ' ')
-        bld.same_line('new' << XCTECpp::Utils.getCapitalizedFirst(var.name))
-        seperator = ', '
+        bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << " ")
+        bld.same_line("new" << XCTECpp::Utils.get_capitalized_first(var.name))
+        seperator = ", "
       end
     end
 
-    bld.same_line(')')
+    bld.same_line(")")
     bld.start_block
 
     #    if codeClass.has_an_array
     #      eqString << "    unsigned int i;\n\n";
     #    end
 
-    eqString << get_body(codeClass, '    ')
+    eqString << get_body(codeClass, "    ")
 
     bld.end_block
     bld.add
@@ -95,7 +95,7 @@ class XCTECpp::MethodDefine < XCTEPlugin
   ## Get body of function
   def get_body(codeClass, _bld)
     eqString = String.new
-    seperator = ''
+    seperator = ""
     longArrayFound = false
     varArray = []
     codeClass.getAllVarsFor(varArray)
@@ -105,8 +105,8 @@ class XCTECpp::MethodDefine < XCTEPlugin
 
     for var in varArray
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && Utils.instance.is_primitive(var)
-        eqString << indent << var.name << ' = '
-        eqString << 'new' << Utils.instance.get_styled_variable_name(var) << ";\n"
+        eqString << indent << var.name << " = "
+        eqString << "new" << Utils.instance.get_styled_variable_name(var) << ";\n"
       end
     end
 

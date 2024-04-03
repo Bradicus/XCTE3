@@ -70,7 +70,7 @@ module XCTECpp
     end
 
     # Capitalizes the first letter of a string
-    def getCapitalizedFirst(str)
+    def get_capitalized_first(str)
       newStr = String.new
       newStr += str[0, 1].capitalize
 
@@ -81,7 +81,7 @@ module XCTECpp
 
     # Return the language type based on the generic type
     def get_type_name(var)
-      typeName = getSingleItemTypeName(var)
+      typeName = get_single_item_type_name(var)
 
       if var.templates.length > 0 && var.templates[0].isCollection
         tplType = @langProfile.get_type_name(var.templates[0].name)
@@ -91,8 +91,8 @@ module XCTECpp
       return typeName
     end
 
-    def getSingleItemTypeName(var)
-      typeName = getBaseTypeName(var)
+    def get_single_item_type_name(var)
+      typeName = get_base_type_name(var)
 
       singleTpls = var.templates
       singleTpls = singleTpls.drop(1) if singleTpls.length > 0 && singleTpls[0].isCollection
@@ -105,7 +105,7 @@ module XCTECpp
     end
 
     # Return the language type based on the generic type
-    def getBaseTypeName(var)
+    def get_base_type_name(var)
       nsPrefix = ""
       langType = @langProfile.get_type_name(var.getUType)
 
@@ -160,11 +160,11 @@ module XCTECpp
       return CodeNameStyling.getStyled(cls.name, @langProfile.classNameStyle)
     end
 
-    def getListTypeName(listTypeName)
+    def get_list_type_name(listTypeName)
       return @langProfile.get_type_name(listTypeName)
     end
 
-    def getComment(var)
+    def get_comment(var)
       return "/* " + var.text + " */\n"
     end
 

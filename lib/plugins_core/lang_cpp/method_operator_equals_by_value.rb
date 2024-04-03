@@ -80,7 +80,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
           end
         end
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.add(Utils.instance.getComment(var))
+        bld.add(Utils.instance.get_comment(var))
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         bld.add(var.formatText)
       end

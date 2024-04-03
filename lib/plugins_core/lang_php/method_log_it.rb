@@ -74,7 +74,7 @@ class XCTEPhp::MethodLogIt < XCTEPlugin
           # outCode.add("pStream.println(indent + " << varSec.name << ");")
         end
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        outCode.add(XCTEPhp::Utils.getComment(varSec))
+        outCode.add(XCTEPhp::Utils.get_comment(varSec))
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         outCode.add(varSec.formatText)
       end

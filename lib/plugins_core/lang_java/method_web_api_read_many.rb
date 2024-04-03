@@ -107,7 +107,7 @@ module XCTEJava
         end
       end
 
-      bld.add('@GetMapping(path = "' + Utils.instance.getStyledUrlName(cls.get_u_name) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
+      bld.add('@GetMapping(path = "' + Utils.instance.get_styled_url_name(cls.get_u_name) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
       bld.start_function_paramed("public " + @returnType + " Get" +
                                  Utils.instance.get_styled_class_name(cls.get_u_name) + "s", params)

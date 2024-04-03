@@ -7,15 +7,15 @@
 #
 # This class contains utility functions for a language
 
-require 'lang_profile'
-require 'utils_base'
+require "lang_profile"
+require "utils_base"
 
 module XCTECss
   class Utils < UtilsBase
     include Singleton
 
     def initialize
-      super('css')
+      super("css")
     end
 
     # Get a parameter declaration for a method parameter
@@ -24,10 +24,10 @@ module XCTECss
 
       pDec << get_type_name(var.vtype)
 
-      pDec << ' ' << var.name
+      pDec << " " << var.name
 
       if var.arrayElemCount > 0
-        pDec << '[]'
+        pDec << "[]"
       end
 
       return pDec
@@ -39,24 +39,24 @@ module XCTECss
       typeName = String.new
 
       if var.isConst
-        vDec << 'const '
+        vDec << "const "
       end
 
       if var.isStatic
-        vDec << 'static '
+        vDec << "static "
       end
 
       vDec << get_styled_variable_name(var)
-      vDec << ': ' + get_type_name(var)
+      vDec << ": " + get_type_name(var)
 
-      if var.arrayElemCount.to_i > 0 && var.vtype != 'String'
-        vDec << '[' + get_size_const(var) << ']'
+      if var.arrayElemCount.to_i > 0 && var.vtype != "String"
+        vDec << "[" + get_size_const(var) << "]"
       end
 
-      vDec << ';'
+      vDec << ";"
 
       if !var.comment.nil?
-        vDec << "\t/** " << var.comment << ' */'
+        vDec << "\t/** " << var.comment << " */"
       end
 
       return vDec
@@ -64,26 +64,26 @@ module XCTECss
 
     # Returns a size constant for the specified variable
     def get_size_const(var)
-      return 'ARRAYSZ_' << var.name.upcase
+      return "ARRAYSZ_" << var.name.upcase
     end
 
     # Get a type name for a variable
     def get_type_name(var)
-      typeName = getSingleItemTypeName(var)
+      typeName = get_single_item_type_name(var)
 
       if !var.listType.nil?
-        typeName = '[]'
+        typeName = "[]"
       end
 
       return typeName
     end
 
-    def getSingleItemTypeName(var)
-      typeName = ''
-      baseTypeName = getBaseTypeName(var)
+    def get_single_item_type_name(var)
+      typeName = ""
+      baseTypeName = get_base_type_name(var)
 
       if !var.templateType.nil?
-        typeName = var.templateType + '<' + baseTypeName + '>'
+        typeName = var.templateType + "<" + baseTypeName + ">"
       end
 
       if typeName.length == 0
@@ -94,10 +94,10 @@ module XCTECss
     end
 
     # Return the language type based on the generic type
-    def getBaseTypeName(var)
-      nsPrefix = ''
+    def get_base_type_name(var)
+      nsPrefix = ""
 
-      baseTypeName = ''
+      baseTypeName = ""
       if !var.vtype.nil?
         baseTypeName = @langProfile.get_type_name(var.vtype)
       else
@@ -109,7 +109,7 @@ module XCTECss
       return baseTypeName
     end
 
-    def getListTypeName(listTypeName)
+    def get_list_type_name(listTypeName)
       return @langProfile.get_type_name(listTypeName)
     end
 
@@ -120,12 +120,12 @@ module XCTECss
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def getComment(var)
-      return '/* ' << var.text << " */\n"
+    def get_comment(var)
+      return "/* " << var.text << " */\n"
     end
 
     # Capitalizes the first letter of a string
-    def getCapitalizedFirst(str)
+    def get_capitalized_first(str)
       newStr = String.new
       newStr += str[0, 1].capitalize
 
@@ -137,8 +137,8 @@ module XCTECss
     end
 
     # process variable group
-    def renderReactiveFormGroup(_cls, bld, vGroup, isDisabled)
-      bld.same_line('this.fb.group({')
+    def render_reactive_form_group(_cls, bld, vGroup, isDisabled)
+      bld.same_line("this.fb.group({")
       bld.indent
 
       for var in vGroup.vars
@@ -147,22 +147,22 @@ module XCTECss
             if var.isList
               bld.add(Utils.instance.get_styled_variable_name(var) + ": [''],")
             else
-              bld.add(Utils.instance.get_styled_variable_name(var) + ': this.fb.array(),')
+              bld.add(Utils.instance.get_styled_variable_name(var) + ": this.fb.array(),")
             end
           else
             otherClass = ClassModelManager.findVarClass(var)
 
             if var.isList
-              bld.add(Utils.instance.get_styled_variable_name(var) + ': ')
+              bld.add(Utils.instance.get_styled_variable_name(var) + ": ")
               if !otherClass.nil?
                 for group in otherClass.model.groups
-                  renderReactiveFormGroup(otherClass, bld, group, isDisabled)
+                  render_reactive_form_group(otherClass, bld, group, isDisabled)
                 end
               else
                 bld.same_line("[''],")
               end
             else
-              bld.add(Utils.instance.get_styled_variable_name(var) + ': this.fb.array(),')
+              bld.add(Utils.instance.get_styled_variable_name(var) + ": this.fb.array(),")
             end
           end
         end
@@ -172,11 +172,11 @@ module XCTECss
       end
 
       bld.unindent
-      bld.add('}),')
+      bld.add("}),")
     end
 
-    def getStyledUrlName(name)
-      return CodeNameStyling.getStyled(name, 'DASH_LOWER')
+    def get_styled_url_name(name)
+      return CodeNameStyling.getStyled(name, "DASH_LOWER")
     end
   end
 end

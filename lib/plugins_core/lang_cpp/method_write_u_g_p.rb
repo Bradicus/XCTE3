@@ -68,7 +68,7 @@ class XCTECpp::MethodWriteUGP < XCTEPlugin
         end
 
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        writeDef << '    ' << XCTECpp::Utils.getComment(varSec)
+        writeDef << '    ' << XCTECpp::Utils.get_comment(varSec)
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         writeDef << varSec.formatText
       end

@@ -14,7 +14,7 @@ module XCTETypescript
     # Returns the code for the content for this function
     def render_function(cls, bld, _fun)
       className = Utils.instance.get_styled_class_name(cls.get_u_name)
-      urlName = Utils.instance.getStyledUrlName(cls.get_u_name)
+      urlName = Utils.instance.get_styled_url_name(cls.get_u_name)
 
       inst_fun = CodeStructure::CodeElemFunction.new(cls)
       inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("req", "FilteredPageReqTpl<" + className + ">"))

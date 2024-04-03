@@ -62,7 +62,7 @@ module XCTETypescript
                          Utils.instance.get_styled_class_name(var.getUType))
         end
         if !var.selectFrom.nil?
-          optVar = Utils.instance.getOptionsVarFor(var)
+          optVar = Utils.instance.get_options_var_for(var)
           cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(optVar.getUType),
                          Utils.instance.get_styled_class_name(optVar.getUType))
 
@@ -108,9 +108,9 @@ module XCTETypescript
       # Generate any selection list variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
-          optVar = Utils.instance.getOptionsVarFor(var)
+          optVar = Utils.instance.get_options_var_for(var)
           bld.add(Utils.instance.get_var_dec(optVar))
-          reqVar = Utils.instance.getOptionsReqVarFor(var)
+          reqVar = Utils.instance.get_options_req_var_for(var)
           bld.add(Utils.instance.get_var_dec(reqVar))
         end
       }))
@@ -126,7 +126,7 @@ module XCTETypescript
       # Generate any selection list variable parameters for data stores
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
-          optVar = Utils.instance.getOptionsVarFor(var)
+          optVar = Utils.instance.get_options_var_for(var)
           optCls = ClassModelManager.findClass(var.selectFrom, "class_standard")
           if optVar.nil?
             Log.error("No options var for var: " + var.name)
@@ -179,8 +179,8 @@ module XCTETypescript
       # Load any selection lists needed
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
-          optVar = Utils.instance.getOptionsVarFor(var)
-          reqVar = Utils.instance.getOptionsReqVarFor(var)
+          optVar = Utils.instance.get_options_var_for(var)
+          reqVar = Utils.instance.get_options_req_var_for(var)
           optCls = ClassModelManager.findClass(var.selectFrom, "class_standard")
           if optVar.nil?
             Log.error("No options var for var: " + var.name)
@@ -212,7 +212,7 @@ module XCTETypescript
       clsVar = CodeNameStyling.getStyled(cls.get_u_name + " form", Utils.instance.langProfile.variableNameStyle)
       bld.add(clsVar + " = ")
 
-      Utils.instance.renderReactiveFormGroup(cls, bld, vGroup, true)
+      Utils.instance.render_reactive_form_group(cls, bld, vGroup, true)
     end
   end
 end

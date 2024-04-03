@@ -73,7 +73,7 @@ module XCTERazor
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def getComment(var)
+    def get_comment(var)
       return '@* ' << var.text << " *@\n"
     end
   end

@@ -74,7 +74,7 @@ module XCTEJava
           hFile.same_line(' = ' + var.defaultValue) if !var.defaultValue.nil?
           hFile.same_line(',') if i != varArray.length - 1
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          hFile.add(Utils.instance.getComment(var))
+          hFile.add(Utils.instance.get_comment(var))
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           hFile.add(var.formatText)
         end

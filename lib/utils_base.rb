@@ -125,7 +125,7 @@ class UtilsBase
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         varFun.call(var)
       elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.same_line(getComment(var))
+        bld.same_line(get_comment(var))
       elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         bld.add(var.formatText)
       end
@@ -147,7 +147,7 @@ class UtilsBase
 
         params.funCb.call(clsFun) if clsFun.isTemplate
       elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.add(Utils.instance.getComment(funItem))
+        bld.add(Utils.instance.get_comment(funItem))
       elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         if funItem.formatText == "\n"
           bld.add
@@ -155,7 +155,7 @@ class UtilsBase
           bld.same_line(funItem.formatText)
         end
       elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.add(getComment(funItem))
+        bld.add(get_comment(funItem))
       elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         if funItem.formatText == "\n"
           bld.add

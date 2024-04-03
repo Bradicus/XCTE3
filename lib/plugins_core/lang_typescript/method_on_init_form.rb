@@ -36,7 +36,7 @@ module XCTETypescript
             end
           end
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          bld.add(XCTECpp::Utils.getComment(var))
+          bld.add(XCTECpp::Utils.get_comment(var))
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
           bld.add(var.formatText)
         end

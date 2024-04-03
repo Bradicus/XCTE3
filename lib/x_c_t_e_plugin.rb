@@ -1,5 +1,5 @@
-require 'params/utils_each_var_params'
-require 'managers/class_plugin_manager'
+require "params/utils_each_var_params"
+require "managers/plugin_manager"
 
 #
 # Copyright XCTE Contributors
@@ -15,10 +15,10 @@ class XCTEPlugin
   # @@pluginRegistry = Hash.new
   @@modelPlugins = {}
 
-  CAT_METHOD = 'method'
-  CAT_CLASS = 'class'
-  CAT_DERIVE = 'derive'
-  CAT_PROJECT = 'project'
+  CAT_METHOD = "method"
+  CAT_CLASS = "class"
+  CAT_DERIVE = "derive"
+  CAT_PROJECT = "project"
 
   def initialize
     # Need to be filled out by plugins
@@ -36,41 +36,41 @@ class XCTEPlugin
     #   end
     # end
 
-    Dir.foreach(codeRootDir + '/plugins_core') do |langDir|
-      next if !langDir.include?('lang_')
+    Dir.foreach(codeRootDir + "/plugins_core") do |langDir|
+      next if !langDir.include?("lang_")
 
-      ClassPluginManager.plugins[langDir[5..100]] = {}
+      PluginManager.plugins[langDir[5..100]] = {}
     end
 
-    ClassPluginManager.plugins.each do |langName, _langMethods|
-      langDir = codeRootDir + '/plugins_core/lang_' + langName
+    PluginManager.plugins.each do |langName, _langMethods|
+      langDir = codeRootDir + "/plugins_core/lang_" + langName
       if Dir.exist?(langDir)
         Find.find(langDir) do |path|
-          if FileTest.file?(path) && (path.include?('.rb') && !path.include?('.svn')) # not perfect but good enough
+          if FileTest.file?(path) && (path.include?(".rb") && !path.include?(".svn")) # not perfect but good enough
             # puts "Loading plugin: " + path + " for language: " + langName
             require path
           end
         end
       end
-      langDir = 'xcte/plugins_custom/lang_' + langName
+      langDir = "xcte/plugins_custom/lang_" + langName
       if Dir.exist?(langDir)
         Find.find(langDir) do |path|
-          if FileTest.file?(path) && (path.include?('.rb') && !path.include?('.svn')) # not perfect but good enough
+          if FileTest.file?(path) && (path.include?(".rb") && !path.include?(".svn")) # not perfect but good enough
             # puts "Loading plugin: " + path
-            require workingDir + '/' + path
+            require workingDir + "/" + path
           end
         end
       end
     end
 
-    #    ClassPluginManager.plugins.each do |langName, langMethods|
+    #    PluginManager.plugins.each do |langName, langMethods|
     #      langMethods = findLangPlugins(langName)
     #    end
   end
 
   # Register a plugin in the plugin repository
   def self.registerPlugin(plug)
-    ClassPluginManager.plugins[plug.language][plug.name] = plug
+    PluginManager.plugins[plug.language][plug.name] = plug
   end
 
   # Register a plugin in the plugin repository
@@ -99,8 +99,8 @@ class XCTEPlugin
 
   # Attempts to find the desired class plugin for the desired language
   def self.findMethodPlugin(lang, method)
-    ClassPluginManager.plugins[lang].each do |_plugKey, plug|
-      return plug if plug.name == method && plug.category == 'method'
+    PluginManager.plugins[lang].each do |_plugKey, plug|
+      return plug if plug.name == method && plug.category == "method"
     end
 
     nil
@@ -108,7 +108,7 @@ class XCTEPlugin
 
   # Attempts to find the desired method plugin for the desired language
   def self.findClassPlugin(lang, pluginName, _ns = nil)
-    ClassPluginManager.plugins[lang].each do |_plugKey, plug|
+    PluginManager.plugins[lang].each do |_plugKey, plug|
       return plug if plug.name == pluginName
     end
 
@@ -119,7 +119,7 @@ class XCTEPlugin
 
   # Attempts to find the desired method plugin for the desired language
   def self.findClassPluginByType(lang, classType, _ns = nil)
-    ClassPluginManager.plugins[lang].each do |_plugKey, plug|
+    PluginManager.plugins[lang].each do |_plugKey, plug|
       return plug if plug.get_unformatted_class_name == classType
     end
 
@@ -128,8 +128,8 @@ class XCTEPlugin
 
   # Attempts to find the desired project plugin for the desired language
   def self.findProjectPlugin(lang, prjType)
-    ClassPluginManager.plugins[lang].each do |_plugKey, plug|
-      return plug if plug.category == 'project' && plug.name == prjType
+    PluginManager.plugins[lang].each do |_plugKey, plug|
+      return plug if plug.category == "project" && plug.name == prjType
     end
 
     nil
@@ -147,7 +147,7 @@ class XCTEPlugin
   # end
 
   def self.getLanguages
-    ClassPluginManager.plugins
+    PluginManager.plugins
   end
 
   def self.getPlugins
@@ -157,10 +157,10 @@ class XCTEPlugin
   # Prints out a list of all the registered plugins and their information
   def self.listPlugins
     for plug in @@pluginRegistry
-      puts 'Name:     ' + plug.name
-      puts 'Language: ' + plug.language
-      puts 'Category: ' + plug.category
-      puts 'Author:   ' + plug.author
+      puts "Name:     " + plug.name
+      puts "Language: " + plug.language
+      puts "Category: " + plug.category
+      puts "Author:   " + plug.author
     end
   end
 
@@ -175,7 +175,7 @@ class XCTEPlugin
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         varFun.call(var)
       elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.same_line(getComment(var))
+        bld.same_line(get_comment(var))
       elsif !bld.nil? && var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         bld.add(var.formatText)
       end

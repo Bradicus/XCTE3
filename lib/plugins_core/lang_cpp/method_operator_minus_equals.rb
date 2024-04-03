@@ -79,7 +79,7 @@ class XCTECpp::MethodOperatorMinusEquals < XCTEPlugin
         end
 
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        eqString << '    ' << XCTECpp::Utils.getComment(var)
+        eqString << '    ' << XCTECpp::Utils.get_comment(var)
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         eqString << var.formatText
       end

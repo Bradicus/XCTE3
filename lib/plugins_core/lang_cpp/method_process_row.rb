@@ -64,7 +64,7 @@ class XCTECpp::MethodProcessRow < XCTEPlugin
         end
             
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        readDef << indent << XCTECpp::Utils::getComment(var)
+        readDef << indent << XCTECpp::Utils::get_comment(var)
       elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         readDef << var.formatText
       end

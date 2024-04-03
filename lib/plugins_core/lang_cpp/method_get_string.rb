@@ -77,7 +77,7 @@ class XCTECpp::MethodGetString < XCTEPlugin
           methodString << '    // outStr << ' << varSec.name << ";\n"
         end
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        methodString << '    ' << XCTECpp::Utils.getComment(varSec)
+        methodString << '    ' << XCTECpp::Utils.get_comment(varSec)
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         methodString << varSec.formatText
       end

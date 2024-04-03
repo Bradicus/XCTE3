@@ -46,7 +46,7 @@ module XCTETypescript
       params.push var
     end
 
-    def getParamDecForClass(cls, plug)
+    def get_param_dec_for_class(cls, plug)
       pDec = String.new
       pDec << CodeNameStyling.getStyled(plug.get_unformatted_class_name(cls), @langProfile.variableNameStyle) << ": "
 
@@ -108,7 +108,7 @@ module XCTETypescript
 
     # Get a type name for a variable
     def get_type_name(var)
-      typeName = getSingleItemTypeName(var)
+      typeName = get_single_item_type_name(var)
 
       if var.isList
         typeName = apply_template(var.templates[0], typeName)
@@ -121,8 +121,8 @@ module XCTETypescript
       return typeName
     end
 
-    def getSingleItemTypeName(var)
-      typeName = getBaseTypeName(var)
+    def get_single_item_type_name(var)
+      typeName = get_base_type_name(var)
 
       singleTpls = var.templates
       singleTpls = singleTpls.drop(1) if var.isList
@@ -146,7 +146,7 @@ module XCTETypescript
     end
 
     # Return the language type based on the generic type
-    def getBaseTypeName(var)
+    def get_base_type_name(var)
       nsPrefix = ""
 
       baseTypeName = ""
@@ -159,7 +159,7 @@ module XCTETypescript
       nsPrefix + baseTypeName
     end
 
-    def getListTypeName(listTypeName)
+    def get_list_type_name(listTypeName)
       @langProfile.get_type_name(listTypeName)
     end
 
@@ -170,12 +170,12 @@ module XCTETypescript
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def getComment(var)
+    def get_comment(var)
       "/* " << var.text << " */\n"
     end
 
     # Capitalizes the first letter of a string
-    def getCapitalizedFirst(str)
+    def get_capitalized_first(str)
       newStr = String.new
       newStr += str[0, 1].capitalize
 
@@ -185,7 +185,7 @@ module XCTETypescript
     end
 
     # process variable group
-    def renderReactiveFormGroup(cls, bld, _vGroup, isDisabled, separator = ";")
+    def render_reactive_form_group(cls, bld, _vGroup, isDisabled, separator = ";")
       bld.same_line("new FormGroup({")
       bld.indent
 
@@ -193,7 +193,7 @@ module XCTETypescript
         if is_primitive(var)
           hasMult = var.isList
           if !var.isList
-            bld.add(genPrimitiveFormControl(var, isDisabled) + ",")
+            bld.add(gen_primitive_form_control(var, isDisabled) + ",")
           else
             bld.add(get_styled_variable_name(var) + ": new FormArray([]),")
           end
@@ -205,10 +205,10 @@ module XCTETypescript
               if !var.selectFrom.nil?
                 bld.add(get_styled_variable_name(var, "", " id") + ": ")
                 idVar = cls.model.getIdentityVar
-                bld.same_line(getFormcontrolType(idVar, idVar.getUType, "", isDisabled) + ",")
+                bld.same_line(get_form_control_type(idVar, idVar.getUType, "", isDisabled) + ",")
               else
                 bld.add(get_styled_variable_name(var) + ": ")
-                renderReactiveFormGroup(otherClass, bld, otherClass.model.varGroup, isDisabled, ",")
+                render_reactive_form_group(otherClass, bld, otherClass.model.varGroup, isDisabled, ",")
               end
             else
               bld.add(get_styled_variable_name(var) + ": ")
@@ -224,7 +224,7 @@ module XCTETypescript
       bld.add("})" + separator)
     end
 
-    def genPrimitiveFormControl(var, isDisabled)
+    def gen_primitive_form_control(var, isDisabled)
       validators = []
       validators << "Validators.required" if var.required
       validators << "Validators.maxLength(" + var.arrayElemCount.to_s + ")" if var.arrayElemCount > 0
@@ -234,10 +234,10 @@ module XCTETypescript
         vdString = ", [" + validators.join(", ") + "]"
       end
 
-      get_styled_variable_name(var) + ": " + getFormcontrolType(var, vdString, isDisabled)
+      get_styled_variable_name(var) + ": " + get_form_control_type(var, vdString, isDisabled)
     end
 
-    def getFormcontrolType(var, vdString, isDisabled)
+    def get_form_control_type(var, vdString, isDisabled)
       utype = var.getUType.downcase
       if utype.start_with?("date")
         if !isDisabled
@@ -249,30 +249,30 @@ module XCTETypescript
 
       if Types.instance.inCategory(var, "text") || utype == "guid"
         if !isDisabled
-          return "new FormControl<" + getBaseTypeName(var) + ">(''" + vdString + ")"
+          return "new FormControl<" + get_base_type_name(var) + ">(''" + vdString + ")"
         else
-          return "new FormControl<" + getBaseTypeName(var) + ">({value: '', disabled: true}" + vdString + ")"
+          return "new FormControl<" + get_base_type_name(var) + ">({value: '', disabled: true}" + vdString + ")"
         end
       elsif utype == "boolean"
         if !isDisabled
-          return "new FormControl<" + getBaseTypeName(var) + ">(false)"
+          return "new FormControl<" + get_base_type_name(var) + ">(false)"
         else
-          return "new FormControl<" + getBaseTypeName(var) + ">({value: false, disabled: true})"
+          return "new FormControl<" + get_base_type_name(var) + ">({value: false, disabled: true})"
         end
       end
 
       if isDisabled
-        return "new FormControl<" + getBaseTypeName(var) + ">({value: 0, disabled: true}" + vdString + ")"
+        return "new FormControl<" + get_base_type_name(var) + ">({value: 0, disabled: true}" + vdString + ")"
       end
 
-      return "new FormControl<" + getBaseTypeName(var) + ">(0" + vdString + ")"
+      return "new FormControl<" + get_base_type_name(var) + ">(0" + vdString + ")"
     end
 
-    def getStyledUrlName(name)
+    def get_styled_url_name(name)
       CodeNameStyling.getStyled(name, "DASH_LOWER")
     end
 
-    def addClassnamesFor(clsList, otherClasses, language, classType)
+    def add_class_names_for(clsList, otherClasses, language, classType)
       for otherCls in otherClasses
         if otherCls.plug_name == classType
           plug = XCTEPlugin.findClassPlugin(language, classType)
@@ -281,9 +281,9 @@ module XCTETypescript
       end
     end
 
-    def getStyledPageName(var); end
+    def get_styled_page_name(var); end
 
-    def renderClassList(clsList, bld)
+    def render_class_list(clsList, bld)
       firstLine = true
       uniqueList = clsList.uniq
 
@@ -295,7 +295,7 @@ module XCTETypescript
       end
     end
 
-    def getRelatedClasses(cls)
+    def get_related_classes(cls)
       relClasses = []
 
       if !cls.model.feature_group.nil?
@@ -313,7 +313,7 @@ module XCTETypescript
       relClasses.uniq
     end
 
-    def getOptionsVarFor(var)
+    def get_options_var_for(var)
       optVar = var.clone
       optVar.name = var.selectFrom + " options"
       optVar.utype = var.selectFrom
@@ -327,7 +327,7 @@ module XCTETypescript
       optVar
     end
 
-    def getOptionsReqVarFor(var)
+    def get_options_req_var_for(var)
       optVar = var.clone
       optVar.name = var.selectFrom + " options req"
       optVar.utype = var.selectFrom

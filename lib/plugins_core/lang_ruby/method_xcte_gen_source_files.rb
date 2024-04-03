@@ -34,7 +34,7 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
     bld.end_block
     bld.end_block
     bld.start_block('elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT')
-    bld.add('bld.add(XCTERuby::Utils::getComment(varSec))')
+    bld.add('bld.add(XCTERuby::Utils::get_comment(varSec))')
     bld.unindent
     bld.start_block('elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT')
     bld.add('bld.same_line(varSec.formatText)')

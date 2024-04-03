@@ -7,15 +7,15 @@
 #
 # This class contains utility functions for a language
 
-require 'lang_profile'
-require 'utils_base'
+require "lang_profile"
+require "utils_base"
 
 module XCTEPhp
   class Utils < UtilsBase
     include Singleton
 
     def initialize
-      super('php')
+      super("php")
     end
 
     # Get a parameter declaration for a method parameter
@@ -34,16 +34,16 @@ module XCTEPhp
       vDec = String.new
 
       if !var.comment.nil?
-        vDec << '/** ' << var.comment << " */\n    "
+        vDec << "/** " << var.comment << " */\n    "
       end
 
       if var.isConst
         vDec << 'define("' << var.name << '");'
       else
-        vDec << 'protected $' << var.name
+        vDec << "protected $" << var.name
       end
 
-      vDec << ';'
+      vDec << ";"
 
       return vDec
     end
@@ -60,8 +60,8 @@ module XCTEPhp
 
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
-    def getComment(var)
-      return '/* ' << var.text << ' */'
+    def get_comment(var)
+      return "/* " << var.text << " */"
     end
 
     def is_primitive(var)
@@ -71,16 +71,16 @@ module XCTEPhp
     def getDataListInfo(classXML)
       dInfo = {}
 
-      classXML.elements.each('DATA_LIST_TYPE') do |dataListXML|
-        dInfo['varClassName'] = dataListXML.attributes['lType']
-        dInfo['cppTemplateType'] = dataListXML.attributes['cppTemplateType']
+      classXML.elements.each("DATA_LIST_TYPE") do |dataListXML|
+        dInfo["varClassName"] = dataListXML.attributes["lType"]
+        dInfo["cppTemplateType"] = dataListXML.attributes["cppTemplateType"]
       end
 
       return(dInfo)
     end
 
     # Capitalizes the first letter of a string
-    def getCapitalizedFirst(str)
+    def get_capitalized_first(str)
       newStr = String.new
       newStr += str[0, 1].capitalize
 

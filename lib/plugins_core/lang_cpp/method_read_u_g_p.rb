@@ -69,7 +69,7 @@ class XCTECpp::MethodReadUGP < XCTEPlugin
         end
 
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        readDef << '    ' << XCTECpp::Utils.getComment(varSec)
+        readDef << '    ' << XCTECpp::Utils.get_comment(varSec)
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         readDef << varSec.formatText
       end
