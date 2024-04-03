@@ -29,8 +29,8 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add("public " + Utils.instance.get_styled_class_name(cls.get_u_name) +
-              " " + Utils.instance.get_styled_class_name("put" + cls.get_u_name) + "(int id);")
+      bld.add("public " + Utils.instance.style_as_class(cls.get_u_name) +
+              " " + Utils.instance.style_as_class("put" + cls.get_u_name) + "(int id);")
     end
 
     def process_dependencies(cls, _bld, _fun)
@@ -45,7 +45,7 @@ module XCTEJava
       data_class = Utils.instance.get_data_class(cls)
       dataStoreName =
         CodeNameStyling.getStyled(data_class.get_u_name + " data store", Utils.instance.langProfile.variableNameStyle)
-      className = Utils.instance.get_styled_class_name(cls.get_u_name)
+      className = Utils.instance.style_as_class(cls.get_u_name)
       mapperName = "mapper"
 
       params = []
@@ -68,13 +68,13 @@ module XCTEJava
       bld.start_block "if (dataItem.isPresent())"
       if !cls.data_class.nil?
         bld.add mapperName + ".map(item, dataItem.get());"
-        bld.add(Utils.instance.get_styled_class_name(data_class.get_u_name) + " savedItem = " + dataStoreName + ".saveAndFlush(dataItem.get());")
+        bld.add(Utils.instance.style_as_class(data_class.get_u_name) + " savedItem = " + dataStoreName + ".saveAndFlush(dataItem.get());")
         bld.add "var returnItem = new " + className + "();"
         bld.add mapperName + ".map(savedItem, returnItem);"
 
         bld.add "return new ResponseEntity<" + className + ">(returnItem, HttpStatus.CREATED);"
       else
-        bld.add(Utils.instance.get_styled_class_name(data_class.get_u_name) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")
+        bld.add(Utils.instance.style_as_class(data_class.get_u_name) + " savedItem = " + dataStoreName + ".saveAndFlush(item);")
         bld.add "return new ResponseEntity<" + className + ">(savedItem, HttpStatus.CREATED);"
       end
 

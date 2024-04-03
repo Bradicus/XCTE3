@@ -12,7 +12,7 @@ module XCTECSharp
     def render_function(cls, bld, _fun)
       # process class variables
 
-      className = Utils.instance.get_styled_class_name(cls.model.name)
+      className = Utils.instance.style_as_class(cls.model.name)
       bld.start_function('void populateRandom(Faker faker, ' + className + ' item)')
 
       genPopulate(cls, bld, 'item.')

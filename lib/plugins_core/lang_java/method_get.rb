@@ -7,15 +7,15 @@
 #
 # This plugin creates a get meathod for a class
 
-require 'x_c_t_e_plugin'
-require 'plugins_core/lang_java/utils'
-require 'plugins_core/lang_java/x_c_t_e_java'
+require "x_c_t_e_plugin"
+require "plugins_core/lang_java/utils"
+require "plugins_core/lang_java/x_c_t_e_java"
 
 module XCTEJava
   class MethodGet < XCTEPlugin
     def initialize
-      @name = 'method_get'
-      @language = 'java'
+      @name = "method_get"
+      @language = "java"
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -24,8 +24,8 @@ module XCTEJava
       return unless var.genGet == true && !var.isPointer
 
       varName = Utils.instance.get_styled_variable_name(var)
-      bld.add('public ' + Utils.instance.get_type_name(var) + ' ' + Utils.instance.get_styled_function_name('get ' + var.name))
-      bld.same_line("()\t{ return(" + varName + '); }')
+      bld.add("public " + Utils.instance.get_type_name(var) + " " + Utils.instance.style_as_function("get " + var.name))
+      bld.same_line("()\t{ return(" + varName + "); }")
     end
   end
 end

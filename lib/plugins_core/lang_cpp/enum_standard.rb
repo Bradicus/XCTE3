@@ -10,19 +10,19 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_cpp/utils'
-require 'plugins_core/lang_cpp/method_empty'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "plugins_core/lang_cpp/utils"
+require "plugins_core/lang_cpp/method_empty"
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
-require 'code_structure/code_elem_parent'
-require 'lang_file'
-require 'x_c_t_e_plugin'
+require "code_structure/code_elem_parent"
+require "lang_file"
+require "x_c_t_e_plugin"
 
 module XCTECpp
   class EnumStandard < ClassBase
     def initialize
-      @name = 'enum'
-      @language = 'cpp'
+      @name = "enum"
+      @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -34,8 +34,8 @@ module XCTECpp
       srcFiles = []
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
-      bld.lfExtension = Utils.instance.get_extension('header')
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
+      bld.lfExtension = Utils.instance.get_extension("header")
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
@@ -47,38 +47,36 @@ module XCTECpp
     def genHeaderComment(cls, bld)
       cfg = UserSettings.instance
 
-      bld.add('/**')
-      bld.add('* @enum ' + cls.get_u_name)
+      bld.add("/**")
+      bld.add("* @enum " + cls.get_u_name)
 
-      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
-
-
+      bld.add("* @author " + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
       if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
-        bld.add('*')
-        bld.add('* ' + cfg.codeLicense)
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
 
-      bld.add('* ')
+      bld.add("* ")
 
       if !cls.model.description.nil?
         cls.model.description.each_line do |descLine|
-          bld.add('* ' << descLine.strip) if descLine.strip.size > 0
+          bld.add("* " << descLine.strip) if descLine.strip.size > 0
         end
       end
 
-      bld.add('*/')
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
     def genHeader(cls, bld)
       if cls.namespace.hasItems?
-        bld.add('#ifndef __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
-        bld.add('#define __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
+        bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
+        bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
         bld.add
       else
-        bld.add('#ifndef __' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
-        bld.add('#define __' + Utils.instance.get_styled_class_name(cls.get_u_name) + '_H')
+        bld.add("#ifndef __" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
+        bld.add("#define __" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
         bld.add
       end
 
@@ -86,15 +84,15 @@ module XCTECpp
 
       # Do automatic static array size declairations above class def
 
-      classDec = 'enum class ' + Utils.instance.get_styled_class_name(cls.get_u_name)
+      classDec = "enum class " + Utils.instance.style_as_class(cls.get_u_name)
 
       bld.start_block(classDec)
       enums = []
 
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        enumDec = Utils.instance.get_styled_enum_name(var.name)
-        enumDec += ' = ' + var.defaultValue if !var.defaultValue.nil?
+        enumDec = Utils.instance.style_as_enum(var.name)
+        enumDec += " = " + var.defaultValue if !var.defaultValue.nil?
         enums.push(enumDec)
       }))
 
@@ -104,17 +102,17 @@ module XCTECpp
           bld.add(enum)
           first = false
         else
-          bld.same_line(',')
+          bld.same_line(",")
           bld.add(enum)
         end
       end
 
-      bld.end_block(';')
+      bld.end_block(";")
 
       render_namespace_end(cls, bld)
 
       bld.separate
-      bld.add('#endif')
+      bld.add("#endif")
     end
   end
 end

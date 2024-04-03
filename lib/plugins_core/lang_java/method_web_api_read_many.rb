@@ -28,9 +28,9 @@ module XCTEJava
       @dsClass = cls.model.findClassSpecByPluginName("class_data_set")
 
       if !@dsClass.nil?
-        @returnType = Utils.instance.get_styled_class_name(@dsClass.get_u_name)
+        @returnType = Utils.instance.style_as_class(@dsClass.get_u_name)
       else
-        @returnType = "FilteredPageRespTpl<" + Utils.instance.get_styled_class_name(cls.get_u_name) + ">"
+        @returnType = "FilteredPageRespTpl<" + Utils.instance.style_as_class(cls.get_u_name) + ">"
       end
 
       get_body(cls, bld, fun)
@@ -53,7 +53,7 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add("public " + @returnType + " Get" + Utils.instance.get_styled_class_name(cls.get_u_name) + "s(" + params.join(", ") + ");")
+      bld.add("public " + @returnType + " Get" + Utils.instance.style_as_class(cls.get_u_name) + "s(" + params.join(", ") + ");")
     end
 
     def get_body(cls, bld, fun)
@@ -110,7 +110,7 @@ module XCTEJava
       bld.add('@GetMapping(path = "' + Utils.instance.get_styled_url_name(cls.get_u_name) + '", produces = MediaType.APPLICATION_JSON_VALUE)')
 
       bld.start_function_paramed("public " + @returnType + " Get" +
-                                 Utils.instance.get_styled_class_name(cls.get_u_name) + "s", params)
+                                 Utils.instance.style_as_class(cls.get_u_name) + "s", params)
 
       bld.add "Sort sort = null;"
       bld.start_block "if (sortBy.length() > 0 && sortBy.length() > 0)"
@@ -126,7 +126,7 @@ module XCTEJava
 
       bld.separate
       bld.add "PageRequest pageRequest = Filter.getPageRequest(pageNum, pageSize, sort);"
-      bld.add "Page<" + Utils.instance.get_styled_class_name(data_class.get_u_name) + "> items;"
+      bld.add "Page<" + Utils.instance.style_as_class(data_class.get_u_name) + "> items;"
 
       if cls.model.data_filter.has_non_paging_filters?
         fun = Utils.instance.get_search_fun(data_class, cls)
@@ -158,17 +158,17 @@ module XCTEJava
 
       bld.separate
 
-      to_type = Utils.instance.get_styled_class_name(cls.get_u_name)
+      to_type = Utils.instance.style_as_class(cls.get_u_name)
 
       if !@dsClass.nil?
-        from_type = Utils.instance.get_styled_class_name(@dsClass)
+        from_type = Utils.instance.style_as_class(@dsClass)
         bld.add "var response = new " + @returnType + "();"
-        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.get_styled_class_name(cls.get_u_name) + "(item));"
+        bld.add "var mappedItems = items.map(item -> " + mapperName + ".mapTo" + Utils.instance.style_as_class(cls.get_u_name) + "(item));"
         bld.add "response.items = mappedItems;"
         bld.separate
         bld.add("return response;")
       elsif !cls.data_class.nil?
-        from_type = Utils.instance.get_styled_class_name(data_class.get_u_name)
+        from_type = Utils.instance.style_as_class(data_class.get_u_name)
 
         bld.start_block "var mappedItems = items.map(new Function<" + from_type + ", " + to_type + ">()"
         bld.add "@Override"

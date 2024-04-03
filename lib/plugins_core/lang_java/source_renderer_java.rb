@@ -43,10 +43,10 @@ class SourceRendererJava < SourceRendererBraceDelim
     if typeName == 'void'
       add typeName + ' '
     else
-      add get_utils.get_styled_class_name(typeName) + ' '
+      add get_utils.style_as_class(typeName) + ' '
     end
 
-    same_line get_utils.get_styled_function_name(fun.name) + '(' + paramStrings.join(', ') + ');'
+    same_line get_utils.style_as_function(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
 
   def render_function_call(assignTo, callFrom, fun, paramStrings)
@@ -56,6 +56,6 @@ class SourceRendererJava < SourceRendererBraceDelim
       assignment = assignTo + ' = '
     end
 
-    add assignment + callFrom + '.' + get_utils.get_styled_function_name(fun.name) + '(' + paramStrings.join(', ') + ');'
+    add assignment + callFrom + '.' + get_utils.style_as_function(fun.name) + '(' + paramStrings.join(', ') + ');'
   end
 end

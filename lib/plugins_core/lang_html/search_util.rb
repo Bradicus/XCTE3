@@ -65,7 +65,7 @@ module XCTEHtml
         .add_attribute("type", "search")
         .add_attribute("placeholder", "Search")
         .add_attribute("id", Utils.instance.get_styled_url_name(id_name))
-        .add_attribute("(keyup)", Utils.instance.get_styled_function_name(search_fun_name) + "($event)")
+        .add_attribute("(keyup)", Utils.instance.style_as_function(search_fun_name) + "($event)")
     end
   end
 end

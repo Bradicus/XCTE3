@@ -14,7 +14,7 @@ module XCTETypescript
     def render_function(cls, bld, _fun)
       # process class variables
 
-      className = Utils.instance.get_styled_class_name(cls.model.name)
+      className = Utils.instance.style_as_class(cls.model.name)
 
       inst_fun = CodeStructure::CodeElemFunction.new(cls)
       inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("item", className))

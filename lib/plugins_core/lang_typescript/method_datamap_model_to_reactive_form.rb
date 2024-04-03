@@ -22,7 +22,7 @@ module XCTETypescript
 
       inst_fun = CodeStructure::CodeElemFunction.new(cls)
       inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("formGroup", 'FormGroup'))
-      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("src", Utils.instance.get_styled_class_name(cls.model.name)))
+      inst_fun.add_param(CodeStructure::CodeElemVariable.new(inst_fun).init_as_param("src", Utils.instance.style_as_class(cls.model.name)))
       
       bld.start_function('populate', inst_fun)
 

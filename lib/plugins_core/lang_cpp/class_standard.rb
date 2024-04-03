@@ -36,13 +36,13 @@ module XCTECpp
       srcFiles = []
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       bld.lfExtension = Utils.instance.get_extension("header")
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      cppFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       cppFile.lfExtension = Utils.instance.get_extension("body")
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
@@ -57,7 +57,7 @@ module XCTECpp
       cfg = UserSettings.instance
 
       bld.add("/**")
-      bld.add("* @class " + Utils.instance.get_styled_class_name(cls.get_u_name))
+      bld.add("* @class " + Utils.instance.style_as_class(cls.get_u_name))
 
       bld.add("* @author " + cfg.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
 
@@ -107,7 +107,7 @@ module XCTECpp
         bld.add("class " + pd + ";")
       end
 
-      classDec = "class " + Utils.instance.get_styled_class_name(cls.get_u_name)
+      classDec = "class " + Utils.instance.style_as_class(cls.get_u_name)
 
       inheritFrom = []
 
@@ -237,7 +237,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, bld)
-      bld.add('#include "' << Utils.instance.get_styled_class_name(cls.get_u_name) << '.h"')
+      bld.add('#include "' << Utils.instance.style_as_class(cls.get_u_name) << '.h"')
       bld.add
 
       render_namespace_start(cls, bld)
@@ -246,7 +246,7 @@ module XCTECpp
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isStatic
           bld.add(Utils.instance.get_type_name(var) << " ")
-          bld.same_line(Utils.instance.get_styled_class_name(cls.get_u_name) << " :: ")
+          bld.same_line(Utils.instance.style_as_class(cls.get_u_name) << " :: ")
           bld.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array

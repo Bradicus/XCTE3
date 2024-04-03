@@ -16,7 +16,7 @@ module XCTETypescript
       clsName = CodeNameStyling.getStyled(cls.get_u_name + " form", Utils.instance.langProfile.variableNameStyle)
       clsIntf = Utils.instance.create_var_for(cls, "class_standard")
 
-      bld.start_function("initData(item: " + Utils.instance.get_styled_class_name(cls.model.name) + "): void")
+      bld.start_function("initData(item: " + Utils.instance.style_as_class(cls.model.name) + "): void")
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isList
@@ -31,7 +31,7 @@ module XCTETypescript
           bld.add("item." + Utils.instance.get_styled_variable_name(var) + " = '';")
         else
           bld.add("item." + Utils.instance.get_styled_variable_name(var) +
-                  " = new " + Utils.instance.get_styled_class_name(var.getUType) + "();")
+                  " = new " + Utils.instance.style_as_class(var.getUType) + "();")
           varCls = ClassModelManager.findVarClass(var, "class_standard")
           if !varCls.nil?
             vService = Utils.instance.create_var_for(varCls, "class_angular_data_gen_service")

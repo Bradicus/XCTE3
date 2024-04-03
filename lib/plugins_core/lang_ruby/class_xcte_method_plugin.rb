@@ -34,7 +34,7 @@ module XCTERuby
       srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfName = lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
       render_file_comment(cls, bld)
       render_body_content(cls, bld)
@@ -80,7 +80,7 @@ module XCTERuby
         end
       end
 
-      bld.start_class('class ' + Utils.instance.get_styled_class_name(cls.get_u_name) + ' < XCTEPlugin')
+      bld.start_class('class ' + Utils.instance.style_as_class(cls.get_u_name) + ' < XCTEPlugin')
 
       bld.start_function('def initialize')
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.get_u_name) + '"')

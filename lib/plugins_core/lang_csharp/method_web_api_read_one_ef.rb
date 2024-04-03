@@ -25,7 +25,7 @@ module XCTECSharp
       bld.add('/// Web API get single ' + cls.get_u_name)
       bld.add('///')
 
-      bld.start_function('public ' + Utils.instance.get_styled_class_name(cls.get_u_name) + ' Get' + Utils.instance.get_styled_class_name(cls.get_u_name) + '(int id)')
+      bld.start_function('public ' + Utils.instance.style_as_class(cls.get_u_name) + ' Get' + Utils.instance.style_as_class(cls.get_u_name) + '(int id)')
 
       get_body(cls, bld, fun)
 
@@ -33,8 +33,8 @@ module XCTECSharp
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add('public ' + Utils.instance.get_styled_class_name(cls.get_u_name) +
-              ' Get' + Utils.instance.get_styled_class_name(cls.get_u_name) + '(int id);')
+      bld.add('public ' + Utils.instance.style_as_class(cls.get_u_name) +
+              ' Get' + Utils.instance.style_as_class(cls.get_u_name) + '(int id);')
     end
 
     def process_dependencies(cls, _bld, _fun)

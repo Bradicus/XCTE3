@@ -19,7 +19,7 @@ module XCTETypescript
     end
 
     def get_file_name(cls)
-      Utils.instance.get_styled_file_name(cls.get_u_name + ".component")
+      Utils.instance.style_as_file_name(cls.get_u_name + ".component")
     end
 
     def getFilePath(cls)
@@ -30,7 +30,7 @@ module XCTETypescript
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + ".component")
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + ".component")
       bld.lfExtension = Utils.instance.get_extension("body")
       # render_file_comment(cls, bld)
       process_dependencies(cls, bld)
@@ -49,8 +49,8 @@ module XCTETypescript
       cls.addInclude("@angular/router", "ActivatedRoute")
       cls.addInclude("rxjs", "Observable, of", "lib")
 
-      cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(cls.model.name),
-                     Utils.instance.get_styled_class_name(cls.model.name))
+      cls.addInclude("shared/dto/model/" + Utils.instance.style_as_file_name(cls.model.name),
+                     Utils.instance.style_as_class(cls.model.name))
 
       IncludeUtil.init("class_angular_data_store_service").wModel(cls.model).addTo(cls)
       IncludeUtil.init("class_angular_data_gen_service").wModel(cls.model).addTo(cls)
@@ -58,13 +58,13 @@ module XCTETypescript
 
       each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var)
-          cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(var.getUType),
-                         Utils.instance.get_styled_class_name(var.getUType))
+          cls.addInclude("shared/dto/model/" + Utils.instance.style_as_file_name(var.getUType),
+                         Utils.instance.style_as_class(var.getUType))
         end
         if !var.selectFrom.nil?
           optVar = Utils.instance.get_options_var_for(var)
-          cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(optVar.getUType),
-                         Utils.instance.get_styled_class_name(optVar.getUType))
+          cls.addInclude("shared/dto/model/" + Utils.instance.style_as_file_name(optVar.getUType),
+                         Utils.instance.style_as_class(optVar.getUType))
 
           bCls = ClassModelManager.findClass(cls.model.name, "class_standard")
           optStoreVar = Utils.instance.create_var_for(bCls, "class_angular_data_store_service")
@@ -83,8 +83,8 @@ module XCTETypescript
     def render_body_content(cls, bld)
       bld.add
 
-      selectorName = Utils.instance.get_styled_file_name(cls.get_u_name)
-      filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
+      selectorName = Utils.instance.style_as_file_name(cls.get_u_name)
+      filePart = Utils.instance.style_as_file_name(cls.get_u_name)
 
       clsVar = CodeNameStyling.getStyled(cls.get_u_name + " form", Utils.instance.langProfile.variableNameStyle)
       storeServiceVar = Utils.instance.create_var_for(cls, "class_angular_data_store_service", "private")
@@ -99,7 +99,7 @@ module XCTETypescript
       bld.add
 
       bld.start_block("export class " + get_class_name(cls) + " implements OnInit ")
-      bld.add("public item: " + Utils.instance.get_styled_class_name(cls.model.name) + " = new " + Utils.instance.get_styled_class_name(cls.model.name) + "();")
+      bld.add("public item: " + Utils.instance.style_as_class(cls.model.name) + " = new " + Utils.instance.style_as_class(cls.model.name) + "();")
       bld.separate
 
       # Generate class variables
@@ -165,7 +165,7 @@ module XCTETypescript
 
       bld.start_block("if (!this.item?.id)")
 
-      bld.add("this.item = new " + Utils.instance.get_styled_class_name(cls.model.name) + ";")
+      bld.add("this.item = new " + Utils.instance.style_as_class(cls.model.name) + ";")
       # bld.add("this." + Utils.instance.get_styled_variable_name(dataGenServiceVar) + ".initData(this.item);")
       bld.mid_block "else"
       bld.start_block "this." + Utils.instance.get_styled_variable_name(storeServiceVar) + ".detail(this.item.id).subscribe(data => {"

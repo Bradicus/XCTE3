@@ -35,8 +35,8 @@ module XCTETypescript
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
-      cls.addInclude("shared/dto/model/" + Utils.instance.get_styled_file_name(cls.model.name),
-                     Utils.instance.get_styled_class_name(cls.model.name))
+      cls.addInclude("shared/dto/model/" + Utils.instance.style_as_file_name(cls.model.name),
+                     Utils.instance.style_as_class(cls.model.name))
 
       cls.addInclude("shared/paging/filtered-page-req-tpl", "FilteredPageReqTpl")
       cls.addInclude("shared/paging/filtered-page-resp-tpl", "FilteredPageRespTpl")
@@ -60,12 +60,12 @@ module XCTETypescript
 
       bld.add
 
-      filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
+      filePart = Utils.instance.style_as_file_name(cls.get_u_name)
 
       clsVar = CodeNameStyling.getStyled(get_unformatted_class_name(cls), Utils.instance.langProfile.variableNameStyle)
 
-      standard_class_name = Utils.instance.get_styled_class_name(cls.model.name)
-      routeName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      standard_class_name = Utils.instance.style_as_class(cls.model.name)
+      routeName = Utils.instance.style_as_file_name(cls.get_u_name)
 
       bld.render_component_declaration(ComponentConfig.new
         .w_selector_name(filePart)
@@ -198,7 +198,7 @@ module XCTETypescript
 
       for act in cls.actions
         if !act.trigger.nil?
-          triggerFun = Utils.instance.get_styled_function_name("on " + act.trigger)
+          triggerFun = Utils.instance.style_as_function("on " + act.trigger)
           if act.trigger == "delete"
             bld.start_block(triggerFun + "(item: " + standard_class_name + ")")
             bld.add "this." + Utils.instance.get_styled_variable_name(userServiceVar) + "." + act.trigger + "(item)"

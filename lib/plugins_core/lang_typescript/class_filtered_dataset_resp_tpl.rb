@@ -31,7 +31,7 @@ module XCTETypescript
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension("body")
 
       process_dependencies(cls, bld)

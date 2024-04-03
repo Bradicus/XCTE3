@@ -7,14 +7,14 @@
 #
 # This plugin creates a get meathod for a class
 
-require 'x_c_t_e_plugin'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "x_c_t_e_plugin"
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
 module XCTECpp
   class MethodGet < XCTEPlugin
     def initialize
-      @name = 'method_get'
-      @language = 'cpp'
+      @name = "method_get"
+      @language = "cpp"
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -22,10 +22,10 @@ module XCTECpp
     def get_declaration(varSec, bld)
       return unless varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == true
 
-      funName = Utils.instance.get_styled_function_name('get ' + varSec.name)
+      funName = Utils.instance.style_as_function("get " + varSec.name)
       varName = Utils.instance.get_styled_variable_name(varSec)
-      bld.add('const ' + Utils.instance.get_type_name(varSec) + '& ' + funName)
-      bld.same_line("() const\t{ return(" + varName + '); };')
+      bld.add("const " + Utils.instance.get_type_name(varSec) + "& " + funName)
+      bld.same_line("() const\t{ return(" + varName + "); };")
     end
 
     # This method has no body

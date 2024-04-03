@@ -35,7 +35,7 @@ module XCTERuby
       srcFiles = []
 
       bld = SourceRendererRuby.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension('body')
       render_file_comment(cls, bld)
       render_body_content(cls, bld)
@@ -107,7 +107,7 @@ module XCTERuby
       bld.separate
       bld.add('bld = SourceRenderer' +
               CodeNameStyling.getStyled(cls.language, 'PASCAL_CASE') + '.new')
-      bld.add('bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))')
+      bld.add('bld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))')
       bld.add("bld.lfExtension = Utils.instance.get_extension('body')")
       bld.separate
       bld.add('process_dependencies(cls, bld)')

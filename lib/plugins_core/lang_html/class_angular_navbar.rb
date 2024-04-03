@@ -17,7 +17,7 @@ module XCTEHtml
       srcFiles = []
 
       bld = SourceRendererHtml.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls) + ".component")
+      bld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls) + ".component")
       bld.lfExtension = Utils.instance.get_extension("body")
       # render_file_comment(cls, bld)
       render_body_content(cls, bld)

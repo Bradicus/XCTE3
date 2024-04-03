@@ -23,7 +23,7 @@ module XCTECSharp
       bld.add('// Configuration ')
       bld.add('//')
 
-      entityClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name)
+      entityClassName = XCTECSharp::Utils.instance.style_as_class(cls.get_u_name)
       configFunName = 'Configure(EntityTypeBuilder<' + entityClassName + '> builder)'
 
       bld.start_function('public void ' + configFunName)
@@ -34,12 +34,12 @@ module XCTECSharp
     end
 
     def get_body(cls, bld, _fun)
-      bld.add('builder.ToTable("' + XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) + '", "dbo");')
+      bld.add('builder.ToTable("' + XCTETSql::Utils.instance.style_as_class(cls.get_u_name) + '", "dbo");')
 
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet || var.genSet
-          bld.add('builder.Property(e => e.' + XCTECSharp::Utils.instance.get_styled_function_name(var.name) + ')')
+          bld.add('builder.Property(e => e.' + XCTECSharp::Utils.instance.style_as_function(var.name) + ')')
         else
           bld.add('builder.Property(e => e.' + XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + ')')
         end

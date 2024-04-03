@@ -58,7 +58,7 @@ module XCTECSharp
       if ident_var
         identParamName = Utils.instance.get_styled_variable_name(ident_var.getParam)
 
-        bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) +
+        bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.style_as_class(cls.get_u_name) +
                 ' WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.var_prefix) +
                 '] = @' + identParamName + '";')
 

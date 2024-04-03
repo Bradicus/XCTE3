@@ -39,11 +39,11 @@ module XCTEPython
         rend.add('# return:: ')
       end
 
-      rend.start_function('def ' + Utils.instance.get_styled_function_name(fun.name))
+      rend.start_function('def ' + Utils.instance.style_as_function(fun.name))
 
       # Function body framework
 
-      rend.add('self.' + Utils.instance.get_styled_function_name(fun.name) + '(')
+      rend.add('self.' + Utils.instance.style_as_function(fun.name) + '(')
 
       for param in (0..(fun.parameters.vars.size - 1))
         if param != 0

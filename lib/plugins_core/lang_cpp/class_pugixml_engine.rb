@@ -32,13 +32,13 @@ module XCTECpp
       srcFiles = []
 
       hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'PugiXmlEngine')
+      hFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name + 'PugiXmlEngine')
       hFile.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, hFile)
       genHeader(cls, hFile)
 
       cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'PugiXmlEngine')
+      cppFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name + 'PugiXmlEngine')
       cppFile.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, cppFile)
       genBody(cls, cppFile)
@@ -128,7 +128,7 @@ module XCTECpp
             nameSp = cls.base_classes[par].namespace.get('::') + '::'
           end
 
-          classDec << cls.base_classes[par].visibility << ' ' << nameSp << Utils.instance.get_styled_class_name(cls.base_classes[par].name)
+          classDec << cls.base_classes[par].visibility << ' ' << nameSp << Utils.instance.style_as_class(cls.base_classes[par].name)
         end
       end
 
@@ -194,7 +194,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, cppGen)
-      cppGen.add('#include "' << Utils.instance.get_styled_class_name(cls.get_u_name) << '.h"')
+      cppGen.add('#include "' << Utils.instance.style_as_class(cls.get_u_name) << '.h"')
       cppGen.add
 
       render_namespace_start(cls, cppGen)
@@ -206,7 +206,7 @@ module XCTECpp
       for var in varArray
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic
           cppGen.add(Utils.instance.get_type_name(var) << ' ')
-          cppGen.same_line(Utils.instance.get_styled_class_name(cls.get_u_name) << ' :: ')
+          cppGen.same_line(Utils.instance.style_as_class(cls.get_u_name) << ' :: ')
           cppGen.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array

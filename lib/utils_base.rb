@@ -56,31 +56,27 @@ class UtilsBase
     CodeNameStyling.getStyled(fun_string, @langProfile.functionNameStyle)
   end
 
-  def get_styled_function_name(funName)
-    CodeNameStyling.getStyled(funName, @langProfile.functionNameStyle)
-  end
-
   # Returns the version of this class name styled for this language
-  def get_styled_class_name(className)
+  def style_as_class(className)
     CodeNameStyling.getStyled(className, @langProfile.classNameStyle)
   end
 
   # Returns the version of this class name styled for this language
-  def get_styled_namespace_name(nsName)
+  def style_as_namespace(nsName)
     CodeNameStyling.getStyled(nsName, @langProfile.classNameStyle)
   end
 
-  def get_styled_enum_name(enumName)
+  def style_as_enum(enumName)
     CodeNameStyling.getStyled(enumName, @langProfile.enumNameStyle)
   end
 
   # Returns the version of this file name styled for this language
-  def get_styled_file_name(fileName)
+  def style_as_file_name(fileName)
     CodeNameStyling.getStyled(fileName, @langProfile.fileNameStyle)
   end
 
   # Returns the version of this file name styled for this language
-  def get_styled_path_name(pathName)
+  def style_as_path_name(pathName)
     CodeNameStyling.getStyled(pathName, @langProfile.directoryNameStyle)
   end
 

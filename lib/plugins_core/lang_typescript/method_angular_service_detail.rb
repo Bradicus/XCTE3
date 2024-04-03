@@ -10,7 +10,7 @@ module XCTETypescript
 
     # Returns the code for the content for this function
     def render_function(cls, bld, fun)
-      className = Utils.instance.get_styled_class_name(cls.get_u_name)
+      className = Utils.instance.style_as_class(cls.get_u_name)
       urlName = Utils.instance.get_styled_url_name(cls.get_u_name)
 
       inst_fun = CodeStructure::CodeElemFunction.new(cls)

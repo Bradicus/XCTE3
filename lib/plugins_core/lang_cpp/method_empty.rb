@@ -74,8 +74,8 @@ module XCTECpp
       funDec << 'const ' if fun.returnValue.isConst
 
       funDec << Utils.instance.get_type_name(fun.returnValue) + ' '
-      funDec << Utils.instance.get_styled_class_name(cls.get_u_name) + ' :: '
-      funDec << Utils.instance.get_styled_function_name(fun.name) << '('
+      funDec << Utils.instance.style_as_class(cls.get_u_name) + ' :: '
+      funDec << Utils.instance.style_as_function(fun.name) << '('
 
       for param in (0..(fun.parameters.vars.size - 1))
         funDec << ', ' if param != 0

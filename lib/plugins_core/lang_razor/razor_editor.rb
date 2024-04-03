@@ -29,7 +29,7 @@ module XCTERazor
       srcFiles = []
 
       bld = SourceRendererRazor.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       bld.lfExtension = 'cshtml'
       render_body_content(cls, bld)
 

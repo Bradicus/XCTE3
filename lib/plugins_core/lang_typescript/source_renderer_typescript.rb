@@ -34,7 +34,7 @@ module XCTETypescript
       end
 
       start_function_paramed(
-        Utils.instance.get_styled_function_name(funName),
+        Utils.instance.style_as_function(funName),
         params,
         returnStr
       )

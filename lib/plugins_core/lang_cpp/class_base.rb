@@ -6,8 +6,8 @@ module XCTECpp
   class ClassBase < XCTEClassBase
     def render_ifndef(cls, bld)
       if cls.namespace.hasItems?
-        bld.add('#ifndef __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.name) + '_H')
-        bld.add('#define __' + cls.namespace.get('_') + '_' + Utils.instance.get_styled_class_name(cls.name) + '_H')
+        bld.add('#ifndef __' + cls.namespace.get('_') + '_' + Utils.instance.style_as_class(cls.name) + '_H')
+        bld.add('#define __' + cls.namespace.get('_') + '_' + Utils.instance.style_as_class(cls.name) + '_H')
         bld.add
       else
         bld.add('#ifndef __' + cls.name + '_H')

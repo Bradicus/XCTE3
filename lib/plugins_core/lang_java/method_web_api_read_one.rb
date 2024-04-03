@@ -31,8 +31,8 @@ module XCTEJava
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add("public " + Utils.instance.get_styled_class_name(cls.get_u_name) +
-              " Get" + Utils.instance.get_styled_class_name(cls.get_u_name) + "(int id);")
+      bld.add("public " + Utils.instance.style_as_class(cls.get_u_name) +
+              " Get" + Utils.instance.style_as_class(cls.get_u_name) + "(int id);")
     end
 
     def get_body(cls, bld, _fun)
@@ -51,8 +51,8 @@ module XCTEJava
 
       bld.add('@GetMapping("' + Utils.instance.get_styled_url_name(cls.get_u_name) + '/{id}")')
 
-      bld.start_function("public " + Utils.instance.get_styled_class_name(cls.get_u_name) +
-                         " Get" + Utils.instance.get_styled_class_name(cls.get_u_name) +
+      bld.start_function("public " + Utils.instance.style_as_class(cls.get_u_name) +
+                         " Get" + Utils.instance.style_as_class(cls.get_u_name) +
                          "(" + params.join(", ") + ")")
 
       bld.add("var item = " + dataStoreName + ".findById(id);")
@@ -60,7 +60,7 @@ module XCTEJava
 
       if !cls.data_class.nil?
         bld.start_block "if (item.isPresent())"
-        bld.add "var mappedItem = new " + Utils.instance.get_styled_class_name(cls.get_u_name) + "();"
+        bld.add "var mappedItem = new " + Utils.instance.style_as_class(cls.get_u_name) + "();"
         bld.add(mapperName + ".map(item.get(), mappedItem);")
         bld.add("return mappedItem;")
         bld.end_block

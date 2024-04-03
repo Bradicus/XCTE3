@@ -10,19 +10,19 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_csharp/utils'
+require "plugins_core/lang_csharp/utils"
 
-require 'code_structure/code_elem_parent'
-require 'lang_file'
-require 'x_c_t_e_plugin'
+require "code_structure/code_elem_parent"
+require "lang_file"
+require "x_c_t_e_plugin"
 
 module XCTECSharp
   class EnumStandard < XCTEClassBase
     def initialize
       super
 
-      @name = 'enum'
-      @language = 'csharp'
+      @name = "enum"
+      @language = "csharp"
       @category = XCTEPlugin::CAT_CLASS
     end
 
@@ -31,32 +31,31 @@ module XCTECSharp
     end
 
     def genHeaderComment(cls, hFile)
-      hFile.add('/**')
-      hFile.add('* @enum ' + cls.get_u_name)
+      hFile.add("/**")
+      hFile.add("* @enum " + cls.get_u_name)
 
-      hFile.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+      hFile.add("* @author " + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
-      hFile.add('* ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+      hFile.add("* " + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
 
       if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
-        hFile.add('*')
-        hFile.add('* ' + cfg.codeLicense)
+        hFile.add("*")
+        hFile.add("* " + cfg.codeLicense)
       end
 
-      hFile.add('* ')
+      hFile.add("* ")
 
       if !cls.model.description.nil?
         cls.model.description.each_line do |descLine|
-          hFile.add('* ' << descLine.strip) if descLine.strip.size > 0
+          hFile.add("* " << descLine.strip) if descLine.strip.size > 0
         end
       end
 
-      hFile.add('*/')
+      hFile.add("*/")
     end
 
     def getBody(cls, hFile)
-
-      classDec = cls.model.visibility + ' enum  ' + get_class_name(cls)
+      classDec = cls.model.visibility + " enum  " + get_class_name(cls)
 
       hFile.start_block(classDec)
 
@@ -70,9 +69,9 @@ module XCTECSharp
       for i in 0..(varArray.length - 1)
         var = varArray[i]
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
-          hFile.add(Utils.instance.get_styled_enum_name(var.name))
-          hFile.same_line(' = ' + var.defaultValue) if !var.defaultValue.nil?
-          hFile.same_line(',') if i != varArray.length - 1
+          hFile.add(Utils.instance.style_as_enum(var.name))
+          hFile.same_line(" = " + var.defaultValue) if !var.defaultValue.nil?
+          hFile.same_line(",") if i != varArray.length - 1
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
           hFile.add(Utils.instance.get_comment(var))
         elsif var.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
@@ -80,17 +79,17 @@ module XCTECSharp
         end
       end
 
-      hFile.end_block(';')
+      hFile.end_block(";")
 
       # Process namespace items
       if cls.namespace.hasItems?
         cls.namespace.ns_list.reverse_each do |nsItem|
-          hFile.end_block('  // namespace ' << nsItem)
+          hFile.end_block("  // namespace " << nsItem)
         end
         hFile.add
       end
 
-      hFile.add('#endif')
+      hFile.add("#endif")
     end
   end
 end

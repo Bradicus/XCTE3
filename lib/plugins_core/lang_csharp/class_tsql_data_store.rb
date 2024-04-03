@@ -32,7 +32,7 @@ module XCTECSharp
       end
 
       bld = SourceRendererCSharp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       bld.lfExtension = Utils.instance.get_extension("body")
       render_body_content(cls, bld)
 
@@ -51,7 +51,7 @@ module XCTECSharp
         inheritsFrom << baseClass.name
       end
       if cls.interface_namespace.hasItems?
-        inheritsFrom << Utils.instance.get_styled_class_name("i " + get_unformatted_class_name(cls))
+        inheritsFrom << Utils.instance.style_as_class("i " + get_unformatted_class_name(cls))
       end
 
       for par in (0..inheritsFrom.size)

@@ -33,7 +33,7 @@ module XCTEPython
       srcFiles = []
 
       rend = SourceRendererPython.new
-      rend.lfName = Utils.instance.get_styled_file_name(cls.get_u_name)
+      rend.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       rend.lfExtension = Utils.instance.get_extension("body")
       genPythonFileComment(cls, rend)
       render_body_content(cls, rend)
@@ -47,7 +47,7 @@ module XCTEPython
       cfg = UserSettings.instance
 
       rend.add("##")
-      rend.add("# Class:: " + Utils.instance.get_styled_file_name(cls.get_u_name))
+      rend.add("# Class:: " + Utils.instance.style_as_file_name(cls.get_u_name))
 
       if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
         rend.add("# " + cfg.codeCompany)
@@ -108,7 +108,7 @@ module XCTEPython
         rend.add
       end
 
-      rend.start_class("class " + Utils.instance.get_styled_file_name(cls.get_u_name))
+      rend.start_class("class " + Utils.instance.style_as_file_name(cls.get_u_name))
 
       for var in varArray
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic == true
@@ -139,7 +139,7 @@ module XCTEPython
         end
       end
 
-      rend.end_block("# class " + Utils.instance.get_styled_file_name(cls.get_u_name))
+      rend.end_block("# class " + Utils.instance.style_as_file_name(cls.get_u_name))
       rend.add
     end
   end

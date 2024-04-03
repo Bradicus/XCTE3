@@ -19,18 +19,18 @@ module XCTETypescript
     end
 
     def getFilePath(cls)
-      cls.path + "/" + Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      cls.path + "/" + Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
     end
 
     def gen_source_files(cls)
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = Utils.instance.get_extension("body")
 
-      fPath = Utils.instance.get_styled_file_name(cls.model.name)
-      cName = Utils.instance.get_styled_class_name(cls.model.name)
+      fPath = Utils.instance.style_as_file_name(cls.model.name)
+      cName = Utils.instance.style_as_class(cls.model.name)
       # Eventaully switch to finding standard class and using path from there
       cls.addInclude("shared/dto/model/" + fPath, cName)
 

@@ -44,7 +44,7 @@ module XCTEJava
 
       param.ref = DataLoading::ClassRefLoader.loadClassRef(fun.data_node.elements[elemName], nil, cls.gen_cfg)
       param.cls = ClassModelManager.findClass(param.ref.model_name, param.ref.plugin_name)
-      param.name = Utils.instance.get_styled_class_name(param.cls.get_u_name)
+      param.name = Utils.instance.style_as_class(param.cls.get_u_name)
 
       return param
     end
@@ -66,8 +66,8 @@ module XCTEJava
     def genListMapper(_cls, bld, _fun)
       @mapParams = []
 
-      @mapParams.push("List<" + Utils.instance.get_styled_class_name(@fromParam.cls.get_u_name) + "> srcList")
-      @mapParams.push("@MappingTarget List<" + Utils.instance.get_styled_class_name(@toParam.cls.get_u_name) + "> dstList")
+      @mapParams.push("List<" + Utils.instance.style_as_class(@fromParam.cls.get_u_name) + "> srcList")
+      @mapParams.push("@MappingTarget List<" + Utils.instance.style_as_class(@toParam.cls.get_u_name) + "> dstList")
 
       bld.separate
 

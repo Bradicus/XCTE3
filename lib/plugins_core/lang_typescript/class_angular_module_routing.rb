@@ -1,4 +1,4 @@
-require 'plugins_core/lang_typescript/class_base'
+require "plugins_core/lang_typescript/class_base"
 
 ##
 # Class:: ClassAngularModule
@@ -6,17 +6,17 @@ require 'plugins_core/lang_typescript/class_base'
 module XCTETypescript
   class ClassAngularModuleRouting < ClassBase
     def initialize
-      @name = 'class_angular_module_routing'
-      @language = 'typescript'
+      @name = "class_angular_module_routing"
+      @language = "typescript"
       @category = XCTEPlugin::CAT_CLASS
     end
 
     def get_unformatted_class_name(cls)
-      cls.get_u_name + ' routing module'
+      cls.get_u_name + " routing module"
     end
 
     def get_file_name(cls)
-      get_styled_file_name(cls.get_u_name + '.routing.module')
+      style_as_file_name(cls.get_u_name + ".routing.module")
     end
 
     def gen_source_files(cls)
@@ -24,10 +24,10 @@ module XCTETypescript
 
       bld = SourceRendererTypescript.new
       bld.lfName = get_file_name(cls)
-      bld.lfExtension = Utils.instance.get_extension('body')
+      bld.lfExtension = Utils.instance.get_extension("body")
 
-      fPath = get_styled_file_name(cls.model.name)
-      cName = get_styled_class_name(cls.model.name)
+      fPath = style_as_file_name(cls.model.name)
+      cName = style_as_class(cls.model.name)
 
       process_dependencies(cls, bld)
       render_dependencies(cls, bld)
@@ -43,30 +43,30 @@ module XCTETypescript
     end
 
     def process_dependencies(cls, bld)
-      cls.addInclude('@angular/core', 'NgModule')
-      cls.addInclude('@angular/common', 'CommonModule')
-      cls.addInclude('@angular/router', 'RouterModule, Routes')
+      cls.addInclude("@angular/core", "NgModule")
+      cls.addInclude("@angular/common", "CommonModule")
+      cls.addInclude("@angular/router", "RouterModule, Routes")
 
       if !cls.model.feature_group.nil?
         fClasses = ClassModelManager.findFeatureClasses(cls.model.feature_group)
 
         for otherCls in fClasses
-          if otherCls.plug_name.start_with?('class_angular_reactive_edit') ||
-             otherCls.plug_name.start_with?('class_angular_reactive_view') ||
-             otherCls.plug_name.start_with?('class_angular_listing')
-            plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
-            cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.get_file_name(otherCls),
+          if otherCls.plug_name.start_with?("class_angular_reactive_edit") ||
+             otherCls.plug_name.start_with?("class_angular_reactive_view") ||
+             otherCls.plug_name.start_with?("class_angular_listing")
+            plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+            cls.addInclude(Utils.instance.style_as_path_name(otherCls.path) + "/" + plug.get_file_name(otherCls),
                            plug.get_class_name(otherCls))
           end
         end
       end
 
       for otherCls in cls.model.classes
-        if otherCls.plug_name.start_with?('class_angular_reactive_edit') ||
-           otherCls.plug_name.start_with?('class_angular_reactive_view') ||
-           otherCls.plug_name.start_with?('class_angular_listing')
-          plug = XCTEPlugin.findClassPlugin('typescript', otherCls.plug_name)
-          cls.addInclude(Utils.instance.get_styled_path_name(otherCls.path) + '/' + plug.get_file_name(otherCls),
+        if otherCls.plug_name.start_with?("class_angular_reactive_edit") ||
+           otherCls.plug_name.start_with?("class_angular_reactive_view") ||
+           otherCls.plug_name.start_with?("class_angular_listing")
+          plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+          cls.addInclude(Utils.instance.style_as_path_name(otherCls.path) + "/" + plug.get_file_name(otherCls),
                          plug.get_class_name(otherCls))
         end
       end
@@ -76,12 +76,12 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      bld.add('const routes: Routes = [')
+      bld.add("const routes: Routes = [")
       bld.indent
-      bld.add('{')
+      bld.add("{")
       bld.indent
-      bld.add("path: '" + get_styled_file_name(cls.get_u_name) + "', ")
-      bld.add('children: [ ')
+      bld.add("path: '" + style_as_file_name(cls.get_u_name) + "', ")
+      bld.add("children: [ ")
 
       pathLines = []
 
@@ -103,21 +103,21 @@ module XCTETypescript
         bld.iadd pline
       end
 
-      bld.add(']')
+      bld.add("]")
       bld.unindent
-      bld.add('}')
+      bld.add("}")
       bld.unindent
-      bld.add('];')
+      bld.add("];")
 
       bld.separate
 
-      bld.add('@NgModule({')
+      bld.add("@NgModule({")
 
-      bld.iadd('imports: [RouterModule.forChild(routes)],')
-      bld.iadd('exports: [RouterModule]')
+      bld.iadd("imports: [RouterModule.forChild(routes)],")
+      bld.iadd("exports: [RouterModule]")
 
-      bld.add('})')
-      bld.start_class('export class ' + get_class_name(cls))
+      bld.add("})")
+      bld.start_class("export class " + get_class_name(cls))
 
       # Generate code for functions
       for fun in cls.functions
@@ -128,26 +128,26 @@ module XCTETypescript
     end
 
     def addPathsForClass(_cls, _bld, otherCls, pathLines)
-      if otherCls.plug_name.start_with? 'class_angular_reactive_edit'
-        plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_edit')
-        editPath = plug.get_relative_route(otherCls, 'edit')
+      if otherCls.plug_name.start_with? "class_angular_reactive_edit"
+        plug = XCTEPlugin.findClassPlugin("typescript", "class_angular_reactive_edit")
+        editPath = plug.get_relative_route(otherCls, "edit")
 
         compName = plug.get_class_name(otherCls)
         # compName = get_class_name(cls)
-        pathLines.push("{ path: '" + editPath.join('/') + "/:id', component: " + compName + ' },')
-      elsif otherCls.plug_name.start_with? 'class_angular_reactive_view'
-        plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_reactive_view')
-        viewPath = plug.get_relative_route(otherCls, 'view')
+        pathLines.push("{ path: '" + editPath.join("/") + "/:id', component: " + compName + " },")
+      elsif otherCls.plug_name.start_with? "class_angular_reactive_view"
+        plug = XCTEPlugin.findClassPlugin("typescript", "class_angular_reactive_view")
+        viewPath = plug.get_relative_route(otherCls, "view")
 
         compName = plug.get_class_name(otherCls)
         # compName = get_class_name(cls)
-        pathLines.push("{ path: '" + viewPath.join('/') + "/:id', component: " + compName + ' },')
-      elsif otherCls.plug_name == 'class_angular_listing'
-        plug = XCTEPlugin.findClassPlugin('typescript', 'class_angular_listing')
+        pathLines.push("{ path: '" + viewPath.join("/") + "/:id', component: " + compName + " },")
+      elsif otherCls.plug_name == "class_angular_listing"
+        plug = XCTEPlugin.findClassPlugin("typescript", "class_angular_listing")
 
-        listPath = plug.get_relative_route(otherCls, 'listing')
+        listPath = plug.get_relative_route(otherCls, "listing")
         compName = plug.get_class_name(otherCls)
-        pathLines.push("{ path: '" + listPath.join('/') + "', component: " + compName + ' },')
+        pathLines.push("{ path: '" + listPath.join("/") + "', component: " + compName + " },")
       end
     end
 
@@ -172,8 +172,8 @@ module XCTETypescript
       for var in vGroup.vars
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
-          editClass = varCls.model.findClassModel('class_angular_reactive_edit')
-          bld.iadd(get_styled_class_name(editClass.model.name + ' module') + ',') if !editClass.nil?
+          editClass = varCls.model.findClassModel("class_angular_reactive_edit")
+          bld.iadd(style_as_class(editClass.model.name + " module") + ",") if !editClass.nil?
         end
       end
     end
@@ -184,14 +184,14 @@ module XCTETypescript
       return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin('typescript', fun.name)
+        templ = XCTEPlugin.findMethodPlugin("typescript", fun.name)
         if !templ.nil?
           templ.render_function(cls, bld)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
         end
       else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin('typescript', 'method_empty')
+        templ = XCTEPlugin.findMethodPlugin("typescript", "method_empty")
         if !templ.nil?
           templ.render_function(fun, cfg)
         else
@@ -204,8 +204,8 @@ module XCTETypescript
       for var in vGroup.vars
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
-          fPath = get_styled_file_name(var.getUType + '')
-          cls.addInclude(varCls.path + '/' + fPath + '.module', get_styled_class_name(var.getUType + ' module'))
+          fPath = style_as_file_name(var.getUType + "")
+          cls.addInclude(varCls.path + "/" + fPath + ".module", style_as_class(var.getUType + " module"))
         end
       end
 

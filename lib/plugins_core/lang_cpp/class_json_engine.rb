@@ -31,13 +31,13 @@ module XCTECpp
       srcFiles = []
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'JsonEngine')
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + 'JsonEngine')
       bld.lfExtension = Utils.instance.get_extension('header')
       genHeaderComment(cls, bld)
       genHeader(cls, bld)
 
       bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + 'JsonEngine')
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + 'JsonEngine')
       bld.lfExtension = Utils.instance.get_extension('body')
       genHeaderComment(cls, bld)
       genBody(cls, bld)
@@ -52,7 +52,7 @@ module XCTECpp
       cfg = UserSettings.instance
 
       bld.add('/**')
-      bld.add('* @class ' + Utils.instance.get_styled_class_name(cls.get_u_name + 'JsonEngine'))
+      bld.add('* @class ' + Utils.instance.style_as_class(cls.get_u_name + 'JsonEngine'))
 
       bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
@@ -108,7 +108,7 @@ module XCTECpp
             nameSp = cls.base_classes[par].namespace.get('::') + '::'
           end
 
-          classDec += cls.base_classes[par].visibility + ' ' + nameSp + Utils.instance.get_styled_class_name(cls.base_classes[par].name)
+          classDec += cls.base_classes[par].visibility + ' ' + nameSp + Utils.instance.style_as_class(cls.base_classes[par].name)
         end
       end
 
@@ -136,7 +136,7 @@ module XCTECpp
 
     # Returns the code for the body for this class
     def genBody(cls, bld)
-      bld.add('#include "' << Utils.instance.get_styled_class_name(cls.get_u_name + 'JsonEngine') << '.h"')
+      bld.add('#include "' << Utils.instance.style_as_class(cls.get_u_name + 'JsonEngine') << '.h"')
       bld.add
 
       render_namespace_start(cls, bld)

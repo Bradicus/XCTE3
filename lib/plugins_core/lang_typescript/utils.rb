@@ -319,7 +319,7 @@ module XCTETypescript
       optVar.utype = var.selectFrom
       optVar.vtype = nil
       optVar.relation = nil
-      optVar.defaultValue = "new Observable<FilteredPageRespTpl<" + get_styled_class_name(optVar.utype) + ">>"
+      optVar.defaultValue = "new Observable<FilteredPageRespTpl<" + style_as_class(optVar.utype) + ">>"
       optVar.templates = []
       optVar.addTpl("Observable")
       optVar.addTpl("FilteredPageRespTpl", true)
@@ -332,7 +332,7 @@ module XCTETypescript
       optVar.name = var.selectFrom + " options req"
       optVar.utype = var.selectFrom
       optVar.vtype = nil
-      optVar.defaultValue = "new FilteredPageReqTpl<" + get_styled_class_name(optVar.utype) + ">"
+      optVar.defaultValue = "new FilteredPageReqTpl<" + style_as_class(optVar.utype) + ">"
       optVar.templates = []
       optVar.addTpl("FilteredPageReqTpl", true)
 
@@ -349,7 +349,7 @@ module XCTETypescript
       fun.add_param(pageVar)
 
       for col in searchColNames
-        colNameCointain.push(get_styled_class_name(col))
+        colNameCointain.push(style_as_class(col))
       end
 
       eventVar = CodeStructure::CodeElemVariable.new(nil)
@@ -372,7 +372,7 @@ module XCTETypescript
       fun.add_param(pageVar)
 
       for col in searchColNames
-        colNameCointain.push(get_styled_class_name(col))
+        colNameCointain.push(style_as_class(col))
       end
 
       eventVar = CodeStructure::CodeElemVariable.new(nil)

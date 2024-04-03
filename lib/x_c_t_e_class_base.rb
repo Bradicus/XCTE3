@@ -5,7 +5,7 @@ require "params/render_fun_def_params"
 # Base class for all class plugins
 class XCTEClassBase < XCTEPlugin
   def get_class_name(cls)
-    get_default_utils.get_styled_class_name(get_unformatted_class_name(cls))
+    get_default_utils.style_as_class(get_unformatted_class_name(cls))
   end
 
   def get_default_utils
@@ -57,7 +57,7 @@ class XCTEClassBase < XCTEPlugin
     srcFiles = []
 
     bld = get_source_renderer()
-    bld.lfName = get_default_utils().get_styled_file_name(get_unformatted_class_name(cls))
+    bld.lfName = get_default_utils().style_as_file_name(get_unformatted_class_name(cls))
     bld.lfExtension = get_default_utils().get_extension("body")
 
     process_dependencies(cls, bld)
@@ -91,7 +91,7 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def get_file_name(cls)
-    get_default_utils.get_styled_file_name(get_unformatted_class_name(cls))
+    get_default_utils.style_as_file_name(get_unformatted_class_name(cls))
   end
 
   def is_primitive(var)

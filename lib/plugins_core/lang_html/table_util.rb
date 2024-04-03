@@ -129,7 +129,7 @@ module XCTEHtml
             actions.add_child(make_action_button(act.name, "routerLink",
                                                  act.link + "/" + "{{" + table_cfg.iterator_var_name + ".id}}"))
           elsif !act.trigger.nil?
-            triggerFun = Utils.instance.get_styled_function_name("on " + act.trigger) + "(" + table_cfg.iterator_var_name + ")"
+            triggerFun = Utils.instance.style_as_function("on " + act.trigger) + "(" + table_cfg.iterator_var_name + ")"
             if act.trigger == "delete"
               actions.add_child(make_action_button(act.name, "(click)", triggerFun))
             else

@@ -21,13 +21,13 @@ module XCTECpp
     # Returns declairation string for this class's constructor
     def get_declaration(cls, bld, _codeFun)
       bld.add('void write(pugi::xml_node node, ' +
-              Utils.instance.get_styled_class_name(cls.name) + '& item);')
+              Utils.instance.style_as_class(cls.name) + '& item);')
     end
 
     # Returns declairation string for this class's constructor
     def get_declaration_inline(cls, bld, codeFun)
       bld.startFuction('void write(pugi::xml_node node, ' +
-                       Utils.instance.get_styled_class_name(cls.name) + '& item);')
+                       Utils.instance.style_as_class(cls.name) + '& item);')
       codeStr << get_body(cls, bld, codeFun)
       bld.endFunction
     end
@@ -44,8 +44,8 @@ module XCTECpp
 
       classDef = String.new
       classDef << Utils.instance.get_type_name(codeFun.returnValue) << ' ' <<
-        Utils.instance.get_styled_class_name(cls.name) << ' :: ' << 'write(pugi::xml_node node, ' +
-                                                                    Utils.instance.get_styled_class_name(cls.name) + '& item)'
+        Utils.instance.style_as_class(cls.name) << ' :: ' << 'write(pugi::xml_node node, ' +
+                                                                    Utils.instance.style_as_class(cls.name) + '& item)'
       bld.start_class(classDef)
 
       get_body(cls, bld, codeFun)

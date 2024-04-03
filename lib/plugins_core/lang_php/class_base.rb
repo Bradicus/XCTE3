@@ -24,7 +24,7 @@ module XCTEPhp
       srcFiles = []
 
       bld = get_source_renderer()
-      bld.lfName = get_default_utils().get_styled_file_name(get_unformatted_class_name(cls))
+      bld.lfName = get_default_utils().style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = get_default_utils().get_extension('body')
 
       process_dependencies(cls, bld)

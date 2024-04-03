@@ -32,7 +32,7 @@ module XCTECSharp
     end
 
     def get_function_signature(cls, _bld, fun)
-      standard_class_name = Utils.instance.get_styled_class_name(cls.get_u_name)
+      standard_class_name = Utils.instance.style_as_class(cls.get_u_name)
 
       paramDec = []
       paramNames = []
@@ -42,16 +42,16 @@ module XCTECSharp
         paramNames << Utils.instance.get_styled_variable_name(param)
       end
 
-      standard_class_name + ' ' + XCTECSharp::Utils.instance.get_styled_function_name('retrieve one by ' + paramNames.join(' ')) +
+      standard_class_name + ' ' + XCTECSharp::Utils.instance.style_as_function('retrieve one by ' + paramNames.join(' ')) +
         '(' + paramDec.join(', ') + ', SqlConnection conn, SqlTransaction trans = null)'
     end
 
     def get_body(cls, bld, fun)
       conDef = String.new
 
-      styledClassName = XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name)
+      styledClassName = XCTECSharp::Utils.instance.style_as_class(cls.get_u_name)
 
-      bld.add('var o = new ' + XCTECSharp::Utils.instance.get_styled_class_name(cls.get_u_name) + '();')
+      bld.add('var o = new ' + XCTECSharp::Utils.instance.style_as_class(cls.get_u_name) + '();')
 
       bld.add('string sql = @"SELECT TOP 1 ')
 

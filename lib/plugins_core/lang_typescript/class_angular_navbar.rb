@@ -29,7 +29,7 @@ module XCTETypescript
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      filePart = Utils.instance.get_styled_file_name(cls.get_u_name)
+      filePart = Utils.instance.style_as_file_name(cls.get_u_name)
 
       bld.start_class("class NavNode")
       bld.add("name: string;")

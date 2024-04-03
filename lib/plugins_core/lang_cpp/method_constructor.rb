@@ -20,12 +20,12 @@ module XCTECpp
 
     # Returns declairation string for this class's constructor
     def get_declaration(cls, bld, _funItem)
-      bld.add(Utils.instance.get_styled_class_name(cls.get_u_name) + '();')
+      bld.add(Utils.instance.style_as_class(cls.get_u_name) + '();')
     end
 
     # Returns declairation string for this class's constructor
     def get_declaration_inline(cls, bld, funItem)
-      bld.startFuction(Utils.instance.get_styled_class_name(cls.get_u_name) + '()')
+      bld.startFuction(Utils.instance.style_as_class(cls.get_u_name) + '()')
       codeStr << get_body(cls, funItem, hFile)
       bld.endFunction
     end
@@ -39,7 +39,7 @@ module XCTECpp
       bld.add('*/')
 
       classDef = String.new
-      classDef << Utils.instance.get_styled_class_name(cls.get_u_name) << ' :: ' << Utils.instance.get_styled_class_name(cls.get_u_name) << '()'
+      classDef << Utils.instance.style_as_class(cls.get_u_name) << ' :: ' << Utils.instance.style_as_class(cls.get_u_name) << '()'
       bld.start_class(classDef)
 
       get_body(cls, bld, funItem)

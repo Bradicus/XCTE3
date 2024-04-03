@@ -64,7 +64,7 @@ module XCTECpp
 
       classDef = String.new
       classDef << Utils.instance.get_type_name(codeFun.returnValue) << " " <<
-        Utils.instance.get_styled_class_name(cls.name) << " :: " << "read(const nlohmann::json& json, " +
+        Utils.instance.style_as_class(cls.name) << " :: " << "read(const nlohmann::json& json, " +
                                                                     cls.standardClassType + "& item)"
       bld.start_class(classDef)
 

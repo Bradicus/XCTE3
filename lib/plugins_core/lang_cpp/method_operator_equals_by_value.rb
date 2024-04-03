@@ -21,8 +21,8 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
   def get_declaration(codeClass, bld)
     eqString = String.new
 
-    bld.add('const ' << Utils.instance.get_styled_class_name(codeClass.name) << '& operator=' << '(const ' << Utils.instance.get_styled_class_name(codeClass.name))
-    bld.same_line('& src' << Utils.instance.get_styled_class_name(codeClass.name) << ');')
+    bld.add('const ' << Utils.instance.style_as_class(codeClass.name) << '& operator=' << '(const ' << Utils.instance.style_as_class(codeClass.name))
+    bld.same_line('& src' << Utils.instance.style_as_class(codeClass.name) << ');')
     bld.add
 
     return eqString
@@ -33,7 +33,7 @@ class XCTECpp::MethodOperatorEqualsByValue < XCTEPlugin
     eqString = String.new
     longArrayFound = false
 
-    styledCName = Utils.instance.get_styled_class_name(codeClass.name)
+    styledCName = Utils.instance.style_as_class(codeClass.name)
 
     bld.add('/**')
     bld.add(' * Sets this object equal to incoming object')

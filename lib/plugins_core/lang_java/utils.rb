@@ -182,8 +182,8 @@ module XCTEJava
       for var in vGroup.vars
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !is_primitive(var)
           varCls = ClassModelManager.findVarClass(var)
-          fPath = get_styled_file_name(var.getUType + "")
-          cls.addInclude(varCls.path + "/" + fPath + ".module", get_styled_class_name(var.getUType + " module"))
+          fPath = style_as_file_name(var.getUType + "")
+          cls.addInclude(varCls.path + "/" + fPath + ".module", style_as_class(var.getUType + " module"))
         end
       end
 
@@ -282,7 +282,7 @@ module XCTEJava
 
         fun.annotations.push('@Query("' + query + '")')
 
-        fun.name = get_styled_function_name(filtered_class.model.data_filter.get_search_fun_name)
+        fun.name = style_as_function(filtered_class.model.data_filter.get_search_fun_name)
 
         for col in filtered_class.model.data_filter.get_search_cols
           cParam = CodeStructure::CodeElemVariable.new(nil)
@@ -319,7 +319,7 @@ module XCTEJava
 
         fun.name = "findBy" + col_name_cointain.join(separator)
         # else # Statif filter but no search filter
-        #   fun.name = 'findBy' + get_styled_class_name(cls.model.data_filter.static_filters[0].column)
+        #   fun.name = 'findBy' + style_as_class(cls.model.data_filter.static_filters[0].column)
         #   searchVar = data_class.data_class.model.get_var_by_name(cls.model.data_filter.static_filters[0].column)
         #   if !searchVar.nil? && searchVar.getUType == 'boolean'
         #     fun.name += value.capitalize
@@ -400,14 +400,14 @@ module XCTEJava
         else
           value_text = ""
         end
-        col_name_cointain.push(get_styled_class_name(filter_var.name) + value_text)
+        col_name_cointain.push(style_as_class(filter_var.name) + value_text)
       else
-        col_name_cointain.push(get_styled_class_name(filter_var.name) + "Contains")
+        col_name_cointain.push(style_as_class(filter_var.name) + "Contains")
       end
     end
 
     def render_fun_call(_bld, _fun)
-      return get_styled_function_name(col) + "(" + ")"
+      return style_as_function(col) + "(" + ")"
     end
   end
 end

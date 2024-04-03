@@ -14,7 +14,7 @@ module XCTETypescript
     end
 
     def get_file_name(cls)
-      get_default_utils.get_styled_file_name(get_unformatted_class_name(cls))
+      get_default_utils.style_as_file_name(get_unformatted_class_name(cls))
     end
 
     def gen_source_files(cls)
@@ -71,7 +71,7 @@ module XCTETypescript
     def render_namespace_start(cls, bld)
       if !ActiveComponent.get().ignore_namespace
         for ns in cls.namespace.ns_list
-          bld.start_block("export namespace " + get_default_utils().get_styled_namespace_name(ns))
+          bld.start_block("export namespace " + get_default_utils().style_as_namespace(ns))
         end
       end
     end
@@ -109,12 +109,12 @@ module XCTETypescript
       cls.addInclude("environments/environment", "environment")
     end
 
-    def get_styled_file_name(uName)
-      return Utils.instance.get_styled_file_name(uName)
+    def style_as_file_name(uName)
+      return Utils.instance.style_as_file_name(uName)
     end
 
-    def get_styled_class_name(uName)
-      return Utils.instance.get_styled_class_name(uName)
+    def style_as_class(uName)
+      return Utils.instance.style_as_class(uName)
     end
 
     def get_relative_route(cls, actionName)
@@ -173,7 +173,7 @@ module XCTETypescript
           path += incPaths.join("/")
         end
 
-        bld.add("import { " + inc.name + " } from '" + get_default_utils().get_styled_path_name(path) + "';")
+        bld.add("import { " + inc.name + " } from '" + get_default_utils().style_as_path_name(path) + "';")
       end
     end
   end

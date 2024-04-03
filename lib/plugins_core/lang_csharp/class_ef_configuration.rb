@@ -31,7 +31,7 @@ module XCTECSharp
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
-      classDec = cls.model.visibility + " class " + get_class_name(cls) + " : IEntityTypeConfiguration<" + Utils.instance.get_styled_class_name(cls.get_u_name) + ">"
+      classDec = cls.model.visibility + " class " + get_class_name(cls) + " : IEntityTypeConfiguration<" + Utils.instance.style_as_class(cls.get_u_name) + ">"
 
       for par in (0..cls.base_classes.size)
         if par == 0 && !cls.base_classes[par].nil?

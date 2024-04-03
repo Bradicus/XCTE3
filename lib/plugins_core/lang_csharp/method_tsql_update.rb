@@ -26,7 +26,7 @@ module XCTECSharp
       bld.add('///')
 
       bld.start_class('public void Update(' +
-                     Utils.instance.get_styled_class_name(cls.get_u_name) +
+                     Utils.instance.style_as_class(cls.get_u_name) +
                      ' o, SqlConnection conn, SqlTransaction trans)')
 
       get_body(cls, bld, fun)
@@ -36,7 +36,7 @@ module XCTECSharp
 
     def get_declairation(cls, bld, _fun)
       bld.add('void Update(' +
-              Utils.instance.get_styled_class_name(cls.get_u_name) +
+              Utils.instance.style_as_class(cls.get_u_name) +
               ' o, SqlConnection conn, SqlTransaction trans);')
     end
 
@@ -47,7 +47,7 @@ module XCTECSharp
     def get_body(cls, bld, _fun)
       conDef = String.new
 
-      bld.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.get_styled_class_name(cls.get_u_name) + ' SET ')
+      bld.add('string sql = @"UPDATE ' + XCTETSql::Utils.instance.style_as_class(cls.get_u_name) + ' SET ')
 
       bld.indent
 

@@ -41,7 +41,7 @@ module XCTEJava
     def render_body_content(cls, bld)
       bld.separate
       clsName = get_class_name(cls)
-      tableName = Utils.instance.get_sql_util(cls).get_styled_class_name(cls.get_u_name)
+      tableName = Utils.instance.get_sql_util(cls).style_as_class(cls.get_u_name)
 
       bld.add('@Entity')
       if tableName != clsName

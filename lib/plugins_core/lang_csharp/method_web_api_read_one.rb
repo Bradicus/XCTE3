@@ -31,8 +31,8 @@ module XCTECSharp
     end
 
     def get_declairation(cls, bld, _fun)
-      bld.add("public " + Utils.instance.get_styled_class_name(cls.get_u_name) +
-              " Get" + Utils.instance.get_styled_class_name(cls.get_u_name) + "(int id);")
+      bld.add("public " + Utils.instance.style_as_class(cls.get_u_name) +
+              " Get" + Utils.instance.style_as_class(cls.get_u_name) + "(int id);")
     end
 
     def process_dependencies(cls, _bld, _fun)
@@ -44,7 +44,7 @@ module XCTECSharp
 
     def get_body(cls, bld, _fun)
       conDef = String.new
-      engineName = Utils.instance.get_styled_class_name(cls.get_u_name + " data store")
+      engineName = Utils.instance.style_as_class(cls.get_u_name + " data store")
 
       pkeys = []
       cls.model.getPrimaryKeyVars(pkeys)
@@ -53,8 +53,8 @@ module XCTECSharp
         params << Utils.instance.get_param_dec(pkey)
       end
 
-      bld.start_function("public " + Utils.instance.get_styled_class_name(cls.get_u_name) +
-                         " Get" + Utils.instance.get_styled_class_name(cls.get_u_name) +
+      bld.start_function("public " + Utils.instance.style_as_class(cls.get_u_name) +
+                         " Get" + Utils.instance.style_as_class(cls.get_u_name) +
                          "(" + params.join(", ") + ")")
 
       bld.start_block("using (SqlConnection conn = new SqlConnection())")

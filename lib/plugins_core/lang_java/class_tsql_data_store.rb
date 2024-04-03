@@ -33,7 +33,7 @@ module XCTEJava
       end
 
       bld.start_class('public interface ' + get_class_name(cls) + ' extends JpaRepository<' +
-                     Utils.instance.get_styled_class_name(cls.model.name) + ', ' +
+                     Utils.instance.style_as_class(cls.model.name) + ', ' +
                      Utils.instance.getObjTypeName(id_var[0]) + '>')
 
       bld.separate

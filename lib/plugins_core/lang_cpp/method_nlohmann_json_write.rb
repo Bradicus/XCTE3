@@ -51,7 +51,7 @@ module XCTECpp
 
       classDef = String.new
       classDef << Utils.instance.get_type_name(codeFun.returnValue) << ' ' <<
-        Utils.instance.get_styled_class_name(cls.name) << ' :: ' << 'write(nlohmann::json& json, const ' +
+        Utils.instance.style_as_class(cls.name) << ' :: ' << 'write(nlohmann::json& json, const ' +
                                                                     cls.standardClassType + '& item)'
       bld.start_class(classDef)
 

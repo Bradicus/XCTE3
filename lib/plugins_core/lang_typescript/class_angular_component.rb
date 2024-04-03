@@ -19,7 +19,7 @@ module XCTETypescript
       srcFiles = []
 
       bld = SourceRendererTypescript.new
-      bld.lfName = Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
+      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + '.component')
       bld.lfExtension = Utils.instance.get_extension('body')
 
       render_file_comment(cls, bld)
@@ -38,9 +38,9 @@ module XCTETypescript
 
     def get_file_name(cls)
       if !cls.feature_group.nil?
-        return Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
+        return Utils.instance.style_as_file_name(cls.get_u_name + '.component')
       else
-        return Utils.instance.get_styled_file_name(cls.get_u_name + '.component')
+        return Utils.instance.style_as_file_name(cls.get_u_name + '.component')
       end
     end
   end
