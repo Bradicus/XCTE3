@@ -3,44 +3,47 @@ module XCTEJava
     def initialize
       super
 
-      @name = 'method_service_datagen_faker_get'
-      @language = 'java'
+      @name = "method_service_datagen_faker_get"
+      @language = "java"
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns the code for the content for this function
-    def render_function(cls, bld, _fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
       # process class variables
 
       className = Utils.instance.style_as_class(cls.model.name)
-      bld.start_function('void populateRandom(Faker faker, ' + className + ' item)')
+      bld.start_function("void populateRandom(Faker faker, " + className + " item)")
 
-      genPopulate(cls, bld, 'item.')
+      genPopulate(cls, bld, "item.")
 
       bld.endFunction
     end
 
     def process_dependencies(cls, _bld, _fun)
-      cls.addUse('com.github.javafaker.Faker')
+      cls.addUse("com.github.javafaker.Faker")
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
-        if var.getUType().downcase == 'datetime'
-          cls.addUse('java.util.concurrent.TimeUnit')
+        if var.getUType().downcase == "datetime"
+          cls.addUse("java.util.concurrent.TimeUnit")
         end
       }))
     end
 
     # process variable group
-    def genPopulate(cls, bld, name = '')
+    def genPopulate(cls, bld, name = "")
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         varName = Utils.instance.get_styled_variable_name(var)
 
         if Utils.instance.is_primitive(var)
-          if var.name == 'id'
+          if var.name == "id"
           elsif !var.isList
-            bld.add(name + varName + ' = ' + getFakerAssignment(var) + ';')
+            bld.add(name + varName + " = " + getFakerAssignment(var) + ";")
           else
-            bld.add(name + varName + '.push(' + getFakerAssignment(var) + ');')
+            bld.add(name + varName + ".push(" + getFakerAssignment(var) + ");")
           end
           # elsif !var.isList
           #   varCls = ClassModelManager.findVarClass(var, 'data_gen')
@@ -61,32 +64,32 @@ module XCTEJava
       varType = var.getUType.downcase
 
       if !var.selectFrom.nil?
-        return '1'
+        return "1"
       elsif Utils.instance.is_numeric?(var)
-        return 'faker.random.numeric(8)'
-      elsif varType.start_with?('datetime')
-        return 'LocalDateTime.ofInstant(faker.date().past(100, TimeUnit.DAYS).toInstant(), null)'
-      elsif varType.start_with?('boolean')
-        return 'faker.bool().bool()'
-      elsif var.name.include?('street') && var.name.include?('2')
-        return 'faker.address().secondaryAddress()'
-      elsif var.name.include?('street')
-        return 'faker.address().streetAddress()'
-      elsif var.name.include?('zip')
-        return 'faker.address().zipCode()'
-      elsif var.name.include?('state')
-        return 'faker.address().stateAbbr()'
-      elsif var.name.include? 'first name'
-        return 'faker.name().firstName()'
-      elsif var.name.include? 'last name'
-        return 'faker.name().lastName()'
-      elsif var.name.include? 'city'
-        return 'faker.address().city()'
-      elsif var.name.include? 'country'
-        return 'faker.address().country()'
-      elsif var.name.include? 'county'
-        return 'faker.address().county()'
-      elsif var.name.include? 'email'
+        return "faker.random.numeric(8)"
+      elsif varType.start_with?("datetime")
+        return "LocalDateTime.ofInstant(faker.date().past(100, TimeUnit.DAYS).toInstant(), null)"
+      elsif varType.start_with?("boolean")
+        return "faker.bool().bool()"
+      elsif var.name.include?("street") && var.name.include?("2")
+        return "faker.address().secondaryAddress()"
+      elsif var.name.include?("street")
+        return "faker.address().streetAddress()"
+      elsif var.name.include?("zip")
+        return "faker.address().zipCode()"
+      elsif var.name.include?("state")
+        return "faker.address().stateAbbr()"
+      elsif var.name.include? "first name"
+        return "faker.name().firstName()"
+      elsif var.name.include? "last name"
+        return "faker.name().lastName()"
+      elsif var.name.include? "city"
+        return "faker.address().city()"
+      elsif var.name.include? "country"
+        return "faker.address().country()"
+      elsif var.name.include? "county"
+        return "faker.address().county()"
+      elsif var.name.include? "email"
         return 'faker.name().firstName() + "." + faker.name().lastName() + "@example.com"'
       end
 

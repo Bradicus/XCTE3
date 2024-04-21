@@ -31,7 +31,7 @@
 	<class_group_ref name="edit" feature_group="profile" roles="admin" />
 
 	<gen_class type="web_api_controller" path="{ControllerPath}" ns="{ControllerNs}">
-		<data_class cname="profile" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
+		<data_class name="profile" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
 		<function name="method_web_api_read_one" />
 		<function name="method_web_api_write_one" />
 		<function name="method_web_api_update_one" />

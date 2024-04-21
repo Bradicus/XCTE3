@@ -7,53 +7,69 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "x_c_t_e_plugin"
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
 module XCTECpp
   class MethodPugiXmlWrite < XCTEPlugin
     def initialize
-      @name = 'method_pugixml_write'
-      @language = 'cpp'
+      @name = "method_pugixml_write"
+      @language = "cpp"
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration(cls, bld, _codeFun)
-      bld.add('void write(pugi::xml_node node, ' +
-              Utils.instance.style_as_class(cls.name) + '& item);')
+    def render_declaration(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
+      bld.add("void write(pugi::xml_node node, " +
+              Utils.instance.style_as_class(cls.get_u_name) + "& item);")
     end
 
     # Returns declairation string for this class's constructor
-    def get_declaration_inline(cls, bld, codeFun)
-      bld.startFuction('void write(pugi::xml_node node, ' +
-                       Utils.instance.style_as_class(cls.name) + '& item);')
-      codeStr << get_body(cls, bld, codeFun)
+    def render_declaration_inline(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
+      bld.startFuction("void write(pugi::xml_node node, " +
+                       Utils.instance.style_as_class(cls.get_u_name) + "& item);")
+      get_body(fp_params)
       bld.endFunction
     end
 
     def process_dependencies(cls, _bld, _codeFun)
-      cls.addInclude('', 'pugixml.hpp')
+      cls.addInclude("", "pugixml.hpp")
     end
 
     # Returns definition string for this class's constructor
-    def render_function(cls, bld, codeFun)
-      bld.add('/**')
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
+      bld.add("/**")
       bld.add("* Write this class' data to an xml element")
-      bld.add('*/')
+      bld.add("*/")
 
       classDef = String.new
-      classDef << Utils.instance.get_type_name(codeFun.returnValue) << ' ' <<
-        Utils.instance.style_as_class(cls.name) << ' :: ' << 'write(pugi::xml_node node, ' +
-                                                                    Utils.instance.style_as_class(cls.name) + '& item)'
+      classDef << Utils.instance.get_type_name(fun.returnValue) << " " <<
+        Utils.instance.style_as_class(cls.get_u_name) << " :: " << "write(pugi::xml_node node, " +
+                                                                   Utils.instance.style_as_class(cls.get_u_name) + "& item)"
       bld.start_class(classDef)
 
-      get_body(cls, bld, codeFun)
+      get_body(fp_params)
 
       bld.endFunction
     end
 
-    def get_body(cls, bld, _codeFun)
+    def get_body(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       conDef = String.new
 
       # Process variables
@@ -62,28 +78,28 @@ module XCTECpp
 
         if Utils.instance.is_primitive(var)
           if !var.isList
-            bld.add('node.append_attribute("' + styledVarName + '").set_value(' + styledVarName + ');')
+            bld.add('node.append_attribute("' + styledVarName + '").set_value(' + styledVarName + ");")
           else
             bld.add('pugi::xml_node childNode = node.append_child("' + styledVarName + '");')
-            bld.start_block('for (auto& listItem: item.' + styledVarName + ')')
+            bld.start_block("for (auto& listItem: item." + styledVarName + ")")
             bld.add('pugi::xml_node valueNode = childNode.append_child("val");')
-            bld.add('valueNode.set_value(listItem);')
+            bld.add("valueNode.set_value(listItem);")
             bld.end_block
           end
         elsif !var.isList
           bld.add(
-            Utils.instance.get_type_name(var) + 'JsonEngine::loadFromJson(' +
+            Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(" +
             Utils.instance.get_styled_variable_name(var) +
-              '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + Utils.instance.get_styled_variable_name(var) + ');'
+              '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + Utils.instance.get_styled_variable_name(var) + ");"
           )
         else
           bld.start_block('for (auto aJson : json["' + Utils.instance.get_styled_variable_name(var) + '"])')
           if !var.isList
-            bld.add(Utils.instance.get_type_name(var) + 'JsonEngine::loadFromJson(aJson, item);')
+            bld.add(Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(aJson, item);")
           else
-            bld.add(Utils.instance.get_type_name(var) + ' newVar;')
-            bld.add(Utils.instance.get_type_name(var) + 'JsonEngine::loadFromJson(aJson, item);')
-            bld.add(Utils.instance.get_styled_variable_name(var) + '.push_back(newVar);')
+            bld.add(Utils.instance.get_type_name(var) + " newVar;")
+            bld.add(Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(aJson, item);")
+            bld.add(Utils.instance.get_styled_variable_name(var) + ".push_back(newVar);")
           end
           bld.end_block
         end

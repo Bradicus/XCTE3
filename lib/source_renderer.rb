@@ -13,10 +13,10 @@ class SourceRenderer
   def initialize
     @lfPath = nil
     @indentLevel = 0
-    @indentChars = '    '
+    @indentChars = "    "
     @lines = []
-    @blockDelimOpen = '{'
-    @blockDelimClose = '}'
+    @blockDelimOpen = "{"
+    @blockDelimClose = "}"
     @hangingFunctionStart = false
     @hangingBlockStart = true
     @max_line_length = 100
@@ -37,7 +37,7 @@ class SourceRenderer
     @indentLevel -= count
   end
 
-  def add(line = '')
+  def add(line = "")
     if line.is_a?(Array)
       for item in line
         add(item)
@@ -49,7 +49,7 @@ class SourceRenderer
         @lines.push(get_indent << line)
       end
     else
-      raise TypeError, 'invalid type ' + line.inspect
+      raise TypeError, "invalid type " + line.inspect
     end
   end
 
@@ -76,7 +76,7 @@ class SourceRenderer
   end
 
   def get_indent(extraIndent = 0)
-    totalIndent = ''
+    totalIndent = ""
     for i in 0..(@indentLevel + extraIndent - 1)
       totalIndent += @indentChars
     end
@@ -85,7 +85,7 @@ class SourceRenderer
   end
 
   def getContents
-    outStr = ''
+    outStr = ""
 
     @lines.each do |line|
       outStr << line << @lineEnding
@@ -93,7 +93,7 @@ class SourceRenderer
     outStr
   end
 
-  def end_block(afterClose = '')
+  def end_block(afterClose = "")
     unindent
 
     if !@lines.last.strip.empty?
@@ -112,27 +112,27 @@ class SourceRenderer
 
   def start_function_paramed(functionName, paramList, returnType = nil)
     if returnType.nil?
-      returnStr = ''
+      returnStr = ""
     else
-      returnStr = ': ' + returnType
+      returnStr = ": " + returnType
     end
-    
-    oneLiner = paramList.join(', ')
+
+    oneLiner = paramList.join(", ")
 
     if (oneLiner.length + returnStr.length) > @max_line_length
       paramStr = "\n"
 
       (0..paramList.length - 1).each do |i|
         if i < paramList.length - 1
-          paramStr += get_indent(2) + paramList[i] + ',' + "\n"
+          paramStr += get_indent(2) + paramList[i] + "," + "\n"
         else
           paramStr += get_indent(2) + paramList[i]
         end
       end
 
-      start_delimed_chunk(functionName + '(' + paramStr + ')' + returnStr, @hangingFunctionStart)
+      start_delimed_chunk(functionName + "(" + paramStr + ")" + returnStr, @hangingFunctionStart)
     else
-      start_delimed_chunk(functionName + '(' + oneLiner + ')' + returnStr, @hangingFunctionStart)
+      start_delimed_chunk(functionName + "(" + oneLiner + ")" + returnStr, @hangingFunctionStart)
     end
   end
 
@@ -172,7 +172,7 @@ class SourceRenderer
     start_delimed_chunk(classDeclairation, @hangingFunctionStart)
   end
 
-  def end_class(afterClose = '')
+  def end_class(afterClose = "")
     end_block(afterClose)
   end
 
@@ -180,8 +180,8 @@ class SourceRenderer
     start_delimed_chunk(statement, @hangingBlockStart)
   end
 
-  def start_delimed_chunk(statement = '', hanging = true)
-    statement += ' ' if statement != '' && @blockDelimOpen.length > 0 && hanging
+  def start_delimed_chunk(statement = "", hanging = true)
+    statement += " " if statement != "" && @blockDelimOpen.length > 0 && hanging
 
     if hanging
       @lines.push(get_indent + statement + @blockDelimOpen)

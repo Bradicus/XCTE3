@@ -8,84 +8,82 @@
 # This plugin creates a method that returns the class variables as a string
 # this class to a stream
 
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
 class XCTECpp::MethodGetString < XCTEPlugin
   def initialize
-    @name = 'method_get_string'
-    @language = 'cpp'
+    @name = "method_get_string"
+    @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
   end
 
   # Returns declairation string for this class's logIt method
-  def get_declaration(_codeClass, _cfg)
-    methodString = String.new
+  def render_declaration(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
 
-    methodString << "\n#ifdef _LOG_IT\n"
-    methodString << "        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const;\n"
-    methodString << "#else\n"
-    methodString << "        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const{;};\n"
-    methodString << "#endif\n"
-
-    return methodString
+    bld.add "\n#ifdef _LOG_IT\n"
+    bld.add "        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const;\n"
+    bld.add "#else\n"
+    bld.add "        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const{;};\n"
+    bld.add "#endif\n"
   end
 
   # Returns definition string for this class's logIt method
-  def render_function(codeClass, _cfg)
-    methodString = String.new
+  def render_function(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
 
-    methodString << "/**\n* Returns a string representing object data\n"
-    methodString << "*/\n"
+    bld.add "/**\n* Returns a string representing object data\n"
+    bld.add "*/\n"
 
-    methodString << 'std::string ' << codeClass.name << " :: getString() const\n"
-    methodString << "{\n"
+    bld.add "std::string " << cls.name << " :: getString() const\n"
+    bld.add "{\n"
 
-    if codeClass.has_an_array
-      methodString << "    unsigned int i;\n\n"
+    if cls.has_an_array
+      bld.add "    unsigned int i;\n\n"
     end
 
-    methodString << "    std::stringstream outStr;\n\n"
+    bld.add "    std::stringstream outStr;\n\n"
 
     varArray = []
-    codeClass.getAllVarsFor(varArray)
+    cls.getAllVarsFor(varArray)
 
     for varSec in varArray
       if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
         if !varSec.isPointer
           if varSec.arrayElemCount > 0
             if XCTECpp::Utils.is_primitive(varSec)
-              methodString << '    outStr << "' << varSec.name << ': {";'
-              methodString << "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) << "; i++)\n"
-              methodString << '        outStr << '
-              methodString << varSec.name << "[i] << \"  \";\n"
-              methodString << "    outStr << \"}\"\n\n"
+              bld.add '    outStr << "' << varSec.name << ': {";'
+              bld.add "\n    for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) << "; i++)\n"
+              bld.add "        outStr << "
+              bld.add varSec.name << "[i] << \"  \";\n"
+              bld.add "    outStr << \"}\"\n\n"
             else
-              methodString << '    outStr << indent << "' << varSec.name << ': [";'
+              bld.add '    outStr << indent << "' << varSec.name << ': [";'
 
-              methodString << '        for (i = 0; i < ' << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
-              methodString << '            ' << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
-              methodString << "        outStr << \" ] \";\n\n"
+              bld.add "        for (i = 0; i < " << XCTECpp::Utils.get_size_const(varSec) + "; i++)\n"
+              bld.add "            " << varSec.name << "[i].logIt(outStr,  indent + \"  \");\n\n"
+              bld.add "        outStr << \" ] \";\n\n"
             end
           elsif XCTECpp::Utils.is_primitive(varSec) # Not an array
-            methodString << '    outStr << "' << varSec.name << ': " << '
-            methodString << varSec.name +  " << \"  \";\n"
+            bld.add '    outStr << "' << varSec.name << ': " << '
+            bld.add varSec.name + " << \"  \";\n"
           else
-            methodString << '    outStr << "Object ' << varSec.name << ': ";'
-            methodString << '        ' << varSec.name << ".getString();\n"
+            bld.add '    outStr << "Object ' << varSec.name << ': ";'
+            bld.add "        " << varSec.name << ".getString();\n"
           end
         else
-          methodString << '    // outStr << ' << varSec.name << ";\n"
+          bld.add "    // outStr << " << varSec.name << ";\n"
         end
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        methodString << '    ' << XCTECpp::Utils.get_comment(varSec)
+        bld.add "    " << XCTECpp::Utils.get_comment(varSec)
       elsif varSec.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
-        methodString << varSec.formatText
+        bld.add varSec.formatText
       end
     end
 
-    methodString << "}\n"
-
-    return methodString
+    bld.add "}\n"
   end
 end
 

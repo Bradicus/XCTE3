@@ -7,13 +7,12 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_typescript/x_c_t_e_typescript.rb'
-require 'plugins_core/lang_typescript/utils'
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_typescript/x_c_t_e_typescript.rb"
+require "plugins_core/lang_typescript/utils"
 
 module XCTETypescript
   class MethodConstructor < XCTEPlugin
-
     def initialize
       super
 
@@ -23,13 +22,17 @@ module XCTETypescript
     end
 
     def get_unformatted_fun_name(cls, fun)
-      return 'constructor'
+      return "constructor"
     end
 
     def process_dependencies(cls, bld, fun); end
 
     # Returns the code for the content for this function
-    def render_function(cls, bld, fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       params = []
 
       for param in fun.parameters.vars
@@ -41,7 +44,7 @@ module XCTETypescript
       if cls.base_classes.length > 0
         bc = cls.base_classes[0]
         bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
-        base_constructor_fun = bc_cls_spec.get_function('method_constructor')
+        base_constructor_fun = bc_cls_spec.get_function("method_constructor")
         if !base_constructor_fun.nil?
           b_params = []
 
@@ -49,9 +52,9 @@ module XCTETypescript
             b_params.push Utils.instance.get_styled_variable_name(param)
           end
 
-          bld.add 'super(' + b_params.join(', ') + ');'
+          bld.add "super(" + b_params.join(", ") + ");"
         else
-          bld.add 'super();'
+          bld.add "super();"
         end
       end
 
@@ -81,7 +84,6 @@ module XCTETypescript
 
       bld.end_class
     end
-
   end
 end
 

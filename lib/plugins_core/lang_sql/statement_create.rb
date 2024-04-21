@@ -26,7 +26,7 @@ module XCTESql
       sqlCDef = Array.new
       indent = ""
 
-      codeLine = indent + "CREATE TABLE `" + cls.name + "List` ("
+      codeLine = indent + "CREATE TABLE `" + cls.get_u_name + "List` ("
       sqlCDef << codeLine
       sqlCDef << indent << "`id` INT"
 

@@ -22,6 +22,14 @@
         },
         {
             "type": "rdbg",
+            "name": "RMap",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder}/RapidMap",
+            "script": "${workspaceFolder}/bin/xcte3.rb"
+        },
+        {
+            "type": "rdbg",
             "name": "Internal",
             "request": "launch",
             "args": [],

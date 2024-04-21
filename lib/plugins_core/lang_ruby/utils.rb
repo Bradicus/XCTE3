@@ -7,16 +7,16 @@
 #
 # This class contains utility functions for a language
 
-require 'plugins_core/lang_ruby/x_c_t_e_ruby'
-require 'lang_profile'
-require 'utils_base'
+require "plugins_core/lang_ruby/x_c_t_e_ruby"
+require "lang_profile"
+require "utils_base"
 
 module XCTERuby
   class Utils < UtilsBase
     include Singleton
 
     def initialize
-      super('ruby')
+      super("ruby")
     end
 
     def get_class_name(var)
@@ -27,7 +27,6 @@ module XCTERuby
 
     # Get a parameter declaration for a method parameter
     def get_param_dec(var)
-
       return get_styled_variable_name(var)
     end
 
@@ -35,36 +34,36 @@ module XCTERuby
     def get_var_dec(var)
       vDec = String.new
 
-      vDec << '@' if var.isStatic
+      vDec << "@" if var.isStatic
 
-      vDec << '@' << get_styled_variable_name(var)
+      vDec << "@" << get_styled_variable_name(var)
 
-      vDec << ' = Array.new(' << get_size_const(var) << ')' if var.arrayElemCount.to_i > 0
+      vDec << " = Array.new(" << get_size_const(var) << ")" if var.arrayElemCount.to_i > 0
 
       if !var.defaultValue.nil?
-        vDec << ' = '
-        if var.vtype == 'String'
+        vDec << " = "
+        if var.vtype == "String"
           vDec << '"' << var.defaultValue << '"'
         else
           if (var.defaultValue == "null")
-            vDec << 'nil'
+            vDec << "nil"
           else
-            vDec << var.defaultValue 
+            vDec << var.defaultValue
           end
         end
       elsif var.isList
-        vDec << ' = []'
+        vDec << " = []"
       elsif var.init_vars
-        vDec << ' = '
+        vDec << " = "
 
         if var.nullable
-          vDec << 'nil'
-        elsif var.vtype == 'String'
+          vDec << "nil"
+        elsif var.vtype == "String"
           vDec << '""'
         elsif !is_primitive(var)
-          vDec << ' ' + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + '.new'
+          vDec << " " + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + ".new"
         else
-          vDec << '0'
+          vDec << "0"
         end
       end
 
@@ -75,7 +74,7 @@ module XCTERuby
 
     # Returns a size constant for the specified variable
     def get_size_const(var)
-      return 'ARRAYSZ_' << var.name.upcase
+      return "ARRAYSZ_" << var.name.upcase
     end
 
     # Get the extension for a file type
@@ -86,13 +85,13 @@ module XCTERuby
     # These are comments declaired in the COMMENT element,
     # not the comment atribute of a variable
     def get_comment(var)
-      return '# ' << var.text << " \n"
+      return "# " << var.text << " \n"
     end
 
     # Get type for a class
     def getClassTypeName(cls)
-      nsPrefix = ''
-      nsPrefix = cls.namespaces.join('::') + '::' if cls.namespaces.hasItems?
+      nsPrefix = ""
+      nsPrefix = cls.namespace.join("::") + "::" if cls.namespace.hasItems?
 
       baseTypeName = CodeNameStyling.getStyled(cls.model_name, @langProfile.classNameStyle)
       baseTypeName = nsPrefix + baseTypeName
@@ -105,10 +104,10 @@ module XCTERuby
 
       return unless !str.nil? && str.strip.length > 0
 
-      bld.add '##'
+      bld.add "##"
       str.each_line do |line|
         if !firstLine || line.strip.length > 0
-          bld.add('# ' + line.delete("\n"))
+          bld.add("# " + line.delete("\n"))
           firstLine = false
         end
       end

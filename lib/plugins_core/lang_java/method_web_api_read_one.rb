@@ -22,12 +22,16 @@ module XCTEJava
     end
 
     # Returns definition string for this class's constructor
-    def render_function(cls, bld, fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       bld.add("/*")
       bld.add("* Web API get single " + cls.get_u_name)
       bld.add("*/")
 
-      get_body(cls, bld, fun)
+      get_body(fp_params)
     end
 
     def get_declairation(cls, bld, _fun)
@@ -35,7 +39,11 @@ module XCTEJava
               " Get" + Utils.instance.style_as_class(cls.get_u_name) + "(int id);")
     end
 
-    def get_body(cls, bld, _fun)
+    def get_body(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       conDef = String.new
       dataClass = Utils.instance.get_data_class(cls)
       dataStoreName =

@@ -176,5 +176,15 @@ module XCTETypescript
         bld.add("import { " + inc.name + " } from '" + get_default_utils().style_as_path_name(path) + "';")
       end
     end
+
+    def start_function_elem(bld, fun_elem)
+      params = []
+
+      for param in fun_elem.parameters.vars
+        params.push(get_default_utils().get_param_dec(param))
+      end
+
+      bld.start_function_paramed(fun_elem.name, params, fun_elem.returnValue.vtype)
+    end
   end
 end

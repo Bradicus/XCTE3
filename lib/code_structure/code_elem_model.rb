@@ -3,16 +3,16 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 
-require 'code_structure/code_elem'
-require 'code_structure/code_elem_class_spec'
-require 'code_structure/code_elem_function'
-require 'code_structure/code_elem_include'
-require 'code_structure/code_elem_parent'
-require 'code_structure/code_elem_variable'
-require 'code_structure/code_elem_var_group'
+require "code_structure/code_elem"
+require "code_structure/code_elem_class_spec"
+require "code_structure/code_elem_function"
+require "code_structure/code_elem_include"
+require "code_structure/code_elem_parent"
+require "code_structure/code_elem_variable"
+require "code_structure/code_elem_var_group"
 
-require 'rexml/document'
-require 'filters/data_filter'
+require "rexml/document"
+require "filters/data_filter"
 
 module CodeStructure
   class CodeElemModel < CodeElem
@@ -24,10 +24,10 @@ module CodeStructure
 
     def initialize
       super(CodeStructure::CodeElemTypes::ELEM_MODEL, nil)
-      
+
       @classes = []
       @varGroup = CodeElemVarGroup.new
-      @xmlFileName = ''
+      @xmlFileName = ""
       @modelSet = nil
       @feature_group = nil
       @data_filter = Filters::DataFilter.new
@@ -55,7 +55,9 @@ module CodeStructure
     #
     def findClassSpecByPluginName(plug_name)
       for cls in @classes
-        return cls if cls.plug_name == plug_name
+        if cls.plug_name == plug_name
+          return cls
+        end
       end
 
       return nil
@@ -83,27 +85,27 @@ module CodeStructure
       lowName = @name
       lowName = lowName.downcase
 
-      return(lowName + '.o') if !@case.nil? && !lowName.nil?
+      return(lowName + ".o") if !@case.nil? && !lowName.nil?
 
-      return(@name + '.o')
+      return(@name + ".o")
     end
 
     def getCppFileName
       lowName = @name
       lowName = lowName.downcase
 
-      return(lowName + '.cpp') if !@case.nil? && !lowName.nil?
+      return(lowName + ".cpp") if !@case.nil? && !lowName.nil?
 
-      return(@name + '.cpp')
+      return(@name + ".cpp")
     end
 
     def getHeaderFileName
       lowName = @name
       lowName = lowName.downcase
 
-      return(lowName + '.h') if !@case.nil? && !lowName.nil?
+      return(lowName + ".h") if !@case.nil? && !lowName.nil?
 
-      return(@name + '.h')
+      return(@name + ".h")
     end
 
     def get_var_by_name(var_name)
@@ -113,7 +115,7 @@ module CodeStructure
         return vars[0]
       end
 
-      Log.warn('Cound not find variable ' + var_name)
+      Log.warn("Cound not find variable " + var_name)
 
       return nil
     end

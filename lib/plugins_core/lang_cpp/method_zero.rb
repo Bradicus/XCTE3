@@ -18,7 +18,7 @@ class XCTECpp::MethodZero < XCTEPlugin
   end
 
   # Returns declairation string for this class's equality assignment operator
-  def get_declaration(codeClass, _cfg)
+  def render_declaration(codeClass, _cfg)
     varArray = []
     codeClass.getAllVarsFor(varArray)
 

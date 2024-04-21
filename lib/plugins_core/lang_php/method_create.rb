@@ -18,7 +18,7 @@ class XCTEPhp::MethodGet < XCTEPlugin
   end
 
   # Returns declairation string for this class's get method
-  def get_declaration(codeClass, cfg)
+  def render_declaration(codeClass, cfg)
     return ""
   end
 

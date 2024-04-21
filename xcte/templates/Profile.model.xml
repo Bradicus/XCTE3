@@ -42,16 +42,16 @@
 
 	<gen_class type="class_mapper_dozer" path="mapper" ns="com.example.demo.mapper">
 		<function name="method_map" gen_reverse="true">
-			<fromClass cname="profile user" plugin="class_standard" />
-			<toClass cname="profile" plugin="{DataModelPlugin}" />
+			<fromClass name="profile user" plugin="class_standard" />
+			<toClass name="profile" plugin="{DataModelPlugin}" />
 		</function>
 		<function name="method_map" gen_reverse="true">
-			<fromClass cname="profile admin" plugin="class_standard" />
-			<toClass cname="profile" plugin="{DataModelPlugin}" />
+			<fromClass name="profile admin" plugin="class_standard" />
+			<toClass name="profile" plugin="{DataModelPlugin}" />
 		</function>
 			<function name="method_map" gen_list_map="true">
-				<fromClass cname="profile" plugin="{DataModelPlugin}" />
-				<toClass cname="profile listing" plugin="class_standard" />
+				<fromClass name="profile" plugin="{DataModelPlugin}" />
+				<toClass name="profile listing" plugin="class_standard" />
 			</function>
 	</gen_class>
 </model>

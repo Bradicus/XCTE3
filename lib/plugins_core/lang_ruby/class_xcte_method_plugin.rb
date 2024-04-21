@@ -10,19 +10,19 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_ruby/utils'
-require 'plugins_core/lang_ruby/source_renderer_ruby'
-require 'plugins_core/lang_ruby/x_c_t_e_ruby'
+require "plugins_core/lang_ruby/utils"
+require "plugins_core/lang_ruby/source_renderer_ruby"
+require "plugins_core/lang_ruby/x_c_t_e_ruby"
 
-require 'code_structure/code_elem_parent'
-require 'code_structure/code_elem_model'
-require 'lang_file'
+require "code_structure/code_elem_parent"
+require "code_structure/code_elem_model"
+require "lang_file"
 
 module XCTERuby
   class ClassXCTEMethodPlugin < ClassBase
     def initialize
-      @name = 'xcte_method_plugin'
-      @language = 'ruby'
+      @name = "xcte_method_plugin"
+      @language = "ruby"
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -35,7 +35,7 @@ module XCTERuby
 
       bld = SourceRendererRuby.new
       bld.lfName = lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = Utils.instance.get_extension('body')
+      bld.lfExtension = Utils.instance.get_extension("body")
       render_file_comment(cls, bld)
       render_body_content(cls, bld)
 
@@ -45,30 +45,30 @@ module XCTERuby
     end
 
     def render_file_comment(cls, bld)
-      bld.add('# Author:: ' + UserSettings.instance.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
+      bld.add("# Author:: " + UserSettings.instance.codeAuthor) if !UserSettings.instance.codeAuthor.nil?
 
       if !UserSettings.instance.codeCompany.nil? && UserSettings.instance.codeCompany.size > 0
-        bld.add('# ' + UserSettings.instance.codeCompany)
+        bld.add("# " + UserSettings.instance.codeCompany)
       end
 
       if !UserSettings.instance.codeLicense.nil? && UserSettings.instance.codeLicense.strip.size > 0
-        bld.add('#')
-        bld.add('# License:: ' + UserSettings.instance.codeLicense)
+        bld.add("#")
+        bld.add("# License:: " + UserSettings.instance.codeLicense)
       end
 
-      bld.add('#')
+      bld.add("#")
 
       return if cls.description.nil?
 
       cls.description.each_line do |descLine|
-        headerString.add('# ' + descLine.chomp) if descLine.strip.size > 0
+        headerString.add("# " + descLine.chomp) if descLine.strip.size > 0
       end
     end
 
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
       for inc in cls.includes
-        bld.add("require '" + inc.path + inc.name + '.' + Utils.instance.get_extension('body') + "'")
+        bld.add("require '" + inc.path + inc.name + "." + Utils.instance.get_extension("body") + "'")
       end
 
       bld.add if !cls.includes.empty?
@@ -76,52 +76,55 @@ module XCTERuby
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.ns_list
-          bld.start_block('module ' << nsItem)
+          bld.start_block("module " << nsItem)
         end
       end
 
-      bld.start_class('class ' + Utils.instance.style_as_class(cls.get_u_name) + ' < XCTEPlugin')
+      bld.start_class("class " + Utils.instance.style_as_class(cls.get_u_name) + " < XCTEPlugin")
 
-      bld.start_function('def initialize')
+      bld.start_function("def initialize")
       bld.add('@name = "' + CodeNameStyling.styleUnderscoreLower(cls.get_u_name) + '"')
-      bld.add('@language = "' + cls.data_node.attributes['lang'] + '"')
-      bld.add('@category = XCTEPlugin::CAT_METHOD')
+      bld.add('@language = "' + cls.data_node.attributes["lang"] + '"')
+      bld.add("@category = XCTEPlugin::CAT_METHOD")
       bld.add('@author = "' + UserSettings.instance.codeAuthor + '"') if UserSettings.instance.codeAuthor
       bld.endFunction
       bld.add
 
-      bld.add('# Returns the code for the content for this function')
-      bld.start_function('def render_function(cls, bld, fun)')
+      bld.add("# Returns the code for the content for this function")
+      bld.start_function("def render_function(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
+    fun = fp_params.fun_spec")
 
-      bld.add('# process class variables')
+      bld.add("# process class variables")
 
-      bld.add('# Generate code for class variables')
-      bld.add('each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|')
+      bld.add("# Generate code for class variables")
+      bld.add("each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|")
 
-      bld.start_block('if !var.isStatic   # Ignore static variables')
-      bld.start_block('if Utils.instance.is_primitive(var)')
+      bld.start_block("if !var.isStatic   # Ignore static variables")
+      bld.start_block("if Utils.instance.is_primitive(var)")
       bld.start_block("if var.arrayElemCount.to_i > 0\t# Array of primitives)")
       bld.add('bld.start_block("for i in 0..@" + var.name + ".size")')
-      bld.add('bld.add(var.name + "[i] = src" + cls.name + "[i]")')
-      bld.add('bld.end_block')
+      bld.add('bld.add(var.name + "[i] = src" + cls.get_u_name + "[i]")')
+      bld.add("bld.end_block")
 
-      bld.mid_block('else')
-      bld.add('bld.add(var.name + " = " + "src" + cls.name + "." + var.name)')
+      bld.mid_block("else")
+      bld.add('bld.add(var.name + " = " + "src" + cls.get_u_name + "." + var.name)')
       bld.end_block
 
-      bld.mid_block('else')
+      bld.mid_block("else")
       bld.start_block("if var.arrayElemCount > 0\t# Array of objects")
       bld.add('bld.start_block("for i in 0..@" << var.name << ".size")')
-      bld.add('bld.add(var.name << "[i] = src" << cls.name << "[i]")')
-      bld.add('bld.end_block')
+      bld.add('bld.add(var.name << "[i] = src" << cls.get_u_name << "[i]")')
+      bld.add("bld.end_block")
 
-      bld.mid_block('else')
-      bld.add('bld.add(var.name + " = " + "src" + cls.name + "." + var.name)')
+      bld.mid_block("else")
+      bld.add('bld.add(var.name + " = " + "src" + cls.get_u_name + "." + var.name)')
       bld.end_block
       bld.end_block
       bld.end_block
 
-      bld.add('}))')
+      bld.add("}))")
       bld.end_block
       bld.end_block
 
@@ -134,11 +137,11 @@ module XCTERuby
 
       bld.add
 
-      prefix = cls.namespace.get('::')
+      prefix = cls.namespace.get("::")
 
-      prefix += '::' if prefix.size > 0
+      prefix += "::" if prefix.size > 0
 
-      bld.add('XCTEPlugin::registerPlugin(' + prefix + get_class_name(cls) + '.new)')
+      bld.add("XCTEPlugin::registerPlugin(" + prefix + get_class_name(cls) + ".new)")
     end
   end
 end

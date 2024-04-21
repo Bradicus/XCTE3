@@ -18,9 +18,12 @@ class XCTECpp::MethodDefine < XCTEPlugin
   end
 
   # Returns declairation string for this class's define function
-  def get_declaration(codeClass, bld)
+  def render_declaration(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
+
     varArray = []
-    codeClass.getAllVarsFor(varArray)
+    cls.getAllVarsFor(varArray)
 
     eqString = String.new
     seperator = ""
@@ -40,36 +43,36 @@ class XCTECpp::MethodDefine < XCTEPlugin
   end
 
   # Returns declairation string for this class's define function
-  def get_declaration_inline(codeClass, _cfg)
-    varArray = []
-    codeClass.getAllVarsFor(varArray)
+  def render_declaration_inline(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
 
     eqString = String.new
     seperator = ""
     bld.add("void define(")
 
-    for var in varArray
+    Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
         bld.same_line(seperator << XCTECpp::Utils.get_type_name(var.vtype) << " ")
         bld.same_line("new" << XCTECpp::Utils.get_capitalized_first(var.name))
         seperator = ", "
       end
-    end
+    }))
 
     bld.same_line(")")
     bld.start_block
-    get_body(codeClass, bld)
+    get_body(cls, bld)
   end
 
   # Returns definition string for this class's equality assignment operator
-  def render_function(codeClass, bld)
+  def render_function(cls, bld)
     seperator = ""
     longArrayFound = false
     varArray = []
-    codeClass.getAllVarsFor(varArray)
+    cls.getAllVarsFor(varArray)
 
     bld.add("/**\n* Defines the variables in an object\n*/")
-    bld.add("void " << codeClass.name << " :: define(")
+    bld.add("void " << cls.name << " :: define(")
 
     for var in varArray
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && XCTECpp::Utils.is_primitive(var) && (var.arrayElemCount.to_i == 0) # Ignore arrays
@@ -82,26 +85,29 @@ class XCTECpp::MethodDefine < XCTEPlugin
     bld.same_line(")")
     bld.start_block
 
-    #    if codeClass.has_an_array
+    #    if cls.has_an_array
     #      eqString << "    unsigned int i;\n\n";
     #    end
 
-    eqString << get_body(codeClass, "    ")
+    eqString << get_body(cls, "    ")
 
     bld.end_block
     bld.add
   end
 
   ## Get body of function
-  def get_body(codeClass, _bld)
+  def get_body(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
+
     eqString = String.new
     seperator = ""
     longArrayFound = false
     varArray = []
-    codeClass.getAllVarsFor(varArray)
+    cls.getAllVarsFor(varArray)
 
     varArray = []
-    codeClass.getAllVarsFor(varArray)
+    cls.getAllVarsFor(varArray)
 
     for var in varArray
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && !var.isStatic && Utils.instance.is_primitive(var)

@@ -11,7 +11,11 @@ module XCTETypescript
     end
 
     # Returns the code for the content for this function
-    def render_function(cls, bld, _fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       # process class variables
 
       className = Utils.instance.style_as_class(cls.model.name)

@@ -7,7 +7,7 @@
 	</gen_class>
 
 	<gen_class type="tsql_data_store" path="{DataModelPath}/store" ns="{DataModelNs}.store">
-		<data_class cname="!{ModelName}" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
+		<data_class name="!{ModelName}" ns="{DataModelNs}" plugin="{DataModelPlugin}" />
 		
 		<function name="method_tsql_create" interface="true" />
 		<function name="method_tsql_update" interface="true" />

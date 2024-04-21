@@ -3,19 +3,20 @@
 # This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 
-require 'code_structure/code_elem'
-require 'managers/name_compare'
+require "code_structure/code_elem"
+require "managers/name_compare"
 
 module CodeStructure
   class CodeElemClassRef < CodeElem
-    attr_accessor :namespaces, :model_name, :plugin_name
+    attr_accessor :namespace, :model_name, :plugin_name, :template_params
 
     def initialize(parentElem, _pComp)
       super(nil, parentElem)
 
-      @namespaces = []
+      @namespace = CodeElemNamespace.new("")
       @model_name = nil
       @plugin_name = nil
+      @template_params = []
     end
 
     def matchesRef(ref)
@@ -29,4 +30,3 @@ module CodeStructure
     end
   end
 end
-

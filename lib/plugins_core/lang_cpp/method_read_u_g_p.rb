@@ -18,7 +18,7 @@ class XCTECpp::MethodReadUGP < XCTEPlugin
   end
 
   # Returns declairation string for this class's UGP read method
-  def get_declaration(_codeClass, _cfg)
+  def render_declaration(_codeClass, _cfg)
     return '        void read' << "(ug::io::StreamReader* ugsr);\n"
   end
 

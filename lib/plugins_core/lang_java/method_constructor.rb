@@ -23,7 +23,7 @@ class XCTEJava::MethodConstructor < XCTEPlugin
     bld.add('* Constructor')
     bld.add('*/')
 
-    bld.start_function(cls.name + '()')
+    bld.start_function(cls.get_u_name + '()')
 
     each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
       if !var.defaultValue.nil?

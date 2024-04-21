@@ -18,7 +18,7 @@ class XCTERuby::MethodXCTEGenSrouceFiles < XCTEPlugin
   end
 
   # Returns declairation string for this class's set method
-  def get_declaration(_codeClass, bld)
+  def render_declaration(_codeClass, bld)
     bld.add('##')
     bld.add('# This class generates a definition for this function')
     bld.start_class('def render_function(codeClass, bld)')

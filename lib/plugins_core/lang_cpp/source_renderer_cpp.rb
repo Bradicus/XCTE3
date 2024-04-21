@@ -7,7 +7,7 @@
 #
 # This class renders C++ code
 
-require 'source_renderer_brace_delim'
+require "source_renderer_brace_delim"
 
 class SourceRendererCpp < SourceRendererBraceDelim
   def initialize
@@ -15,19 +15,19 @@ class SourceRendererCpp < SourceRendererBraceDelim
   end
 
   def genMultiComment(lines)
-    add('/**')
+    add("/**")
     for line in lines
-      add(' * ' + line)
+      add(" * " + line)
     end
-    add(' */')
+    add(" */")
   end
 
-  def endFunction(afterClose = '')
+  def endFunction(afterClose = "")
     end_block(afterClose)
-    add
+    separate
   end
 
-  def end_class(afterClose = '')
-    end_block(';' + afterClose)
+  def end_class(afterClose = "")
+    end_block(";" + afterClose)
   end
 end

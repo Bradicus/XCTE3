@@ -97,7 +97,10 @@ module XCTECSharp
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
           templ = XCTEPlugin.findMethodPlugin("csharp", fun.name)
           if !templ.nil?
-            templ.render_function(cls, bld, fun)
+            templ.render_function(fp_params)
+            bld = fp_params.bld
+            cls = fp_params.cls_spec
+            fun = fp_params.fun_spec
           else
             puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
           end

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="code elem spec and plugin">
+				
+	<gen_class type="class_standard" ns="code structure" path="code structure">
+	</gen_class>
+
+	<var_group genGet="true" genSet="true" init_vars="true">
+	  <var name="spec"	utype="code elem class spec"	nullable="true"  />
+	  <var name="plugin"	type="XCTEPlugin"	nullable="true" />
+	</var_group>
+	
+</model>

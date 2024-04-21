@@ -37,7 +37,7 @@ class XCTEJava::MethodLogIt < XCTEPlugin
       bld.add("int i;\n")
     end
 
-    bld.add('pStream.println(indent + " -- ' << cls.name << ' begin -- ");')
+    bld.add('pStream.println(indent + " -- ' << cls.get_u_name << ' begin -- ");')
 
     each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
       if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
@@ -72,7 +72,7 @@ class XCTEJava::MethodLogIt < XCTEPlugin
       end
     }))
 
-    bld.add('pStream.println(indent + " -- ' << cls.name << ' end -- ");')
+    bld.add('pStream.println(indent + " -- ' << cls.get_u_name << ' end -- ");')
 
     bld.end_block
 

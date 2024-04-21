@@ -11,7 +11,11 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def render_function(cls, bld, fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       bld.add("/// <summary>")
       bld.add("/// Reads set of results using the specified filter parameters")
       bld.add("/// </summary>")

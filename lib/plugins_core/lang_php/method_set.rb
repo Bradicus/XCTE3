@@ -18,7 +18,7 @@ class XCTEPhp::MethodSet < XCTEPlugin
   end
 
   # Returns declairation string for this class's set method
-  def get_declaration(_codeClass, _cfg)
+  def render_declaration(_codeClass, _cfg)
     return ""
   end
 

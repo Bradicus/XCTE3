@@ -6,7 +6,7 @@
 			This class stores information on variables in a model.
 		</description>
 
-		<base_class cname="code elem" plugin="class_standard" />
+		<base_class name="code elem" plugin="class_standard" />
 
 		<function name="method_constructor" >
 			<param name="parentElem" utype="code elem" />

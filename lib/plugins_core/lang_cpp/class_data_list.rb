@@ -61,13 +61,13 @@ module XCTECpp
       #      cls.groups << newGroup
 
       listHFile = LangFile.new
-      listHFile.lfName = cls.name
+      listHFile.lfName = cls.get_u_name
       listHFile.lfExtension = XCTECpp::Utils.get_extension("header")
       listHFile.lfContents = stdClass.genHeaderComment(cls, cfg)
       listHFile.lfContents << stdClass.genHeader(cls, cfg)
 
       listCppFile = LangFile.new
-      listCppFile.lfName = cls.name
+      listCppFile.lfName = cls.get_u_name
       listCppFile.lfExtension = XCTECpp::Utils.get_extension("body")
       listCppFile.lfContents = stdClass.genHeaderComment(cls, cfg)
       listCppFile.lfContents << stdClass.genBody(cls, cfg)

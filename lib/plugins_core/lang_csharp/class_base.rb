@@ -18,23 +18,22 @@ module XCTECSharp
 
     def render_namespace_start(cls, bld)
       return unless cls.namespace.hasItems?
-      bld.start_block('namespace ' << cls.namespace.get('.'))
+      bld.start_block("namespace " << cls.namespace.get("."))
     end
 
     def render_namespace_end(cls, bld)
       return unless cls.namespace.hasItems?
 
-      bld.end_block(' // namespace ' + cls.namespace.get('.'))
+      bld.end_block(" // namespace " + cls.namespace.get("."))
       bld.add
     end
 
     def render_dependencies(cls, bld)
       for use in cls.uses
-        bld.add('using ' + use.namespace.get('.') + ';')
+        bld.add("using " + use.namespace.get(".") + ";")
       end
 
       bld.separate
     end
-
   end
 end

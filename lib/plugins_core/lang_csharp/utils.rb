@@ -313,7 +313,7 @@ module XCTECSharp
       if cls.template_params.length > 0
         allParams = []
 
-        for param in cls.templateParams
+        for param in cls.template_params
           allParams.push(CodeNameStyling.getStyled(param.name, @langProfile.classNameStyle))
         end
 
@@ -325,21 +325,21 @@ module XCTECSharp
 
     # Retrieve the standard version of this model's class
     def getStandardClassInfo(cls)
-      cls.standardClass = cls.model.findClassSpecByPluginName("class_standard")
+      cls.standard_class = cls.model.findClassSpecByPluginName("class_standard")
 
-      if cls.standardClass.namespace.hasItems?
-        ns = cls.standardClass.namespace.get(".") + "."
+      if cls.standard_class.namespace.hasItems?
+        ns = cls.standard_class.namespace.get(".") + "."
       else
         ns = ""
       end
 
-      cls.standardClassType = ns + Utils.instance.style_as_class(cls.get_u_name)
+      cls.standard_class_type = ns + Utils.instance.style_as_class(cls.get_u_name)
 
-      if !cls.standardClass.nil? && cls.standardClass.plug_name != "enum"
-        cls.addInclude(cls.standardClass.namespace.get("/"), Utils.instance.style_as_class(cls.get_u_name))
+      if !cls.standard_class.nil? && cls.standard_class.plug_name != "enum"
+        cls.addInclude(cls.standard_class.namespace.get("/"), Utils.instance.style_as_class(cls.get_u_name))
       end
 
-      return cls.standardClass
+      return cls.standard_class
     end
   end
 end

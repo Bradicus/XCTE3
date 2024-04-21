@@ -27,7 +27,7 @@ module XCTECSharp
       templ = XCTEPlugin.findMethodPlugin('csharp', 'method_test_engine')
 
       bld.add('[TestClass]')
-      classDec = cls.model.visibility + ' class ' + Utils.instance.style_as_class(cls.name)
+      classDec = cls.model.visibility + ' class ' + Utils.instance.style_as_class(cls.get_u_name)
 
       bld.start_class(classDec)
 

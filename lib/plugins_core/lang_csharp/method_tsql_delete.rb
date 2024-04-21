@@ -7,28 +7,31 @@
 #
 # This plugin deletes a record from the database
 
-require 'x_c_t_e_plugin'
-require 'code_name_styling'
+require "x_c_t_e_plugin"
+require "code_name_styling"
 
 module XCTECSharp
   class MethodTsqlDelete < XCTEPlugin
     def initialize
-      @name = 'method_tsql_delete'
-      @language = 'csharp'
+      @name = "method_tsql_delete"
+      @language = "csharp"
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns definition string for this class's constructor
-    def render_function(cls, bld, fun)
-      bld.add('///')
-      bld.add('/// Delete the record for the model with this id')
-      bld.add('///')
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+      bld.add("///")
+      bld.add("/// Delete the record for the model with this id")
+      bld.add("///")
 
       ident_var = cls.model.getIdentityVar
 
       if ident_var
-        bld.start_class('public void Delete(' + Utils.instance.get_param_dec(ident_var.getParam) +
-                       ', SqlConnection conn, SqlTransaction trans = null)')
+        bld.start_class("public void Delete(" + Utils.instance.get_param_dec(ident_var.getParam) +
+                        ", SqlConnection conn, SqlTransaction trans = null)")
       end
 
       get_body(cls, bld, fun)
@@ -41,12 +44,12 @@ module XCTECSharp
 
       return unless ident_var
 
-      bld.add('void Delete(' + Utils.instance.get_param_dec(ident_var.getParam) +
-              ', SqlConnection conn, SqlTransaction trans = null);')
+      bld.add("void Delete(" + Utils.instance.get_param_dec(ident_var.getParam) +
+              ", SqlConnection conn, SqlTransaction trans = null);")
     end
 
     def process_dependencies(cls, _bld, _fun)
-      cls.addUse('System.Data.SqlClient', 'SqlConnection')
+      cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 
     def get_body(cls, bld, _fun)
@@ -59,22 +62,22 @@ module XCTECSharp
         identParamName = Utils.instance.get_styled_variable_name(ident_var.getParam)
 
         bld.add('string sql = @"DELETE FROM ' + XCTETSql::Utils.instance.style_as_class(cls.get_u_name) +
-                ' WHERE [' + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.var_prefix) +
-                '] = @' + identParamName + '";')
+                " WHERE [" + XCTETSql::Utils.instance.get_styled_variable_name(ident_var, cls.var_prefix) +
+                "] = @" + identParamName + '";')
 
         bld.add
 
-        bld.start_block('try')
-        bld.start_block('using(SqlCommand cmd = new SqlCommand(sql, conn))')
-        bld.add('cmd.Transaction = trans;')
+        bld.start_block("try")
+        bld.start_block("using(SqlCommand cmd = new SqlCommand(sql, conn))")
+        bld.add("cmd.Transaction = trans;")
         bld.add
         bld.add('cmd.Parameters.AddWithValue("@' + identParamName +
-                '", ' + identParamName + ');')
+                '", ' + identParamName + ");")
         bld.end_block
         bld.end_block
-        bld.start_block('catch(Exception e)')
-        bld.add('throw new Exception("Error deleting ' + cls.get_u_name + ' with ' +
-                ident_var.name + ' = "' + ' + ' + identParamName + ', e);')
+        bld.start_block("catch(Exception e)")
+        bld.add('throw new Exception("Error deleting ' + cls.get_u_name + " with " +
+                ident_var.name + ' = "' + " + " + identParamName + ", e);")
         bld.end_block
       end
     end

@@ -17,7 +17,7 @@ class XCTECpp::MethodWriteUGP < XCTEPlugin
   end
 
   # Returns declairation string for this class's UGP write method
-  def get_declaration(_codeClass, _cfg)
+  def render_declaration(_codeClass, _cfg)
     return '        void write' << "(ug::io::StreamWriter* ugsw);\n"
   end
 

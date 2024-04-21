@@ -19,7 +19,7 @@ module XCTECpp
     end
 
     # Returns declairation string for this class's set method
-    def get_declaration(varSec, bld)
+    def render_declaration(varSec, bld)
       return unless varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == true
 
       funName = Utils.instance.style_as_function('set ' + varSec.name)

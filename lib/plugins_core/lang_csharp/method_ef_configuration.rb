@@ -7,26 +7,29 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin'
+require "x_c_t_e_plugin"
 
 module XCTECSharp
   class MethodEFConfiguration < XCTEPlugin
     def initialize
-      @name = 'method_ef_configuration'
-      @language = 'csharp'
+      @name = "method_ef_configuration"
+      @language = "csharp"
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns definition string for this class's constructor
-    def render_function(cls, bld, fun)
-      bld.add('//')
-      bld.add('// Configuration ')
-      bld.add('//')
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+      bld.add("//")
+      bld.add("// Configuration ")
+      bld.add("//")
 
       entityClassName = XCTECSharp::Utils.instance.style_as_class(cls.get_u_name)
-      configFunName = 'Configure(EntityTypeBuilder<' + entityClassName + '> builder)'
+      configFunName = "Configure(EntityTypeBuilder<" + entityClassName + "> builder)"
 
-      bld.start_function('public void ' + configFunName)
+      bld.start_function("public void " + configFunName)
 
       get_body(cls, bld, fun)
 
@@ -39,9 +42,9 @@ module XCTECSharp
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet || var.genSet
-          bld.add('builder.Property(e => e.' + XCTECSharp::Utils.instance.style_as_function(var.name) + ')')
+          bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.style_as_function(var.name) + ")")
         else
-          bld.add('builder.Property(e => e.' + XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + ')')
+          bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + ")")
         end
 
         bld.indent

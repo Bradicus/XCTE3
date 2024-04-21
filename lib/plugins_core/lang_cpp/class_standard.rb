@@ -35,6 +35,8 @@ module XCTECpp
     def gen_source_files(cls)
       srcFiles = []
 
+      cls.name = get_class_name(cls)
+
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       bld.lfExtension = Utils.instance.get_extension("header")
@@ -111,12 +113,24 @@ module XCTECpp
 
       inheritFrom = []
 
-      for bcls in cls.base_classes
-        inheritFrom.push(bcls.visibility + " " + Utils.instance.getClassTypeName(bcls))
+      for b_cls_ref in cls.base_classes
+        bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, b_cls_ref)
+
+        if bc_sap.valid?
+          inheritFrom.push("public" + " " + bc_sap.plugin.get_class_name(bc_sap.spec))
+        else # If this class isn't made by us
+          inheritFrom.push("public" + " " + Utils.instance.style_as_class(b_cls_ref.model_name))
+        end
       end
 
       for icls in cls.interfaces
-        inheritFrom.push(icls.visibility + " " + Utils.instance.getClassTypeName(icls))
+        i_pas = Utils.instance.get_plugin_and_spec_for_ref(cls, icls)
+
+        if i_pas.valid?
+          inheritFrom.push("public" + " " + i_pas.plugin.get_class_name(i_pas.spec))
+        else # If this class isn't made by us
+          inheritFrom.push("public" + " " + Utils.instance.style_as_class(icls.model_name))
+        end
       end
 
       classDec += " : " + inheritFrom.join(", ") if inheritFrom.length > 0
@@ -136,6 +150,8 @@ module XCTECpp
 
       # Generate function declarations
       for funItem in cls.functions
+        fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(funItem)
+
         if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if funItem.visibility != @activeVisibility
             @activeVisibility = funItem.visibility
@@ -148,9 +164,9 @@ module XCTECpp
             templ = XCTEPlugin.findMethodPlugin("cpp", funItem.name)
             if !templ.nil?
               if funItem.isInline
-                templ.get_declaration_inline(cls, bld, funItem)
+                templ.render_declaration_inline(fp_params)
               else
-                templ.get_declaration(cls, bld, funItem)
+                templ.render_declaration(fp_params)
               end
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -159,9 +175,9 @@ module XCTECpp
             templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
             if !templ.nil?
               if funItem.isInline
-                templ.get_declaration_inline(cls, bld, funItem)
+                templ.render_declaration_inline(fp_params)
               else
-                templ.get_declaration(cls, bld, funItem)
+                templ.render_declaration(fp_params)
               end
             else
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
@@ -221,11 +237,11 @@ module XCTECpp
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if var.genGet
             templ = XCTEPlugin.findMethodPlugin("cpp", "method_get")
-            templ.get_declaration(var, bld) if !templ.nil?
+            templ.render_declaration(var, bld) if !templ.nil?
           end
           if var.genSet
             templ = XCTEPlugin.findMethodPlugin("cpp", "method_set")
-            templ.get_declaration(var, bld) if !templ.nil?
+            templ.render_declaration(var, bld) if !templ.nil?
           end
         end
       end
@@ -259,30 +275,9 @@ module XCTECpp
         end
       }))
 
-      bld.add
+      bld.separate
 
-      # Generate code for functions
-      for fun in cls.functions
-        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin("cpp", fun.name)
-
-            Log.debug("processing template for function " + fun.name)
-            if !templ.nil?
-              templ.render_function(cls, bld, fun) if !fun.isInline
-            else
-              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
-            if !templ.nil?
-              templ.render_function(cls, bld, fun) if !fun.isInline
-            else
-              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          end
-        end
-      end
+      render_functions(cls, bld)
 
       bld.add("//+XCTE Custom Code Area")
       bld.add

@@ -1,5 +1,5 @@
-require 'plugins_core/lang_php/utils'
-require 'x_c_t_e_class_base'
+require "plugins_core/lang_php/utils"
+require "x_c_t_e_class_base"
 
 # This class contains functions that may be usefull in any type of class
 module XCTEPhp
@@ -13,7 +13,7 @@ module XCTEPhp
     end
 
     def get_sql_util(cls)
-      if cls.model.findClassSpecByPluginName('tsql_data_store') != nil
+      if cls.model.findClassSpecByPluginName("tsql_data_store") != nil
         return XCTETSql::Utils.instance
       else
         return XCTESql::Utils.instance
@@ -25,11 +25,11 @@ module XCTEPhp
 
       bld = get_source_renderer()
       bld.lfName = get_default_utils().style_as_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = get_default_utils().get_extension('body')
+      bld.lfExtension = get_default_utils().get_extension("body")
 
       process_dependencies(cls, bld)
-      
-      bld.add('<?php')
+
+      bld.add("<?php")
 
       render_file_comment(cls, bld)
       render_namespace_start(cls, bld)
@@ -37,7 +37,7 @@ module XCTEPhp
       render_body_content(cls, bld)
 
       render_namespace_end(cls, bld)
-      bld.add('?>')
+      bld.add("?>")
 
       srcFiles << bld
 
@@ -48,7 +48,7 @@ module XCTEPhp
       # Process namespace items
       return unless cls.namespace.hasItems?
 
-      bld.add('package ' + cls.namespace.get('.') + ';')
+      bld.add("package " + cls.namespace.get(".") + ";")
       bld.separate
     end
 
@@ -56,7 +56,7 @@ module XCTEPhp
     end
 
     def process_dependencies(cls, bld)
-      super 
+      super
 
       # Generate dependency code for functions
       for fun in cls.functions
@@ -93,11 +93,11 @@ module XCTEPhp
     def render_header_var_group_getter_setters(cls, bld)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
-          templ = XCTEPlugin.findMethodPlugin('php', 'method_get')
+          templ = XCTEPlugin.findMethodPlugin("php", "method_get")
           templ.render_function(var, bld) if !templ.nil?
         end
         if var.genSet
-          templ = XCTEPlugin.findMethodPlugin('php', 'method_set')
+          templ = XCTEPlugin.findMethodPlugin("php", "method_set")
           templ.render_function(var, bld) if !templ.nil?
         end
       }))
@@ -107,24 +107,22 @@ module XCTEPhp
       cfg = UserSettings.instance
       headerString = String.new
 
-      bld.add('/**')
-      bld.add('* @class ' + get_class_name(cls))
+      bld.add("/**")
+      bld.add("* @class " + get_class_name(cls))
 
-      bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
-
-
+      bld.add("* @author " + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
       bld.add("*\n* " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
 
-      bld.add('* ')
+      bld.add("* ")
 
       if !cls.description.nil?
         cls.description.each_line do |descLine|
-          bld.add('* ' << descLine.chomp) if descLine.strip.size > 0
+          bld.add("* " << descLine.chomp) if descLine.strip.size > 0
         end
       end
 
-      bld.add('*/')
+      bld.add("*/")
 
       headerString
     end

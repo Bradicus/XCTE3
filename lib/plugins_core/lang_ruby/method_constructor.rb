@@ -7,14 +7,13 @@
 #
 # This plugin creates a constructor for a class
 
-require 'plugins_core/lang_ruby/utils'
-require 'plugins_core/lang_ruby/x_c_t_e_ruby'
+require "plugins_core/lang_ruby/utils"
+require "plugins_core/lang_ruby/x_c_t_e_ruby"
 
 module XCTERuby
   class MethodConstructor < XCTEPlugin
-
     def initialize
-      super 
+      super
       @name = "method_constructor"
       @language = "ruby"
       @category = XCTEPlugin::CAT_METHOD
@@ -28,13 +27,17 @@ module XCTERuby
     end
 
     # Returns the code for the content for this function
-    def render_function(cls, bld, fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       param_set = []
 
       for param in fun.parameters.vars
         param_set.push Utils.instance.get_param_dec(param)
       end
-      
+
       for bc in cls.base_classes
         bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
 
@@ -53,14 +56,14 @@ module XCTERuby
       bld.start_class("def initialize(" + param_set.join(", ") + ")")
 
       if cls.base_classes.length > 0
-        bld.add 'super'
+        bld.add "super"
       end
 
       each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         for param in fun.parameters.vars
           if var.name == param.name
-            varName =  Utils.instance.get_styled_variable_name(var) 
-            bld.add '@' + varName + ' = ' + varName
+            varName = Utils.instance.get_styled_variable_name(var)
+            bld.add "@" + varName + " = " + varName
           end
         end
       }))

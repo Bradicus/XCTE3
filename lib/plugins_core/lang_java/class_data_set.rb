@@ -49,7 +49,7 @@ module XCTEJava
       cfg = UserSettings.instance
 
       bld.add('/**')
-      bld.add('* @class ' + cls.name)
+      bld.add('* @class ' + cls.get_u_name)
 
       bld.add('* @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
@@ -72,7 +72,7 @@ module XCTEJava
     def render_body_content(cls, bld)
       cfg = UserSettings.instance
 
-      bld.start_class('public class ' << cls.name)
+      bld.start_class('public class ' << cls.get_u_name)
 
       bld.separate if Utils.instance.has_an_array?(cls)
 

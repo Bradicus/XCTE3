@@ -20,7 +20,11 @@ module XCTECSharp
     end
 
     # Returns definition string for this class's constructor
-    def render_function(cls, bld, fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       bld.add("///")
       bld.add("/// Web API get single " + cls.get_u_name)
       bld.add("///")

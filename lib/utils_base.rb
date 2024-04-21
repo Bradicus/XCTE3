@@ -7,6 +7,7 @@
 
 require "lang_profile"
 require "params/process_dependencies_params"
+require "code_structure/code_elem_spec_and_plugin"
 require "log"
 
 class UtilsBase
@@ -177,7 +178,7 @@ class UtilsBase
   def try_add_include_for(to_cls, for_cls, plug_name)
     clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
 
-    if !clsPlug.nil?
+    if !clsPlug.nil? && !for_cls.nil?
       for_cls_spec = for_cls.model.findClassModel(plug_name)
 
       if !for_cls_spec.nil?
@@ -202,6 +203,23 @@ class UtilsBase
     varUType = var.getUType
     classUType = clsPlug.get_unformatted_class_name(cls)
     varUType == classUType
+  end
+
+  def get_plugin_and_spec_for_ref(cls_spec, cls_ref)
+    pas = CodeStructure::CodeElemSpecAndPlugin.new
+
+    pas.spec = ClassModelManager.findClass(cls_ref.model_name, cls_ref.plugin_name)
+    pas.plugin = XCTEPlugin::findClassPlugin(cls_spec.language, cls_ref.plugin_name)
+
+    if pas.spec.nil?
+      Log.info "Unable to find class spec for model: " + cls_ref.model_name + " " + cls_ref.plugin_name
+    end
+
+    if pas.plugin.nil?
+      Log.info "Unable to find class plugin for model: " + cls_ref.model_name + " " + cls_ref.plugin_name
+    end
+
+    return pas
   end
 
   def render_param_list(pList)

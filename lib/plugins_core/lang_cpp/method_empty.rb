@@ -8,88 +8,95 @@
 # This plugin creates an empty method with the specified function name
 # and parameters
 
-require 'code_structure/code_elem_model'
-require 'lang_file'
+require "code_structure/code_elem_model"
+require "lang_file"
 
-require 'x_c_t_e_plugin'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require "x_c_t_e_plugin"
+require "plugins_core/lang_cpp/x_c_t_e_cpp"
 
 module XCTECpp
   class MethodEmpty < XCTEPlugin
     def initialize
-      @name = 'method_empty'
-      @language = 'cpp'
+      @name = "method_empty"
+      @language = "cpp"
       @category = XCTEPlugin::CAT_METHOD
     end
 
     # Returns declairation string for this empty method
-    def get_declaration(_cls, bld, fun)
+    def render_declaration(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
+
       eDecl = String.new
 
-      eDecl << 'virtual ' if fun.isVirtual
+      eDecl << "virtual " if fun.isVirtual
 
-      eDecl << 'static ' if fun.isStatic
+      eDecl << "static " if fun.isStatic
 
-      eDecl << 'const ' if fun.returnValue.isConst
+      eDecl << "const " if fun.returnValue.isConst
 
-      eDecl << Utils.instance.get_type_name(fun.returnValue) << ' '
-      eDecl << fun.name << '('
+      eDecl << Utils.instance.get_type_name(fun.returnValue) << " "
+      eDecl << fun.name << "("
 
       for param in (0..(fun.parameters.vars.size - 1))
-        eDecl << ', ' if param != 0
+        eDecl << ", " if param != 0
 
         eDecl << Utils.instance.get_param_dec(fun.parameters.vars[param])
       end
 
-      eDecl << ')'
+      eDecl << ")"
 
-      eDecl << ' const' if fun.isConst
+      eDecl << " const" if fun.isConst
 
-      eDecl << ';'
+      eDecl << ";"
 
       bld.add(eDecl)
     end
 
     # Returns definition string for an empty method
-    def render_function(cls, bld, fun)
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
+      fun = fp_params.fun_spec
       # Skeleton of comment block
-      bld.add('/**')
-      bld.add('* ')
-      bld.add('* ')
+      bld.add("/**")
+      bld.add("* ")
+      bld.add("* ")
 
       for param in fun.parameters.vars
-        bld.add('* @param ' + Utils.instance.get_styled_variable_name(param))
+        bld.add("* @param " + Utils.instance.get_styled_variable_name(param))
       end
 
-      if fun.returnValue.vtype != 'void'
-        bld.add('*')
-        bld.add('* @return ')
+      if fun.returnValue.vtype != "void"
+        bld.add("*")
+        bld.add("* @return ")
       end
 
-      bld.add('*/ ')
+      bld.add("*/ ")
 
       funDec = String.new
 
       # Function body framework
-      funDec << 'const ' if fun.returnValue.isConst
+      funDec << "const " if fun.returnValue.isConst
 
-      funDec << Utils.instance.get_type_name(fun.returnValue) + ' '
-      funDec << Utils.instance.style_as_class(cls.get_u_name) + ' :: '
-      funDec << Utils.instance.style_as_function(fun.name) << '('
+      funDec << Utils.instance.get_type_name(fun.returnValue) + " "
+      funDec << Utils.instance.style_as_class(cls.get_u_name) + " :: "
+      funDec << Utils.instance.style_as_function(fun.name) << "("
 
       for param in (0..(fun.parameters.vars.size - 1))
-        funDec << ', ' if param != 0
+        funDec << ", " if param != 0
 
         funDec << Utils.instance.get_param_dec(fun.parameters.vars[param])
       end
 
-      funDec << ')'
+      funDec << ")"
 
-      funDec << ' const' if fun.isConst
+      funDec << " const" if fun.isConst
 
       bld.start_function(funDec)
 
-      bld.add('return();') if fun.returnValue.vtype != 'void'
+      bld.add("return();") if fun.returnValue.vtype != "void"
 
       bld.endFunction
     end

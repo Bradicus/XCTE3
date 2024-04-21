@@ -1,6 +1,6 @@
 require "x_c_t_e_plugin"
 require "path_util"
-require "params/render_fun_def_params"
+require "params/fun_plugin_params"
 
 # Base class for all class plugins
 class XCTEClassBase < XCTEPlugin
@@ -108,17 +108,19 @@ class XCTEClassBase < XCTEPlugin
 
   def render_functions(cls, bld)
     get_default_utils.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+      fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(fun)
+
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, fun.name)
         if !templ.nil?
-          templ.render_function(cls, bld, fun)
+          templ.render_function(fp_params)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
         end
       else # Must be empty function
         templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, "method_empty")
         if !templ.nil?
-          templ.render_function(cls, bld, fun)
+          templ.render_function(fp_params)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
         end

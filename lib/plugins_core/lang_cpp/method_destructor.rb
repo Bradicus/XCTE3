@@ -1,45 +1,48 @@
 ##
 
-# 
+#
 # Copyright XCTE Contributors
-# This file is released under the zlib/libpng license, see license.txt in the 
+# This file is released under the zlib/libpng license, see license.txt in the
 # root directory
 #
 # This plugin creates a destructor for a class
- 
-require 'x_c_t_e_plugin.rb'
-require 'plugins_core/lang_cpp/x_c_t_e_cpp.rb'
 
-class XCTECpp::MethodDestructor < XCTEPlugin  
+require "x_c_t_e_plugin.rb"
+require "plugins_core/lang_cpp/x_c_t_e_cpp.rb"
+
+class XCTECpp::MethodDestructor < XCTEPlugin
   def initialize
     @name = "method_destructor"
     @language = "cpp"
     @category = XCTEPlugin::CAT_METHOD
   end
-  
-  # Returns declairation string for this class's destructor   
-  def get_declaration(codeClass, cfg)
-    return "        ~" << codeClass.name << "();\n"
+
+  # Returns declairation string for this class's destructor
+  def render_declaration(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
+    bld.add "        ~" << cls.name << "();\n"
   end
 
   # Returns declairation string for this class's destructor
-  def get_declaration_inline(codeClass, cfg)
-    return "        ~" << codeClass.name << "() {};\n"
+  def render_declaration_inline(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
+    bld.add "        ~" << cls.name << "() {};\n"
   end
-  
+
   # Returns definition string for this class's destructor
-  def render_function(codeClass, cfg)
-    desDef = String.new
-    
-    desDef << "/**\n"
-    desDef << "* Destructor\n"
-    desDef << "*/\n"
-        
-    desDef << codeClass.name + " :: ~" << codeClass.name << "()\n"
-    desDef << "{\n"        
-    desDef << "}\n\n"
-        
-    return desDef
+  def render_function(fp_params)
+    bld = fp_params.bld
+    cls = fp_params.cls_spec
+
+    bld.add "/**\n"
+    bld.add "* Destructor\n"
+    bld.add "*/\n"
+
+    bld.add cls.name + " :: ~" << cls.name << "()\n"
+    bld.add "{\n"
+    bld.add "}\n\n"
   end
 end
 
