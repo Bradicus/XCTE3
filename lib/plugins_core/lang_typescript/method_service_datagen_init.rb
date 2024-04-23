@@ -19,7 +19,7 @@ module XCTETypescript
       clsName = CodeNameStyling.getStyled(cls.get_u_name + " form", Utils.instance.langProfile.variableNameStyle)
       clsIntf = Utils.instance.create_var_for(cls, "class_standard")
 
-      bld.start_function("initData(item: " + Utils.instance.style_as_class(cls.model.name) + "): void", fun)
+      bld.start_function("initData(item: " + Utils.instance.style_as_class(cls.model.name) + ")", fun)
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.isList

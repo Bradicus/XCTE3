@@ -28,7 +28,11 @@ module XCTETypescript
       end
 
       if funName != "constructor"
-        returnStr = Utils.instance.get_type_name(fun.returnValue)
+        if (fun.returnValue.vtype != "void")
+          returnStr = Utils.instance.get_type_name(fun.returnValue)
+        else
+          returnStr = "void"
+        end
       else
         returnStr = nil
       end
