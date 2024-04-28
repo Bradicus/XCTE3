@@ -33,14 +33,14 @@ module XCTECpp
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "JsonEngine")
       bld.lfExtension = Utils.instance.get_extension("header")
-      genHeaderComment(cls, bld)
-      genHeader(cls, bld)
+      render_header_comment(cls, bld)
+      render_header(cls, bld)
 
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "JsonEngine")
       bld.lfExtension = Utils.instance.get_extension("body")
-      genHeaderComment(cls, bld)
-      genBody(cls, bld)
+      render_header_comment(cls, bld)
+      render_body_content(cls, bld)
 
       srcFiles << bld
       srcFiles << bld
@@ -48,7 +48,7 @@ module XCTECpp
       srcFiles
     end
 
-    def genHeaderComment(cls, bld)
+    def render_header_comment(cls, bld)
       cfg = UserSettings.instance
 
       bld.add("/**")
@@ -73,7 +73,7 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, bld)
+    def render_header(cls, bld)
       render_ifndef(cls, bld)
 
       # get list of includes needed by functions
@@ -133,7 +133,7 @@ module XCTECpp
     end
 
     # Returns the code for the body for this class
-    def genBody(cls, bld)
+    def render_body_content(cls, bld)
       bld.add('#include "' << Utils.instance.style_as_class(cls.get_u_name + "JsonEngine") << '.h"')
       bld.separate
 

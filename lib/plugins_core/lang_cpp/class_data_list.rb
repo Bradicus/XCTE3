@@ -23,7 +23,7 @@ module XCTECpp
       @name = "data_list"
       @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
-          end
+    end
 
     def get_unformatted_class_name(cls)
       cls.get_u_name + " container"
@@ -62,14 +62,14 @@ module XCTECpp
       listHFile = LangFile.new
       listHFile.lfName = cls.get_u_name
       listHFile.lfExtension = XCTECpp::Utils.get_extension("header")
-      listHFile.lfContents = stdClass.genHeaderComment(cls, cfg)
-      listHFile.lfContents << stdClass.genHeader(cls, cfg)
+      listHFile.lfContents = stdClass.render_header_comment(cls, cfg)
+      listHFile.lfContents << stdClass.render_header(cls, cfg)
 
       listCppFile = LangFile.new
       listCppFile.lfName = cls.get_u_name
       listCppFile.lfExtension = XCTECpp::Utils.get_extension("body")
-      listCppFile.lfContents = stdClass.genHeaderComment(cls, cfg)
-      listCppFile.lfContents << stdClass.genBody(cls, cfg)
+      listCppFile.lfContents = stdClass.render_header_comment(cls, cfg)
+      listCppFile.lfContents << stdClass.render_body_content(cls, cfg)
 
       #      srcFiles << hFile
       #      srcFiles << cppFile

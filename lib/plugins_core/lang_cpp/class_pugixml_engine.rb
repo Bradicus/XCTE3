@@ -34,14 +34,14 @@ module XCTECpp
       hFile = SourceRendererCpp.new
       hFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "PugiXmlEngine")
       hFile.lfExtension = Utils.instance.get_extension("header")
-      genHeaderComment(cls, hFile)
-      genHeader(cls, hFile)
+      render_header_comment(cls, hFile)
+      render_header(cls, hFile)
 
       cppFile = SourceRendererCpp.new
       cppFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "PugiXmlEngine")
       cppFile.lfExtension = Utils.instance.get_extension("body")
-      genHeaderComment(cls, cppFile)
-      genBody(cls, cppFile)
+      render_header_comment(cls, cppFile)
+      render_body_content(cls, cppFile)
 
       srcFiles << hFile
       srcFiles << cppFile
@@ -49,7 +49,7 @@ module XCTECpp
       srcFiles
     end
 
-    def genHeaderComment(cls, hFile)
+    def render_header_comment(cls, hFile)
       hFile.add("/**")
       hFile.add("* @class " + get_class_name(cls))
 
@@ -74,7 +74,7 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, hFile)
+    def render_header(cls, hFile)
       render_ifndef(cls, hFile)
 
       # get list of includes needed by functions
@@ -193,7 +193,7 @@ module XCTECpp
     end
 
     # Returns the code for the body for this class
-    def genBody(cls, cppGen)
+    def render_body_content(cls, cppGen)
       cppGen.add('#include "' << Utils.instance.style_as_class(cls.get_u_name) << '.h"')
       cppGen.add
 

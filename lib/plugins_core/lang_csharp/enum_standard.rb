@@ -30,7 +30,7 @@ module XCTECSharp
       cls.get_u_name
     end
 
-    def genHeaderComment(cls, hFile)
+    def render_header_comment(cls, hFile)
       hFile.add("/**")
       hFile.add("* @enum " + cls.get_u_name)
 

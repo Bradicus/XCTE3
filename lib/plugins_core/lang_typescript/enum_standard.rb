@@ -30,7 +30,7 @@ module XCTETypescript
       cls.get_u_name
     end
 
-    def genHeaderComment(cls, bld)
+    def render_header_comment(cls, bld)
       bld.add("/**")
       bld.add("* @enum " + cls.get_u_name)
 

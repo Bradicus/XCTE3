@@ -36,15 +36,15 @@ module XCTECpp
       bld = SourceRendererCpp.new
       bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
       bld.lfExtension = Utils.instance.get_extension("header")
-      genHeaderComment(cls, bld)
-      genHeader(cls, bld)
+      render_header_comment(cls, bld)
+      render_header(cls, bld)
 
       srcFiles << bld
 
       srcFiles
     end
 
-    def genHeaderComment(cls, bld)
+    def render_header_comment(cls, bld)
       cfg = UserSettings.instance
 
       bld.add("/**")
@@ -69,7 +69,7 @@ module XCTECpp
     end
 
     # Returns the code for the header for this class
-    def genHeader(cls, bld)
+    def render_header(cls, bld)
       if cls.namespace.hasItems?
         bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
         bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
