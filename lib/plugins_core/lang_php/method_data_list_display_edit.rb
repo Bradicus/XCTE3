@@ -14,8 +14,7 @@ module XCTEPhp
       @name = "method_data_list_display_edit"
       @language = "php"
       @category = XCTEPlugin::CAT_METHOD
-      @author = "Brad Ottoson"
-    end
+          end
 
     def render_function(codeClass, outCode)
       

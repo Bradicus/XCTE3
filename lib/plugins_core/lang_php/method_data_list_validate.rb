@@ -13,8 +13,7 @@ module XCTEPhp
       @name = "method_data_list_validate"
       @language = "php"
       @category = XCTEPlugin::CAT_METHOD
-      @author = "Brad Ottoson"
-    end
+          end
 
     # Returns definition string for this class's constructor
     def render_function(listCodeClass, cfg)

@@ -13,8 +13,7 @@ module XCTEPhp
       @name = "method_data_list_display"
       @language = "php"
       @category = XCTEPlugin::CAT_METHOD
-      @author = "Brad Ottoson"
-    end
+          end
 
     def render_function(codeClass, outCode)
 

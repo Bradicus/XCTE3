@@ -23,8 +23,7 @@ module XCTECpp
       @name = "data_list"
       @language = "cpp"
       @category = XCTEPlugin::CAT_CLASS
-      @author = "Brad Ottoson"
-    end
+          end
 
     def get_unformatted_class_name(cls)
       cls.get_u_name + " container"

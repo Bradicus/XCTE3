@@ -19,8 +19,7 @@ module XCTEPhp
       @name = "method_get_mysql_create"
       @language = "php"
       @category = XCTEPlugin::CAT_METHOD
-      @author = "Brad Ottoson"
-    end
+          end
     
     # Returns definition string for this class's mysql create 
     # statement generator

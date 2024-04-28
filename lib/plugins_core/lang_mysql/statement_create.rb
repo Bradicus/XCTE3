@@ -18,8 +18,7 @@ module XCTEMySql
       @name = "statement_create"
       @language = "sql"
       @category = XCTEPlugin::CAT_METHOD
-      @author = "Brad Ottoson"
-    end
+          end
 
     # Returns definition string for this class's constructor
     def get_lines(codeClass, cfg)
