@@ -26,6 +26,7 @@ module CodeStructure
       super(CodeStructure::CodeElemTypes::ELEM_MODEL, nil)
 
       @classes = []
+      @includes = []
       @varGroup = CodeElemVarGroup.new
       @xmlFileName = ""
       @modelSet = nil
@@ -48,6 +49,23 @@ module CodeStructure
       end
 
       @classes << cls
+    end
+
+    def add_include(iPath, iName, iType = nil)
+      iPath = String.new if iPath.nil?
+
+      raise "Include name cannot be nil" if iName.nil? || iName.length == 0
+
+      curInc = nil
+
+      for i in @includes
+        curInc = i if i.path == iPath && i.name == iName
+      end
+
+      return unless curInc.nil?
+
+      curInc = CodeElemInclude.new(iPath, iName, iType)
+      @includes << curInc
     end
 
     #

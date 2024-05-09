@@ -75,6 +75,7 @@ module XCTECpp
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.get_styled_variable_name(var)
+        varTypeName = Utils.instance.get_type_name(var)
 
         if Utils.instance.is_primitive(var)
           if !var.isList
@@ -87,19 +88,20 @@ module XCTECpp
             bld.end_block
           end
         elsif !var.isList
+          bld.add "auto " + styledVarName + ' = grp.append_child("' + styledVarName + '");'
           bld.add(
-            Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(" +
-            Utils.instance.get_styled_variable_name(var) +
-              '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + Utils.instance.get_styled_variable_name(var) + ");"
+            varTypeName + "PugiXmlEngine::write(" +
+            styledVarName +
+              ", " + styledVarName + ");"
           )
         else
-          bld.start_block('for (auto aJson : json["' + Utils.instance.get_styled_variable_name(var) + '"])')
           if !var.isList
-            bld.add(Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(aJson, item);")
+            bld.add(varTypeName + "PugiXmlEngine::write(pNode, item);")
           else
-            bld.add(Utils.instance.get_type_name(var) + " newVar;")
-            bld.add(Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(aJson, item);")
-            bld.add(Utils.instance.get_styled_variable_name(var) + ".push_back(newVar);")
+            bld.start_block("for (auto& listItem: item." + styledVarName + ")")
+            bld.add(varTypeName + " newVar;")
+            bld.add(varTypeName + "PugiXmlEngine::write(pNode, listItem);")
+            bld.add(styledVarName + ".push_back(newVar);")
           end
           bld.end_block
         end

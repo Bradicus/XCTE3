@@ -80,7 +80,7 @@ module XCTECpp
 
         if Utils.instance.is_primitive(var)
           if !var.isList
-            bld.add(styledVarName + " = item.child(" + styledVarName + ")." + pugiCast + ";")
+            bld.add(styledVarName + " = item.attribute(" + styledVarName + ")." + pugiCast + ";")
           else
             bld.start_block('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
             bld.add(styledVarName + ".push_back(pNode." + pugiCast + ");")
@@ -88,17 +88,17 @@ module XCTECpp
           end
         elsif !var.isList
           bld.add(
-            Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(" +
+            Utils.instance.get_type_name(var) + "PugiXmlEngine::load(" +
             Utils.instance.get_styled_variable_name(var) +
-              '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + Utils.instance.get_styled_variable_name(var) + ");"
+              '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + styledVarName + ");"
           )
         else
-          bld.start_block('for (auto aJson : json["' + Utils.instance.get_styled_variable_name(var) + '"])')
+          bld.start_block('for pNode = node.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + "')")
           if !var.isList
-            bld.add(Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(aJson, item);")
+            bld.add(Utils.instance.get_type_name(var) + "PugiXmlEngine::load(node, pNode);")
           else
             bld.add(Utils.instance.get_type_name(var) + " newVar;")
-            bld.add(Utils.instance.get_type_name(var) + "JsonEngine::loadFromJson(aJson, item);")
+            bld.add(Utils.instance.get_type_name(var) + "PugiXmlEngine::load(node, pNode);")
             bld.add(Utils.instance.get_styled_variable_name(var) + ".push_back(newVar);")
           end
           bld.end_block

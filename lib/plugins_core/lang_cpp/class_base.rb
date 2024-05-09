@@ -6,18 +6,45 @@ module XCTECpp
   class ClassBase < XCTEClassBase
     def render_ifndef(cls, bld)
       if cls.namespace.hasItems?
-        bld.add("#ifndef __" + cls.namespace.get("_") + "_" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
-        bld.add("#define __" + cls.namespace.get("_") + "_" + Utils.instance.style_as_class(cls.get_u_name) + "_H")
+        bld.add("#ifndef __" + cls.namespace.get("_") + "_" + get_class_name(cls) + "_H")
+        bld.add("#define __" + cls.namespace.get("_") + "_" + get_class_name(cls) + "_H")
         bld.add
       else
-        bld.add("#ifndef __" + cls.get_u_name + "_H")
-        bld.add("#define __" + cls.get_u_name + "_H")
+        bld.add("#ifndef __" + get_class_name(cls) + "_H")
+        bld.add("#define __" + get_class_name(cls) + "_H")
         bld.add
       end
     end
 
     def get_default_utils
       return Utils.instance
+    end
+
+    def get_source_renderer
+      return SourceRendererCpp.new
+    end
+
+    def gen_source_files(cls)
+      srcFiles = []
+
+      cls.name = get_class_name(cls)
+
+      hBld = get_source_renderer()
+      hBld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
+      hBld.lfExtension = Utils.instance.get_extension("header")
+      render_header_comment(cls, hBld)
+      render_header(cls, hBld)
+
+      bBld = get_source_renderer()
+      bBld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
+      bBld.lfExtension = Utils.instance.get_extension("body")
+      render_header_comment(cls, bBld)
+      render_body_content(cls, bBld)
+
+      srcFiles << hBld
+      srcFiles << bBld
+
+      return srcFiles
     end
 
     def render_dependencies(cls, bld)

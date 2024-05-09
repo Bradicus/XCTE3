@@ -32,29 +32,6 @@ module XCTECpp
       cls.get_u_name
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
-
-      cls.name = get_class_name(cls)
-
-      bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
-      bld.lfExtension = Utils.instance.get_extension("header")
-      render_header_comment(cls, bld)
-      render_header(cls, bld)
-
-      cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name)
-      cppFile.lfExtension = Utils.instance.get_extension("body")
-      render_header_comment(cls, cppFile)
-      render_body_content(cls, cppFile)
-
-      srcFiles << bld
-      srcFiles << cppFile
-
-      srcFiles
-    end
-
     def render_header_comment(cls, bld)
       cfg = UserSettings.instance
 

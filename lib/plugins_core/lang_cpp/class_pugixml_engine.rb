@@ -28,54 +28,32 @@ module XCTECpp
       cls.get_u_name + " pugi xml engine"
     end
 
-    def gen_source_files(cls)
-      srcFiles = []
+    def render_header_comment(cls, bld)
+      cfg = UserSettings.instance
 
-      hFile = SourceRendererCpp.new
-      hFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "PugiXmlEngine")
-      hFile.lfExtension = Utils.instance.get_extension("header")
-      render_header_comment(cls, hFile)
-      render_header(cls, hFile)
-
-      cppFile = SourceRendererCpp.new
-      cppFile.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "PugiXmlEngine")
-      cppFile.lfExtension = Utils.instance.get_extension("body")
-      render_header_comment(cls, cppFile)
-      render_body_content(cls, cppFile)
-
-      srcFiles << hFile
-      srcFiles << cppFile
-
-      srcFiles
-    end
-
-    def render_header_comment(cls, hFile)
-      hFile.add("/**")
-      hFile.add("* @class " + get_class_name(cls))
-
-      hFile.add("* @author " + cfg.codeAuthor) if !cfg.codeAuthor.nil?
-
-      hFile.add("* " + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+      bld.add("/**")
+      bld.add("* @class " + get_class_name(cls))
+      bld.add("* " + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
 
       if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
-        hFile.add("*")
-        hFile.add("* " + cfg.codeLicense)
+        bld.add("*")
+        bld.add("* " + cfg.codeLicense)
       end
 
-      hFile.add("* ")
+      bld.add("* ")
 
       if !cls.model.description.nil?
         cls.model.description.each_line do |descLine|
-          hFile.add("* " << descLine.strip) if descLine.strip.size > 0
+          bld.add("* " << descLine.strip) if descLine.strip.size > 0
         end
       end
 
-      hFile.add("*/")
+      bld.add("*/")
     end
 
     # Returns the code for the header for this class
-    def render_header(cls, hFile)
-      render_ifndef(cls, hFile)
+    def render_header(cls, bld)
+      render_ifndef(cls, bld)
 
       # get list of includes needed by functions
 
@@ -84,38 +62,38 @@ module XCTECpp
         if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && funItem.isTemplate
           templ = XCTEPlugin.findMethodPlugin("cpp", funItem.name)
           if !templ.nil?
-            templ.process_dependencies(cls, funItem, hFile)
+            templ.process_dependencies(cls, funItem, bld)
           else
             # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
           end
         end
       end
 
-      process_dependencies(cls, bld)
+      render_dependencies(cls, bld)
 
-      hFile.add if cls.includes.length > 0
+      bld.add if cls.includes.length > 0
 
       # Process namespace items
       if cls.namespace.hasItems?
         for nsItem in cls.namespace.ns_list
-          hFile.start_block("namespace " << nsItem)
+          bld.start_block("namespace " << nsItem)
         end
-        hFile.add
+        bld.add
       end
 
       # Do automatic static array size declairations above class def
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.arrayElemCount > 0
-          hFile.add("#define " << Utils.instance.get_size_const(var) << " " << var.arrayElemCount.to_s)
+          bld.add("#define " << Utils.instance.get_size_const(var) << " " << var.arrayElemCount.to_s)
         end
       }))
 
-      hFile.separate if Utils.instance.has_an_array?(cls)
+      bld.separate if Utils.instance.has_an_array?(cls)
 
       classDec = "class " + cls.get_u_name
 
-      for par in (0..cls.baseClassModelManager.size)
+      for par in (0..cls.base_classes.size)
         nameSp = ""
         if par == 0 && !cls.base_classes[par].nil?
           classDec << " : "
@@ -132,117 +110,57 @@ module XCTECpp
         end
       end
 
-      hFile.start_class(classDec)
+      bld.start_class(classDec)
 
-      hFile.add("public:")
-      hFile.indent
+      bld.add("public:")
+      bld.indent
 
       # Generate class variables
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        hFile.add(Utils.instance.get_var_dec(var)) if var.arrayElemCount > 0
+        bld.add(Utils.instance.get_var_dec(var)) if var.arrayElemCount > 0
       }))
 
-      hFile.add if cls.functions.length > 0
+      bld.add if cls.functions.length > 0
 
-      # Generate function declarations
-      for funItem in cls.functions
-        if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
-          if funItem.isTemplate
-            templ = XCTEPlugin.findMethodPlugin("cpp", funItem.name)
-            if !templ.nil?
-              if funItem.isInline
-                templ.render_declaration_inline(cls, funItem, hFile)
-              else
-                templ.render_declaration(cls, funItem, hFile)
-              end
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          else # Must be an empty function
-            templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
-            if !templ.nil?
-              if funItem.isInline
-                templ.render_declaration_inline(cls, funItem, hFile)
-              else
-                templ.render_declaration(cls, funItem, hFile)
-              end
-            else
-              # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-            end
-          end
-        elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-          hFile.add(Utils.instance.get_comment(funItem))
-        elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
-          if funItem.formatText == "\n"
-            hFile.add
-          else
-            hFile.same_line(funItem.formatText)
-          end
-        end
-      end
+      render_function_declairations(cls, bld)
 
-      hFile.unindent
+      bld.unindent
 
-      hFile.end_class
+      bld.end_class
 
-      render_namespace_end(cls, hFile)
+      render_namespace_end(cls, bld)
 
-      hFile.separate
-      hFile.add("#endif")
+      bld.separate
+      bld.add("#endif")
     end
 
     # Returns the code for the body for this class
-    def render_body_content(cls, cppGen)
-      cppGen.add('#include "' << Utils.instance.style_as_class(cls.get_u_name) << '.h"')
-      cppGen.add
+    def render_body_content(cls, bld)
+      bld.add('#include "' << Utils.instance.style_as_class(cls.get_u_name) << '.h"')
+      bld.separate
 
-      render_namespace_start(cls, cppGen)
+      render_namespace_start(cls, bld)
 
-      # Initialize static variables
-      varArray = []
-      cls.model.getAllVarsFor(varArray)
-
-      for var in varArray
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && var.isStatic
-          cppGen.add(Utils.instance.get_type_name(var) << " ")
-          cppGen.same_line(Utils.instance.style_as_class(cls.get_u_name) << " :: ")
-          cppGen.same_line(Utils.instance.get_styled_variable_name(var))
+          bld.add(Utils.instance.get_type_name(var) << " ")
+          bld.same_line(Utils.instance.style_as_class(cls.get_u_name) << " :: ")
+          bld.same_line(Utils.instance.get_styled_variable_name(var))
 
           if var.arrayElemCount.to_i > 0 # This is an array
-            cppGen.same_line("[" + Utils.instance.get_size_const(var) << "]")
+            bld.same_line("[" + Utils.instance.get_size_const(var) << "]")
           end
 
-          cppGen.same_line(";")
+          bld.same_line(";")
         end
-      end
+      }))
 
-      cppGen.add
+      bld.separate
 
-      # Generate code for functions
-      for fun in cls.functions
-        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
-          if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin("cpp", fun.name)
+      render_functions(cls, bld)
 
-            Log.debug("processing template for function " + fun.name)
-            if !templ.nil?
-              templ.render_function(cls, fun, cppGen) if !fun.isInline
-            else
-              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
-            if !templ.nil?
-              templ.render_function(cls, fun, cppGen) if !fun.isInline
-            else
-              # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-            end
-          end
-        end
-      end
-
-      render_namespace_end(cls, cppGen)
+      render_namespace_end(cls, bld)
     end
   end
 end

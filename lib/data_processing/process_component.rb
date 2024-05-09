@@ -132,17 +132,17 @@ module DataProcessing
 
               existingFile.close
             end
-          end
 
-          if overwriteFile
-            Log.debug("writing file: " + File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension))
-            if !File.directory?(plan.file_path)
-              FileUtils.mkdir_p(plan.file_path)
-              #   Log.debug("Creating folder: " + newPath
+            if overwriteFile
+              Log.debug("writing file: " + File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension))
+              if !File.directory?(plan.file_path)
+                FileUtils.mkdir_p(plan.file_path)
+                #   Log.debug("Creating folder: " + newPath
+              end
+              sFile = File.new(File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
+              sFile << srcFile.getContents
+              sFile.close
             end
-            sFile = File.new(File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
-            sFile << srcFile.getContents
-            sFile.close
           end
         end
       end

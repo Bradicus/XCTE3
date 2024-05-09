@@ -30,20 +30,20 @@ module XCTECpp
     def gen_source_files(cls)
       srcFiles = []
 
-      bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "JsonEngine")
-      bld.lfExtension = Utils.instance.get_extension("header")
-      render_header_comment(cls, bld)
-      render_header(cls, bld)
+      hBld = SourceRendererCpp.new
+      hBld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
+      hBld.lfExtension = Utils.instance.get_extension("header")
+      render_header_comment(cls, hBld)
+      render_header(cls, hBld)
 
-      bld = SourceRendererCpp.new
-      bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + "JsonEngine")
-      bld.lfExtension = Utils.instance.get_extension("body")
-      render_header_comment(cls, bld)
-      render_body_content(cls, bld)
+      bBld = SourceRendererCpp.new
+      bBld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
+      bBld.lfExtension = Utils.instance.get_extension("body")
+      render_header_comment(cls, bBld)
+      render_body_content(cls, bBld)
 
-      srcFiles << bld
-      srcFiles << bld
+      srcFiles << hBld
+      srcFiles << bBld
 
       srcFiles
     end
@@ -91,7 +91,7 @@ module XCTECpp
         bld.add
       end
 
-      classDec = "class " + Utils.instance.getDerivedClassPrefix(cls)
+      classDec = "class " + get_class_name(cls)
 
       for par in (0..cls.base_classes.size)
         nameSp = ""
