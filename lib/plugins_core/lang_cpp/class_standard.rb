@@ -189,7 +189,7 @@ module XCTECpp
     end
 
     # process variable group
-    def process_header_var_group(cls, bld, _vGroup, _vis)
+    def process_header_var_group(cls, bld, _vGroup, vis)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.visibility != @activeVisibility
           @activeVisibility = var.visibility
@@ -198,7 +198,9 @@ module XCTECpp
           bld.indent
         end
 
-        bld.add(Utils.instance.get_var_dec(var))
+        if vis == var.visibility
+          bld.add(Utils.instance.get_var_dec(var))
+        end
       }))
     end
 

@@ -6,8 +6,8 @@
 # This class stores information for the variable code structure
 # read in from an xml file
 
-require 'code_structure/code_elem_template'
-require 'code_structure/code_elem'
+require "code_structure/code_elem_template"
+require "code_structure/code_elem"
 
 module CodeStructure
   class CodeElemVariable < CodeElem
@@ -25,7 +25,7 @@ module CodeStructure
       @isSharedPointer = false
       @init = nil
       @namespace = CodeElemNamespace.new
-      @passBy = 'value'
+      @passBy = "value"
       @genSet = false
       @genGet = false
       @nullable = false
@@ -48,7 +48,7 @@ module CodeStructure
       # puts "[CodeElemVariable::initialize] Creating variable"
     end
 
-    def init_as_param(name, type, visibility = nil)
+    def init_as_param(name, type, visibility = "public")
       @name = name
       @vtype = type
       @visibility = visibility
@@ -144,19 +144,19 @@ module CodeStructure
     end
 
     def is_bool?
-      return getUType().downcase == 'boolean'
+      return getUType().downcase == "boolean"
     end
 
     def hasOneToOneRelation
-      return !@relation.nil? && @relation.start_with?('one-to-one')
+      return !@relation.nil? && @relation.start_with?("one-to-one")
     end
 
     def hasOneToManyRelation
-      return !@relation.nil? && @relation.start_with?('one-to-many')
+      return !@relation.nil? && @relation.start_with?("one-to-many")
     end
 
     def hasManyToManyRelation
-      return !@relation.nil? && @relation.start_with?('many-to-many')
+      return !@relation.nil? && @relation.start_with?("many-to-many")
     end
   end
 end

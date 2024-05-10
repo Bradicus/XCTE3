@@ -16,7 +16,7 @@ module XCTECpp
       end
     end
 
-    def get_default_utils
+    def dutils
       return Utils.instance
     end
 

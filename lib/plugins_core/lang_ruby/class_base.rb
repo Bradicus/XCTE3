@@ -6,7 +6,7 @@ require "active_component"
 # This class contains functions that may be usefull in any type of class
 module XCTERuby
   class ClassBase < XCTEClassBase
-    def get_default_utils
+    def dutils
       return Utils.instance
     end
 
@@ -18,8 +18,8 @@ module XCTERuby
       srcFiles = []
 
       bld = get_source_renderer()
-      bld.lfName = get_default_utils().style_as_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = get_default_utils().get_extension("body")
+      bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = dutils().get_extension("body")
 
       process_dependencies(cls, bld)
 
@@ -39,21 +39,21 @@ module XCTERuby
 
     def render_namespace_start(cls, bld)
       for ns in cls.namespace.ns_list
-        styledNs = get_default_utils().style_as_namespace(ns)
+        styledNs = dutils().style_as_namespace(ns)
         bld.start_block("module " + styledNs)
       end
     end
 
     def render_dependencies(cls, bld)
       for inc in cls.includes
-        bld.add("require '" << get_default_utils().style_as_path_name(inc.path) << "'")
+        bld.add("require '" << dutils().style_as_path_name(inc.path) << "'")
       end
 
       bld.separate
     end
 
     def render_file_comment(cls, bld)
-      get_default_utils().render_block_comment(ActiveComponent.get().file_comment, bld)
+      dutils().render_block_comment(ActiveComponent.get().file_comment, bld)
 
       bld.separate
 

@@ -168,7 +168,7 @@ class UtilsBase
     bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
 
     if !bc_cls_spec.nil?
-      get_default_utils().try_add_include_for(to_cls, bc_cls_spec, bc.plugin_name)
+      dutils().try_add_include_for(to_cls, bc_cls_spec, bc.plugin_name)
     else
       Log.warn "Could not find class for class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
     end

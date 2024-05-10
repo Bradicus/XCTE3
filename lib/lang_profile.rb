@@ -7,8 +7,8 @@
 #
 # This class stores information specific to each programming language
 
-require 'lang_profile_file_type'
-require 'lang_profile_type_map'
+require "lang_profile_file_type"
+require "lang_profile_type_map"
 
 class LangProfile
   attr_accessor :name, :fileTypes, :typeMaps, :variableNameStyle,
@@ -33,31 +33,31 @@ class LangProfile
   def load(xmlDoc)
     @fileTypes = []
 
-    xmlDoc.elements.each('LANGUAGE_DEFS/FILE_TYPES') do |fTypes|
-      fTypes.elements.each('FILE_TYPE') do |fType|
-        @fileTypes << LangProfileFileType.new(fType.attributes['type'], fType.attributes['extension'])
+    xmlDoc.elements.each("LANGUAGE_DEFS/FILE_TYPES") do |fTypes|
+      fTypes.elements.each("FILE_TYPE") do |fType|
+        @fileTypes << LangProfileFileType.new(fType.attributes["type"], fType.attributes["extension"])
       end
     end
 
-    xmlDoc.elements.each('LANGUAGE_DEFS/TYPE_MAPS') do |typeMaps|
-      typeMaps.elements.each('TYPE_MAP') do |typeMap|
-        @typeMaps << LangProfileTypeMap.new(typeMap.attributes['genType'],
-                                            typeMap.attributes['langType'],
-                                            typeMap.attributes['tplType'],
-                                            typeMap.attributes['autoIncludePath'],
-                                            typeMap.attributes['autoIncludeName'],
-                                            typeMap.attributes['autoIncludeType'])
+    xmlDoc.elements.each("LANGUAGE_DEFS/TYPE_MAPS") do |typeMaps|
+      typeMaps.elements.each("TYPE_MAP") do |typeMap|
+        @typeMaps << LangProfileTypeMap.new(typeMap.attributes["genType"],
+                                            typeMap.attributes["langType"],
+                                            typeMap.attributes["tplType"],
+                                            typeMap.attributes["autoIncludePath"],
+                                            typeMap.attributes["autoIncludeName"],
+                                            typeMap.attributes["autoIncludeType"])
       end
     end
 
-    xmlDoc.elements.each('LANGUAGE_DEFS/STYLING') do |styling|
-      @variableNameStyle = styling.attributes['variable']
-      @classNameStyle = styling.attributes['class']
-      @functionNameStyle = styling.attributes['function']
-      @fileNameStyle = styling.attributes['file']
-      @directoryNameStyle = styling.attributes['directory']
-      @enumNameStyle = styling.attributes['enum']
-      @constNameStyle = styling.attributes['const']
+    xmlDoc.elements.each("LANGUAGE_DEFS/STYLING") do |styling|
+      @variableNameStyle = styling.attributes["variable"]
+      @classNameStyle = styling.attributes["class"]
+      @functionNameStyle = styling.attributes["function"]
+      @fileNameStyle = styling.attributes["file"]
+      @directoryNameStyle = styling.attributes["directory"]
+      @enumNameStyle = styling.attributes["enum"]
+      @constNameStyle = styling.attributes["const"]
     end
 
     if @fileNameStyle.nil?
@@ -65,14 +65,14 @@ class LangProfile
     end
 
     if @variableNameStyle.nil?
-      raise('Variable name style must be defined in type map for ' + name)
+      raise("Variable name style must be defined in type map for " + name)
     end
     if @classNameStyle.nil?
-      raise('Class name style must be defined in type map for ' + name)
+      raise("Class name style must be defined in type map for " + name)
     end
     return unless @functionNameStyle.nil?
 
-    raise('Function name style must be defined in type map for ' + name)
+    raise("Function name style must be defined in type map for " + name)
   end
 
   def get_extension(extType)
@@ -88,9 +88,9 @@ class LangProfile
   def get_type_name(gType)
     for tMap in @typeMaps
       if tMap.genericType == gType
-        return tMap.langType if tMap.tplType.nil?
+        return tMap.langType
 
-        return tMap.langType + '#' + tMap.tplType
+        # return tMap.langType + '#' + tMap.tplType
 
       end
     end

@@ -4,7 +4,7 @@ require "x_c_t_e_class_base"
 # This class contains functions that may be usefull in any type of class
 module XCTEJava
   class ClassBase < XCTEClassBase
-    def get_default_utils
+    def dutils
       Utils.instance
     end
 
@@ -24,8 +24,8 @@ module XCTEJava
       srcFiles = []
 
       bld = get_source_renderer()
-      bld.lfName = get_default_utils().style_as_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = get_default_utils().get_extension("body")
+      bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
+      bld.lfExtension = dutils().get_extension("body")
 
       process_dependencies(cls, bld)
 
@@ -74,7 +74,7 @@ module XCTEJava
     def process_fuction_dependencies(cls, bld, fun)
       return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
-      templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, fun.name)
+      templ = XCTEPlugin.findMethodPlugin(dutils.langProfile.name, fun.name)
       if !templ.nil?
         templ.process_dependencies(cls, bld, fun)
       else

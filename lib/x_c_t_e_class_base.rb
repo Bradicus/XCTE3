@@ -5,10 +5,10 @@ require "params/fun_plugin_params"
 # Base class for all class plugins
 class XCTEClassBase < XCTEPlugin
   def get_class_name(cls)
-    get_default_utils.style_as_class(get_unformatted_class_name(cls))
+    dutils.style_as_class(get_unformatted_class_name(cls))
   end
 
-  def get_default_utils
+  def dutils
     throw :required_implimentation
   end
 
@@ -30,7 +30,7 @@ class XCTEClassBase < XCTEPlugin
 
   def process_dependencies(cls_spec, bld)
     # Add in any dependencies required by functions
-    get_default_utils().each_fun(UtilsEachFunParams.new(cls_spec, bld, lambda { |fun|
+    dutils().each_fun(UtilsEachFunParams.new(cls_spec, bld, lambda { |fun|
       if fun.isTemplate
         templ = XCTEPlugin.findMethodPlugin(cls_spec.language, fun.name)
         if !templ.nil?
@@ -46,7 +46,7 @@ class XCTEClassBase < XCTEPlugin
       bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
 
       if !bc_cls_spec.nil?
-        get_default_utils().try_add_include_for(cls_spec, bc_cls_spec, bc.plugin_name)
+        dutils().try_add_include_for(cls_spec, bc_cls_spec, bc.plugin_name)
       else
         Log.warn "Could not find class for base class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
       end
@@ -57,8 +57,8 @@ class XCTEClassBase < XCTEPlugin
     srcFiles = []
 
     bld = get_source_renderer()
-    bld.lfName = get_default_utils().style_as_file_name(get_unformatted_class_name(cls))
-    bld.lfExtension = get_default_utils().get_extension("body")
+    bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
+    bld.lfExtension = dutils().get_extension("body")
 
     process_dependencies(cls, bld)
 
@@ -91,11 +91,11 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def get_file_name(cls)
-    get_default_utils.style_as_file_name(get_unformatted_class_name(cls))
+    dutils.style_as_file_name(get_unformatted_class_name(cls))
   end
 
   def is_primitive(var)
-    get_default_utils.is_primitive(var)
+    dutils.is_primitive(var)
   end
 
   def hasList(cls)
@@ -107,29 +107,29 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def render_functions(cls, bld)
-    get_default_utils.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+    dutils.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
       fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(fun)
 
       if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, fun.name)
+        templ = XCTEPlugin.findMethodPlugin(dutils.langProfile.name, fun.name)
         if !templ.nil?
           templ.render_function(fp_params)
         else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
+          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'dutils.langProfile.name
         end
       else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin(get_default_utils.langProfile.name, "method_empty")
+        templ = XCTEPlugin.findMethodPlugin(dutils.langProfile.name, "method_empty")
         if !templ.nil?
           templ.render_function(fp_params)
         else
-          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'get_default_utils.langProfile.name
+          # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'dutils.langProfile.name
         end
       end
     }))
   end
 
   def render_head_comment(_bld, _pComponent)
-    utils = get_default_utils
+    utils = dutils
 
     utils.render_block_comment
   end

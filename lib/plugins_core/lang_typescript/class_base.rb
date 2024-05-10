@@ -5,7 +5,7 @@ require "x_c_t_e_class_base"
 # This class contains functions that may be usefull in any type of class
 module XCTETypescript
   class ClassBase < XCTEClassBase
-    def get_default_utils
+    def dutils
       return Utils.instance
     end
 
@@ -14,7 +14,7 @@ module XCTETypescript
     end
 
     def get_file_name(cls)
-      get_default_utils.style_as_file_name(get_unformatted_class_name(cls))
+      dutils.style_as_file_name(get_unformatted_class_name(cls))
     end
 
     def gen_source_files(cls)
@@ -71,7 +71,7 @@ module XCTETypescript
     def render_namespace_start(cls, bld)
       if !ActiveComponent.get().ignore_namespace
         for ns in cls.namespace.ns_list
-          bld.start_block("export namespace " + get_default_utils().style_as_namespace(ns))
+          bld.start_block("export namespace " + dutils().style_as_namespace(ns))
         end
       end
     end
@@ -173,7 +173,7 @@ module XCTETypescript
           path += incPaths.join("/")
         end
 
-        bld.add("import { " + inc.name + " } from '" + get_default_utils().style_as_path_name(path) + "';")
+        bld.add("import { " + inc.name + " } from '" + dutils().style_as_path_name(path) + "';")
       end
     end
 
@@ -181,7 +181,7 @@ module XCTETypescript
       params = []
 
       for param in fun_elem.parameters.vars
-        params.push(get_default_utils().get_param_dec(param))
+        params.push(dutils().get_param_dec(param))
       end
 
       bld.start_function_paramed(fun_elem.name, params, fun_elem.returnValue.vtype)
