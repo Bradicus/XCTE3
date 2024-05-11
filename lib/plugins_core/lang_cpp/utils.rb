@@ -79,6 +79,28 @@ module XCTECpp
       return(newStr)
     end
 
+    def get_class_ref_type(cls, cls_ref)
+      typeName = ""
+
+      if cls_ref.namespace.hasItems?
+        typeName += cls_ref.namespace.get("::") + "::"
+      end
+
+      bc_sap = get_plugin_and_spec_for_ref(cls, cls_ref)
+
+      if bc_sap.valid?
+        typeName += bc_sap.plugin.get_class_name(bc_sap.spec)
+      else # If this class isn't made by us
+        typeName += style_as_class(cls_ref.model_name)
+      end
+
+      if cls_ref.template_params.length > 0
+        typeName += "<" + cls_ref.get_template_param_names().join(", ") + ">"
+      end
+
+      return typeName
+    end
+
     # Return the language type based on the generic type
     def get_type_name(var)
       typeName = get_single_item_type_name(var)
@@ -209,7 +231,7 @@ module XCTECpp
       cls.standard_class_type = ns + Utils.instance.style_as_class(cls.get_u_name)
 
       if !cls.standard_class.nil? && cls.standard_class.plug_name != "enum"
-        cls.addInclude(cls.standard_class.namespace.get("/"), Utils.instance.style_as_class(cls.get_u_name))
+        cls.addInclude(cls.standard_class.namespace.get("/"), style_as_class(cls.get_u_name))
       end
 
       return cls.standard_class

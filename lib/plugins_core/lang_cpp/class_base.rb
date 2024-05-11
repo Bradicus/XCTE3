@@ -50,9 +50,9 @@ module XCTECpp
     def render_dependencies(cls, bld)
       addAutoIncludes(cls)
 
-      for inc in cls.includes
+      for inc in cls.includes + cls.model.includes
         if inc.path.length > 0
-          incPathAndName = inc.path + "/" + inc.name
+          incPathAndName = inc.path + "/" + dutils.style_as_file_name(inc.name)
         else
           incPathAndName = inc.name
         end

@@ -84,14 +84,21 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def get_dependency_path_w_file(cls)
-    # get_file_name
-    file_name = get_file_name(cls)
-
-    return PathUtil.get_dependency_path(cls) + "/" + file_name
+    return get_file_path(cls) + "/" + get_file_name(cls)
   end
 
   def get_file_name(cls)
     dutils.style_as_file_name(get_unformatted_class_name(cls))
+  end
+
+  def get_file_path(cls)
+    if !cls.path.nil? && cls.path.length > 0
+      depPath = cls.path
+    else
+      depPath = cls.namespace.get("/")
+    end
+
+    return depPath
   end
 
   def is_primitive(var)

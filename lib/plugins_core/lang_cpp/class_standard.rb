@@ -91,13 +91,7 @@ module XCTECpp
       inheritFrom = []
 
       for b_cls_ref in cls.base_classes
-        bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, b_cls_ref)
-
-        if bc_sap.valid?
-          inheritFrom.push("public" + " " + bc_sap.plugin.get_class_name(bc_sap.spec))
-        else # If this class isn't made by us
-          inheritFrom.push("public" + " " + Utils.instance.style_as_class(b_cls_ref.model_name))
-        end
+        inheritFrom.push("public " + dutils.get_class_ref_type(cls, b_cls_ref))
       end
 
       for icls in cls.interfaces

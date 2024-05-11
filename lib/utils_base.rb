@@ -165,10 +165,10 @@ class UtilsBase
 
   # Add an include if there's a class model defined for it
   def try_add_include_for_class_ref(to_cls, cls_ref)
-    bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
+    bc_cls_spec = ClassModelManager.findClass(cls_ref.model_name, cls_ref.plugin_name)
 
     if !bc_cls_spec.nil?
-      dutils().try_add_include_for(to_cls, bc_cls_spec, bc.plugin_name)
+      try_add_include_for(to_cls, bc_cls_spec, cls_ref.plugin_name)
     else
       Log.warn "Could not find class for class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
     end
@@ -182,7 +182,7 @@ class UtilsBase
       for_cls_spec = for_cls.model.findClassModel(plug_name)
 
       if !for_cls_spec.nil?
-        to_cls.addInclude(clsPlug.get_dependency_path_w_file(for_cls_spec), clsPlug.get_class_name(for_cls_spec))
+        to_cls.addInclude(clsPlug.get_file_path(for_cls_spec), clsPlug.get_file_name(for_cls_spec))
       end
     else
       Log.warn "[try_add_include_for] Couldn't find class plugin: " + plug_name.to_s

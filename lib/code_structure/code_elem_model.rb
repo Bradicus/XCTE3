@@ -18,7 +18,7 @@ module CodeStructure
   class CodeElemModel < CodeElem
     attr_accessor :name, :description,
                   :case, :varGroup, :xmlFileName, :lastModified,
-                  :modelSet, :feature_group, :data_filter
+                  :modelSet, :feature_group, :data_filter, :includes
 
     attr_reader :classes
 

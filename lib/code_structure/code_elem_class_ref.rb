@@ -28,5 +28,15 @@ module CodeStructure
       # puts 'comparing ' +  @plugin_name + ' and ' + other_plugin_name
       return NameCompare.matches(@model_name, other_model_name) && NameCompare.matches(@plugin_name, other_plugin_name)
     end
+
+    def get_template_param_names()
+      names = []
+
+      for tp in @template_params
+        names.push(tp.model_name)
+      end
+
+      return names
+    end
   end
 end
