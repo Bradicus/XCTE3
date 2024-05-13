@@ -29,7 +29,7 @@ module XCTECpp
       pDec += get_type_name(var)
 
       pDec += "&" if var.passBy.upcase == "REFERENCE"
-      pDec += "*" if var.isPointer
+      pDec += "*" if var.ptr_type = "*"
 
       pDec += " " + get_styled_variable_name(var)
 
@@ -49,7 +49,7 @@ module XCTECpp
 
       vDec += get_type_name(var)
 
-      vDec += "*" if var.isPointer
+      vDec += "*" if var.ptr_type == "raw"
 
       vDec += "&" if var.passBy.upcase == "REFERENCE"
 

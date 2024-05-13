@@ -27,17 +27,16 @@ module DataLoading
       AttributeLoader.init().xml(varXML).names("set").isTplAttrib().get(curVar)
       AttributeLoader.init().xml(varXML).names("tpl").isTplAttrib().get(curVar)
 
-      curVar.init_vars = AttributeLoader.init().xml(varXML).names("init_vars").doInherit().get() == 'true'
+      curVar.init_vars = AttributeLoader.init().xml(varXML).names("init_vars").doInherit().get() == "true"
 
       curVar.arrayElemCount = varXML.attributes["maxlen"].to_i
       curVar.isConst = varXML.attributes.get_attribute("const") != nil
       curVar.isStatic = varXML.attributes.get_attribute("static") != nil
-      #curVar.isPointer = varXML.attributes.get_attribute("pointer") != nil || varXML.attributes.get_attribute("ptr") != nil
-      curVar.isSharedPointer = varXML.attributes.get_attribute("sharedptr") != nil
+      curVar.ptr_type = AttributeLoader.init().xml(varXML).names("ptr").doInherit().get
       curVar.init = varXML.attributes["init"]
       curVar.namespace = NamespaceUtil.loadNamespaces(varXML, pComp)
       curVar.isVirtual = curVar.required = AttributeLoader.init().xml(varXML).names("virtual").doInherit().get == "true"
-      curVar.nullable = curVar.required = AttributeLoader.init().xml(varXML).names("nullable").doInherit().get == "true"      
+      curVar.nullable = curVar.required = AttributeLoader.init().xml(varXML).names("nullable").doInherit().get == "true"
       curVar.identity = varXML.attributes["identity"]
       curVar.isPrimary = varXML.attributes["pkey"] == "true"
       curVar.name = varXML.attributes["name"]

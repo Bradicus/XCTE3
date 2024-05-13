@@ -8,6 +8,7 @@ class XCTEClassBase < XCTEPlugin
     dutils.style_as_class(get_unformatted_class_name(cls))
   end
 
+  # Return the default utilities instance for this language
   def dutils
     throw :required_implimentation
   end

@@ -183,6 +183,8 @@ class UtilsBase
 
       if !for_cls_spec.nil?
         to_cls.addInclude(clsPlug.get_file_path(for_cls_spec), clsPlug.get_file_name(for_cls_spec))
+        # Log.info("added base class path: " + clsPlug.get_file_path(for_cls_spec))
+        # Log.info("added base class name: " + clsPlug.get_file_name(for_cls_spec))
       end
     else
       Log.warn "[try_add_include_for] Couldn't find class plugin: " + plug_name.to_s

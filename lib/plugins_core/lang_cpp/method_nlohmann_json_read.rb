@@ -50,7 +50,7 @@ module XCTECpp
       for bc in cls.standard_class.base_classes
         bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
         if bc_sap.valid?
-          Utils.instance.try_add_include_for_class_ref(cls, bc)
+          cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
         else
           cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
         end

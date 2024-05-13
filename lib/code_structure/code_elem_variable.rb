@@ -12,7 +12,7 @@ require "code_structure/code_elem"
 module CodeStructure
   class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :defaultValue, :comment,
-                  :visibility, :isConst, :isStatic, :isSharedPointer, :isVirtual, :init, :passBy, :genSet, :genGet,
+                  :visibility, :isConst, :isStatic, :ptr_type, :isVirtual, :init, :passBy, :genSet, :genGet,
                   :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptions_list,
                   :templates, :attribs, :required, :readonly, :relation, :storeIn, :init_vars
 
@@ -22,7 +22,7 @@ module CodeStructure
       @isVirtual = false
       @isConst = false
       @isStatic = false
-      @isSharedPointer = false
+      @ptr_type = nil
       @init = nil
       @namespace = CodeElemNamespace.new
       @passBy = "value"

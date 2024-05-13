@@ -1,4 +1,4 @@
-require 'managers/name_compare'
+require "managers/name_compare"
 
 class ClassModelManager
   @@list = []
@@ -13,14 +13,14 @@ class ClassModelManager
 
   def self.findClass(modelName, classplug_name)
     for c in @@list
-      #  puts classplug_name + " " + c.plug_name
-      #  puts modelName + " " + c.model.name
+      #puts classplug_name + " " + c.plug_name
+      #puts modelName + " " + c.model.name
       if c.plug_name == classplug_name && NameCompare.matches(c.model.name, modelName)
         return c
       end
     end
 
-    Log.warn("could not find class with model: " + modelName.to_s + "  plugin: " + classplug_name.to_s)
+    Log.warn("could not find class with model: " + modelName.to_s + " plugin: " + classplug_name.to_s)
 
     return nil
   end
@@ -45,8 +45,8 @@ class ClassModelManager
       # puts c.model.name + " " + var.getUType()
       # puts c.plug_name + " " + plug_name
       if !c.model.name.nil? && (NameCompare.matches(c.model.name, var.getUType) &&
-                 (plug_name.nil? || NameCompare.matches(c.plug_name,
-                                                       plug_name))) && (c.namespace.same?(var.namespace) || !var.namespace.hasItems?)
+                                (plug_name.nil? || NameCompare.matches(c.plug_name,
+                                                                       plug_name))) && (c.namespace.same?(var.namespace) || !var.namespace.hasItems?)
         return c
       end
     end
@@ -60,7 +60,7 @@ class ClassModelManager
       if !c.model.name.nil?
         # puts c.model.name + " " + var.getUType()
         if !model.modelSet.nil?
-          if NameCompare.matches(c.model.name, var.getUType + ' ' + model.modelSet) && c.namespace.same?(var.namespace)
+          if NameCompare.matches(c.model.name, var.getUType + " " + model.modelSet) && c.namespace.same?(var.namespace)
             return c
           end
         elsif NameCompare.matches(c.model.name, var.getUType)

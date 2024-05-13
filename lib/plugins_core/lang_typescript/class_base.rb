@@ -173,7 +173,7 @@ module XCTETypescript
           path += incPaths.join("/")
         end
 
-        bld.add("import { " + inc.name + " } from '" + dutils().style_as_path_name(path) + "';")
+        bld.add("import { " + inc.name + " } from '" + path + "';")
       end
     end
 
