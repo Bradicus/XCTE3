@@ -2,10 +2,11 @@
 <LANGUAGE_DEFS>
 
 	<STYLING 
-		namespace="CAMEL_CASE" 
+		namespace="LOWER_NOSPACE" 
 		variable="CAMEL_CASE" 
 		class="PASCAL_CASE" 
 		function="CAMEL_CASE" 
+		directory="LOWER_NOSPACE" 
 		file="PASCAL_CASE"
 		const = "UNDERSCORE_UPPER" />
 

@@ -64,7 +64,7 @@ class UtilsBase
 
   # Returns the version of this class name styled for this language
   def style_as_namespace(nsName)
-    CodeNameStyling.getStyled(nsName, @langProfile.classNameStyle)
+    CodeNameStyling.getStyled(nsName, @langProfile.namespaceStyle)
   end
 
   def style_as_enum(enumName)

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LANGUAGE_DEFS>
 
-	<STYLING namespace="PASCAL_CASE" variable="CAMEL_CASE" class="PASCAL_CASE" function="CAMEL_CASE" file="DASH_LOWER" />
+	<STYLING 
+		namespace="PASCAL_CASE" 
+		variable="CAMEL_CASE" 
+		class="PASCAL_CASE" 
+		function="CAMEL_CASE" 
+		directory="DASH_LOWER"
+		file="DASH_LOWER" />
 
 	<FILE_TYPES>
 		<FILE_TYPE type="body" extension="html" />

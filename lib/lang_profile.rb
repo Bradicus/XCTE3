@@ -13,7 +13,7 @@ require "lang_profile_type_map"
 class LangProfile
   attr_accessor :name, :fileTypes, :typeMaps, :variableNameStyle,
                 :functionNameStyle, :classNameStyle, :fileNameStyle,
-                :enumNameStyle, :constNameStyle, :directoryNameStyle
+                :enumNameStyle, :constNameStyle, :directoryNameStyle, :namespaceStyle
 
   def initialize(name) # Defined in the initialize method of child classes
     @name = name
@@ -28,6 +28,7 @@ class LangProfile
     @directoryNameStyle = nil
     @enumNameStyle = nil
     @constNameStyle = nil
+    @namespaceStyle = nil
   end
 
   def load(xmlDoc)
@@ -58,6 +59,7 @@ class LangProfile
       @directoryNameStyle = styling.attributes["directory"]
       @enumNameStyle = styling.attributes["enum"]
       @constNameStyle = styling.attributes["const"]
+      @namespaceStyle = styling.attributes["namespace"]
     end
 
     if @fileNameStyle.nil?

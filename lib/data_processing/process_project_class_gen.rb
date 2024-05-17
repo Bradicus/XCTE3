@@ -10,14 +10,8 @@ module DataProcessing
         end
 
         if language.has_key?(cls.plug_name)
-          if cls.path != nil
-            newPath = pComponent.dest + "/" + cls.path
-          else
-            newPath = pComponent.dest + "/" + cls.namespace.get("/")
-          end
-
           lClass = cls.clone()
-          lClass.file_path = newPath.gsub(" ", "-")
+
           # lClass.name = language[lClass.plug_name].get_class_name(lClass)
           lClass.gen_cfg = pComponent
 

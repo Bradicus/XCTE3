@@ -33,7 +33,6 @@
 		<var name="template params"	utype="code elem class spec" set="List" />
 		<var name="var prefix"		type="String" nullable="true" />
 		<var name="pre defs"			type="String" set="List" />
-		<var name="file path"			type="String" nullable="true" />
 		<var name="standard class"		type="String" nullable="true" />
 		<var name="standard class type"	type="String" nullable="true" />
 		<var name="custom code"			type="String" nullable="true" />

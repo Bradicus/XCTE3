@@ -7,41 +7,50 @@
 #
 # This plugin creates a constructor for a class
 
-require 'x_c_t_e_plugin'
-require 'plugins_core/lang_java/x_c_t_e_java'
+require "x_c_t_e_plugin"
+require "plugins_core/lang_java/x_c_t_e_java"
+require "plugins_core/lang_java/utils"
 
-class XCTEJava::MethodConstructor < XCTEPlugin
-  def initialize
-    @name = 'method_constructor'
-    @language = 'java'
-    @category = XCTEPlugin::CAT_METHOD
-  end
+module XCTEJava
+  class MethodConstructor < XCTEPlugin
+    def initialize
+      @name = "method_constructor"
+      @language = "java"
+      @category = XCTEPlugin::CAT_METHOD
+    end
 
-  # Returns definition string for this class's constructor
-  def render_function(cls, bld, _cfg)
-    bld.add('/**')
-    bld.add('* Constructor')
-    bld.add('*/')
+    def process_dependencies(cls, bld, fun)
+    end
 
-    bld.start_function(cls.get_u_name + '()')
+    # Returns definition string for this class's constructor
+    def render_function(fp_params)
+      bld = fp_params.bld
+      cls = fp_params.cls_spec
 
-    each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-      if !var.defaultValue.nil?
-        bld.add(var.name + ' = ')
+      bld.add("/**")
+      bld.add("* Constructor")
+      bld.add("*/")
 
-        if var.vtype == 'String'
-          bld.same_line('"' + var.defaultValue + '";')
-        else
-          bld.same_line(var.defaultValue + ';')
+      bld.start_function(cls.name + "()")
+
+      each_var(uevParams().wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+        if !var.defaultValue.nil?
+          bld.add(Utils.instance.get_styled_variable_name(var) + " = ")
+
+          if var.vtype == "String"
+            bld.same_line('"' + var.defaultValue + '";')
+          else
+            bld.same_line(var.defaultValue + ";")
+          end
+
+          if !var.comment.nil?
+            bld.same_line("\t// " + var.comment)
+          end
         end
+      }))
 
-        if !var.comment.nil?
-          bld.same_line("\t// " + var.comment)
-        end
-      end
-    }))
-
-    bld.endFunction
+      bld.endFunction
+    end
   end
 end
 

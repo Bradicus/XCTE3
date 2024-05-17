@@ -13,6 +13,8 @@ class CodeNameStyling
       return self.styleUnderscoreLower(name)
     when "DASH_LOWER"
       return self.styleDashLower(name)
+    when "LOWER_NOSPACE"
+      return self.styleLowerNospace(name)
     else
       raise("Undefined style type: " + styleName.to_s)
     end
@@ -48,11 +50,18 @@ class CodeNameStyling
     return(nameParts.join("_"))
   end
 
-  # Format in uppercase with underscores
+  # Format in uppercase with dashes
   def self.styleDashLower(name)
     name = name.downcase
     nameParts = name.split(" ")
     return(nameParts.join("-"))
+  end
+
+  # All lower case with spaces removed
+  def self.styleLowerNospace(name)
+    name = name.downcase
+    nameParts = name.split(" ")
+    return(nameParts.join(""))
   end
 
   # Capitalizes the first letter of a string

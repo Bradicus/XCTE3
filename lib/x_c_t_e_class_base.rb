@@ -94,9 +94,9 @@ class XCTEClassBase < XCTEPlugin
 
   def get_file_path(cls)
     if !cls.path.nil? && cls.path.length > 0
-      depPath = cls.path
+      depPath = dutils.style_as_path_name(cls.path)
     else
-      depPath = cls.namespace.get("/")
+      depPath = dutils.style_as_path_name(cls.namespace.get("/"))
     end
 
     return depPath

@@ -46,7 +46,7 @@ module XCTEJava
       # Process namespace items
       return unless cls.namespace.hasItems?
 
-      bld.add("package " + cls.namespace.get(".") + ";")
+      bld.add("package " + dutils().style_as_namespace((cls.namespace.get(".") + ";")))
       bld.separate
     end
 

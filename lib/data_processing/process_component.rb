@@ -93,28 +93,31 @@ module DataProcessing
 
       # Debug.logModels(projectPlan.models)
 
-      for plan in projectPlan.classes
-        language = XCTEPlugin.getLanguages[plan.language]
+      for cls_spec in projectPlan.classes
+        language = XCTEPlugin.getLanguages[cls_spec.language]
+        plugin = language[cls_spec.plug_name]
 
-        Log.debug("generating model " + plan.model.name + " class " + plan.plug_name + " language: " + plan.language +
-                  "  namespace: " + plan.namespace.get("."))
+        Log.debug("generating model " + cls_spec.model.name + " class " + cls_spec.plug_name + " language: " + cls_spec.language +
+                  "  namespace: " + cls_spec.namespace.get("."))
 
         # project.singleFile = "map gen settings"
 
-        if project.singleFile.nil? || project.singleFile == plan.model.name
-          srcFiles = language[plan.plug_name].gen_source_files(plan)
+        if project.singleFile.nil? || project.singleFile == cls_spec.model.name
+          srcFiles = language[cls_spec.plug_name].gen_source_files(cls_spec)
 
           for srcFile in srcFiles
             foundStart = false
             foundEnd = false
             overwriteFile = false
-            fName = plan.file_path + "/" + srcFile.lfName + "." + srcFile.lfExtension
+
+            file_path = File.join(pComponent.dest, plugin.get_file_path(cls_spec))
+            fName = File.join(file_path, srcFile.lfName + "." + srcFile.lfExtension)
 
             if File.file?(fName)
-              plan.custom_code = ProcessCustomCode.extractCustomCode(fName)
+              cls_spec.custom_code = ProcessCustomCode.extractCustomCode(fName)
 
-              if !plan.custom_code.nil? && plan.custom_code.strip.length > 0
-                srcFile.lines = ProcessCustomCode.insertCustomCode(plan.custom_code, srcFile)
+              if !cls_spec.custom_code.nil? && cls_spec.custom_code.strip.length > 0
+                srcFile.lines = ProcessCustomCode.insertCustomCode(cls_spec.custom_code, srcFile)
                 for line in srcFile.lines
                   line.strip! if line.strip.empty?
                 end
@@ -124,7 +127,7 @@ module DataProcessing
             if !File.file?(fName)
               overwriteFile = true
             else
-              existingFile = File.new(File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension), mode: "r")
+              existingFile = File.new(fName, mode: "r")
               fileData = existingFile.read
               genContents = srcFile.getContents
 
@@ -134,12 +137,12 @@ module DataProcessing
             end
 
             if overwriteFile
-              Log.debug("writing file: " + File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension))
-              if !File.directory?(plan.file_path)
-                FileUtils.mkdir_p(plan.file_path)
+              Log.debug("writing file: " + fName)
+              if !File.directory?(file_path)
+                FileUtils.mkdir_p(file_path)
                 #   Log.debug("Creating folder: " + newPath
               end
-              sFile = File.new(File.join(plan.file_path, srcFile.lfName + "." + srcFile.lfExtension), mode: "w")
+              sFile = File.new(fName, mode: "w")
               sFile << srcFile.getContents
               sFile.close
             end

@@ -7,6 +7,7 @@
 		class="PASCAL_CASE" 
 		function="CAMEL_CASE" 
 		file="PASCAL_CASE" 
+		directory="PASCAL_CASE"
 		enum="UNDERSCORE_UPPER" />
 	
 	<FILE_TYPES>

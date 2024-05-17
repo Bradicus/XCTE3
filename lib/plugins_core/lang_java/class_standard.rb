@@ -46,6 +46,7 @@ module XCTEJava
     # Returns the code for the header for this class
     def render_body_content(cls, bld)
       cfg = UserSettings.instance
+      cls.name = get_class_name(cls)
 
       bld.start_class("public class " << get_class_name(cls))
 
