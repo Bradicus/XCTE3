@@ -40,9 +40,13 @@ module XCTETypescript
       return self
     end
 
-    def w_exports(imports)
-      @imports = exports
+    def w_exports(exports)
+      @exports = exports
       return self
+    end
+
+    def w_standalone(standalone)
+      @standalone = standalone
     end
   end
 end
