@@ -24,8 +24,9 @@ module XCTECpp
       cls = fp_params.cls_spec
       fun = fp_params.fun_spec
 
+      Utils.instance.getStandardClassInfo(cls)
       bld.add("void write(pugi::xml_node node, " +
-              Utils.instance.style_as_class(cls.get_u_name) + "& item);")
+              Utils.instance.style_as_class(cls.model.name) + "& item);")
     end
 
     # Returns declairation string for this class's constructor
@@ -34,14 +35,16 @@ module XCTECpp
       cls = fp_params.cls_spec
       fun = fp_params.fun_spec
 
-      bld.startFuction("void write(pugi::xml_node node, " +
-                       Utils.instance.style_as_class(cls.get_u_name) + "& item);")
+      std_class = XCTEPlugin.findClassPlugin("cpp", "class_standard")
+
+      bld.startFuction("void write(pugi::xml_node node, " + Utils.instance.style_as_class(cls.model.name) + "& item);")
       get_body(fp_params)
       bld.endFunction
     end
 
     def process_dependencies(cls, _bld, _codeFun)
       cls.addInclude("", "pugixml.hpp")
+      cls.addInclude("", Utils.instance.style_as_class(cls.model.name) + ".h")
     end
 
     # Returns definition string for this class's constructor
@@ -56,8 +59,7 @@ module XCTECpp
 
       classDef = String.new
       classDef << Utils.instance.get_type_name(fun.returnValue) << " " <<
-        Utils.instance.style_as_class(cls.get_u_name) << " :: " << "write(pugi::xml_node node, " +
-                                                                   Utils.instance.style_as_class(cls.get_u_name) + "& item)"
+        Utils.instance.style_as_class(cls.get_u_name) << " :: write(pugi::xml_node node, " << Utils.instance.style_as_class(cls.model.name) << "& item)"
       bld.start_class(classDef)
 
       get_body(fp_params)
@@ -79,7 +81,11 @@ module XCTECpp
 
         if Utils.instance.is_primitive(var)
           if !var.isList
-            bld.add('node.append_attribute("' + styledVarName + '").set_value(' + styledVarName + ");")
+            if (var.getUType().downcase == "string")
+              bld.add('node.append_attribute("' + styledVarName + '").set_value(item.' + styledVarName + ".c_str());")
+            else
+              bld.add('node.append_attribute("' + styledVarName + '").set_value(item.' + styledVarName + ");")
+            end
           else
             bld.add('pugi::xml_node childNode = node.append_child("' + styledVarName + '");')
             bld.start_block("for (auto& listItem: item." + styledVarName + ")")
@@ -88,11 +94,10 @@ module XCTECpp
             bld.end_block
           end
         elsif !var.isList
-          bld.add "auto " + styledVarName + ' = grp.append_child("' + styledVarName + '");'
           bld.add(
             varTypeName + "PugiXmlEngine::write(" +
-            styledVarName +
-              ", " + styledVarName + ");"
+            'node.append_child("' + styledVarName + '")' +
+              ", item." + styledVarName + ");"
           )
         else
           if !var.isList

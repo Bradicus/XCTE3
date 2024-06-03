@@ -25,7 +25,13 @@ module XCTECpp
     end
 
     def get_unformatted_class_name(cls)
-      cls.get_u_name + " pugi xml engine"
+      cls.model.name + " pugi xml engine"
+    end
+
+    def process_dependencies(cls_spec, bld)
+      super
+
+      Utils.instance.try_add_include_for(cls, cls, "class_standard")
     end
 
     def render_header_comment(cls, bld)

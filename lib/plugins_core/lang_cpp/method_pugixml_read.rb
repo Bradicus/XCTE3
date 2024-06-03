@@ -24,8 +24,9 @@ module XCTECpp
       cls = fp_params.cls_spec
       fun = fp_params.fun_spec
 
-      bld.add("void load(pugi::xml_node node, " +
-              Utils.instance.style_as_class(cls.get_u_name) + "& item);")
+      Utils.instance.getStandardClassInfo(cls)
+      bld.add("void read(pugi::xml_node node, " +
+              Utils.instance.style_as_class(cls.model.name) + "& item);")
     end
 
     # Returns declairation string for this class's constructor
@@ -34,8 +35,9 @@ module XCTECpp
       cls = fp_params.cls_spec
       fun = fp_params.fun_spec
 
-      bld.startFuction("void load(pugi::xml_node node, " +
-                       Utils.instance.style_as_class(cls.get_u_name) + "& item);")
+      Utils.instance.getStandardClassInfo(cls)
+      bld.startFuction("void read(pugi::xml_node node, " +
+                       Utils.instance.style_as_class(cls.model.name) + "& item);")
       codeStr << get_body(cls, bld, codeFun)
       bld.endFunction
     end
@@ -56,8 +58,7 @@ module XCTECpp
 
       classDef = String.new
       classDef << Utils.instance.get_type_name(fun.returnValue) << " " <<
-        Utils.instance.style_as_class(cls.get_u_name) << " :: " << "read(pugi::xml_node node, " +
-                                                                   Utils.instance.style_as_class(cls.get_u_name) + "& item)"
+        Utils.instance.style_as_class(cls.get_u_name) << " :: read(pugi::xml_node node, " << Utils.instance.style_as_class(cls.model.name) << "& item)"
       bld.start_class(classDef)
 
       get_body(fp_params)
@@ -74,16 +75,16 @@ module XCTECpp
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.get_styled_variable_name(var)
 
-        pugiCast = "to_string()"
-        pugiCast = "to_int()" if var.vtype.start_with? "Int"
-        pugiCast = "to_float()" if var.vtype.start_with? "Float"
+        pugiCast = "as_string()"
+        pugiCast = "as_int()" if var.getUType().downcase.start_with? "int"
+        pugiCast = "as_float()" if var.getUType().downcase.start_with? "float"
 
         if Utils.instance.is_primitive(var)
           if !var.isList
-            bld.add(styledVarName + " = item.attribute(" + styledVarName + ")." + pugiCast + ";")
+            bld.add("item." + styledVarName + ' = node.attribute("' + styledVarName + '").' + pugiCast + ";")
           else
-            bld.start_block('for (pugi::xml_node pNode = item.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
-            bld.add(styledVarName + ".push_back(pNode." + pugiCast + ");")
+            bld.start_block('for (pugi::xml_node pNode = node.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '")')
+            bld.add("item." + styledVarName + ".push_back(pNode." + pugiCast + ");")
             bld.end_block
           end
         elsif !var.isList
