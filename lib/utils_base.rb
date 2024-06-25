@@ -89,7 +89,7 @@ class UtilsBase
   # Create a variable with a type cls
   def create_var_for(cls, plug_name, visibility = nil)
     plugClass = cls.model.findClassModel(plug_name)
-    plug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
+    plug = PluginManager.find_class_plugin(@langProfile.name, plug_name)
 
     if plugClass.nil?
       Log.debug("Class not found for " + plug_name)
@@ -176,7 +176,7 @@ class UtilsBase
 
   # Add an include if there's a class model defined for it
   def try_add_include_for(to_cls, for_cls, plug_name)
-    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
+    clsPlug = PluginManager.find_class_plugin(@langProfile.name, plug_name)
 
     if !clsPlug.nil? && !for_cls.nil?
       for_cls_spec = for_cls.model.findClassModel(plug_name)
@@ -193,7 +193,7 @@ class UtilsBase
 
   # Add an include if there's a class model defined for it
   def try_add_include_for_var(cls, var, plug_name)
-    clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
+    clsPlug = PluginManager.find_class_plugin(@langProfile.name, plug_name)
     clsGen = ClassModelManager.findClass(var.getUType, plug_name)
 
     return unless !clsPlug.nil? && !clsGen.nil? && !is_self_reference(cls, var, clsPlug)
@@ -211,7 +211,24 @@ class UtilsBase
     pas = CodeStructure::CodeElemSpecAndPlugin.new
 
     pas.spec = ClassModelManager.findClass(cls_ref.model_name, cls_ref.plugin_name)
-    pas.plugin = XCTEPlugin::findClassPlugin(cls_spec.language, cls_ref.plugin_name)
+    pas.plugin = PluginManager.find_class_plugin(cls_spec.language, cls_ref.plugin_name)
+
+    if pas.spec.nil?
+      Log.info "Unable to find class spec for model: " + cls_ref.model_name + " " + cls_ref.plugin_name
+    end
+
+    if pas.plugin.nil?
+      Log.info "Unable to find class plugin for model: " + cls_ref.model_name + " " + cls_ref.plugin_name
+    end
+
+    return pas
+  end
+
+  def get_plugin_and_spec_for_type(cls_type_name)
+    pas = CodeStructure::CodeElemSpecAndPlugin.new
+
+    pas.spec = ClassModelManager.findClass(cls_ref.model_name, cls_ref.plugin_name)
+    pas.plugin = PluginManager.find_class_plugin(cls_spec.language, cls_ref.plugin_name)
 
     if pas.spec.nil?
       Log.info "Unable to find class spec for model: " + cls_ref.model_name + " " + cls_ref.plugin_name

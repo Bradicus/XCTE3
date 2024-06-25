@@ -49,7 +49,7 @@ module XCTEJava
       # Add in any dependencies required by functions
       Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
         if fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin("java", fun.name)
+          templ = PluginManager.find_method_plugin("java", fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)
           else

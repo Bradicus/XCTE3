@@ -132,7 +132,7 @@ module XCTECpp
           end
 
           if funItem.isTemplate
-            templ = XCTEPlugin.findMethodPlugin("cpp", funItem.name)
+            templ = PluginManager.find_method_plugin("cpp", funItem.name)
             if !templ.nil?
               if funItem.isInline
                 templ.render_declaration_inline(fp_params)
@@ -143,7 +143,7 @@ module XCTECpp
               # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
             end
           else # Must be an empty function
-            templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
+            templ = PluginManager.find_method_plugin("cpp", "method_empty")
             if !templ.nil?
               if funItem.isInline
                 templ.render_declaration_inline(fp_params)
@@ -209,11 +209,11 @@ module XCTECpp
 
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
           if var.genGet
-            templ = XCTEPlugin.findMethodPlugin("cpp", "method_get")
+            templ = PluginManager.find_method_plugin("cpp", "method_get")
             templ.render_declaration(var, bld) if !templ.nil?
           end
           if var.genSet
-            templ = XCTEPlugin.findMethodPlugin("cpp", "method_set")
+            templ = PluginManager.find_method_plugin("cpp", "method_set")
             templ.render_declaration(var, bld) if !templ.nil?
           end
         end

@@ -1,3 +1,5 @@
+require "managers/plugin_manager.rb"
+
 class IncludeUtil
   attr_accessor :pName
 
@@ -27,7 +29,7 @@ class IncludeUtil
   end
 
   def addTo(tgtClass)
-    clsPlug = XCTEPlugin::findClassPlugin(tgtClass.gen_cfg.language, @pName)
+    clsPlug = PluginManager.find_class_plugin(tgtClass.gen_cfg.language, @pName)
     clsGen = @mdl.findClassModel(@pName)
 
     if clsPlug != nil && clsGen != nil

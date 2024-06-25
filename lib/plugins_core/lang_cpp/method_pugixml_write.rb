@@ -35,7 +35,7 @@ module XCTECpp
       cls = fp_params.cls_spec
       fun = fp_params.fun_spec
 
-      std_class = XCTEPlugin.findClassPlugin("cpp", "class_standard")
+      std_class = PluginManager.find_class_plugin("cpp", "class_standard")
 
       bld.startFuction("void write(pugi::xml_node node, " + Utils.instance.style_as_class(cls.model.name) + "& item);")
       get_body(fp_params)
@@ -94,19 +94,17 @@ module XCTECpp
             bld.end_block
           end
         elsif !var.isList
-          bld.add(
-            varTypeName + "PugiXmlEngine::write(" +
-            'node.append_child("' + styledVarName + '")' +
-              ", item." + styledVarName + ");"
-          )
+          bld.add(Utils.instance.get_class_name(var) + "PugiXmlEngine::write(" +
+                  'node.append_child("' + styledVarName + '")' +
+                  ", item." + styledVarName + ");")
         else
           if !var.isList
             bld.add(varTypeName + "PugiXmlEngine::write(pNode, item);")
           else
             bld.start_block("for (auto& listItem: item." + styledVarName + ")")
             bld.add(varTypeName + " newVar;")
-            bld.add(varTypeName + "PugiXmlEngine::write(pNode, listItem);")
-            bld.add(styledVarName + ".push_back(newVar);")
+            bld.add(Utils.instance.get_class_name(var) + "PugiXmlEngine::write(pNode, listItem);")
+            bld.add("item." + styledVarName + ".push_back(newVar);")
           end
           bld.end_block
         end

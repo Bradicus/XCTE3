@@ -225,12 +225,12 @@ module XCTETypescript
       end
       bld.start_block("this." + Utils.instance.get_styled_variable_name(storeServiceVar) + ".create(this." + clsVar + ".value).subscribe(newItem => ")
       listingSpec = cls.model.findClassSpecByPluginName("class_angular_listing")
-      listingPlugin = XCTEPlugin.findClassPlugin("typescript", "class_angular_listing")
+      listingPlugin = PluginManager.find_class_plugin("typescript", "class_angular_listing")
       if listingSpec != nil && listingPlugin != nil
         listPath = listingPlugin.get_full_route(listingSpec, "listing")
         bld.add 'this.router.navigate(["' + listPath.split("/").drop(1).unshift("/").join('","') + '"]);'
       else
-        editPlugin = XCTEPlugin.findClassPlugin("typescript", "class_angular_reactive_edit")
+        editPlugin = PluginManager.find_class_plugin("typescript", "class_angular_reactive_edit")
         editPath = editPlugin.get_full_route(cls, "edit")
 
         if editPath != nil

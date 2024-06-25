@@ -95,7 +95,7 @@ module XCTECSharp
       # Generate code for functions
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin("csharp", fun.name)
+          templ = PluginManager.find_method_plugin("csharp", fun.name)
           if !templ.nil?
             templ.render_function(fp_params)
             bld = fp_params.bld

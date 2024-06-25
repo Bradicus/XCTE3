@@ -275,7 +275,7 @@ module XCTETypescript
     def add_class_names_for(clsList, otherClasses, language, classType)
       for otherCls in otherClasses
         if otherCls.plug_name == classType
-          plug = XCTEPlugin.findClassPlugin(language, classType)
+          plug = PluginManager.find_class_plugin(language, classType)
           clsList.push(plug.get_class_name(otherCls))
         end
       end
@@ -405,7 +405,7 @@ module XCTETypescript
 
     # Add an include if there's a class model defined for it
     def try_add_include_for(to_cls, for_cls, plug_name)
-      clsPlug = XCTEPlugin.findClassPlugin(@langProfile.name, plug_name)
+      clsPlug = PluginManager.find_class_plugin(@langProfile.name, plug_name)
 
       if !clsPlug.nil? && !for_cls.nil?
         for_cls_spec = for_cls.model.findClassModel(plug_name)

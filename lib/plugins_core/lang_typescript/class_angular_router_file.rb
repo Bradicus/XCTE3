@@ -50,19 +50,19 @@ module XCTETypescript
       for mdl in ProjectPlanManager.current.models
         for otherCls in mdl.classes
           if otherCls.plug_name.start_with?("class_angular_listing")
-            plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+            plug = PluginManager.find_class_plugin("typescript", otherCls.plug_name)
 
             route = plug.get_full_route(otherCls, "listing")
 
             bld.add("{ path: '" + route + "', component: " + plug.get_class_name(otherCls) + " },")
           elsif otherCls.plug_name.start_with?("class_angular_reactive_edit")
-            plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+            plug = PluginManager.find_class_plugin("typescript", otherCls.plug_name)
 
             route = plug.get_full_route(otherCls, "edit")
 
             bld.add("{ path: '" + route + "/:id', component: " + plug.get_class_name(otherCls) + " },")
           elsif otherCls.plug_name.start_with?("class_angular_reactive_view")
-            plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+            plug = PluginManager.find_class_plugin("typescript", otherCls.plug_name)
 
             route = plug.get_full_route(otherCls, "view")
 

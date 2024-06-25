@@ -92,7 +92,7 @@ module XCTETypescript
 
         for bc in cls.base_classes
           bc_cls_spec = ClassModelManager.findClass(bc.model_name, bc.plugin_name)
-          bc_plugin = XCTEPlugin::findClassPlugin(cls.language, bc.plugin_name)
+          bc_plugin = PluginManager.find_class_plugin(cls.language, bc.plugin_name)
 
           if !first
             base_classes += ", "

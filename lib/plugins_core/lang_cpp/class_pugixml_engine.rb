@@ -66,7 +66,7 @@ module XCTECpp
       # Generate function declarations
       for funItem in cls.functions
         if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && funItem.isTemplate
-          templ = XCTEPlugin.findMethodPlugin("cpp", funItem.name)
+          templ = PluginManager.find_method_plugin("cpp", funItem.name)
           if !templ.nil?
             templ.process_dependencies(cls, funItem, bld)
           else

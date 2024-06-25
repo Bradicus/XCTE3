@@ -7,6 +7,7 @@
 	<var_group genGet="true" genSet="true" init_vars="true">
 	  <var name="spec"	utype="code elem class spec"	nullable="true"  />
 	  <var name="plugin"	type="XCTEPlugin"	nullable="true" />
+	  <var name="type name"	type="String"	nullable="true" />
 	</var_group>
 	
 </model>

@@ -50,9 +50,9 @@ module XCTECpp
       for bc in cls.standard_class.base_classes
         bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
         if bc_sap.valid?
-          cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
+          cls.addInclude("", Utils.instance.get_derived_class_prefix(bc) + "JsonEngine.h")
         else
-          cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
+          cls.addInclude("", Utils.instance.get_derived_class_prefix(bc) + "JsonEngine.h")
         end
       end
 
@@ -101,7 +101,7 @@ module XCTECpp
         if bc_sap.valid?
           bld.add(bc_sap.plugin.get_class_name(bc_sap.spec) + "JsonEngine::read(json, item);")
         else
-          bld.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::read(json, item);")
+          bld.add(Utils.instance.get_derived_class_prefix(bc) + "JsonEngine::read(json, item);")
         end
       end
 
@@ -141,10 +141,18 @@ module XCTECpp
 
             if var.isPointer(1)
               bld.add(Utils.instance.get_single_item_type_name(var) + " newVar(new " + Utils.instance.get_base_type_name(var) + "());")
-              bld.add(Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, *newVar);")
+              if curVarClass == nil
+                bld.add Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, *newVar);"
+              else
+                bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + "JsonEngine::read(aJson, *newVar);")
+              end
             else
               bld.add(Utils.instance.get_single_item_type_name(var) + " newVar;")
-              bld.add(Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, newVar);")
+              if curVarClass == nil
+                bld.add Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, *newVar);"
+              else
+                bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + "JsonEngine::read(aJson, newVar);")
+              end
             end
 
             bld.add("item." + curVarName + ".push_back(newVar);")

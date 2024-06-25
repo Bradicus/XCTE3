@@ -63,7 +63,7 @@ module XCTECpp
 
       for b_cls_ref in cls.base_classes
         bc_cls_spec = ClassModelManager.findClass(b_cls_ref.model_name, b_cls_ref.plugin_name)
-        bc_plugin = XCTEPlugin::findClassPlugin(cls.language, b_cls_ref.plugin_name)
+        bc_plugin = PluginManager.find_class_plugin(cls.language, b_cls_ref.plugin_name)
 
         if bc_cls_spec.nil?
           Log.info "Unable to find class spec for model: " + b_cls_ref.model_name + " " + b_cls_ref.plugin_name

@@ -10,16 +10,16 @@
 # class generators, such as a wxWidgets class generator or a Fox Toolkit
 # class generator for example
 
-require 'plugins_core/lang_php/utils'
-require 'plugins_core/lang_php/x_c_t_e_php'
+require "plugins_core/lang_php/utils"
+require "plugins_core/lang_php/x_c_t_e_php"
 
-require 'code_structure/code_elem_parent'
-require 'lang_file'
+require "code_structure/code_elem_parent"
+require "lang_file"
 
 class XCTEPhp::ClassModel < XCTEPlugin
   def initialize
-    @name = 'model'
-    @language = 'php'
+    @name = "model"
+    @language = "php"
     @category = XCTEPlugin::CAT_CLASS
   end
 
@@ -27,13 +27,13 @@ class XCTEPhp::ClassModel < XCTEPlugin
     srcFiles = []
 
     phpFile = SourceRendererPhp.new
-    phpFile.lfName = codeClass.name << 'MDL'
-    phpFile.lfExtension = XCTEPhp::Utils.get_extension('body')
+    phpFile.lfName = codeClass.name << "MDL"
+    phpFile.lfExtension = XCTEPhp::Utils.get_extension("body")
 
-    phpFile.add('<?php')
+    phpFile.add("<?php")
     genPhpFileComment(codeClass, phpFile)
     genPhpFileContent(codeClass, phpFile)
-    phpFile.add('?>')
+    phpFile.add("?>")
 
     srcFiles << phpFile
 
@@ -41,32 +41,32 @@ class XCTEPhp::ClassModel < XCTEPlugin
   end
 
   def genPhpFileComment(codeClass, outCode)
-    outCode.add('/**')
-    outCode.add('* @class ' + codeClass.name)
+    outCode.add("/**")
+    outCode.add("* @class " + codeClass.name)
 
     if !cfg.codeAuthor.nil?
-      outCode.add('* @author ' + cfg.codeAuthor)
+      outCode.add("* @author " + cfg.codeAuthor)
     end
 
     if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
-      outCode.add('* ' + cfg.codeCompany)
+      outCode.add("* " + cfg.codeCompany)
     end
 
     if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
       outCode.add("*\n* " + cfg.codeLicense)
     end
 
-    outCode.add('* ')
+    outCode.add("* ")
 
     if !codeClass.description.nil?
       codeClass.description.each_line do |descLine|
         if descLine.strip.size > 0
-          outCode.add('* ' << descLine.chomp)
+          outCode.add("* " << descLine.chomp)
         end
       end
     end
 
-    outCode.add('*/')
+    outCode.add("*/")
   end
 
   # Returns the code for the header for this class
@@ -85,8 +85,8 @@ class XCTEPhp::ClassModel < XCTEPlugin
       outCode.add
     end
 
-    outCode.add('class ' << codeClass.name)
-    outCode.add('{')
+    outCode.add("class " << codeClass.name)
+    outCode.add("{")
 
     outCode.add
 
@@ -94,14 +94,14 @@ class XCTEPhp::ClassModel < XCTEPlugin
     for fun in codeClass.functionSection
       if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
         if fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin('php', fun.name)
+          templ = PluginManager.find_method_plugin("php", fun.name)
           if !templ.nil?
             templ.render_function(codeClass, outCode)
           else
             # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
           end
         else # Must be empty function
-          templ = XCTEPlugin.findMethodPlugin('php', 'method_empty')
+          templ = PluginManager.find_method_plugin("php", "method_empty")
           if !templ.nil?
             templ.render_function(fun, outCode)
           else
@@ -111,7 +111,7 @@ class XCTEPhp::ClassModel < XCTEPlugin
       end
     end
 
-    outCode.add('}')
+    outCode.add("}")
   end
 end
 

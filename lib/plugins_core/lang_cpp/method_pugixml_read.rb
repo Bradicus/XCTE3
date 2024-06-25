@@ -74,6 +74,8 @@ module XCTECpp
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         styledVarName = Utils.instance.get_styled_variable_name(var)
+        curVarType = Utils.instance.get_type_name(var)
+        curVarClass = ClassModelManager.findVarClass(var)
 
         pugiCast = "as_string()"
         pugiCast = "as_int()" if var.getUType().downcase.start_with? "int"
@@ -89,18 +91,18 @@ module XCTECpp
           end
         elsif !var.isList
           bld.add(
-            Utils.instance.get_type_name(var) + "PugiXmlEngine::load(" +
+            Utils.instance.get_class_name(var) + "PugiXmlEngine::load(" +
             Utils.instance.get_styled_variable_name(var) +
               '(json["' + Utils.instance.get_styled_variable_name(var) + '"], ' + styledVarName + ");"
           )
         else
-          bld.start_block('for pNode = node.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + "')")
+          bld.start_block('for (pugi::xml_node pNode = node.child("' + styledVarName + '"); pNode; pNode = pNode.next_sibling("' + styledVarName + '"))')
           if !var.isList
-            bld.add(Utils.instance.get_type_name(var) + "PugiXmlEngine::load(node, pNode);")
+            bld.add(Utils.instance.get_class_name(var) + "PugiXmlEngine::load(node, pNode);")
           else
             bld.add(Utils.instance.get_type_name(var) + " newVar;")
-            bld.add(Utils.instance.get_type_name(var) + "PugiXmlEngine::load(node, pNode);")
-            bld.add(Utils.instance.get_styled_variable_name(var) + ".push_back(newVar);")
+            bld.add(Utils.instance.get_class_name(var) + "PugiXmlEngine::load(node, pNode);")
+            bld.add("item." + Utils.instance.get_styled_variable_name(var) + ".push_back(newVar);")
           end
           bld.end_block
         end

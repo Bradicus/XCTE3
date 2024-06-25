@@ -12,9 +12,6 @@ require "managers/plugin_manager"
 class XCTEPlugin
   attr_accessor :pluginRegistry, :languagePlugins, :name, :language, :category, :author
 
-  # @@pluginRegistry = Hash.new
-  @@modelPlugins = {}
-
   CAT_METHOD = "method"
   CAT_CLASS = "class"
   CAT_DERIVE = "derive"
@@ -73,11 +70,6 @@ class XCTEPlugin
     PluginManager.plugins[plug.language][plug.name] = plug
   end
 
-  # Register a plugin in the plugin repository
-  def self.registerModelPlugin(plug)
-    @@modelPlugins[plug.name] = plug
-  end
-
   #  # Attempts to find the desired class plugin for the desired language
   #  def self.findLangPlugins(langName)
   #    pluginSet = Hash.new()
@@ -96,44 +88,6 @@ class XCTEPlugin
   #
   #    return pluginSet
   #  end
-
-  # Attempts to find the desired class plugin for the desired language
-  def self.findMethodPlugin(lang, method)
-    PluginManager.plugins[lang].each do |_plugKey, plug|
-      return plug if plug.name == method && plug.category == "method"
-    end
-
-    nil
-  end
-
-  # Attempts to find the desired method plugin for the desired language
-  def self.findClassPlugin(lang, pluginName, _ns = nil)
-    PluginManager.plugins[lang].each do |_plugKey, plug|
-      return plug if plug.name == pluginName
-    end
-
-    Log.warn("could not find plugin: " + pluginName.to_s)
-
-    nil
-  end
-
-  # Attempts to find the desired method plugin for the desired language
-  def self.findClassPluginByType(lang, classType, _ns = nil)
-    PluginManager.plugins[lang].each do |_plugKey, plug|
-      return plug if plug.get_unformatted_class_name == classType
-    end
-
-    nil
-  end
-
-  # Attempts to find the desired project plugin for the desired language
-  def self.findProjectPlugin(lang, prjType)
-    PluginManager.plugins[lang].each do |_plugKey, plug|
-      return plug if plug.category == "project" && plug.name == prjType
-    end
-
-    nil
-  end
 
   # Attempts to find the desired derived model plugin for the desired language
   # def self.findDerivePlugin(prjType)

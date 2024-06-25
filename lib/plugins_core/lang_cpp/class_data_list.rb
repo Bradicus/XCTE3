@@ -33,7 +33,7 @@ module XCTECpp
       srcFiles = []
 
       # Use the standard class once we've added the necessary components
-      stdClass = XCTEPlugin.findClassPlugin("cpp", "class_standard")
+      stdClass = PluginManager.find_class_plugin("cpp", "class_standard")
 
       listInfo = XCTECpp::Utils.getDataListInfo(cls.data_node)
 

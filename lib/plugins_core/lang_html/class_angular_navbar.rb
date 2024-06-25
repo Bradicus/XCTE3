@@ -35,7 +35,7 @@ module XCTEHtml
       for mdl in ProjectPlanManager.current.models
         for otherCls in mdl.classes
           if otherCls.plug_name.start_with?("class_angular_listing")
-            plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+            plug = PluginManager.find_class_plugin("typescript", otherCls.plug_name)
 
             featureName = otherCls.feature_group
             featureName = otherCls.model.name if featureName.nil?
@@ -55,7 +55,7 @@ module XCTEHtml
             editPath = plug.get_full_route(otherCls, "listing")
             curNode.children.push(NavigationNode.new(nodeName.capitalize + " listing", editPath))
           elsif otherCls.plug_name.start_with?("class_angular_reactive_edit")
-            plug = XCTEPlugin.findClassPlugin("typescript", otherCls.plug_name)
+            plug = PluginManager.find_class_plugin("typescript", otherCls.plug_name)
 
             featureName = otherCls.feature_group
             featureName = cls.model.name if featureName.nil?

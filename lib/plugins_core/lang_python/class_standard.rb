@@ -122,14 +122,14 @@ module XCTEPython
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin("python", fun.name)
+            templ = PluginManager.find_method_plugin("python", fun.name)
             if !templ.nil?
               templ.render_function(cls, fun, rend)
             else
               # puts 'ERROR no plugin for function: ' << fun.name << '   language: java'
             end
           else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin("python", "method_empty")
+            templ = PluginManager.find_method_plugin("python", "method_empty")
             if !templ.nil?
               templ.render_function(cls, fun, rend)
             else

@@ -33,7 +33,7 @@ class XCTEClassBase < XCTEPlugin
     # Add in any dependencies required by functions
     dutils().each_fun(UtilsEachFunParams.new(cls_spec, bld, lambda { |fun|
       if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin(cls_spec.language, fun.name)
+        templ = PluginManager.find_method_plugin(cls_spec.language, fun.name)
         if !templ.nil?
           Log.info "processing fun: " + fun.name
           templ.process_dependencies(cls_spec, bld, fun)
@@ -52,6 +52,15 @@ class XCTEClassBase < XCTEPlugin
         Log.warn "Could not find class for base class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
       end
     end
+  end
+
+  def process_var_dependencies(cls_spec, var)
+    # Add in any dependencies required by variables
+    Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      enumDec = Utils.instance.style_as_enum(var.name)
+      enumDec += " = " + var.defaultValue if !var.defaultValue.nil?
+      enums.push(enumDec)
+    }))
   end
 
   def gen_source_files(cls)
@@ -119,14 +128,14 @@ class XCTEClassBase < XCTEPlugin
       fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(fun)
 
       if fun.isTemplate
-        templ = XCTEPlugin.findMethodPlugin(dutils.langProfile.name, fun.name)
+        templ = PluginManager.find_method_plugin(dutils.langProfile.name, fun.name)
         if !templ.nil?
           templ.render_function(fp_params)
         else
           # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'dutils.langProfile.name
         end
       else # Must be empty function
-        templ = XCTEPlugin.findMethodPlugin(dutils.langProfile.name, "method_empty")
+        templ = PluginManager.find_method_plugin(dutils.langProfile.name, "method_empty")
         if !templ.nil?
           templ.render_function(fp_params)
         else

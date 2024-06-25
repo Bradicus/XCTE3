@@ -48,9 +48,9 @@ module XCTECpp
       for bc in cls.standard_class.base_classes
         bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
         if bc_sap.valid?
-          cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
+          cls.addInclude("", Utils.instance.get_derived_class_prefix(bc) + "JsonEngine.h")
         else
-          cls.addInclude("", Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine.h")
+          cls.addInclude("", Utils.instance.get_derived_class_prefix(bc) + "JsonEngine.h")
         end
       end
     end
@@ -85,9 +85,9 @@ module XCTECpp
       for bc in cls.standard_class.base_classes
         bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
         if bc_sap.valid?
-          bld.add(Utils.instance.getDerivedClassPrefix(bc_sap.spec) + "JsonEngine::write(json, item);")
+          bld.add(Utils.instance.get_derived_class_prefix(bc_sap.spec) + "JsonEngine::write(json, item);")
         else
-          bld.add(Utils.instance.getDerivedClassPrefix(bc) + "JsonEngine::write(json, item);")
+          bld.add(Utils.instance.get_derived_class_prefix(bc) + "JsonEngine::write(json, item);")
         end
       end
 

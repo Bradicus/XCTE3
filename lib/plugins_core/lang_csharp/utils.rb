@@ -205,7 +205,7 @@ module XCTECSharp
       # Add in any dependencies required by functions
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin("csharp", fun.name)
+          templ = PluginManager.find_method_plugin("csharp", fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)
           else
@@ -279,14 +279,14 @@ module XCTECSharp
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
           if fun.isTemplate
-            templ = XCTEPlugin.findMethodPlugin("csharp", fun.name)
+            templ = PluginManager.find_method_plugin("csharp", fun.name)
             if !templ.nil?
               templ.render_function(cls, fun, nil, bld)
             else
               puts "ERROR no plugin for function: " + fun.name + "   language: csharp"
             end
           else # Must be empty function
-            templ = XCTEPlugin.findMethodPlugin("csharp", "method_empty")
+            templ = PluginManager.find_method_plugin("csharp", "method_empty")
             if !templ.nil?
               templ.render_function(cls, fun, nil, bld)
             else

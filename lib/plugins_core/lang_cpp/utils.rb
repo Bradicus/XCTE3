@@ -171,7 +171,7 @@ module XCTECpp
       return baseTypeName
     end
 
-    def getDerivedClassPrefix(cls_ref)
+    def get_derived_class_prefix(cls_ref)
       tplNames = []
 
       if cls_ref.is_a? CodeStructure::CodeElemClassRef

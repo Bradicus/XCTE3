@@ -72,7 +72,7 @@ module XCTEPhp
     def process_fuction_dependencies(cls, bld, fun)
       return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
-      templ = XCTEPlugin.findMethodPlugin(dutils.langProfile.name, fun.name)
+      templ = PluginManager.find_method_plugin(dutils.langProfile.name, fun.name)
       if !templ.nil?
         templ.process_dependencies(cls, bld, fun)
       else
@@ -93,11 +93,11 @@ module XCTEPhp
     def render_header_var_group_getter_setters(cls, bld)
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if var.genGet
-          templ = XCTEPlugin.findMethodPlugin("php", "method_get")
+          templ = PluginManager.find_method_plugin("php", "method_get")
           templ.render_function(var, bld) if !templ.nil?
         end
         if var.genSet
-          templ = XCTEPlugin.findMethodPlugin("php", "method_set")
+          templ = PluginManager.find_method_plugin("php", "method_set")
           templ.render_function(var, bld) if !templ.nil?
         end
       }))

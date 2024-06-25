@@ -71,7 +71,7 @@ module XCTECpp
       # Get dependencies for functions
       for fun in cls.functions
         if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin("cpp", fun.name)
+          templ = PluginManager.find_method_plugin("cpp", fun.name)
           if !templ.nil?
             templ.process_dependencies(cls, bld, fun)
           else
@@ -85,7 +85,7 @@ module XCTECpp
       Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
         fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(fun)
         if fun.isTemplate
-          templ = XCTEPlugin.findMethodPlugin("cpp", fun.name)
+          templ = PluginManager.find_method_plugin("cpp", fun.name)
           if !templ.nil?
             if fun.isInline
               templ.render_declaration_inline(fp_params)
@@ -96,7 +96,7 @@ module XCTECpp
             # puts 'ERROR no plugin 4 function: ' << fun.name << '   language: cpp'
           end
         else # Must be an empty function
-          templ = XCTEPlugin.findMethodPlugin("cpp", "method_empty")
+          templ = PluginManager.find_method_plugin("cpp", "method_empty")
           if !templ.nil?
             if fun.isInline
               templ.render_declaration_inline(fp_params)

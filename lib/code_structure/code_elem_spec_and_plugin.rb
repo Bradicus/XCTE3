@@ -5,10 +5,11 @@
 
 module CodeStructure
   class CodeElemSpecAndPlugin
-    attr_accessor :spec, :plugin
+    attr_accessor :spec, :plugin, :type_name
 
     @spec = nil
     @plugin = nil
+    @type_name = nil
 
     def valid?
       return !@spec.nil? && !@plugin.nil?
