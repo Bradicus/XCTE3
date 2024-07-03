@@ -31,7 +31,7 @@ module XCTEJava
       bld.add("*/")
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       Utils.instance.requires_class_type(cls, cls, "class_standard")
       cls.addUse("org.springframework.web.bind.annotation.*")
       cls.addUse("org.springframework.beans.factory.annotation.Autowired")
@@ -47,11 +47,11 @@ module XCTEJava
     # Returns the code for the content for this class
     def render_body_content(cls, bld)
       # Add in any dependencies required by functions
-      Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+      Utils.instance.each_fun(UtilsEachFunParams.new.w_cls(cls).w_bld(bld).w_fun_cb(lambda { |fun|
         if fun.isTemplate
           templ = PluginManager.find_method_plugin("java", fun.name)
           if !templ.nil?
-            templ.process_dependencies(cls, bld, fun)
+            templ.process_dependencies(cls, fun)
           else
             puts "ERROR no plugin for function: " + fun.name + "   language: java"
           end

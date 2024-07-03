@@ -1,6 +1,7 @@
 require "data_processing/process_custom_code"
 require "data_processing/process_project_class_gen"
 require "data_loading/class_group_loader"
+require "managers/class_type_manager"
 require "code_structure/code_elem_classgroup"
 require "class_groups"
 require "debug"
@@ -93,6 +94,24 @@ module DataProcessing
 
       # Debug.logModels(projectPlan.models)
 
+      # Generate types list
+      for cls_spec in projectPlan.classes
+        language = XCTEPlugin.getLanguages[cls_spec.language]
+        plugin = language[cls_spec.plug_name]
+
+        Log.debug("generating model " + cls_spec.model.name + " class " + cls_spec.plug_name + " language: " + cls_spec.language +
+                  "  namespace: " + cls_spec.namespace.get("."))
+
+        # project.singleFile = "map gen settings"
+
+        if project.singleFile.nil? || project.singleFile == cls_spec.model.name
+          srcFiles = language[cls_spec.plug_name].gen_source_files(cls_spec)
+
+          ClassTypeManager.add_type(cls_spec.language, cls_spec, plugin)
+        end
+      end
+
+      # Process data models
       for cls_spec in projectPlan.classes
         language = XCTEPlugin.getLanguages[cls_spec.language]
         plugin = language[cls_spec.plug_name]

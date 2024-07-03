@@ -34,7 +34,7 @@ module XCTETypescript
       # Eventaully switch to finding standard class and using path from there
       cls.addInclude("shared/dto/model/" + fPath, cName)
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
       render_dependencies(cls, bld)
 
       bld.separate
@@ -47,13 +47,13 @@ module XCTETypescript
       srcFiles
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray")
       cls.addInclude("@angular/core", "Injectable")
 
       # Process variables
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var)
           Utils.instance.try_add_include_for_var(cls, var, "class_standard")
 
@@ -66,7 +66,7 @@ module XCTETypescript
         if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && funItem.isTemplate
           templ = PluginManager.find_method_plugin("typescript", funItem.name)
           if !templ.nil?
-            templ.process_dependencies(cls, bld, funItem)
+            templ.process_dependencies(cls, funItem)
           else
             # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
           end

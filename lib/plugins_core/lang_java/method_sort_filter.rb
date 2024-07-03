@@ -30,7 +30,7 @@ module XCTEJava
       bld.add("Sort getSort(String sortBy, Boolean sortAsc);")
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, fun)
     end
 
     def get_body(fp_params)

@@ -30,7 +30,7 @@ module XCTECpp
       fp_params.bld.endFunction
     end
 
-    def process_dependencies(cls, bld, funItem); end
+    def process_dependencies(cls, funItem); end
 
     # Returns definition string for this class's constructor
     def render_function(fp_params)
@@ -62,14 +62,12 @@ module XCTECpp
           bld.add(Utils.instance.get_styled_variable_name(var) << " = ")
 
           if var.vtype == "String"
-            bld.same_line('"' << var.defaultValue << '";')
+            bld.same_line('"' + var.defaultValue + '";')
           else
-            bld.same_line(var.defaultValue << ";")
+            bld.same_line(var.defaultValue + ";")
           end
 
           bld.same_line("\t// " << var.comment) if !var.comment.nil?
-
-          bld.separate
         end
 
         bld.add(var.init) if !var.init.nil?

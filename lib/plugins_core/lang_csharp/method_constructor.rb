@@ -39,7 +39,7 @@ class XCTECSharp::MethodConstructor < XCTEPlugin
   end
 
   # No deps
-  def process_dependencies(cls, bld, fun); end
+  def process_dependencies(cls, fun); end
 
   def get_body(cls, bld, _fun)
     conDef = String.new

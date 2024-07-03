@@ -30,7 +30,7 @@ module XCTEJava
       cls.get_u_name
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       # Generate class variables
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         Utils.instance.requires_var(cls, var) if !is_primitive(var)

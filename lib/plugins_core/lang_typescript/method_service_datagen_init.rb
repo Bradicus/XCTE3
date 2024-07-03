@@ -6,7 +6,7 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, _bld)
+    def process_dependencies(cls)
       cls.addInclude("@faker-js/faker", "faker")
     end
 

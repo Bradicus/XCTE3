@@ -8,7 +8,7 @@ require "managers/name_compare"
 
 module CodeStructure
   class CodeElemClassRef < CodeElem
-    attr_accessor :namespace, :model_name, :plugin_name, :template_params
+    attr_accessor :namespace, :model_name, :plugin_name, :template_params, :type_name
 
     def initialize(parentElem, _pComp)
       super(nil, parentElem)

@@ -7,7 +7,7 @@ module XCTECSharp
       @name = "method_tsql_retrieve_set_by"
       @language = "csharp"
       @category = XCTEPlugin::CAT_METHOD
-          end
+    end
 
     # Returns definition string for this class's constructor
     def render_function(fp_params)
@@ -29,7 +29,7 @@ module XCTECSharp
       bld.add(get_function_signature(cls, bld, fun) + ";")
     end
 
-    def process_dependencies(cls, _bld, _fun)
+    def process_dependencies(cls, _fun)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end

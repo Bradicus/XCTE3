@@ -1,6 +1,7 @@
 require "x_c_t_e_plugin"
 require "path_util"
 require "params/fun_plugin_params"
+require "managers/class_type_manager"
 
 # Base class for all class plugins
 class XCTEClassBase < XCTEPlugin
@@ -29,14 +30,14 @@ class XCTEClassBase < XCTEPlugin
     throw :required_implimentation
   end
 
-  def process_dependencies(cls_spec, bld)
+  def process_dependencies(cls_spec)
     # Add in any dependencies required by functions
-    dutils().each_fun(UtilsEachFunParams.new(cls_spec, bld, lambda { |fun|
+    dutils().each_fun(UtilsEachFunParams.new.w_cls(cls_spec).w_fun_cb(lambda { |fun|
       if fun.isTemplate
         templ = PluginManager.find_method_plugin(cls_spec.language, fun.name)
         if !templ.nil?
           Log.info "processing fun: " + fun.name
-          templ.process_dependencies(cls_spec, bld, fun)
+          templ.process_dependencies(cls_spec, fun)
         else
           Log.warn "ERROR no plugin for function: " + fun.name + "   language: " + cls_spec.language
         end
@@ -52,14 +53,23 @@ class XCTEClassBase < XCTEPlugin
         Log.warn "Could not find class for base class ref " + bc.model_name.to_s + " " + bc.plugin_name.to_s
       end
     end
+
+    #process_var_dependencies(cls_spec)
   end
 
-  def process_var_dependencies(cls_spec, var)
+  def process_var_dependencies(cls_spec)
     # Add in any dependencies required by variables
-    Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-      enumDec = Utils.instance.style_as_enum(var.name)
-      enumDec += " = " + var.defaultValue if !var.defaultValue.nil?
-      enums.push(enumDec)
+    dutils.each_var(UtilsEachVarParams.new.wCls(cls_spec).wSeparate(true).wVarCb(lambda { |var|
+      pas = nil
+      if var.vtype != nil
+        pas = ClassTypeManager.find_class_type_by_name(cls_spec.language, var.vtype)
+      elsif var.utype != nil
+        pas = ClassTypeManager.find_class_type_by_name(cls_spec.language, dutils.get_styled_variable_name(var))
+      end
+
+      if pas != nil
+        dutils.try_add_include_for(cls_spec, pas.spec, pas.plugin.name)
+      end
     }))
   end
 
@@ -70,7 +80,7 @@ class XCTEClassBase < XCTEPlugin
     bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
     bld.lfExtension = dutils().get_extension("body")
 
-    process_dependencies(cls, bld)
+    process_dependencies(cls)
 
     render_dependencies(cls, bld)
     render_namespace_start(cls, bld)
@@ -124,7 +134,7 @@ class XCTEClassBase < XCTEPlugin
   end
 
   def render_functions(cls, bld)
-    dutils.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+    dutils.each_fun(UtilsEachFunParams.new.w_cls(cls).w_fun_cb(lambda { |fun|
       fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(fun)
 
       if fun.isTemplate

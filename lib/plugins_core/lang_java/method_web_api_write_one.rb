@@ -37,7 +37,7 @@ module XCTEJava
               " Post" + Utils.instance.style_as_class(cls.get_u_name) + "(int id);")
     end
 
-    def process_dependencies(cls, _bld, fun)
+    def process_dependencies(cls, fun)
       if !fun.role.nil?
         cls.addUse("org.springframework.security.access.prepost.PreAuthorize")
       end

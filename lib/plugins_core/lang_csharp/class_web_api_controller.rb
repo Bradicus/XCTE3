@@ -25,7 +25,7 @@ module XCTECSharp
       cls.get_u_name + ' controller'
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse('System.Data.SqlClient')
     end
 

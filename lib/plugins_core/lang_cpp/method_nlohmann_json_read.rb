@@ -43,7 +43,7 @@ module XCTECpp
       bld.endFunction
     end
 
-    def process_dependencies(cls, _bld, _codeFun)
+    def process_dependencies(cls, _codeFun)
       cls.addInclude("", "json.hpp")
       Utils.instance.getStandardClassInfo(cls)
 
@@ -149,7 +149,7 @@ module XCTECpp
             else
               bld.add(Utils.instance.get_single_item_type_name(var) + " newVar;")
               if curVarClass == nil
-                bld.add Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, *newVar);"
+                bld.add Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, newVar);"
               else
                 bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + "JsonEngine::read(aJson, newVar);")
               end

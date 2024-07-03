@@ -10,10 +10,26 @@ class UtilsEachFunParams
   @cls
   @bld
   @funCb
+  @separateGroups = false
 
-  def initialize(cls, bld, funCb)
+  def w_cls(cls)
     @cls = cls
+
+    return self
+  end
+
+  def w_bld(bld)
     @bld = bld
-    @funCb = funCb
+    return self
+  end
+
+  def w_fun_cb(cb)
+    @funCb = cb
+    return self
+  end
+
+  def w_separate(separateGroups)
+    @separateGroups = separateGroups
+    return self
   end
 end

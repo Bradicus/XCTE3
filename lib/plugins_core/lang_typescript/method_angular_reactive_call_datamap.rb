@@ -8,7 +8,7 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, fun)
     end
 
     # Returns the code for the content for this function

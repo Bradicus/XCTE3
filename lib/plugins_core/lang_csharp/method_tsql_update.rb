@@ -16,7 +16,7 @@ module XCTECSharp
       @name = "method_tsql_update"
       @language = "csharp"
       @category = XCTEPlugin::CAT_METHOD
-          end
+    end
 
     # Returns definition string for this class's constructor
     def render_function(fp_params)
@@ -43,7 +43,7 @@ module XCTECSharp
               " o, SqlConnection conn, SqlTransaction trans);")
     end
 
-    def process_dependencies(cls, _bld, _fun)
+    def process_dependencies(cls, _fun)
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 

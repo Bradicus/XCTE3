@@ -37,7 +37,7 @@ module XCTEJava
               " " + Utils.instance.style_as_class("put" + cls.get_u_name) + "(int id);")
     end
 
-    def process_dependencies(cls, _bld, _fun)
+    def process_dependencies(cls, _fun)
       cls.addUse("org.springframework.web.bind.annotation.PutMapping")
       cls.addUse("org.springframework.web.bind.annotation.RequestBody")
       cls.addUse("org.springframework.http.MediaType")

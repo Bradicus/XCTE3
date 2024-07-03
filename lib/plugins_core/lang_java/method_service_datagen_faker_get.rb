@@ -23,7 +23,7 @@ module XCTEJava
       bld.endFunction
     end
 
-    def process_dependencies(cls, _bld, _fun)
+    def process_dependencies(cls, _fun)
       cls.addUse("com.github.javafaker.Faker")
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|

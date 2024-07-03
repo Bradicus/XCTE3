@@ -29,7 +29,7 @@ module XCTECpp
       bld.same_line(" src" << cls.name << ") const;")
     end
 
-    def process_dependencies(cls, bld, funItem)
+    def process_dependencies(cls, funItem)
     end
 
     # Returns definition string for this class's equality assignment operator

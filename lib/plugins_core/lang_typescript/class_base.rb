@@ -26,7 +26,7 @@ module XCTETypescript
 
       render_file_comment(cls, bld)
       bld.separate
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
       render_dependencies(cls, bld)
 
       bld.separate

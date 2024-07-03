@@ -82,7 +82,7 @@ module XCTEJava
       bld.add("public void updateList(" + @mapParams.join(", ") + ");")
     end
 
-    def process_dependencies(cls, _bld, fun)
+    def process_dependencies(cls, fun)
       @fromParam = load_param(cls, fun, "fromClass")
       @toParam = load_param(cls, fun, "toClass")
 

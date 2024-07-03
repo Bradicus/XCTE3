@@ -40,7 +40,7 @@ module XCTEJava
       get_body(cls, bld, fun)
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, fun)
       cls.addUse("org.springframework.data.domain.PageRequest")
       cls.addUse("org.springframework.data.domain.Sort")
       cls.addUse("org.springframework.data.domain.Page")

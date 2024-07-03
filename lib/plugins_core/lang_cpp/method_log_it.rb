@@ -26,7 +26,7 @@ module XCTECpp
       bld.add("        void logIt(std::ostream &outStr, std::string indent, bool logChildren = false) const;")
     end
 
-    def process_dependencies(cls, bld, funItem)
+    def process_dependencies(cls, funItem)
     end
 
     # Returns definition string for this class's logIt method

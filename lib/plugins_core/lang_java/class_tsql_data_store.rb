@@ -15,7 +15,7 @@ module XCTEJava
       cls.get_u_name + ' data store'
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       Utils.instance.requires_class_type(cls, cls, 'class_db_entity')
       cls.addUse('org.springframework.data.jpa.repository.*')
       cls.addUse('org.springframework.data.domain.Page')

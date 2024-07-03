@@ -140,24 +140,14 @@ class UtilsBase
   def each_fun(params)
     for clsFun in params.cls.functions
       if clsFun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
-        params.bld.separate
-
         params.funCb.call(clsFun) if clsFun.isTemplate
       elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.add(Utils.instance.get_comment(funItem))
+        #bld.add(Utils.instance.get_comment(funItem))
       elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
         if funItem.formatText == "\n"
-          bld.add
+          # bld.add
         else
-          bld.same_line(funItem.formatText)
-        end
-      elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_COMMENT
-        bld.add(get_comment(funItem))
-      elsif funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FORMAT
-        if funItem.formatText == "\n"
-          bld.add
-        else
-          bld.same_line(funItem.formatText)
+          #bld.same_line(funItem.formatText)
         end
       end
     end

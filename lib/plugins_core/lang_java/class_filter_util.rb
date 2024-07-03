@@ -30,7 +30,7 @@ module XCTEJava
       cls.get_u_name
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse('org.springframework.data.domain.PageRequest')
       cls.addUse('org.springframework.data.domain.Sort')
 

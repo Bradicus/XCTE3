@@ -32,7 +32,7 @@ module XCTECpp
       bld.same_line("& src" + Utils.instance.style_as_class(cls.get_u_name) + ");\n")
     end
 
-    def process_dependencies(cls, bld, funItem); end
+    def process_dependencies(cls, funItem); end
 
     # Returns definition string for this class's equality assignment operator
     def render_function(fp_params)

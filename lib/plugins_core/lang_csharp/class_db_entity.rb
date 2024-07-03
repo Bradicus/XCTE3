@@ -28,7 +28,7 @@ module XCTECSharp
       cls.get_u_name
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse('Microsoft.EntityFrameworkCore')
       cls.addUse('Microsoft.EntityFrameworkCore.Metadata.Builders')
       super

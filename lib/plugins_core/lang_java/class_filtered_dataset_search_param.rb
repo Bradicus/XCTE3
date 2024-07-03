@@ -27,7 +27,7 @@ module XCTEJava
       return "filtered page search param"
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse("java.util.HashMap")
       super
     end

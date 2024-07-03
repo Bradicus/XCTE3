@@ -28,11 +28,11 @@ module XCTETypescript
       cls.get_u_name
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       super
 
       # Generate class variables
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         Utils.instance.try_add_include_for_var(cls, var, "class_standard") if !Utils.instance.is_primitive(var)
         Utils.instance.try_add_include_for_var(cls, var, "enum") if !Utils.instance.is_primitive(var)
       }))

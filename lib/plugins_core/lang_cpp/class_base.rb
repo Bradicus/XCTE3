@@ -29,6 +29,8 @@ module XCTECpp
 
       cls.name = get_class_name(cls)
 
+      process_dependencies(cls)
+
       hBld = get_source_renderer()
       hBld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))
       hBld.lfExtension = Utils.instance.get_extension("header")
@@ -52,37 +54,35 @@ module XCTECpp
 
       for inc in cls.includes + cls.model.includes
         if inc.path.length > 0
-          incPathAndName = inc.path + "/" + dutils.style_as_file_name(inc.name)
+          incPathAndName = inc.path + "/" + inc.name
         else
           incPathAndName = inc.name
         end
 
         if inc.itype == "<"
-          bld.add("#include <" << incPathAndName << ">")
+          bld.add("#include <" + incPathAndName + ">")
         elsif inc.name.count(".") > 0
-          bld.add('#include "' << incPathAndName << '"')
+          bld.add('#include "' + incPathAndName + '"')
         else
-          bld.add('#include "' << incPathAndName << "." << Utils.instance.get_extension("header") << '"')
+          bld.add('#include "' + incPathAndName + "." + Utils.instance.get_extension("header") + '"')
         end
       end
     end
 
     def render_fun_dependencies(cls, bld)
       # Get dependencies for functions
-      for fun in cls.functions
-        if fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && fun.isTemplate
-          templ = PluginManager.find_method_plugin("cpp", fun.name)
-          if !templ.nil?
-            templ.process_dependencies(cls, bld, fun)
-          else
-            # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
-          end
+      Utils.instance.each_fun(UtilsEachFunParams.new.w_cls(cls).w_bld(bld).w_fun_cb(lambda { |fun|
+        templ = PluginManager.find_method_plugin("cpp", fun.name)
+        if !templ.nil?
+          templ.process_dependencies(cls, fun)
+        else
+          # puts 'ERROR no plugin for function: ' << fun.name << '   language: cpp'
         end
-      end
+      }))
     end
 
     def render_function_declairations(cls, bld)
-      Utils.instance.each_fun(UtilsEachFunParams.new(cls, bld, lambda { |fun|
+      Utils.instance.each_fun(UtilsEachFunParams.new.w_cls(cls).w_bld(bld).w_fun_cb(lambda { |fun|
         fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(fun)
         if fun.isTemplate
           templ = PluginManager.find_method_plugin("cpp", fun.name)
@@ -121,7 +121,7 @@ module XCTECpp
       return unless cls.namespace.hasItems?
 
       for nsItem in cls.namespace.ns_list
-        bld.start_block("namespace " << nsItem)
+        bld.start_block("namespace " + nsItem)
       end
     end
 

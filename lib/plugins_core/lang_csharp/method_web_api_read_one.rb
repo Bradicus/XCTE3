@@ -39,7 +39,7 @@ module XCTECSharp
               " Get" + Utils.instance.style_as_class(cls.get_u_name) + "(int id);")
     end
 
-    def process_dependencies(cls, _bld, _fun)
+    def process_dependencies(cls, _fun)
       cls.addUse("System.Collections.Generic", "List")
       cls.addUse("System.Web.Http", "ApiController")
       Utils.instance.add_class_include(cls, "class_standard")

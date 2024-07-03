@@ -8,8 +8,8 @@ module XCTETypescript
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, bld, _funItem)
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+    def process_dependencies(cls, _funItem)
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           Utils.instance.try_add_include_for_var(cls, var, "class_angular_data_map_service")
         end

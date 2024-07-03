@@ -32,7 +32,7 @@ module XCTEJava
       cls.get_u_name
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse('jakarta.persistence.*')
       super
     end

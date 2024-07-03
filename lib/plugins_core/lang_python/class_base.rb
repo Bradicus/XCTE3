@@ -21,7 +21,7 @@ module XCTEPython
       bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = dutils().get_extension("body")
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
 
       render_file_comment(cls, bld)
 

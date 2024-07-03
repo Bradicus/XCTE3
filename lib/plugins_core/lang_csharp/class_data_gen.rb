@@ -15,7 +15,7 @@ module XCTECSharp
       cls.get_u_name + ' data gen'
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       super
 
       Utils.instance.requires_other_class_type(cls, 'class_db_entity')

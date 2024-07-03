@@ -36,7 +36,7 @@ module XCTETypescript
       # Eventaully switch to finding standard class and using path from there
       cls.addInclude("shared/dto/model/" + fPath, cName)
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
       render_dependencies(cls, bld)
 
       bld.separate
@@ -49,7 +49,7 @@ module XCTETypescript
       return srcFiles
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       include_env_file(cls)
 
       cls.addInclude("@angular/core", "Injectable")
@@ -57,14 +57,14 @@ module XCTETypescript
       cls.addInclude("@faker-js/faker", "faker")
 
       # Include variable interfaces
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var)
           varCls = ClassModelManager.findVarClass(var, "class_standard")
           Utils.instance.try_add_include_for(cls, varCls, "class_standard")
         end
       }))
 
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
+      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wVarCb(lambda { |var|
         if !Utils.instance.is_primitive(var) && !var.hasMultipleItems
           Utils.instance.try_add_include_for_var(cls, var, "class_angular_data_gen_service")
         end

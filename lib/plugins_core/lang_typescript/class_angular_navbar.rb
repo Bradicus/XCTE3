@@ -21,7 +21,7 @@ module XCTETypescript
       cls.get_u_name + " component"
     end
 
-    def process_dependencies(cls, _bld)
+    def process_dependencies(cls)
       cls.addInclude("@angular/core", "Component")
       cls.addInclude("@angular/router", "RouterModule")
       cls.addInclude("@ng-bootstrap/ng-bootstrap", "NgbDropdownModule")

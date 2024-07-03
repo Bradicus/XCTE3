@@ -31,7 +31,7 @@ module XCTETypescript
       # Eventaully switch to finding standard class and using path from there
       cls.addInclude("shared/dto/model/" + fPath, cName)
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
       render_dependencies(cls, bld)
 
       bld.separate

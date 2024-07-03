@@ -110,7 +110,7 @@ module XCTERuby
       bld.add("bld.lfName = Utils.instance.style_as_file_name(get_unformatted_class_name(cls))")
       bld.add("bld.lfExtension = Utils.instance.get_extension('body')")
       bld.separate
-      bld.add("process_dependencies(cls, bld)")
+      bld.add("process_dependencies(cls)")
       bld.add("render_dependencies(cls, bld)")
       bld.separate
       bld.add("render_file_comment(cls, bld)")

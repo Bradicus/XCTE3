@@ -27,7 +27,7 @@ module XCTEJava
       cls.get_u_name + " resp tpl"
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse("java.util.List")
       super
     end

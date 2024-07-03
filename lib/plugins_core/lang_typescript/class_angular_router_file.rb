@@ -24,7 +24,7 @@ module XCTETypescript
       return "app.routes"
     end
 
-    def process_dependencies(cls, _bld)
+    def process_dependencies(cls)
       cls.addInclude("@angular/router", "Routes")
 
       for mdl in ProjectPlanManager.current.models

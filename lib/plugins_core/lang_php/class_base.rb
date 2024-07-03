@@ -27,7 +27,7 @@ module XCTEPhp
       bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = dutils().get_extension("body")
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
 
       bld.add("<?php")
 
@@ -55,7 +55,7 @@ module XCTEPhp
     def render_namespace_end(cls, bld)
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       super
 
       # Generate dependency code for functions

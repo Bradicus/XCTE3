@@ -20,7 +20,7 @@ module XCTETypescript
       bld.lfName = get_file_name(cls)
       bld.lfExtension = Utils.instance.get_extension("body")
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
 
       render_file_comment(cls, bld)
       render_body_content(cls, bld)
@@ -30,7 +30,7 @@ module XCTETypescript
       srcFiles
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addInclude("@angular/core", "Component, OnInit")
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")

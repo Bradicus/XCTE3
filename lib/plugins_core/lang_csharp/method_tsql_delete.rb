@@ -48,7 +48,7 @@ module XCTECSharp
               ", SqlConnection conn, SqlTransaction trans = null);")
     end
 
-    def process_dependencies(cls, _bld, _fun)
+    def process_dependencies(cls, _fun)
       cls.addUse("System.Data.SqlClient", "SqlConnection")
     end
 

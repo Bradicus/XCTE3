@@ -19,7 +19,7 @@ module XCTEJava
       @category = XCTEPlugin::CAT_METHOD
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, fun)
     end
 
     # Returns definition string for this class's constructor

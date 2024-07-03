@@ -34,7 +34,7 @@ module XCTETypescript
       bld.lfName = Utils.instance.style_as_file_name(cls.get_u_name + ".component")
       bld.lfExtension = Utils.instance.get_extension("body")
       # render_file_comment(cls, bld)
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
       render_dependencies(cls, bld)
 
       render_body_content(cls, bld)
@@ -44,7 +44,7 @@ module XCTETypescript
       srcFiles
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addInclude("@angular/core", "Component, OnInit, Input")
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray, Validators")

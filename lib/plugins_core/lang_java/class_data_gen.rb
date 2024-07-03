@@ -15,7 +15,7 @@ module XCTEJava
       cls.get_u_name + ' data gen'
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       Utils.instance.requires_class_type(cls, cls, 'class_db_entity')
 
       super

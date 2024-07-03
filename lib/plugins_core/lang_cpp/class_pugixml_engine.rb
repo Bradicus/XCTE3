@@ -28,10 +28,11 @@ module XCTECpp
       cls.model.name + " pugi xml engine"
     end
 
-    def process_dependencies(cls_spec, bld)
+    def process_dependencies(cls)
       super
 
       Utils.instance.try_add_include_for(cls, cls, "class_standard")
+      cls.addInclude("", "pugixml.hpp")
     end
 
     def render_header_comment(cls, bld)
@@ -60,20 +61,6 @@ module XCTECpp
     # Returns the code for the header for this class
     def render_header(cls, bld)
       render_ifndef(cls, bld)
-
-      # get list of includes needed by functions
-
-      # Generate function declarations
-      for funItem in cls.functions
-        if funItem.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION && funItem.isTemplate
-          templ = PluginManager.find_method_plugin("cpp", funItem.name)
-          if !templ.nil?
-            templ.process_dependencies(cls, funItem, bld)
-          else
-            # puts 'ERROR no plugin for function: ' << funItem.name << '   language: cpp'
-          end
-        end
-      end
 
       render_dependencies(cls, bld)
 

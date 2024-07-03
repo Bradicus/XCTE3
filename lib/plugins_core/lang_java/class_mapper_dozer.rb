@@ -13,7 +13,7 @@ module XCTEJava
       cls.get_u_name + ' mapper'
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       cls.addUse('org.mapstruct.Mapper')
       cls.addUse('org.mapstruct.MappingTarget')
       cls.addUse('org.mapstruct.factory.Mappers')

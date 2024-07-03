@@ -27,7 +27,7 @@ module XCTEJava
       bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
       bld.lfExtension = dutils().get_extension("body")
 
-      process_dependencies(cls, bld)
+      process_dependencies(cls)
 
       render_namespace_start(cls, bld)
       render_dependencies(cls, bld)
@@ -53,10 +53,10 @@ module XCTEJava
     def render_namespace_end(cls, bld)
     end
 
-    def process_dependencies(cls, bld)
+    def process_dependencies(cls)
       # Generate dependency code for functions
       for fun in cls.functions
-        process_fuction_dependencies(cls, bld, fun)
+        process_fuction_dependencies(cls, fun)
       end
 
       cls.addUse("java.time.LocalDateTime") if cls.model.hasVariableType("datetime")
@@ -71,12 +71,12 @@ module XCTEJava
       super
     end
 
-    def process_fuction_dependencies(cls, bld, fun)
+    def process_fuction_dependencies(cls, fun)
       return unless fun.element_id == CodeStructure::CodeElemTypes::ELEM_FUNCTION
 
       templ = PluginManager.find_method_plugin(dutils.langProfile.name, fun.name)
       if !templ.nil?
-        templ.process_dependencies(cls, bld, fun)
+        templ.process_dependencies(cls, fun)
       else
         # puts 'ERROR no plugin for function: ' + fun.name + '   language: 'typescript
       end

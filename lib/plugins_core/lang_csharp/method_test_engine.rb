@@ -33,7 +33,7 @@ module XCTECSharp
       bld.endFunction
     end
 
-    def process_dependencies(cls, _bld)
+    def process_dependencies(cls)
       cls.addUse("System.Collections.Generic", "IEnumerable")
       cls.addUse("System.Data.SqlClient", "SqlConnection")
       cls.addUse("System.Configuration", "ConfigurationManager")

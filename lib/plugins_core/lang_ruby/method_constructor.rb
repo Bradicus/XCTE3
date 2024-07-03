@@ -23,7 +23,7 @@ module XCTERuby
       cls.get_u_name
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, fun)
     end
 
     # Returns the code for the content for this function

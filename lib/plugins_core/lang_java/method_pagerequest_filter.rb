@@ -28,7 +28,7 @@ module XCTEJava
       bld.add("PageRequest getPageRequest(Integer pageNum, Integer pageSize, Sort sort)")
     end
 
-    def process_dependencies(cls, bld, fun)
+    def process_dependencies(cls, fun)
     end
 
     def get_body(fp_params)
