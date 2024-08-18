@@ -118,7 +118,7 @@ module XCTEHtml
       # List of primitive "ids" linked to an options list
       if Utils.instance.is_primitive(var) && !var.selectFrom.nil?
         optVar = XCTETypescript::Utils.instance.get_options_var_for(var)
-        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
+        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item")
         rowContainer.add_child(tableNode)
         # Not an options list, just a reglar array of data
       elsif !var.relation.nil?
@@ -198,12 +198,12 @@ module XCTEHtml
 
       if !var.selectFrom.nil?
         itemName = CodeNameStyling.getStyled(var.selectFrom + " item", Utils.instance.langProfile.variableNameStyle)
-        optVarName = CodeNameStyling.getStyled(var.selectFrom + " options",
+        optVarName = CodeNameStyling.getStyled(var.selectFrom + " options sig",
                                                Utils.instance.langProfile.variableNameStyle)
         selectNode.add_attribute("id", varId)
         selectNode.add_attribute("formControlName", Utils.instance.get_styled_variable_name(var, ""))
         selectNode.add_child(HtmlNode.new("option")
-          .add_attribute("*ngFor", "let " + itemName + " of (" + optVarName + " | async)?.data")
+          .add_attribute("*ngFor", "let " + itemName + " of " + optVarName + "().data")
           .add_attribute("value", "{{" + itemName + ".id}}")
           .add_text("{{" + itemName + ".name}}"))
 

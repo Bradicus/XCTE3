@@ -65,7 +65,7 @@ module XCTEHtml
       tableElem.add_child(tBody)
 
       if table_cfg.is_paged?
-        tableElem.add_child(PageUtil.instance.get_page_footer(colCount, table_cfg.container_var_name, asyncStr))
+        tableElem.add_child(PageUtil.instance.get_page_footer(colCount, table_cfg.container_var_name))
       end
 
       return tableDiv
@@ -104,9 +104,9 @@ module XCTEHtml
       end
 
       if table_cfg.is_paged?
-        rowLoop.add_text("@for (" + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ")?.data; track " + table_cfg.iterator_var_name + ".id) {")
+        rowLoop.add_text("@for (" + table_cfg.iterator_var_name + " of " + table_cfg.container_var_name + "().data; track " + table_cfg.iterator_var_name + ".id) {")
       else
-        rowLoop.add_text("@for (" + table_cfg.iterator_var_name + " of (" + table_cfg.container_var_name + asyncStr + ") track " + table_cfg.iterator_var_name + ".id) {")
+        rowLoop.add_text("@for (" + table_cfg.iterator_var_name + " of " + table_cfg.container_var_name + "; track " + table_cfg.iterator_var_name + ".id) {")
       end
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(table_cfg.item_class).wVarCb(lambda { |var|
@@ -206,7 +206,7 @@ module XCTEHtml
       # Generate table body
       tBody = HtmlNode.new("tbody")
       tBodyRow = HtmlNode.new("tr")
-                         .add_attribute("*ngFor", "let " + iteratorName + " of (" + listVarName + asyncStr + ")?.data")
+                         .add_attribute("*ngFor", "let " + iteratorName + " of " + listVarName + ".data")
 
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(optClass).wVarCb(lambda { |var|
         if Utils.instance.is_primitive(var)

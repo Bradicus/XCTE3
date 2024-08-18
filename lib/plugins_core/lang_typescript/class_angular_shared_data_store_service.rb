@@ -39,13 +39,12 @@ module XCTETypescript
       bld.start_class("export class " + get_class_name(cls))
 
       itemVar = Utils.instance.create_var_for(cls, "class_standard")
+      itemClassName = Utils.instance.style_as_class(cls.model.name)
 
       if cls.data_node["isList"] == "true"
-        observableType = "Observable<" + Utils.instance.style_as_class(cls.model.name) + "[]>"
-        bld.add("item: " + observableType + " = new " + observableType + ";")
+        bld.add("item = signal<" + itemClassName + ">([])>;")
       else
-        observableType = "Observable<" + Utils.instance.style_as_class(cls.model.name) + ">"
-        bld.add("item: " + observableType + " = new " + observableType + ";")
+        bld.add("item = signal<" + itemClassName + ">(new " + itemClassName + ");")
       end
 
       bld.add("lastUpdate: Date = new Date(0);")

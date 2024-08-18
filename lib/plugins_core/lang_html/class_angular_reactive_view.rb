@@ -105,7 +105,7 @@ module XCTEHtml
       # List of primitive "ids" linked to an options list
       if Utils.instance.is_primitive(var) && !var.selectFrom.nil?
         optVar = XCTETypescript::Utils.instance.get_options_var_for(var)
-        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item", "async")
+        tableNode = TableUtil.instance.make_sel_option_table(var, optVar, vName + "Item")
         rowContainer.add_child(tableNode)
         # Not an options list, just a reglar array of data
       else

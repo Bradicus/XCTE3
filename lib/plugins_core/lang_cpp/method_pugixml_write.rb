@@ -91,14 +91,21 @@ module XCTECpp
           else
             bld.add('pugi::xml_node childNode = node.append_child("' + styledVarName + '");')
             bld.start_block("for (auto& listItem: item." + styledVarName + ")")
-            bld.add('pugi::xml_node valueNode = childNode.append_child("val");')
+            bld.add("std::string primValue;")
             if var.getUType().downcase == "string"
-              bld.add("valueNode.set_value(listItem.c_str());")
+              bld.add("primValue = listItem.c_str();")
             elsif var.getUType().downcase.start_with?("int")
-              bld.add("valueNode.set_value(std::to_string(listItem).c_str());")
+              bld.add("primValue = std::to_string(listItem).c_str();")
             else
-              bld.add("valueNode.set_value(listItem);")
+              bld.add("primValue = listItem;")
             end
+            bld.start_block "if (strlen(childNode.text().as_string()) > 0)"
+            bld.add "std::string textValue = std::string(childNode.text().as_string());"
+            bld.add 'childNode.set_value((textValue + std::string(", ") + primValue).c_str());'
+
+            bld.mid_block "else"
+            bld.add "childNode.set_value(primValue.c_str());"
+            bld.end_block
             bld.end_block
           end
         elsif !var.isList

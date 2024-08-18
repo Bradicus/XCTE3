@@ -45,7 +45,7 @@ module XCTETypescript
     end
 
     def process_dependencies(cls)
-      cls.addInclude("@angular/core", "Component, OnInit, Input")
+      cls.addInclude("@angular/core", "Component, OnInit, Input, signal")
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/forms", "ReactiveFormsModule, FormControl, FormGroup, FormArray, Validators")
 
@@ -119,7 +119,7 @@ module XCTETypescript
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
         if !var.selectFrom.nil?
           optVar = Utils.instance.get_options_var_for(var)
-          bld.add(Utils.instance.get_var_dec(optVar))
+          bld.add(Utils.instance.get_var_dec(optVar, true))
           reqVar = Utils.instance.get_options_req_var_for(var)
           bld.add(Utils.instance.get_var_dec(reqVar))
         end
@@ -201,8 +201,9 @@ module XCTETypescript
           else
             dataStoreOptServiceVar = Utils.instance.create_var_for(optCls, "class_angular_data_store_service")
             if !dataStoreOptServiceVar.nil?
-              bld.add("this." + Utils.instance.get_styled_variable_name(optVar) + " = this." +
-                      Utils.instance.get_styled_variable_name(dataStoreOptServiceVar) + ".listing(this." + Utils.instance.get_styled_variable_name(reqVar) + ");")
+              bld.add("this." +
+                      Utils.instance.get_styled_variable_name(dataStoreOptServiceVar) + ".listing(this." + Utils.instance.get_styled_variable_name(reqVar) +
+                      ").subscribe((p) =>  { this." + Utils.instance.get_styled_variable_name(optVar) + ".set(p); });")
             else
               Log.error("No class_angular_data_store_service variable for class: " + var.name)
             end

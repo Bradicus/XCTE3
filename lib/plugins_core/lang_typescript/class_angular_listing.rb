@@ -31,7 +31,7 @@ module XCTETypescript
     end
 
     def process_dependencies(cls)
-      cls.addInclude("@angular/core", "Component, OnInit")
+      cls.addInclude("@angular/core", "Component, OnInit, signal")
       cls.addInclude("@angular/common", "CommonModule")
       cls.addInclude("@angular/router", "Routes, RouterModule, ActivatedRoute")
       cls.addInclude("rxjs", "Observable", "lib")
@@ -70,15 +70,15 @@ module XCTETypescript
       bld.render_component_declaration(ComponentConfig.new
         .w_selector_name(filePart)
         .w_file_part(filePart)
-        .w_imports(["CommonModule, RouterModule"]))
+        .w_imports(["CommonModule", "RouterModule"]))
 
       bld.separate
 
       bld.start_block("export class " + get_class_name(cls) + " implements OnInit ")
 
-      bld.add("public pageObv: Observable<FilteredPageRespTpl<" + standard_class_name + ">> = new Observable<FilteredPageRespTpl<" + standard_class_name + ">>;")
-      bld.add("public page: FilteredPageRespTpl<" + standard_class_name + "> = new FilteredPageRespTpl<" + standard_class_name + ">;")
-      bld.add("public pageReq: FilteredPageReqTpl<" + standard_class_name + "> = new FilteredPageReqTpl<" + standard_class_name + ">;")
+      bld.add("public pageSig = signal(new FilteredPageRespTpl<" + standard_class_name + ">());")
+      #bld.add("public page: FilteredPageRespTpl<" + standard_class_name + "> = new FilteredPageRespTpl<" + standard_class_name + ">;")
+      bld.add("public pageReq = new FilteredPageReqTpl<" + standard_class_name + ">;")
 
       bld.separate
 
@@ -137,17 +137,16 @@ module XCTETypescript
       bld.separate
 
       bld.start_block("getVisiblePageCount()")
-      bld.add("return Math.min((this.page?.pageCount ?? 0, 10));")
+      bld.add("return Math.min(this.pageSig().pageCount, 10);")
       bld.end_block
 
       bld.separate
 
       bld.start_block("updatePageData()")
-      bld.add("this.pageObv = " + "this." + Utils.instance.get_styled_variable_name(userServiceVar) + ".listing(this.pageReq);")
-      bld.start_block "this.pageObv.subscribe((p) =>  "
-      bld.add "this.page = p;"
-      bld.add "this.pageReq.pageNum = this.page.pageNum;"
-      bld.add "this.pageReq.pageSize = this.page.pageSize;"
+      bld.start_block "this." + Utils.instance.get_styled_variable_name(userServiceVar) + ".listing(this.pageReq).subscribe((p) =>  "
+      bld.add "this.pageSig.set(p);"
+      bld.add "this.pageReq.pageNum = p.pageNum;"
+      bld.add "this.pageReq.pageSize = p.pageSize;"
       bld.end_block ");"
       bld.end_block
 
@@ -162,7 +161,7 @@ module XCTETypescript
       bld.end_block
 
       bld.start_block("goToNextPage()")
-      bld.add "if (this.pageReq.pageNum < this.page.pageCount - 1)"
+      bld.add "if (this.pageReq.pageNum < this.pageSig().pageCount - 1)"
       bld.iadd "this.goToPage(this.pageReq.pageNum + 1);"
       bld.end_block
 

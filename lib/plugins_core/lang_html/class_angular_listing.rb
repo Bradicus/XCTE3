@@ -43,7 +43,7 @@ module XCTEHtml
       end
 
       tbl = TableUtil.instance.make_table(
-        TableCfg.new(cls, "page", TableContainerTypes::PAGE, "item", false, false)
+        TableCfg.new(cls, "pageSig", TableContainerTypes::PAGE, "item", false, false)
       )
 
       bld.render_html(tbl)

@@ -56,7 +56,7 @@ module XCTETypescript
     end
 
     # Returns variable declaration for the specified variable
-    def get_var_dec(var)
+    def get_var_dec(var, is_signal = false)
       vDec = String.new
       typeName = String.new
 
@@ -66,13 +66,25 @@ module XCTETypescript
 
       vDec << get_styled_variable_name(var)
 
-      vDec << ": " + get_type_name(var)
+      if is_signal
+        vDec << " = signal"
+      else
+        vDec << ": " + get_type_name(var)
+      end
 
       if !var.defaultValue.nil?
-        if var.getUType.downcase == "string"
-          vDec << ' = "' << var.defaultValue << '"'
+        if is_signal
+          if var.getUType.downcase == "string"
+            vDec << '("' << var.defaultValue << '")'
+          else
+            vDec << "(" << var.defaultValue << ")"
+          end
         else
-          vDec << " = " << var.defaultValue << ""
+          if var.getUType.downcase == "string"
+            vDec << ' = "' << var.defaultValue << '"'
+          else
+            vDec << " = " << var.defaultValue << ""
+          end
         end
       elsif var.init_vars
         if var.isList
@@ -86,9 +98,17 @@ module XCTETypescript
         elsif var.getUType.downcase == "boolean"
           vDec << " = false"
         elsif Types.instance.inCategory(var, "time")
-          vDec << " = new Date()"
+          if is_signal
+            vDec << "(new Date())"
+          else
+            vDec << " = new Date()"
+          end
         elsif !is_primitive(var)
-          vDec << " = new " + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + "()"
+          if is_signal
+            vDec << "(new " + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + "())"
+          else
+            vDec << " = new " + CodeNameStyling.getStyled(var.getUType, @langProfile.classNameStyle) + "()"
+          end
         else
           vDec << " = 0"
         end
@@ -315,13 +335,13 @@ module XCTETypescript
 
     def get_options_var_for(var)
       optVar = var.clone
-      optVar.name = var.selectFrom + " options"
+      optVar.name = var.selectFrom + " options sig"
       optVar.utype = var.selectFrom
       optVar.vtype = nil
       optVar.relation = nil
-      optVar.defaultValue = "new Observable<FilteredPageRespTpl<" + style_as_class(optVar.utype) + ">>"
+      optVar.defaultValue = "new FilteredPageRespTpl<" + style_as_class(optVar.utype) + ">()"
       optVar.templates = []
-      optVar.addTpl("Observable")
+      optVar.addTpl("signal")
       optVar.addTpl("FilteredPageRespTpl", true)
 
       optVar
