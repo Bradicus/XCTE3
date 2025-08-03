@@ -22,7 +22,7 @@ module DataLoading
 
       curVar.vtype = AttributeLoader.init().xml(varXML).names("type").get()
       curVar.utype = AttributeLoader.init().xml(varXML).names("utype").get()
-      curVar.visibility = AttributeLoader.init().xml(varXML).names("visibility").default(curVar.visibility).get()
+      curVar.visibility = AttributeLoader.init().xml(varXML).names("visibility").doInherit().default(curVar.visibility).get()
       curVar.passBy = AttributeLoader.init().xml(varXML).names("passby").default(curVar.passBy).get()
       AttributeLoader.init().xml(varXML).names("set").isTplAttrib().get(curVar)
       AttributeLoader.init().xml(varXML).names("tpl").isTplAttrib().get(curVar)
@@ -49,8 +49,9 @@ module DataLoading
       curVar.required = AttributeLoader.init().xml(varXML).names("required").default("false").doInherit().get == "true"
       curVar.readonly = AttributeLoader.init().xml(varXML).names("readonly").default("false").doInherit().get == "true"
 
-      curVar.genGet = AttributeLoader.init().xml(varXML).names("genGet").default(curVar.genGet).doInherit().get == "true"
-      curVar.genSet = AttributeLoader.init().xml(varXML).names("genSet").default(curVar.genSet).doInherit().get == "true"
+      curVar.set_var_fun("get", AttributeLoader.init().xml(varXML).names("genGet").default(curVar.has_var_fun?("get")).doInherit().get == "true")
+      curVar.set_var_fun("set", AttributeLoader.init().xml(varXML).names("genSet").default(curVar.has_var_fun?("set")).doInherit().get == "true")
+      curVar.set_var_fun("is", AttributeLoader.init().xml(varXML).names("genIs").default(curVar.has_var_fun?("is")).doInherit().get == "true")
 
       curVar.comment = varXML.attributes["comm"]
       curVar.defaultValue = AttributeLoader.init().xml(varXML).names("default").doInherit().get

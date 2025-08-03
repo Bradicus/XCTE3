@@ -21,7 +21,7 @@ module XCTEJava
 
     # Returns declairation string for this class's get method
     def render_function(var, bld)
-      return unless var.genGet == true && !var.isPointer
+      return unless var.has_var_fun?("get") && !var.isPointer
 
       varName = Utils.instance.get_styled_variable_name(var)
       bld.add("public " + Utils.instance.get_type_name(var) + " " + Utils.instance.style_as_function("get " + var.name))

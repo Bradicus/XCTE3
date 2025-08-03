@@ -50,8 +50,8 @@ module XCTERuby
 
       # Render accessors
       each_var(uevParams.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.genGet || var.genSet
-          accessors.add(Accessor.new(var, var.genGet, var.genSet))
+        if var.has_get_or_set
+          accessors.add(Accessor.new(var, var.has_var_fun?("get"), var.has_var_fun?("set")))
         end
       }))
 

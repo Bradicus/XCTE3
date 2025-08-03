@@ -83,22 +83,35 @@ module XCTECpp
       render_namespace_start(cls, bld)
 
       # Do automatic static array size declairations above class def
-
-      classDec = "enum class " + Utils.instance.style_as_class(cls.get_u_name)
+      if !cls.model.hasVariableType("int32")
+        classDec = "class " + Utils.instance.style_as_class(cls.get_u_name)
+      else
+        classDec = "enum class " + Utils.instance.style_as_class(cls.get_u_name)
+      end
 
       bld.start_block(classDec)
       enums = []
 
+      if !cls.model.hasVariableType("int32")
+        bld.add "public:"
+      end
+
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        enumDec = Utils.instance.style_as_enum(var.name)
-        enumDec += " = " + var.defaultValue if !var.defaultValue.nil?
+        enumDec = ""
+        if var.getUType().downcase != "int32"
+          enumDec += "static constexpr " + Utils.instance.get_var_dec(var, true)
+        else
+          enumDec += Utils.instance.style_as_enum(var.name)
+          enumDec += " = " + var.defaultValue if !var.defaultValue.nil?
+        end
+
         enums.push(enumDec)
       }))
 
       first = true
       for enum in enums
-        if first
+        if first || !cls.model.hasVariableType("int32")
           bld.add(enum)
           first = false
         else

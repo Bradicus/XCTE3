@@ -41,7 +41,7 @@ module XCTECSharp
 
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.genGet || var.genSet
+        if var.has_get_or_set
           bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.style_as_function(var.name) + ")")
         else
           bld.add("builder.Property(e => e." + XCTECSharp::Utils.instance.get_styled_variable_name(var.name) + ")")

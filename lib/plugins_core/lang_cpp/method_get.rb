@@ -20,11 +20,15 @@ module XCTECpp
 
     # Returns declairation string for this class's get method
     def render_declaration(varSec, bld)
-      return unless varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == true
+      return unless varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.has_var_fun?("get")
 
       funName = Utils.instance.style_as_function("get " + varSec.name)
       varName = Utils.instance.get_styled_variable_name(varSec)
-      bld.add("const " + Utils.instance.get_type_name(varSec) + "& " + funName)
+      if varSec.ptr_type.nil?
+        bld.add("const " + Utils.instance.get_type_name(varSec) + "& " + funName)
+      else
+        bld.add("const " + Utils.instance.get_type_name(varSec) + " " + funName)
+      end
       bld.same_line("() const\t{ return(" + varName + "); };")
     end
 

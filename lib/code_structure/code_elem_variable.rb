@@ -12,7 +12,7 @@ require "code_structure/code_elem"
 module CodeStructure
   class CodeElemVariable < CodeElem
     attr_accessor :vtype, :utype, :defaultValue, :comment,
-                  :visibility, :isConst, :isStatic, :ptr_type, :isVirtual, :init, :passBy, :genSet, :genGet,
+                  :visibility, :isConst, :isStatic, :ptr_type, :isVirtual, :init, :passBy, :var_functions,
                   :arrayElemCount, :nullable, :identity, :isPrimary, :namespace, :selectFrom, :isOptions_list,
                   :templates, :attribs, :required, :readonly, :relation, :storeIn, :init_vars
 
@@ -26,8 +26,7 @@ module CodeStructure
       @init = nil
       @namespace = CodeElemNamespace.new
       @passBy = "value"
-      @genSet = false
-      @genGet = false
+      @var_functions = Hash.new # get set is
       @nullable = false
       @identity = nil
       @isPrimary = false
@@ -99,6 +98,18 @@ module CodeStructure
 
     def hasSet
       return !listType.nil?
+    end
+
+    def set_var_fun(f_name, f_used)
+      @var_functions[f_name] = f_used
+    end
+
+    def has_get_or_set?()
+      return has_var_fun?("get") || has_var_fun?("set")
+    end
+
+    def has_var_fun?(f_name)
+      return @var_functions[f_name] != nil && @var_functions[f_name] == true
     end
 
     def addTpl(name, isCollection = false, ptrType = nil)

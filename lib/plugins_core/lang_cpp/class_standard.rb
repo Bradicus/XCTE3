@@ -60,7 +60,7 @@ module XCTECpp
 
     # Returns the code for the header for this class
     def render_header(cls, bld)
-      @activeVisibility = ""
+      @activeVisibility = "private"
       render_ifndef(cls, bld)
 
       # get list of includes needed by functions
@@ -115,10 +115,6 @@ module XCTECpp
 
       bld.separate
 
-      process_header_var_group(cls, bld, cls.model.varGroup, "private")
-
-      bld.separate
-
       # Generate function declarations
       for funItem in cls.functions
         fp_params = FunPluginParams.new().w_bld(bld).w_cls(cls).w_cplug(self).w_fun(funItem)
@@ -168,6 +164,11 @@ module XCTECpp
       process_header_var_group_getter_setters(cls, bld, cls.model.varGroup)
 
       bld.separate
+      process_header_var_group(cls, bld, cls.model.varGroup, "private")
+
+      bld.separate
+
+      bld.separate
 
       bld.unindent
 
@@ -208,13 +209,11 @@ module XCTECpp
         end
 
         if var.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE
-          if var.genGet
-            templ = PluginManager.find_method_plugin("cpp", "method_get")
-            templ.render_declaration(var, bld) if !templ.nil?
-          end
-          if var.genSet
-            templ = PluginManager.find_method_plugin("cpp", "method_set")
-            templ.render_declaration(var, bld) if !templ.nil?
+          var.var_functions.each do |key, value|
+            if value == true
+              templ = PluginManager.find_method_plugin("cpp", "method_" + key)
+              templ.render_declaration(var, bld) if !templ.nil?
+            end
           end
         end
       end

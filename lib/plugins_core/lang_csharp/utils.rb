@@ -60,10 +60,10 @@ module XCTECSharp
 
       vDec << get_styled_variable_name(var)
 
-      if !var.genGet.nil? || !var.genSet.nil?
+      if var.has_get_or_set?
         vDec << " { "
-        vDec << "get; " if !var.genGet.nil?
-        vDec << "set; " if !var.genSet.nil?
+        vDec << "get; " if var.has_var_fun?("get")
+        vDec << "set; " if var.has_var_fun?("set")
         vDec << "}"
       else
         vDec << ";"
@@ -150,7 +150,7 @@ module XCTECSharp
     def get_styled_variable_name(var, var_prefix = "")
       if !var.is_a?(CodeStructure::CodeElemVariable)
         return CodeNameStyling.getStyled(var, @langProfile.variableNameStyle)
-      elsif !var.genGet.nil? || !var.genSet.nil?
+      elsif var.has_get_or_set?
         return CodeNameStyling.getStyled(var_prefix + var.name, @langProfile.functionNameStyle)
       end
 

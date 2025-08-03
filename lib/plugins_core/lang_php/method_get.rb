@@ -30,7 +30,7 @@ class XCTEPhp::MethodGet < XCTEPlugin
     outCode.add
 
     for varSec in varArray
-      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genGet == "true"
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.has_var_fun?("get")
         if !varSec.isPointer
           outCode.add("    public function get" << XCTEPhp::Utils::get_capitalized_first(varSec.name))
           outCode.add("() \t{ return($this->" << varSec.name << "); }")

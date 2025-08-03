@@ -29,7 +29,6 @@ module XCTECpp
       pDec += get_type_name(var)
 
       pDec += "&" if var.passBy.upcase == "REFERENCE"
-      pDec += "*" if var.ptr_type = "*"
 
       pDec += " " + get_styled_variable_name(var)
 
@@ -39,7 +38,7 @@ module XCTECpp
     end
 
     # Returns variable declaration for the specified variable
-    def get_var_dec(var)
+    def get_var_dec(var, use_default = false)
       vDec = String.new
       typeName = String.new
 
@@ -49,13 +48,19 @@ module XCTECpp
 
       vDec += get_type_name(var)
 
-      vDec += "*" if var.ptr_type == "raw"
-
       vDec += "&" if var.passBy.upcase == "REFERENCE"
 
       vDec += " " + get_styled_variable_name(var)
 
       vDec += "[" + get_size_const(var) + "]" if var.arrayElemCount.to_i > 0
+
+      if !var.defaultValue.nil? && use_default
+        if var.vtype == "String"
+          vDec += ' = "' + var.defaultValue + '"'
+        else
+          vDec += " = " + var.defaultValue
+        end
+      end
 
       vDec += ";"
 
@@ -115,6 +120,18 @@ module XCTECpp
 
     def get_single_item_type_name(var)
       typeName = get_base_type_name(var)
+
+      if var.ptr_type == "raw"
+        typeName += "*"
+      end
+
+      if var.ptr_type == "shared"
+        typeName = "std::shared_ptr<" + typeName + ">"
+      end
+
+      if var.ptr_type == "unique"
+        typeName = "std::unique_ptr<" + typeName + ">"
+      end
 
       singleTpls = var.templates
       singleTpls = singleTpls.drop(1) if singleTpls.length > 0 && singleTpls[0].isCollection

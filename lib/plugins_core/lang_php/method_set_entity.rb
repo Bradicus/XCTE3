@@ -28,7 +28,7 @@ class XCTEPhp::MethodSetEntity < XCTEPlugin
     codeClass.getAllVarsFor(varArray)
 
     for varSec in varArray
-      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == "true"
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.has_var_fun?("set")
         if !varSec.isPointer
           outCode.iadd(1, "public function set" << XCTEPhp::Utils.get_capitalized_first(varSec.name))
           outCode.same_line("( $new" << XCTEPhp::Utils.get_capitalized_first(varSec.name))

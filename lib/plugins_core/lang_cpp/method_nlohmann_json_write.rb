@@ -42,7 +42,7 @@ module XCTECpp
     end
 
     def process_dependencies(cls, _codeFun)
-      cls.addInclude("", "json.hpp")
+      cls.addInclude("", "nlohmann/json.hpp")
       Utils.instance.getStandardClassInfo(cls)
 
       for bc in cls.standard_class.base_classes

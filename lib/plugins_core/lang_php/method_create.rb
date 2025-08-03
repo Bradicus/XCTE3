@@ -43,7 +43,7 @@ class XCTEPhp::MethodGet < XCTEPlugin
     "{ return($this->" << varSec.name << "); };\n"
 
     for varSec in varArray
-      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.genSet == "true"
+      if varSec.element_id == CodeStructure::CodeElemTypes::ELEM_VARIABLE && varSec.has_var_fun?("set")
         if !varSec.isPointer
           if varSec.arrayElemCount == 0
             readDef << "( $new" << XCTEPhp::Utils::get_capitalized_first(varSec.name)

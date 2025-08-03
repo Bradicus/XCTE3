@@ -91,16 +91,12 @@ module XCTEPhp
     end
 
     def render_header_var_group_getter_setters(cls, bld)
-      Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wBld(bld).wSeparate(true).wVarCb(lambda { |var|
-        if var.genGet
-          templ = PluginManager.find_method_plugin("php", "method_get")
+      var.var_functions.each do |key, value|
+        if value == true
+          templ = PluginManager.find_method_plugin("php", "method_" + key)
           templ.render_function(var, bld) if !templ.nil?
         end
-        if var.genSet
-          templ = PluginManager.find_method_plugin("php", "method_set")
-          templ.render_function(var, bld) if !templ.nil?
-        end
-      }))
+      end
     end
 
     def render_file_comment(cls, bld)
