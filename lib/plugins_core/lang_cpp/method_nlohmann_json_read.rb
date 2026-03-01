@@ -7,15 +7,15 @@
 #
 # This plugin creates a constructor for a class
 
-require "x_c_t_e_plugin"
-require "plugins_core/lang_cpp/x_c_t_e_cpp"
-require "managers/class_model_manager"
+require 'x_c_t_e_plugin'
+require 'plugins_core/lang_cpp/x_c_t_e_cpp'
+require 'managers/class_model_manager'
 
 module XCTECpp
   class MethodNlohmannJsonRead < XCTEPlugin
     def initialize
-      @name = "method_nlohmann_json_read"
-      @language = "cpp"
+      @name = 'method_nlohmann_json_read'
+      @language = 'cpp'
       @category = XCTEPlugin::CAT_METHOD
     end
 
@@ -26,8 +26,8 @@ module XCTECpp
 
       Utils.instance.getStandardClassInfo(cls)
 
-      bld.add("static void read(const nlohmann::json& json, " +
-              cls.standard_class_type + "& item);")
+      bld.add('static void read(const nlohmann::json& json, ' +
+              cls.standard_class_type + '& item);')
     end
 
     # Returns declairation string for this class's constructor
@@ -37,30 +37,34 @@ module XCTECpp
 
       Utils.instance.getStandardClassInfo(cls)
 
-      bld.startFuction("static void read(const nlohmann::json& json, " +
-                       cls.standard_class_type + "& item);")
+      bld.startFuction('static void read(const nlohmann::json& json, ' +
+                       cls.standard_class_type + '& item);')
       get_body(fp_params)
       bld.endFunction
     end
 
     def process_dependencies(cls, _codeFun)
-      cls.addInclude("", "nlohmann/json.hpp")
+      cls.addInclude('', 'nlohmann/json.hpp')
       Utils.instance.getStandardClassInfo(cls)
 
       for bc in cls.standard_class.base_classes
-        bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
-        if bc_sap.valid?
-          cls.addInclude("", Utils.instance.get_derived_class_prefix(bc) + "JsonEngine.h")
-        else
-          cls.addInclude("", Utils.instance.get_derived_class_prefix(bc) + "JsonEngine.h")
+        if !bc.is_interface
+          bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
+          if bc_sap.valid?
+            if bc_sap.spec.model.varGroup.vars.length.positive? || sap.spec.model.varGroup.varGroups.length
+              cls.addInclude('', Utils.instance.get_derived_class_prefix(bc) + 'JsonEngine.h')
+            end
+          else
+            cls.addInclude('', Utils.instance.get_derived_class_prefix(bc) + 'JsonEngine.h')
+          end
         end
       end
 
       # Process variables
       Utils.instance.each_var(UtilsEachVarParams.new.wCls(cls).wSeparate(true).wVarCb(lambda { |var|
-        if !Utils.instance.is_primitive(var) && !Utils.instance.get_type_name(var).end_with?("Type")
+        if !Utils.instance.is_primitive(var) && !Utils.instance.get_type_name(var).end_with?('Type')
           # cls.addInclude(var.namespace, Utils.instance.get_type_name(var) )
-          cls.addInclude(cls.namespace.get("/"), Utils.instance.get_class_name(var) + "JsonEngine")
+          cls.addInclude(cls.namespace.get('/'), Utils.instance.get_class_name(var) + 'JsonEngine')
         end
       }))
     end
@@ -71,16 +75,16 @@ module XCTECpp
       cls = fp_params.cls_spec
       fun = fp_params.fun_spec
 
-      bld.add("/**")
-      bld.add("* Reads this classes primitives from a json element")
-      bld.add("*/")
+      bld.add('/**')
+      bld.add('* Reads this classes primitives from a json element')
+      bld.add('*/')
 
       Utils.instance.getStandardClassInfo(cls)
 
       classDef = String.new
-      classDef << Utils.instance.get_type_name(fun.returnValue) << " " <<
-        Utils.instance.style_as_class(cls.get_u_name) << "JsonEngine :: " << "read(const nlohmann::json& json, " +
-                                                                             cls.standard_class_type + "& item)"
+      classDef << Utils.instance.get_type_name(fun.returnValue) << ' ' <<
+        Utils.instance.style_as_class(cls.get_u_name) << 'JsonEngine :: ' << 'read(const nlohmann::json& json, ' +
+                                                                             cls.standard_class_type + '& item)'
       bld.start_class(classDef)
 
       get_body(fp_params)
@@ -94,14 +98,18 @@ module XCTECpp
 
       conDef = String.new
 
-      bld.start_block("if (json.is_null() == false)")
+      bld.start_block('if (json.is_null() == false)')
 
       for bc in cls.standard_class.base_classes
-        bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
-        if bc_sap.valid?
-          bld.add(bc_sap.plugin.get_class_name(bc_sap.spec) + "JsonEngine::read(json, item);")
-        else
-          bld.add(Utils.instance.get_derived_class_prefix(bc) + "JsonEngine::read(json, item);")
+        if !bc.is_interface
+          bc_sap = Utils.instance.get_plugin_and_spec_for_ref(cls, bc)
+          if bc_sap.valid?
+            if bc_sap.spec.model.varGroup.vars.length.positive? || sap.spec.model.varGroup.varGroups.length
+              bld.add(bc_sap.plugin.get_class_name(bc_sap.spec) + 'JsonEngine::read(json, item);')
+            end
+          else
+            bld.add(Utils.instance.get_derived_class_prefix(bc) + 'JsonEngine::read(json, item);')
+          end
         end
       end
 
@@ -112,27 +120,27 @@ module XCTECpp
           curVarType = Utils.instance.get_type_name(var)
           curVarClass = ClassModelManager.findVarClass(var)
 
-          isEnum = !curVarClass.nil? && curVarClass.plug_name == "enum"
+          isEnum = !curVarClass.nil? && curVarClass.plug_name == 'enum'
 
           if Utils.instance.is_primitive(var) || isEnum
             if !var.isList
               if !isEnum
                 bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
-                        ' = json["' + curVarName + '"].get<' + Utils.instance.get_type_name(var) + ">();")
+                        ' = json["' + curVarName + '"].get<' + Utils.instance.get_type_name(var) + '>();')
               else
                 bld.add('if (json.contains("' + curVarName + '")) item.' + curVarName +
-                        ' = json["' + curVarName + '"].get<' + Utils.instance.get_type_name(var) + ">();")
+                        ' = json["' + curVarName + '"].get<' + Utils.instance.get_type_name(var) + '>();')
               end
             else
-              bld.add("item." + curVarName + ".clear();")
+              bld.add('item.' + curVarName + '.clear();')
               bld.start_block('for (auto child : json["' + curVarName + '"])')
-              bld.add("item." + curVarName + ".push_back(child.get<" + Utils.instance.get_base_type_name(var) + ">());")
+              bld.add('item.' + curVarName + '.push_back(child.get<' + Utils.instance.get_base_type_name(var) + '>());')
               bld.end_block
             end
           elsif !var.isList
             bld.add(
-              'if (json.contains("' + curVarName + '")) ' + Utils.instance.get_class_name(var) + "JsonEngine::read(" +
-                'json["' + curVarName + '"], item.' + curVarName + ");"
+              'if (json.contains("' + curVarName + '")) ' + Utils.instance.get_class_name(var) + 'JsonEngine::read(' +
+                'json["' + curVarName + '"], item.' + curVarName + ');'
             )
           else
             bld.start_block('if (json.contains("' + curVarName + '"))')
@@ -140,22 +148,22 @@ module XCTECpp
             bld.start_block('for (auto aJson : json["' + curVarName + '"])')
 
             if var.isPointer(1)
-              bld.add(Utils.instance.get_single_item_type_name(var) + " newVar(new " + Utils.instance.get_base_type_name(var) + "());")
-              if curVarClass == nil
-                bld.add Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, *newVar);"
+              bld.add(Utils.instance.get_single_item_type_name(var) + ' newVar(new ' + Utils.instance.get_base_type_name(var) + '());')
+              if curVarClass.nil?
+                bld.add Utils.instance.get_class_name(var) + 'JsonEngine::read(aJson, *newVar);'
               else
-                bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + "JsonEngine::read(aJson, *newVar);")
+                bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + 'JsonEngine::read(aJson, *newVar);')
               end
             else
-              bld.add(Utils.instance.get_single_item_type_name(var) + " newVar;")
-              if curVarClass == nil
-                bld.add Utils.instance.get_class_name(var) + "JsonEngine::read(aJson, newVar);"
+              bld.add(Utils.instance.get_single_item_type_name(var) + ' newVar;')
+              if curVarClass.nil?
+                bld.add Utils.instance.get_class_name(var) + 'JsonEngine::read(aJson, newVar);'
               else
-                bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + "JsonEngine::read(aJson, newVar);")
+                bld.add(Utils.instance.get_derived_class_prefix(curVarClass) + 'JsonEngine::read(aJson, newVar);')
               end
             end
 
-            bld.add("item." + curVarName + ".push_back(newVar);")
+            bld.add('item.' + curVarName + '.push_back(newVar);')
 
             bld.end_block
             bld.end_block

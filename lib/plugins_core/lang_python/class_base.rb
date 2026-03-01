@@ -1,7 +1,7 @@
-require "plugins_core/lang_python/utils"
-require "plugins_core/lang_python/source_renderer_python"
-require "x_c_t_e_class_base"
-require "active_component"
+require 'plugins_core/lang_python/utils'
+require 'plugins_core/lang_python/source_renderer_python'
+require 'x_c_t_e_class_base'
+require 'active_component'
 
 # This class contains functions that may be usefull in any type of class
 module XCTEPython
@@ -19,7 +19,7 @@ module XCTEPython
 
       bld = get_source_renderer()
       bld.lfName = dutils().style_as_file_name(get_unformatted_class_name(cls))
-      bld.lfExtension = dutils().get_extension("body")
+      bld.lfExtension = dutils().get_extension('body')
 
       process_dependencies(cls)
 
@@ -40,7 +40,7 @@ module XCTEPython
     def render_namespace_start(cls, bld)
       for ns in cls.namespace.ns_list
         styledNs = dutils().style_as_namespace(ns)
-        bld.start_block("module " + styledNs)
+        bld.start_block('module ' + styledNs)
       end
     end
 
@@ -52,7 +52,7 @@ module XCTEPython
       bld.separate
     end
 
-    def render_file_comment(cls, bld)
+    def render_file_comment(_cls, bld)
       dutils().render_block_comment(ActiveComponent.get().file_comment, bld)
 
       bld.separate
@@ -63,18 +63,18 @@ module XCTEPython
     def render_class_comment(cls, bld)
       cfg = UserSettings.instance
 
-      bld.add("##")
-      bld.add("# @author " + cfg.codeAuthor) if !cfg.codeAuthor.nil?
+      bld.add('##')
+      bld.add('# @author ' + cfg.codeAuthor) if !cfg.codeAuthor.nil?
 
-      bld.add("# " + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
+      bld.add('# ' + cfg.codeCompany) if !cfg.codeCompany.nil? && cfg.codeCompany.size > 0
 
-      bld.add("# " + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
+      bld.add('# ' + cfg.codeLicense) if !cfg.codeLicense.nil? && cfg.codeLicense.strip.size > 0
 
       if !cls.description.nil?
-        bld.add("# ")
+        bld.add('# ')
 
         cls.description.each_line do |descLine|
-          bld.add("# " << descLine.chomp) if descLine.strip.size > 0
+          bld.add('# ' << descLine.chomp) if descLine.strip.size > 0
         end
       end
     end
